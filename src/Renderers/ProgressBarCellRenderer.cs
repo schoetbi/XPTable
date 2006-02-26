@@ -277,7 +277,9 @@ namespace XPTable.Renderers
 				}
 			}
 			
-			if (e.Focused && e.Enabled)
+			if( (e.Focused && e.Enabled)
+				// only if we want to show selection rectangle
+				&& ( e.Table.ShowSelectionRectangle ) )
 			{
 				ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
 			}
