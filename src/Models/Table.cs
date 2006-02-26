@@ -643,6 +643,11 @@ namespace XPTable.Models
 		/// </summary>
 		private bool tabMovesEditor;*/
 
+		/// <summary>
+		/// Specifies whether show selection in grid or not
+		/// </summary>
+		private bool showSelectionRectangle;
+
 		#endregion
 
 		#endregion
@@ -753,6 +758,9 @@ namespace XPTable.Models
 			this.editStartAction = EditStartAction.DoubleClick;
 			this.customEditKey = Keys.F5;
 			//this.tabMovesEditor = true;
+
+			// showSelectionRectangle defaults to true
+			this.showSelectionRectangle = true;
 
 			// finished setting up
 			this.beginUpdateCount = 0;
@@ -4003,6 +4011,34 @@ namespace XPTable.Models
 
 
 		/// <summary>
+		/// Gets or sets whether highlighting rectangle is shown in grid
+		/// </summary>
+		[ Category( "Selection" ),
+		DefaultValue( true ),
+		Description( "Specifies whether highlighting rectangle is shown in grid" ) ]
+		public bool ShowSelectionRectangle
+		{
+			get
+			{
+				return this.showSelectionRectangle;
+			}
+			
+			set
+			{
+				if( this.showSelectionRectangle != value )
+				{
+					this.showSelectionRectangle = value;
+
+					if( this.TableModel != null )
+					{
+						this.Invalidate( this.CellDataRect, false );
+					}
+				}
+			}
+		}
+
+
+		/// <summary>
 		/// Gets or sets the background color of a selected cell
 		/// </summary>
 		[Category("Selection"),
@@ -4198,7 +4234,6 @@ namespace XPTable.Models
 				return this.TableModel.Selections.SelectedIndicies;
 			}
 		}
-
 		#endregion
 
 		#region TableModel
