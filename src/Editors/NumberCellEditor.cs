@@ -714,6 +714,8 @@ namespace XPTable.Editors
 			char enter = AsciiChars.CarriageReturn;
 			char escape = AsciiChars.Escape;
 			char tab = AsciiChars.HorizontalTab;
+			// netus fix by Richard Sadler on 2006-01-13 - added backspace key
+			char backspace = AsciiChars.Backspace;
 			
 			NumberFormatInfo info = CultureInfo.CurrentCulture.NumberFormat;
 			
@@ -721,9 +723,10 @@ namespace XPTable.Editors
 			string groupSeparator = info.NumberGroupSeparator;
 			string negativeSign = info.NegativeSign;
 			string character = e.KeyChar.ToString();
-			
+
+			// netus fix by Richard Sadler on 2006-01-13 - added backspace key
 			if ((!char.IsDigit(e.KeyChar) && !character.Equals(decimalSeparator) && !character.Equals(groupSeparator)) && 
-				!character.Equals(negativeSign) && (e.KeyChar != tab))
+				!character.Equals(negativeSign) && (e.KeyChar != tab) && (e.KeyChar != backspace))
 			{
 				if ((Control.ModifierKeys & (Keys.Alt | Keys.Control)) == Keys.None)
 				{
