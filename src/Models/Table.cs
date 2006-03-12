@@ -44,7 +44,7 @@ using XPTable.Win32;
 namespace XPTable.Models
 {
 	/// <summary>
-	/// Summary description for Table.
+	/// A Table is "simple" object in that it doesn't actually contain or know how to draw the data it will display.
 	/// </summary>
 	[DesignTimeVisible(true),
 	ToolboxItem(true), 
@@ -2137,7 +2137,10 @@ namespace XPTable.Models
 				this.hScrollBar.Visible = true;
 				this.hScrollBar.Bounds = hscrollBounds;
 				this.hScrollBar.Minimum = 0;
-				this.hScrollBar.Maximum = this.ColumnModel.VisibleColumnsWidth;				
+				this.hScrollBar.Maximum = this.ColumnModel.VisibleColumnsWidth;
+				// netus fix by Kosmokrat Hismoom  - added check for property Maximum
+				// as otherwise resizing could lead to a crash 12/01/06
+				this.hScrollBar.Maximum = (this.hScrollBar.Maximum <= 0) ? 0 : this.hScrollBar.Maximum;
 				this.hScrollBar.SmallChange = Column.MinimumWidth;
 				// fixed by Kosmokrat Hismoom on 7 jan 2006
 				this.hScrollBar.LargeChange = ( hscrollBounds.Width <= 0 ) ? 0 : ( hscrollBounds.Width - 1 );
@@ -2169,6 +2172,9 @@ namespace XPTable.Models
 				this.vScrollBar.Bounds = vscrollBounds;
 				this.vScrollBar.Minimum = 0;
 				this.vScrollBar.Maximum = (this.RowCount > this.VisibleRowCount ? this.RowCount - 1 : this.VisibleRowCount);
+				//netus - fix by Kosmokrat Hismoom  - added check for property Maximum
+				// as otherwise resizing could lead to a crash - 12/01/06
+				this.vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
 				this.vScrollBar.SmallChange = 1;
 				// fixed by Kosmokrat Hismoom on 7 jan 2006
 				this.vScrollBar.LargeChange = this.VisibleRowCount - 1 <= 0 ? 0 : this.VisibleRowCount - 1;
@@ -2632,7 +2638,7 @@ namespace XPTable.Models
 			if (column.Comparer != null)
 			{
 				comparer = (ComparerBase) Activator.CreateInstance(column.Comparer, new object[] {this.TableModel, index, sortOrder});
-			}
+			}	
 			else if (column.DefaultComparerType != null)
 			{
 				comparer = (ComparerBase) Activator.CreateInstance(column.DefaultComparerType, new object[] {this.TableModel, index, sortOrder});
@@ -3120,7 +3126,8 @@ namespace XPTable.Models
 					return displayRect;
 				}
 				
-				if (this.ColumnModel.TotalColumnWidth <= this.CellDataRect.Width)
+				//by netus 2006-02-07
+				if (this.ColumnModel.VisibleColumnsWidth <= this.CellDataRect.Width)
 				{
 					displayRect.Width = this.CellDataRect.Width;
 				}
@@ -6756,6 +6763,10 @@ namespace XPTable.Models
 					}
 				}
 
+				// netus - fix by Kosmokrat Hismoom on 2006-01-29
+				// make sure the cursor is the default cursor 
+				// (we may have just come from a resizing area in the header)
+				this.Cursor = Cursors.Default;
 				return;
 			}
 			else
