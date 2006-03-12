@@ -250,9 +250,13 @@ namespace XPTable.Renderers
 							e.Table.EditCell(e.CellPos);
 						}
 
-						((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+						//netus - fix from John Boyce on 2006-02-08
+						if (e.Table.IsEditing)
+						{
+							((IEditorUsesRendererButtons)e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
 
-						e.Table.Invalidate(e.CellRect);
+							e.Table.Invalidate(e.CellRect);
+						}
 					}
 				}
 			}
