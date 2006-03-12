@@ -566,8 +566,9 @@ namespace XPTable.Renderers
 						}
 					}
 					else
-					{
-						if ( position == 1)
+					{ 
+						//fixed by netus 2006-02-07
+						if (position % 2 == 1)
 						{
 							if (e.Table.AlternatingRowColor.A != 0)
 							{
