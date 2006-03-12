@@ -39,7 +39,8 @@ using XPTable.Renderers;
 namespace XPTable.Models
 {
 	/// <summary>
-	/// Summary description for ColumnModel.
+	/// A ColumnModel contains a collection of Columns that will be displayed in a Table. It also keeps track of whether a 
+	/// CellRenderer or CellEditor has been created for a particular Column. 
 	/// </summary>
 	[DesignTimeVisible(true),
 	ToolboxItem(true), 
