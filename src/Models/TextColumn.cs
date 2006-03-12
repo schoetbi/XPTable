@@ -39,7 +39,7 @@ using XPTable.Sorting;
 namespace XPTable.Models
 {
 	/// <summary>
-	/// Summary description for TextColumn.
+	/// Represents a Column whose Cells are displayed as strings
 	/// </summary>
 	[DesignTimeVisible(false),
 	ToolboxItem(false)]
