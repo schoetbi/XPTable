@@ -513,9 +513,9 @@ namespace XPTable.Renderers
 			// we have to figure it out if row is in the alternate span or not
 			// if position is odd it's alternate, even it's not (it's normal)
             // netus 2006-03-13 - new formula for calculating alternating background color
-            bool position = (e.Row % (e.Table.AlternatingRowSpan + 1)) == 0 ? true : false;
+            bool isAlternateRow = ( Math.Ceiling( ( e.Row  ) / e.Table.AlternatingRowSpan ) % 2 ) == 0;
 
-            //Debug.WriteLine("row: " + e.Row.ToString() + ", position: " + position.ToString());
+            //Debug.WriteLine("row: " + e.Row.ToString() + ", isAlternateRow: " + isAlternateRow.ToString());
 
 			if (e.Selected && (!e.Table.HideSelection || (e.Table.HideSelection && (e.Table.Focused || e.Table.IsEditing))))
 			{
@@ -546,7 +546,7 @@ namespace XPTable.Renderers
 						if (e.Cell.BackColor.A < 255)
 						{
                             //netus 2006-03-13 - when there is alternate background color row
-                            if (position)
+                            if (isAlternateRow)
 							{
 								if (e.Table.AlternatingRowColor.A != 0)
 								{
@@ -573,7 +573,7 @@ namespace XPTable.Renderers
 					else
 					{
                         //netus 2006-03-13 - when there is alternate background color row
-						if (position)
+						if (isAlternateRow)
 						{
 							if (e.Table.AlternatingRowColor.A != 0)
 							{
