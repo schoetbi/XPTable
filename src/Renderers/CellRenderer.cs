@@ -33,6 +33,7 @@ using XPTable.Editors;
 using XPTable.Events;
 using XPTable.Models;
 using XPTable.Themes;
+using System.Diagnostics;
 
 
 namespace XPTable.Renderers
@@ -511,7 +512,10 @@ namespace XPTable.Renderers
 			// Mateusz [PEYN] Adamus (peyn@tlen.pl)
 			// we have to figure it out if row is in the alternate span or not
 			// if position is odd it's alternate, even it's not (it's normal)
-			double position = Math.Ceiling( ( e.Row + 1d ) / e.Table.AlternatingRowSpan );
+            // netus 2006-03-13 - new formula for calculating alternating background color
+            bool position = (e.Row % (e.Table.AlternatingRowSpan + 1)) == 0 ? true : false;
+
+            //Debug.WriteLine("row: " + e.Row.ToString() + ", position: " + position.ToString());
 
 			if (e.Selected && (!e.Table.HideSelection || (e.Table.HideSelection && (e.Table.Focused || e.Table.IsEditing))))
 			{
@@ -541,7 +545,8 @@ namespace XPTable.Renderers
 					{
 						if (e.Cell.BackColor.A < 255)
 						{
-							if ( position % 2 == 1)
+                            //netus 2006-03-13 - when there is alternate background color row
+                            if (position)
 							{
 								if (e.Table.AlternatingRowColor.A != 0)
 								{
@@ -566,9 +571,9 @@ namespace XPTable.Renderers
 						}
 					}
 					else
-					{ 
-						//fixed by netus 2006-02-07
-						if (position % 2 == 1)
+					{
+                        //netus 2006-03-13 - when there is alternate background color row
+						if (position)
 						{
 							if (e.Table.AlternatingRowColor.A != 0)
 							{
