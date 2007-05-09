@@ -400,7 +400,7 @@ namespace XPTable.Models
 		DefaultValue("G"),
 		Description("A string that specifies how a column's cell contents are formatted."),
 		Localizable(true)]
-		public new string Format
+		public override string Format
 		{
 			get
 			{

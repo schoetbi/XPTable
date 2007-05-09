@@ -395,7 +395,7 @@ namespace XPTable.Models
 		DefaultValue(""),
 		Description("A string that specifies how a column's cell contents are formatted."),
 		Localizable(true)]
-		public string Format
+		public virtual string Format
 		{
 			get
 			{

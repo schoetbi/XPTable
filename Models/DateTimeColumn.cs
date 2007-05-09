@@ -299,7 +299,7 @@ namespace XPTable.Models
 		[Browsable(false),
 		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden),
 		Localizable(true)]
-		public new string Format
+		public override string Format
 		{
 			get
 			{
