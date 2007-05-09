@@ -2317,8 +2317,14 @@ namespace XPTable.Models
 					}
 					else if (this.ColumnModel.Columns[column].Right > this.hScrollBar.Value + this.CellDataRect.Width)
 					{
-						hscrollVal = this.ColumnModel.Columns[column].Right - this.CellDataRect.Width;
-					}
+ 						if (this.ColumnModel.Columns[column].Width > this.CellDataRect.Width)
+ 						{
+ 							hscrollVal = this.ColumnModel.Columns[column].Left;
+ 						}
+ 						else
+ 						{
+ 							hscrollVal = this.ColumnModel.Columns[column].Right - this.CellDataRect.Width;
+ 						}						}
 
 					if (hscrollVal > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
 					{
