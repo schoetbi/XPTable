@@ -205,12 +205,7 @@ namespace XPTable.Editors
 			
 			if (this.IntegralHeight)
 			{
-				int visItems = this.listbox.Height / this.ItemHeight;
-
-				if (visItems > this.MaxDropDownItems)
-				{
-					visItems = this.MaxDropDownItems;
-				}
+				int visItems = this.MaxDropDownItems;
 
 				if (this.listbox.Items.Count < this.MaxDropDownItems)
 				{
