@@ -366,7 +366,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(LeftRightAlignment.Right),
-		Description("The alignment of the up and down buttons in the Column")]
+		Description("The alignment of the up and down buttons in the Column"),
+		Localizable(true)]
 		public LeftRightAlignment UpDownAlign
 		{
 			get
@@ -397,7 +398,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue("G"),
-		Description("A string that specifies how a column's cell contents are formatted.")]
+		Description("A string that specifies how a column's cell contents are formatted."),
+		Localizable(true)]
 		public new string Format
 		{
 			get

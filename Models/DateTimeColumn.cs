@@ -222,7 +222,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(DateTimePickerFormat.Long),
-		Description("The format of the date and time displayed in the Column's Cells")]
+		Description("The format of the date and time displayed in the Column's Cells"),
+		Localizable(true)]
 		public DateTimePickerFormat DateTimeFormat
 		{
 			get
@@ -251,7 +252,8 @@ namespace XPTable.Models
 		/// Gets or sets the custom date/time format string
 		/// </summary>
 		[Category("Appearance"),
-		Description("The custom date/time format string")]
+		Description("The custom date/time format string"),
+		Localizable(true)]
 		public string CustomDateTimeFormat
 		{
 			get
@@ -295,7 +297,8 @@ namespace XPTable.Models
 		/// are formatted
 		/// </summary>
 		[Browsable(false),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden),
+		Localizable(true)]
 		public new string Format
 		{
 			get

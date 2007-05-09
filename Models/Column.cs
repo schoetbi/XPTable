@@ -359,7 +359,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(null),
-		Description("The text displayed in the column's header.")]
+		Description("The text displayed in the column's header."),
+		Localizable(true)]
 		public string Text
 		{
 			get
@@ -392,7 +393,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(""),
-		Description("A string that specifies how a column's cell contents are formatted.")]
+		Description("A string that specifies how a column's cell contents are formatted."),
+		Localizable(true)]
 		public string Format
 		{
 			get
@@ -424,7 +426,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(ColumnAlignment.Left),
-		Description("The horizontal alignment of the column's cell contents.")]
+		Description("The horizontal alignment of the column's cell contents."),
+		Localizable(true)]
 		public virtual ColumnAlignment Alignment
 		{
 			get
@@ -455,7 +458,8 @@ namespace XPTable.Models
 		/// Gets or sets the width of the Column
 		/// </summary>
 		[Category("Appearance"),
-		Description("The width of the column.")]
+		Description("The width of the column."),
+		Localizable(true)]
 		public int Width
 		{
 			get
@@ -495,7 +499,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(null),
-		Description("Ihe image displayed in the column's header")]
+		Description("Ihe image displayed in the column's header"),
+		Localizable(true)]
 		public Image Image
 		{
 			get
@@ -523,7 +528,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(false),
-		Description("Specifies whether the image displayed on the column's header should be drawn on the right hand side of the column")]
+		Description("Specifies whether the image displayed on the column's header should be drawn on the right hand side of the column"),
+		Localizable(true)]
 		public bool ImageOnRight
 		{
 			get
@@ -921,7 +927,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(null),
-		Description("The ToolTip text associated with the Column")]
+		Description("The ToolTip text associated with the Column"),
+		Localizable(true)]
 		public string ToolTipText
 		{
 			get

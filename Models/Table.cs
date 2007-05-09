@@ -4287,7 +4287,8 @@ namespace XPTable.Models
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue("There are no items in this view"), 
-		Description("Specifies the text displayed by the Table when it doesn't contain any items")]
+		Description("Specifies the text displayed by the Table when it doesn't contain any items"),
+		Localizable(true)]
 		public string NoItemsText
 		{
 			get
