@@ -327,7 +327,7 @@ namespace XPTable.Models
 		/// A CellCollection representing the collection of 
 		/// Cells contained within the Row
 		/// </summary>
-		[Category("Behavior"),
+		[Category("Data"),
 		Description("Cell Collection"),
 		DesignerSerializationVisibility(DesignerSerializationVisibility.Content), 
 		Editor(typeof(CellCollectionEditor), typeof(UITypeEditor))]
