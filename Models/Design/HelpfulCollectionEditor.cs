@@ -37,39 +37,61 @@ namespace XPTable.Models.Design
 	/// </summary>
 	public class HelpfulCollectionEditor : CollectionEditor
 	{
+        private PropertyGrid propertyGrid;
+
 		/// <summary>
 		/// Initializes a new instance of the HelpfulCollectionEditor class using 
 		/// the specified collection type
 		/// </summary>
 		/// <param name="type">The type of the collection for this editor to edit</param>
-		public HelpfulCollectionEditor(Type type) : base(type)
-		{
-
-		}
-
+        public HelpfulCollectionEditor(Type type)
+            : base(type)
+        {
+        }
 
 		/// <summary>
-		/// Creates a new form to display and edit the current collection
+		/// If it can be found, the PropertyGrid is made available here, it's availability not guaranteed.
+		/// Inheritors should check that it is available before attempting to access its members.  It is 
+		/// discovered in the <see cref="HelpfulCollectionEditor.CreateCollectionForm"/> method, inheritors
+		/// who want to change the PropertyGrids properties would typically do so in an override of 
+		/// that method, after invoking the base method.
 		/// </summary>
-		/// <returns>An instance of CollectionEditor.CollectionForm to provide as the 
-		/// user interface for editing the collection</returns>
+        public PropertyGrid PropertyGrid
+        {
+            get { return this.propertyGrid; }
+            private set { this.propertyGrid = value; }
+        }
+
+		/// <summary>
+		/// Discovers the CollectionForm's property grid
+		/// </summary>
+		/// <returns>The CollectionEditor.CollectionForm returned from base method</returns>
 		protected override CollectionEditor.CollectionForm CreateCollectionForm()
 		{
 			CollectionEditor.CollectionForm editor = base.CreateCollectionForm();
 
-			foreach (Control control in editor.Controls)
-			{
-				//
-				if (control is PropertyGrid)
-				{
-					PropertyGrid grid = (PropertyGrid) control;
-					
-					grid.HelpVisible = true;
-					grid.CommandsVisibleIfAvailable = true;
-				}
-			}
+			this.findPropertyGrid((Control) editor);
 
 			return editor;
 		}
+
+		private bool findPropertyGrid(Control control)
+		{
+			if (control is PropertyGrid)
+			{
+				this.PropertyGrid = (PropertyGrid) control;
+				return true;
+			}
+
+			foreach (Control c in control.Controls)
+			{
+				if (this.findPropertyGrid(c))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 }

@@ -43,122 +43,38 @@ namespace XPTable.Models.Design
 	/// </summary>
 	public class ColumnCollectionEditor : HelpfulCollectionEditor
 	{
-		#region Class Data
-		
-		/// <summary>
-		/// The ColumnCollection being edited
-		/// </summary>
-		private ColumnCollection columns;
+        /// <summary>
+        /// The ColumnCollection being edited
+        /// </summary>
+        private ColumnCollection columnCollection;
 
 		/// <summary>
-		/// Preview table
+		/// Constructor
 		/// </summary>
-		private Table previewTable;
+		/// <param name="type">The type of the collection to be edited</param>
+        public ColumnCollectionEditor(Type type)
+            : base(type)
+        {
+        }
 
 		/// <summary>
-		/// ColumnModel for the preview table
+		/// If the property grid is available it's HelpVisible property is set to true, the help pane backcolor is changed and
+		/// the CommandsVisibleIfAvailable property is set to true ((hot) commands are elsewhere known as designer verbs).
 		/// </summary>
-		private ColumnModel previewColumnModel;
-
-		/// <summary>
-		/// TableModel for the preview table
-		/// </summary>
-		private TableModel previewTableModel;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private Label previewLabel;
-
-		#endregion
-
-		
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ColumnCollectionEditor class 
-		/// using the specified collection type
-		/// </summary>
-		/// <param name="type">The type of the collection for this editor to edit</param>
-		public ColumnCollectionEditor(Type type) : base(type)
+		/// <returns>The CollectionEditor.CollectionForm returned from base method</returns>
+		protected override CollectionEditor.CollectionForm CreateCollectionForm()
 		{
-			this.columns = null;
+			CollectionEditor.CollectionForm collectionForm = base.CreateCollectionForm();
 
-			this.previewColumnModel = new ColumnModel();
-			this.previewColumnModel.Columns.Add(new TextColumn("Column", 116));
-			
-			this.previewTableModel = new TableModel();
-			this.previewTableModel.Rows.Add(new Row());
-			
-			Cell cell = new Cell();
-			cell.Editable = false;
-			cell.ToolTipText = "This is a Cell ToolTip";
-			
-			this.previewTableModel.Rows[0].Cells.Add(cell);
-			this.previewTableModel.RowHeight = 20;
-
-			this.previewTable = new Table();
-			this.previewTable.Preview = true;
-			this.previewTable.Size = new Size(120, 274);
-			this.previewTable.Location = new Point(246, 24);
-			this.previewTable.GridLines = GridLines.Both;
-			this.previewTable.TabStop = false;
-			this.previewTable.EnableToolTips = true;
-			this.previewTable.ColumnModel = this.previewColumnModel;
-			this.previewTable.TableModel = this.previewTableModel;
-
-			this.previewLabel = new Label();
-			this.previewLabel.Text = "Preview:";
-			this.previewLabel.Size = new Size(140, 16);
-			this.previewLabel.Location = new Point(247, 8);
-		}
-
-		#endregion
-		
-		
-		#region Methods
-
-		/// <summary>
-		/// Edits the value of the specified object using the specified 
-		/// service provider and context
-		/// </summary>
-		/// <param name="context">An ITypeDescriptorContext that can be 
-		/// used to gain additional context information</param>
-		/// <param name="isp">A service provider object through which 
-		/// editing services can be obtained</param>
-		/// <param name="value">The object to edit the value of</param>
-		/// <returns>The new value of the object. If the value of the 
-		/// object has not changed, this should return the same object 
-		/// it was passed</returns>
-		public override object EditValue(ITypeDescriptorContext context, IServiceProvider isp, object value)
-		{
-			this.columns = (ColumnCollection) value;
-
-			// for some reason (might be beacause Column is an 
-			// abstract class) the table doesn't get redrawn 
-			// when a columns property changes, but we can get 
-			// around that by subscribing to the columns 
-			// PropertyChange event and passing the message on 
-			// to the table ourselves.  we need to do this for 
-			// all the existing columns in the collection
-			for (int i=0; i<this.columns.Count; i++)
+			if (this.PropertyGrid != null)
 			{
-				this.columns[i].PropertyChanged += new ColumnEventHandler(column_PropertyChanged);
+				this.PropertyGrid.HelpVisible = true;
+				this.PropertyGrid.HelpBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+				this.PropertyGrid.CommandsVisibleIfAvailable = true;
 			}
 
-			object returnObject = base.EditValue(context, isp, value);
-
-			ColumnModel model = (ColumnModel) context.Instance;
-			
-			if (model.Table != null)
-			{
-				model.Table.PerformLayout();
-				model.Table.Refresh();
-			}
-			
-			return returnObject;
+			return collectionForm;
 		}
-
 
 		/// <summary>
 		/// Gets the data types that this collection editor can contain
@@ -167,17 +83,16 @@ namespace XPTable.Models.Design
 		protected override Type[] CreateNewItemTypes()
 		{
 			return new Type[] {typeof(TextColumn),
-								  typeof(ButtonColumn),
-								  typeof(CheckBoxColumn),
-								  typeof(ColorColumn),
-								  typeof(ComboBoxColumn),
-								  typeof(DateTimeColumn),
-								  typeof(ImageColumn),
-								  typeof(NumberColumn),
-								  typeof(ProgressBarColumn)};
+							   typeof(ButtonColumn),
+							   typeof(CheckBoxColumn),
+							   typeof(ColorColumn),
+							   typeof(ComboBoxColumn),
+							   typeof(DateTimeColumn),
+							   typeof(ImageColumn),
+							   typeof(NumberColumn),
+							   typeof(ProgressBarColumn)};
 		}
-
-
+		
 		/// <summary>
 		/// Creates a new instance of the specified collection item type
 		/// </summary>
@@ -187,23 +102,12 @@ namespace XPTable.Models.Design
 		{
 			Column column = (Column) base.CreateInstance(itemType);
 
-			// newly created items aren't added to the collection 
-			// until editing has finished.  we'd like the newly 
-			// created column to show up in the table immediately
-			// so we'll add it to the ColumnCollection now
-			this.columns.Add(column);
+			this.columnCollection.Add(column);
 
-			// for some reason (might be beacause Column is an 
-			// abstract class) the table doesn't get redrawn 
-			// when a columns property changes, but we can get 
-			// around that by subscribing to the columns 
-			// PropertyChange event and passing the message on 
-			// to the table ourselves
-			column.PropertyChanged += new XPTable.Events.ColumnEventHandler(column_PropertyChanged);
+			column.PropertyChanged += new ColumnEventHandler(this.column_PropertyChanged);
 
 			return column;
 		}
-
 
 		/// <summary>
 		/// Destroys the specified instance of the object
@@ -211,124 +115,46 @@ namespace XPTable.Models.Design
 		/// <param name="instance">The object to destroy</param>
 		protected override void DestroyInstance(object instance)
 		{
-			if (instance != null && instance is Column)
+            if (instance != null && instance is Column)
 			{
-				Column column = (Column) instance;
+                Column column = (Column)instance;
 
-				// the specified column is about to be destroyed 
-				// so we need to remove it from the ColumnCollection first
-				this.columns.Remove(column);
-				column.PropertyChanged -= new XPTable.Events.ColumnEventHandler(column_PropertyChanged);
+				this.columnCollection.Remove(column);
+				column.PropertyChanged -= new ColumnEventHandler(this.column_PropertyChanged);
+				column.Dispose();
 			}
-			
 			base.DestroyInstance(instance);
 		}
 
-
 		/// <summary>
-		/// Creates a new form to display and edit the current collection
+		/// Edits the value of the specified object using the specified 
+		/// service provider and context
 		/// </summary>
-		/// <returns>An instance of CollectionEditor.CollectionForm to provide 
-		/// as the user interface for editing the collection</returns>
-		protected override CollectionEditor.CollectionForm CreateCollectionForm()
+		/// <param name="context">An ITypeDescriptorContext that can be used to gain additional context information</param>
+		/// <param name="isp">A service provider object through which editing services can be obtained</param>
+		/// <param name="value">the value of the object under edit</param>
+		/// <returns>The new value of the object. If the value is not changed, this should return the original value</returns>
+		public override object EditValue(ITypeDescriptorContext context, IServiceProvider isp, object value)
 		{
-			CollectionEditor.CollectionForm editor = base.CreateCollectionForm();
+			this.columnCollection = (ColumnCollection) value;
 
-			editor.Width += 140;
-
-			foreach (Control control in editor.Controls)
+            foreach (Column column in this.columnCollection)
 			{
-				if (control.Name.Equals("propertiesLabel"))
-				{
-					control.Location = new Point(control.Left + 140, control.Top);
-				}
-				
-				//
-				if (control is PropertyGrid)
-				{
-					PropertyGrid grid = (PropertyGrid) control;
-					
-					grid.SelectedObjectsChanged += new EventHandler(this.PropertyGrid_SelectedObjectsChanged);
-					grid.Location = new Point(grid.Left + 140, grid.Top);
-					grid.Width -= 140;
-				}
+				column.PropertyChanged += new ColumnEventHandler(this.column_PropertyChanged);
 			}
 
-			editor.Controls.Add(this.previewLabel);
-			editor.Controls.Add(this.previewTable);
+			object newCollection = base.EditValue(context, isp, value);
 
-			return editor;
-		}
+            ColumnModel columns = (ColumnModel)context.Instance;
 
-		#endregion
-
-
-		#region Events
-
-		/// <summary>
-		/// Handler for the PropertyGrid's SelectedObjectsChanged event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		protected void PropertyGrid_SelectedObjectsChanged(object sender, EventArgs e)
-		{
-			object[] objects = ((PropertyGrid) sender).SelectedObjects;
-
-			this.previewColumnModel.Columns.Clear();
-
-			if (objects.Length == 1)
+			if (columns.Table != null)
 			{
-				Column column = (Column) objects[0];
-				Cell cell = this.previewTableModel[0, 0];
-
-				if (column is ButtonColumn)
-				{
-					cell.Text = "Button";
-					cell.Data = null;
-				}
-				else if (column is CheckBoxColumn)
-				{
-					cell.Text = "Checkbox";
-					cell.Data = null;
-					cell.Checked = true;
-				}
-				else if (column is ColorColumn)
-				{
-					cell.Text = null;
-					cell.Data = Color.Red;
-				}
-				else if (column is ComboBoxColumn)
-				{
-					cell.Text = "ComboBox";
-					cell.Data = null;
-				}
-				else if (column is DateTimeColumn)
-				{
-					cell.Text = null;
-					cell.Data = DateTime.Now;
-				}
-				else if (column is ImageColumn)
-				{
-					cell.Text = "Image";
-					cell.Data = null;
-				}
-				else if (column is NumberColumn || column is ProgressBarColumn)
-				{
-					cell.Text = null;
-					cell.Data = 50;
-				}
-				else //if (column is TextColumn)
-				{
-					cell.Text = "Text";
-					cell.Data = null;
-				}
-				
-				this.previewColumnModel.Columns.Add(column);
+				columns.Table.PerformLayout();
+				columns.Table.Refresh();
 			}
 
-			this.previewTable.Invalidate();
+			return newCollection;
 		}
-
 
 		/// <summary>
 		/// Handler for a Column's PropertyChanged event
@@ -337,9 +163,7 @@ namespace XPTable.Models.Design
 		/// <param name="e">A ColumnEventArgs that contains the event data</param>
 		private void column_PropertyChanged(object sender, ColumnEventArgs e)
 		{
-			this.columns.ColumnModel.OnColumnPropertyChanged(e);
+            this.columnCollection.ColumnModel.OnColumnPropertyChanged(e);
 		}
-
-		#endregion
 	}
 }
