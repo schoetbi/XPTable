@@ -513,7 +513,7 @@ namespace XPTable.Renderers
 			// we have to figure it out if row is in the alternate span or not
 			// if position is odd it's alternate, even it's not (it's normal)
             // netus 2006-03-13 - new formula for calculating alternating background color
-            bool isAlternateRow = ( Math.Ceiling( ( e.Row  ) / e.Table.AlternatingRowSpan ) % 2 ) == 0;
+            bool isAlternateRow = ( Math.Ceiling( (double)( e.Row  ) / e.Table.AlternatingRowSpan ) % 2 ) == 0;
 
             //Debug.WriteLine("row: " + e.Row.ToString() + ", isAlternateRow: " + isAlternateRow.ToString());
 

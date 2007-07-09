@@ -59,7 +59,8 @@ namespace XPTable.Events
 		/// <param name="source">The Cell that Raised the event</param>
 		/// <param name="column">The Column index of the Cell</param>
 		/// <param name="row">The Row index of the Cell</param>
-		public CellCheckBoxEventArgs(Cell source, int column, int row) : base(source, column, row)
+        public CellCheckBoxEventArgs(Cell source, int column, int row)
+            : base(source, column, row)
 		{
 			
 		}

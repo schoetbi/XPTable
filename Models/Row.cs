@@ -318,6 +318,35 @@ namespace XPTable.Models
 			this.state = (byte) (value ? (this.state | flag) : (this.state & ~flag));
 		}
 
+        /// <summary>
+        /// Returns the column that contains the cell that renders over the given column.
+        /// This is only different if there is a colspan cell on this row, to the left of the given position.
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        internal int GetRenderedCellIndex(int columnIndex)
+        {
+            if (columnIndex == 0)
+                return columnIndex;
+
+            if (this.cells != null)
+            {
+                for (int i = columnIndex; i > -1 ; i--)
+                {
+                    Cell cell = this.cells[i];
+
+                    if (cell.ColSpan > 1 && (i + cell.ColSpan >= columnIndex))
+                    {
+                        // Then this cell (i) covers the cell at columnIndex for this row
+                        return i;
+                    }
+                }
+            }
+
+            // If no cells have colspan > 0 then the answer is the column we were given:
+            return columnIndex;
+
+        }
 		#endregion
 
 

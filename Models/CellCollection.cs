@@ -86,6 +86,11 @@ namespace XPTable.Models
 
 			this.OnCellAdded(new RowEventArgs(this.owner, cell, index, index));
 
+            for (int i = 1; i < cell.ColSpan; i++)
+            {
+                this.Add(new Cell(string.Empty));
+            }
+
 			return index;
 		}
 

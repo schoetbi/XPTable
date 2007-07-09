@@ -999,6 +999,21 @@ namespace XPTable.Models
 			return this.CellRect(row, col);
 		}
 
+        /// <summary>
+        /// Returns the position of the actual cell that renders to the given cell pos.
+        /// This looks at colspans and returns the cell that colspan overs the given cell (if any)
+        /// </summary>
+        /// <param name="cellPos"></param>
+        /// <returns></returns>
+        protected internal CellPos ResolveColspan(CellPos cellPos)
+        {
+            Row r = this.TableModel.Rows[cellPos.Row];
+
+            CellPos n = new CellPos(cellPos.Row, r.GetRenderedCellIndex(cellPos.Column));
+
+            return n;
+        }
+
 
 		/// <summary>
 		/// Returns whether Cell at the specified row and column indexes 
@@ -1415,7 +1430,41 @@ namespace XPTable.Models
 			return this.ColumnRect(this.ColumnModel.Columns.IndexOf(column));
 		}
 
-		#endregion
+        /// <summary>
+        /// Returns the actual width that this cell can render over (taking colspan into account).
+        /// Normally its just the width of this column from the column model.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        private int GetColumnWidth(int column, Cell cell)
+        {
+            int width = this.ColumnModel.Columns[column].Width;
+
+            if (cell.ColSpan > 1)
+            {
+                // Just in case the colspan goes over the end of the table
+                int maxcolindex = Math.Min(cell.ColSpan + column - 1, this.ColumnModel.Columns.Count - 1);
+
+                for (int i = column + 1; i <= maxcolindex; i++)
+                {
+                    width += this.ColumnModel.Columns[i].Width;
+                }
+            }
+
+            return width;
+        }
+
+        /// <summary>
+        /// Returns the left position of the given column.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        private int GetColumnLeft(int column)
+        {
+            return this.ColumnRect(column).Left;
+        }
+        #endregion
 
 		#region Rows
 
@@ -1925,6 +1974,14 @@ namespace XPTable.Models
 			this.InvalidateRow(cellPos.Row);
 		}
 
+        /// <summary>
+        /// Invalidates the given Rectangle
+        /// </summary>
+        /// <param name="rect"></param>
+        public void InvalidateRect(Rectangle rect)
+        {
+            this.Invalidate(rect);
+        }
 		#endregion
 
 		#region Keys
@@ -6396,7 +6453,11 @@ namespace XPTable.Models
 					
 					return;
 				}
-				
+
+                Row r = this.tableModel.Rows[row];
+                int realCol = r.GetRenderedCellIndex(column);
+                column = realCol;
+
 				this.FocusedCell = new CellPos(row, column);
 				
 				// don't bother going any further if the user 
@@ -6758,7 +6819,9 @@ namespace XPTable.Models
 					else
 					{
 						this.RaiseCellMouseMove(cellPos, e);
-					}
+                        
+                        this.Cursor = Cursors.Default;
+                    }
 				}
 				else
 				{
@@ -6908,7 +6971,11 @@ namespace XPTable.Models
 
 			if (this.IsValidCell(this.LastMouseCell))
 			{
-				this.OnCellClick(new CellMouseEventArgs(this.TableModel[this.LastMouseCell], this, this.LastMouseCell, this.CellRect(this.LastMouseCell)));
+                // Adjust this to take colspan into account
+                // LastMouseCell may be a cell that is 'under' a colspan cell
+                CellPos realCell = this.ResolveColspan(this.LastMouseCell);
+
+                this.OnCellClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell)));
 			}
 			else if (this.hotColumn != -1)
 			{
@@ -6927,9 +6994,12 @@ namespace XPTable.Models
 
 			if (this.IsValidCell(this.LastMouseCell))
 			{
-				Rectangle cellRect = this.CellRect(this.LastMouseCell);
 				
-				this.OnCellDoubleClick(new CellMouseEventArgs(this.TableModel[this.LastMouseCell], this, this.LastMouseCell, this.CellRect(this.LastMouseCell)));
+                // Adjust this to take colspan into account
+                // LastMouseCell may be a cell that is 'under' a colspan cell
+                CellPos realCell = this.ResolveColspan(this.LastMouseCell);
+
+                this.OnCellDoubleClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell)));
 			}
 			else if (this.hotColumn != -1)
 			{
@@ -7122,8 +7192,19 @@ namespace XPTable.Models
 				return;
 			}
 
-			PaintCellEventArgs pcea = new PaintCellEventArgs(e.Graphics, cellRect);
-			pcea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, cellRect));
+            ////////////
+            // Adjust the rectangle for this cell to include any cells that it colspans over
+            Rectangle realRect = cellRect;
+            Cell thisCell = this.TableModel[row, column];
+            if (thisCell != null && thisCell.ColSpan > 1)
+            {
+                int width = this.GetColumnWidth(column, thisCell);
+                realRect = new Rectangle(cellRect.X, cellRect.Y, width, cellRect.Height);
+            }
+            ////////////
+
+            PaintCellEventArgs pcea = new PaintCellEventArgs(e.Graphics, realRect);
+            pcea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, realRect));
 
 			if (column < this.TableModel.Rows[row].Cells.Count)
 			{
@@ -7166,7 +7247,7 @@ namespace XPTable.Models
 				pcea.SetSorted(column == this.lastSortedColumn);
 				pcea.SetEditable(editable);
 				pcea.SetEnabled(enabled);
-				pcea.SetCellRect(cellRect);
+                pcea.SetCellRect(realRect);
 			}
 			else
 			{
@@ -7183,7 +7264,7 @@ namespace XPTable.Models
 				pcea.SetSorted(false);
 				pcea.SetEditable(false);
 				pcea.SetEnabled(false);
-				pcea.SetCellRect(cellRect);
+                pcea.SetCellRect(realRect);
 			}
 
 			// let the user get the first crack at painting the cell
@@ -7469,6 +7550,7 @@ namespace XPTable.Models
 			}
 
 			//
+            #region Set the background colour of the sorted column
 			if (this.IsValidColumn(this.lastSortedColumn))
 			{
 				if (rowRect.Y < this.PseudoClientRect.Bottom)
@@ -7490,8 +7572,8 @@ namespace XPTable.Models
 					}
 				}
 			}
+            #endregion
 		}
-
 
 		/// <summary>
 		/// Paints the Row at the specified index
@@ -7504,21 +7586,40 @@ namespace XPTable.Models
 			Rectangle cellRect = new Rectangle(rowRect.X, rowRect.Y, 0, rowRect.Height);
 
 			//e.Graphics.SetClip(rowRect);
+            int colsToIgnore = 0;       // Used to skip cells that are ignored because of a colspan
 
 			for (int i=0; i<this.ColumnModel.Columns.Count; i++)
 			{
 				if (this.ColumnModel.Columns[i].Visible)
 				{
-					cellRect.Width = this.ColumnModel.Columns[i].Width;
+                    //////////
+                    Cell thisCell = TableModel[row, i];
+                    if (colsToIgnore == 0)
+                    {
+                        //////////
 
-					if (cellRect.IntersectsWith(e.ClipRectangle))
-					{
-						this.OnPaintCell(e, row, i, cellRect);
-					}
-					else if (cellRect.Left > e.ClipRectangle.Right)
-					{
-						break;
-					}
+                        cellRect.Width = this.ColumnModel.Columns[i].Width;
+
+                        if (cellRect.IntersectsWith(e.ClipRectangle))
+                        {
+                            this.OnPaintCell(e, row, i, cellRect);
+                        }
+                        else if (cellRect.Left > e.ClipRectangle.Right)
+                        {
+                            break;
+                        }
+
+                        //////////
+                        if (thisCell != null && thisCell.ColSpan > 1)
+                        {
+                            colsToIgnore = thisCell.ColSpan - 1;        // Ignore the cells that this cell span over
+                        }
+                        /////////
+                    }
+                    else
+                    {
+                        colsToIgnore--;     // Skip over this cell and count down
+                    }
 
 					cellRect.X += this.ColumnModel.Columns[i].Width;
 				}

@@ -122,6 +122,11 @@ namespace XPTable.Models
 		/// </summary>
 		private bool disposed = false;
 
+        /// <summary>
+        /// Specifies how many columns this cell occupies.
+        /// </summary>
+        private int colspan;
+
 		#endregion
 
 
@@ -407,6 +412,7 @@ namespace XPTable.Models
 			this.checkStyle = null;
 			this.imageStyle = null;
 			this.tooltipText = null;
+            this.colspan = 1;
 
 			this.state = (byte) (STATE_EDITABLE | STATE_ENABLED);
 		}
@@ -1144,6 +1150,26 @@ namespace XPTable.Models
 				}
 			}
 		}
+
+
+        /// <summary>
+        /// Gets or sets how many columns this cell occupies
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(1),
+        Description("How many columns this cell occupies")]
+        public int ColSpan
+        {
+            get
+            {
+                return this.colspan;
+            }
+
+            set
+            {
+                this.colspan = value;
+            }
+        }
 
 
 		/// <summary>
