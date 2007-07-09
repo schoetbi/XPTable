@@ -183,7 +183,15 @@ namespace XPTable.Models
 		/// no Row is found</returns>
 		public int RowIndexAt(int yPosition)
 		{
-			int row = yPosition / this.RowHeight;
+            int row = 0;
+            if (this.Table.EnableWordWrap)
+            {
+                row = this.RowIndexAtExact(yPosition);
+            }
+            else
+            {
+                row = yPosition / this.RowHeight;
+            }
 
 			if (row < 0 || row > this.Rows.Count - 1)
 			{
@@ -193,6 +201,29 @@ namespace XPTable.Models
 			return row;
 		}
 
+        /// <summary>
+        /// Returns the index of the Row that lies on the specified position.
+        /// Found by iterating through all rows (i.e. copes with variable height rows).
+        /// </summary>
+        /// <param name="yPosition"></param>
+        /// <returns></returns>
+        private int RowIndexAtExact(int yPosition)
+        {
+            int height = 0;
+            for (int i = 0; i < this.Rows.Count; i++)
+            {
+				Row row = this.Rows[i];
+				if (row.Parent == null || row.Parent.ExpandSubRows)
+				{
+					height += row.Height;
+					if (yPosition < height)
+						return i;
+				}
+            }
+
+            // If we've got this far then its the last row
+            return this.Rows.Count - 1;
+        }
 		#endregion
 
 
@@ -320,19 +351,6 @@ namespace XPTable.Models
 		private bool ShouldSerializeRowHeight()
 		{
 			return this.rowHeight != TableModel.DefaultRowHeight;
-		}
-
-
-		/// <summary>
-		/// Gets the total height of all the Rows in the TableModel
-		/// </summary>
-		[Browsable(false)]
-		public int TotalRowHeight
-		{
-			get
-			{
-				return this.Rows.Count * this.RowHeight;
-			}
 		}
 
 
@@ -1268,10 +1286,10 @@ namespace XPTable.Models
 
 
 			/// <summary>
-			/// 
+            /// Returns a Rectange that bounds the currently selected Rows
 			/// </summary>
-			/// <param name="start"></param>
-			/// <param name="end"></param>
+			/// <param name="start">First row index</param>
+            /// <param name="end">Last row index</param>
 			/// <returns></returns>
 			internal Rectangle CalcSelectionBounds(int start, int end)
 			{
@@ -1284,16 +1302,35 @@ namespace XPTable.Models
 					bounds.Width = this.owner.Table.ColumnModel.VisibleColumnsWidth;
 				}
 
-				bounds.Y = start * this.owner.RowHeight;
-					
-				if (start == end)
-				{
-					bounds.Height = this.owner.RowHeight;
-				}
-				else
-				{
-					bounds.Height = ((end + 1) * this.owner.RowHeight) - bounds.Y;
-				}
+                if (this.owner.Table.EnableWordWrap)
+                {
+					// v1.1.1 fix - this Y value used to include the border + header height
+
+                    bounds.Y = this.owner.Table.RowYDifference(0, start);
+
+                    if (start == end)
+                    {
+                        bounds.Height = this.owner.Rows[start].Height;
+                    }
+                    else
+                    {
+                        bounds.Height = this.owner.Table.RowYDifference(start, end) +
+                            this.owner.Rows[end].Height;
+                    }
+                }
+                else
+                {
+                    bounds.Y = start * this.owner.RowHeight;
+
+                    if (start == end)
+                    {
+                        bounds.Height = this.owner.RowHeight;
+                    }
+                    else
+                    {
+                        bounds.Height = ((end + 1) * this.owner.RowHeight) - bounds.Y;
+                    }
+                }
 
 				return bounds;
 			}

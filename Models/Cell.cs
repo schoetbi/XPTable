@@ -604,6 +604,38 @@ namespace XPTable.Models
 			this.SetState(STATE_SELECTED, selected);
 		}
 
+		/// <summary>
+		/// Gets of sets whether text can wrap in this cell (and force the cell's height to increase)
+		/// </summary>
+        [Category("Appearance"),
+        Description("Whether the text can wrap (and force the cell's height to increase)")]
+        public bool WordWrap
+        {
+            get
+            {
+                if (this.CellStyle == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.CellStyle.WordWrap;
+                }
+            }
+
+            set
+            {
+                if (this.CellStyle == null)
+                {
+                    this.CellStyle = new CellStyle();
+                }
+
+                if (this.CellStyle.WordWrap != value)
+                {
+                    this.CellStyle.WordWrap = value;
+                }
+            }
+        }
 
 		/// <summary>
 		/// Gets or sets the background Color for the Cell

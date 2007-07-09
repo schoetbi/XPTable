@@ -33,7 +33,6 @@ using XPTable.Editors;
 using XPTable.Events;
 using XPTable.Models;
 using XPTable.Themes;
-using System.Diagnostics;
 
 
 namespace XPTable.Renderers
@@ -120,6 +119,16 @@ namespace XPTable.Renderers
 			cell.RendererData = value;
 		}
 
+        /// <summary>
+        /// Returns the height that is required to render this cell. If zero is returned then the default row height is used.
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="graphics">The GDI+ drawing surface provided by the Paint event.</param>
+        /// <returns></returns>
+        public virtual int GetCellHeight(Graphics graphics, Cell cell)
+        {
+            return 0;
+        }
 		#endregion
 
 

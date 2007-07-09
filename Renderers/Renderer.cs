@@ -90,7 +90,7 @@ namespace XPTable.Renderers
 			this.stringFormat = new StringFormat();
 			this.stringFormat.LineAlignment = StringAlignment.Center;
 			this.stringFormat.Alignment = StringAlignment.Near;
-			this.stringFormat.FormatFlags = StringFormatFlags.NoWrap;
+//            this.stringFormat.FormatFlags = StringFormatFlags;   //NoWrap
 			this.stringFormat.Trimming = StringTrimming.EllipsisCharacter;
 
 			this.backBrush = new SolidBrush(Color.Transparent);

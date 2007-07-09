@@ -28,6 +28,7 @@
 using System;
 using System.Windows.Forms;
 
+using XPTable.Models;
 using XPTable.Events;
 
 
@@ -120,5 +121,14 @@ namespace XPTable.Renderers
 		/// </summary>
 		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
 		void OnDoubleClick(CellMouseEventArgs e);
+
+
+        /// <summary>
+        /// Returns the height that is required to render this cell. If zero is returned then the default row height is used.
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="graphics">The GDI+ drawing surface provided by the Paint event.</param>
+        /// <returns></returns>
+        int GetCellHeight(System.Drawing.Graphics graphics, Cell cell);
 	}
 }

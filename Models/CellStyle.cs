@@ -59,6 +59,11 @@ namespace XPTable.Models
 		/// </summary>
 		private CellPadding padding;
 
+        /// <summary>
+        /// Whether the text can wrap (and force the cell's height to increase)
+        /// </summary>
+        private bool wordWrap;
+
 		#endregion
 
 
@@ -73,6 +78,7 @@ namespace XPTable.Models
 			this.foreColor = Color.Empty;
 			this.font = null;
 			this.padding = CellPadding.Empty;
+            this.wordWrap = false;
 		}
 
 		#endregion
@@ -154,6 +160,24 @@ namespace XPTable.Models
 				this.padding = value;
 			}
 		}
+
+		/// <summary>
+		/// Gets of sets whether text can wrap in this cell (and force the cell's height to increase)
+		/// </summary>
+        [Category("Appearance"),
+        Description("Whether the text can wrap (and force the cell's height to increase)")]
+        public bool WordWrap
+        {
+            get
+            {
+                return this.wordWrap;
+            }
+
+            set
+            {
+                this.wordWrap = value;
+            }
+        }
 
 		#endregion
 	}

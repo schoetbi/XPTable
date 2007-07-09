@@ -650,12 +650,19 @@ namespace XPTable.Models
 
 		#endregion
 
-		#endregion
+        #region Word wrapping
+        /// <summary>
+        /// Specifies whether any cells are allowed to word-wrap.
+        /// </summary>
+        private bool enableWordWrap;
+        #endregion
+
+        #endregion
 
 
-		#region Constructor
+        #region Constructor
 
-		/// <summary>
+        /// <summary>
 		/// Initializes a new instance of the Table class with default settings
 		/// </summary>
 		public Table()
@@ -1496,7 +1503,15 @@ namespace XPTable.Models
 			
 			if (this.VScroll)
 			{
-				y += this.TopIndex * this.RowHeight;
+                // This adds on the total height we can't see
+                if (this.EnableWordWrap)
+                {
+                    y += this.RowY(this.TopIndex);   // * this.RowHeight;
+                }
+                else
+                {
+                    y += this.TopIndex * this.RowHeight;
+                }
 			}
 
 			return this.TableModel.RowIndexAt(y);
@@ -1532,10 +1547,19 @@ namespace XPTable.Models
 			Rectangle rect = new Rectangle();
 
 			rect.X = this.DisplayRectangle.X;
-			rect.Y = this.BorderWidth + ((row - this.TopIndex) * this.RowHeight);
+
+            if (this.EnableWordWrap)
+            {
+                rect.Y = this.BorderWidth + this.RowYDifference(this.TopIndex, row);
+                rect.Height = this.TableModel.Rows[row].Height;
+            }
+            else
+            {
+                rect.Y = this.BorderWidth + ((row - this.TopIndex) * this.RowHeight);
+                rect.Height = this.RowHeight;
+            }
 			
 			rect.Width = this.ColumnModel.VisibleColumnsWidth;
-			rect.Height = this.RowHeight;
 
 			if (this.HeaderStyle != ColumnHeaderStyle.None)
 			{
@@ -1563,7 +1587,56 @@ namespace XPTable.Models
 			return this.RowRect(this.TableModel.Rows.IndexOf(row));
 		}
 
-		#endregion
+        /// <summary>
+        /// Returns the Y-coord of the top of the row at the 
+        /// specified index in client coordinates
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        private int RowY(int row)
+        {
+            return RowYDifference(0, row);
+        }
+
+        /// <summary>
+        /// Returns the difference in Y-coords between the tops of the two given rows. May return a negative.
+        /// </summary>
+        /// <param name="row1">Index of first row</param>
+        /// <param name="row2">Index of second row</param>
+        /// <returns>Is positive if Row2 > Row1</returns>
+        public int RowYDifference(int row1, int row2)
+        {
+            if (row1 == row2)
+                return 0;
+
+            int r1 = Math.Min(row1, row2);
+            int r2 = Math.Max(row1, row2);
+
+            if (r2 > this.TableModel.Rows.Count)
+                r2 = this.TableModel.Rows.Count;
+
+            int ydiff = 0;
+            RowCollection rows = this.TableModel.Rows;
+            for (int i = r1; i < r2; i++)
+            {
+                // Don't count this row if it is currently a hidden subrow
+                Row row = rows[i];
+                if (row.Parent == null || row.Parent.ExpandSubRows)
+                    ydiff += row.Height;
+            }
+
+            if (r1 == row1)
+            {
+                // Row2 > Row1 so return a +ve
+                return ydiff;
+            }
+            else
+            {
+                // Row2 < Row1 so return a -ve
+                return -ydiff;
+            }
+        }
+        #endregion
 
 		#region Hit Tests
 
@@ -1920,7 +1993,7 @@ namespace XPTable.Models
 
 			if (cellRect.IntersectsWith(this.CellDataRect))
 			{
-				this.Invalidate(Rectangle.Intersect(this.CellDataRect, cellRect), false);
+                this.Invalidate(Rectangle.Intersect(this.CellDataRect, cellRect), false);
 			}
 		}
 
@@ -2291,15 +2364,32 @@ namespace XPTable.Models
 		/// <param name="value">The value to scroll to</param>
 		protected void VerticalScroll(int value)
 		{
-			int scrollVal = this.vScrollBar.Value - value;
+			int scrollDiff = this.vScrollBar.Value - value;
 
-			if (scrollVal != 0)
+            if (scrollDiff != 0)
 			{
+                // scrollDiff < 0: going down
+
 				RECT scrollRect = RECT.FromRectangle(this.CellDataRect);
 
 				Rectangle invalidateRect = scrollRect.ToRectangle();
 
-				scrollVal *= this.RowHeight;
+                int scrollVal = 0;
+                if (this.EnableWordWrap)
+                {
+                    if (scrollDiff < 0)
+                    {
+                        scrollVal = this.RowYDifference(this.TopIndex - scrollDiff, this.TopIndex);
+                    }
+                    else
+                    {
+                        scrollVal = this.RowYDifference(this.TopIndex, this.TopIndex + scrollDiff);
+                    }
+                }
+                else
+                {
+                    scrollVal = scrollDiff * this.RowHeight;
+                }
 
 				NativeMethods.ScrollWindow(this.Handle, 0, scrollVal, ref scrollRect, ref scrollRect);
 				
@@ -2308,7 +2398,9 @@ namespace XPTable.Models
 					invalidateRect.Y = invalidateRect.Bottom + scrollVal;
 				}
 
-				invalidateRect.Height = Math.Abs(scrollVal);
+                // Can't afford to do this if variable height grid
+                if (!this.EnableWordWrap)
+    				invalidateRect.Height = Math.Abs(scrollVal);
 
 				this.Invalidate(invalidateRect, false);
 
@@ -2381,8 +2473,8 @@ namespace XPTable.Models
  						else
  						{
  							hscrollVal = this.ColumnModel.Columns[column].Right - this.CellDataRect.Width;
- 						}						}
-
+ 						}
+                    }
 					if (hscrollVal > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
 					{
 						hscrollVal = this.hScrollBar.Maximum - this.hScrollBar.LargeChange;
@@ -3684,7 +3776,14 @@ namespace XPTable.Models
 					return 0;
 				}
 				
-				return this.TableModel.TotalRowHeight;
+                if (this.EnableWordWrap)
+                {
+                    return this.RowYDifference(0, this.TableModel.Rows.Count) + this.TableModel.Rows[this.TableModel.Rows.Count-1].Height;
+                }
+                else
+                {
+                    return this.TableModel.Rows.Count * this.RowHeight;
+                }
 			}
 		}
 
@@ -3729,6 +3828,7 @@ namespace XPTable.Models
 		{
 			get
 			{
+                // (This is only used for scroll bar stuff and is ok as an approximation)
 				int count = this.CellDataRect.Height / this.RowHeight;
 
 				if ((this.CellDataRect.Height % this.RowHeight) > 0)
@@ -4514,6 +4614,26 @@ namespace XPTable.Models
 		}
 
 		#endregion
+
+        #region Word wrapping
+		/// <summary>
+		/// Gets of sets whether word wrap is allowed in any cell in the table. If false then the WordWrap property on Cells is ignored.
+		/// </summary>
+        [Category("Appearance"),
+        DefaultValue(false),
+        Description("Specifies whether any cells are allowed to word-wrap.")]
+        public bool EnableWordWrap
+        {
+            get
+            {
+                return enableWordWrap;
+            }
+            set
+            {
+                enableWordWrap = value;
+            }
+        }
+        #endregion
 
 		#region ToolTips
 
@@ -7363,15 +7483,41 @@ namespace XPTable.Models
 						// check if we can draw row lines
 						if ((this.GridLines & GridLines.Rows) == GridLines.Rows)
 						{
-							int y = this.CellDataRect.Y + this.RowHeight - 1;
-			
-							for (int i=y; i<=e.ClipRectangle.Bottom; i+=this.RowHeight)
-							{
-								if (i >= this.CellDataRect.Top)
-								{
-									e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, i, e.ClipRectangle.Right, i);
-								}
-							}
+                            // Loop over all visible rows and draw lines for each
+                            if (this.EnableWordWrap)
+                            {
+
+                                int yline = this.CellDataRect.Y - 1;
+
+                                if (this.TopIndex > -1)
+                                {
+                                    // Need to draw each row grid at its correct height
+                                    for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+                                    {
+                                        if (yline > e.ClipRectangle.Bottom)
+                                            break;
+
+                                        if (yline >= this.CellDataRect.Top)
+                                        {
+                                            e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
+                                        }
+
+                                        yline += this.TableModel.Rows[irow].Height;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                int y = this.CellDataRect.Y + this.RowHeight - 1;
+                                // It is quicker ito do this for a regular grid
+                                for (int i = y; i <= e.ClipRectangle.Bottom; i += this.RowHeight)
+                                {
+                                    if (i >= this.CellDataRect.Top)
+                                    {
+                                        e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, i, e.ClipRectangle.Right, i);
+                                    }
+                                }
+                            }
 						}
 					}
 				}
@@ -7532,24 +7678,59 @@ namespace XPTable.Models
 				yPos += this.HeaderHeight;
 			}
 
-			Rectangle rowRect = new Rectangle(xPos, yPos, this.ColumnModel.TotalColumnWidth, this.RowHeight);
+            bool variable = this.EnableWordWrap;
 
-			for (int i=this.TopIndex; i<Math.Min(this.TableModel.Rows.Count, this.TopIndex+this.VisibleRowCount+1); i++)
+            Rectangle rowRect = new Rectangle(xPos, yPos, this.ColumnModel.TotalColumnWidth, this.RowHeight);
+
+			for (int i = this.TopIndex; i < this.TableModel.Rows.Count; i++)
 			{
-				if (rowRect.IntersectsWith(e.ClipRectangle))
+				Row row = this.TableModel.Rows[i];
+				if (row.Parent == null || row.Parent.ExpandSubRows)
 				{
-					this.OnPaintRow(e, i, rowRect);
-				}
-				else if (rowRect.Top > e.ClipRectangle.Bottom)
-				{
-					break;
-				}
+					rowRect.Height = row.Height;
 
-				// move to the next row
-				rowRect.Y += this.RowHeight;
-			}
+					if (variable)
+					{
+						// We may need to adjust the row height is we allow word wrapping
+						if (row.HasWordWrapCell)
+						{
+							int column = row.WordWrapCellIndex;
+							Cell varCell = this.TableModel[i, column];
+							if (varCell.WordWrap)
+							{
+								// get the renderer for the cells column
+								ICellRenderer renderer = this.ColumnModel.Columns[column].Renderer;
+								if (renderer == null)
+								{
+									// get the default renderer for the column
+									renderer = this.ColumnModel.GetCellRenderer(this.ColumnModel.Columns[column].GetDefaultRendererName());
+								}
 
-			//
+								renderer.Bounds = new Rectangle(this.GetColumnLeft(column), rowRect.Y, this.GetColumnWidth(column, varCell), rowRect.Height);
+
+								int newheight = renderer.GetCellHeight(e.Graphics, varCell);
+                                int newMax = Math.Max(row.Height, newheight);
+								this.TableModel.Rows[i].InternalHeight = newMax;
+								if (newMax != rowRect.Height)
+									rowRect.Height = newMax;
+							}
+						}
+					}
+
+					if (rowRect.IntersectsWith(e.ClipRectangle))
+					{
+						this.OnPaintRow(e, i, rowRect);
+					}
+					else if (rowRect.Top > e.ClipRectangle.Bottom)
+					{
+						break;
+					}
+
+					// move to the next row
+					rowRect.Y += rowRect.Height;
+				}
+            }
+
             #region Set the background colour of the sorted column
 			if (this.IsValidColumn(this.lastSortedColumn))
 			{

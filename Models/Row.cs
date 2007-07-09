@@ -74,6 +74,11 @@ namespace XPTable.Models
 		/// </summary>
 		private CellCollection cells;
 
+        /// <summary>
+        /// The actual rendered height of this row. If negative then it has not been rendered and height is unknown.
+        /// </summary>
+        private int height;
+
 		/// <summary>
 		/// An object that contains data about the Row
 		/// </summary>
@@ -108,6 +113,10 @@ namespace XPTable.Models
 		/// Specifies whether the Row has been disposed
 		/// </summary>
 		private bool disposed = false;
+
+        private bool hasWordWrapCell;
+
+        private int wordWrapIndex;
 
 		#endregion
 
@@ -248,6 +257,9 @@ namespace XPTable.Models
 			this.index = -1;
 			this.rowStyle = null;
 			this.selectedCellCount = 0;
+            this.hasWordWrapCell = false;
+            this.wordWrapIndex = 0;
+            this.height = -1;
 
 			this.state = (byte) (STATE_EDITABLE | STATE_ENABLED);
 		}
@@ -786,6 +798,39 @@ namespace XPTable.Models
 			}
 		}
 
+		/// <summary>
+        /// Gets or sets the height of the Row. If this row has not been rendered 
+        /// (and the so exact height has not been calculated) -1 is returned.
+		/// </summary>
+		internal int InternalHeight
+		{
+			get
+			{
+				return this.height;
+			}
+
+			set
+			{
+                this.height = value;
+			}
+		}
+
+        /// <summary>
+        /// Gets the height of the Row. If this row has not been rendered 
+        /// (and the so exact height has not been calculated) the table default
+        /// row height is returned.
+        /// </summary>
+        [Browsable(false)]
+        public int Height
+        {
+            get
+            {
+                if (this.height < 0)
+                    return this.TableModel.RowHeight;
+                return this.height;
+            }
+            set { this.height = value; }
+        }
 
 		/// <summary>
 		/// Updates the Cell's Index property so that it matches the Cells 
@@ -852,6 +897,32 @@ namespace XPTable.Models
 			}
 		}
 
+        /// <summary>
+        /// Gets the index of the word wrap cell (if any).
+        /// </summary>
+        internal int WordWrapCellIndex
+        {
+            get
+            {
+                return wordWrapIndex;
+            }
+            set
+            {
+                wordWrapIndex = value;
+            }
+        }
+
+        internal bool HasWordWrapCell
+        {
+            get
+            {
+                return hasWordWrapCell;
+            }
+            set
+            {
+                hasWordWrapCell = value;
+            }
+        }
 
 		/// <summary>
 		/// Gets whether any Cells within the Row are selected
@@ -1004,7 +1075,13 @@ namespace XPTable.Models
 			e.Cell.SetSelected(false);
 
 			this.UpdateCellIndicies(e.CellFromIndex);
-			
+
+            if (e.Cell.WordWrap)
+            {
+                this.WordWrapCellIndex = e.CellFromIndex;
+                this.HasWordWrapCell = true;
+            }
+
 			if (this.CanRaiseEvents)
 			{
 				if (this.TableModel != null)
