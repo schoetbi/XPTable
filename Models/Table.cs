@@ -3807,7 +3807,8 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.TableModel == null)
+				// v1.1.1 fix (jover) - used to error if no rows were added
+				if (this.TableModel == null || this.TableModel.Rows.Count == 0)
 				{
 					return 0;
 				}
