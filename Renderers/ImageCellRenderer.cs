@@ -193,27 +193,18 @@ namespace XPTable.Renderers
 		{
 			base.OnPaint(e);
 			
-			// don't bother if the Cell is null
-			if (e.Cell == null)
+			// don't bother if the Cell is null or doesn't have an image
+			if (e.Cell == null || e.Cell.Image == null)
 			{
 				return;
 			}
 
-			Rectangle imageRect;
+			// work out the size and location of the image
+			Rectangle imageRect = this.CalcImageRect(e.Cell.Image, e.Cell.ImageSizeMode, this.LineAlignment, this.Alignment);
 			
-			if(e.Cell.Image != null)
-			{
-				// work out the size and location of the image
-				imageRect = this.CalcImageRect(e.Cell.Image, e.Cell.ImageSizeMode, this.LineAlignment, this.Alignment);
-				
-				// draw the image
-				bool scaled = (this.DrawText || e.Cell.ImageSizeMode != ImageSizeMode.Normal);
-				this.DrawImage(e.Graphics, e.Cell.Image, imageRect, scaled, e.Table.Enabled);
-			}
-			else
-			{
-				imageRect = Rectangle.Empty;
-			}
+			// draw the image
+			bool scaled = (this.DrawText || e.Cell.ImageSizeMode != ImageSizeMode.Normal);
+			this.DrawImage(e.Graphics, e.Cell.Image, imageRect, scaled, e.Table.Enabled);
 
 			// check if we need to draw any text
 			if (this.DrawText)
