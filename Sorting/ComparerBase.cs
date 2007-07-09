@@ -51,10 +51,6 @@ namespace XPTable.Sorting
 		/// </summary>
 		private int column;
 
-		/// <summary>
-		/// Specifies how the Column is to be sorted
-		/// </summary>
-		private SortOrder sortOrder;
 
 		#endregion
 		
@@ -72,7 +68,6 @@ namespace XPTable.Sorting
 		{
 			this.tableModel = tableModel;
 			this.column = column;
-			this.sortOrder = sortOrder;
 		}
 
 		#endregion
@@ -80,15 +75,52 @@ namespace XPTable.Sorting
 
 		#region Methods
 
-		/// <summary>
-		/// Compares two objects and returns a value indicating whether one is less 
-		/// than, equal to or greater than the other
-		/// </summary>
-		/// <param name="a">First object to compare</param>
-		/// <param name="b">Second object to compare</param>
-		/// <returns>-1 if a is less than b, 1 if a is greater than b, or 0 if a equals b</returns>
-		public abstract int Compare(object a, object b);
+        /// <summary>
+        /// Compares two objects and returns a value indicating whether one is less 
+        /// than, equal to or greater than the other.
+        /// </summary>
+        /// <param name="a">First object to compare</param>
+        /// <param name="b">Second object to compare</param>
+        /// <returns>-1 if a is less than b, 1 if a is greater than b, or 0 if a equals b</returns>
+        public virtual int Compare(object a, object b)
+        {
+            if (!(a is Cell))
+                throw new ArgumentException("Invalid type '" + a.GetType().FullName + "'. Cell expected.", "a");
+            if (!(b is Cell))
+                throw new ArgumentException("Invalid type '" + b.GetType().FullName + "'. Cell expected.", "b");
 
+            Cell cell1 = (Cell)a;
+            Cell cell2 = (Cell)b;
+
+            // check for null cells
+            if (cell1 == null && cell2 == null)
+            {
+                return 0;
+            }
+            else if (cell1 == null)
+            {
+                return -1;
+            }
+            else if (cell2 == null)
+            {
+                return 1;
+            }
+
+            int result = CompareCells(cell1, cell2);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Compares two cells and returns a value indicating whether one is less 
+        /// than, equal to or greater than the other.
+        /// Both cells are non-null;
+        /// </summary>
+        /// <param name="cell1"></param>
+        /// <param name="cell2"></param>
+        /// <returns></returns>
+        protected abstract int CompareCells(Cell cell1, Cell cell2);
 		#endregion
 
 
@@ -118,16 +150,6 @@ namespace XPTable.Sorting
 		}
 
 
-		/// <summary>
-		/// Gets how the Column is to be sorted
-		/// </summary>
-		public SortOrder SortOrder
-		{
-			get
-			{
-				return this.sortOrder;
-			}
-		}
 
 		#endregion
 	}

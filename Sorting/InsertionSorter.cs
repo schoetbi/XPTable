@@ -66,15 +66,16 @@ namespace XPTable.Sorting
 			int i;
 			int j;
 			Row b;
+            RowCollection rows = this.TableModel.Rows;
 
-			for (i=1; i<this.TableModel.Rows.Count; i++)
+            for (i = 1; i < rows.Count; i++)
 			{
 				j = i;
-				b = this.TableModel.Rows[i];
+                b = rows[i];
 				
-				while ((j > 0) && (this.Compare(this.TableModel[j-1, this.SortColumn], b.Cells[this.SortColumn]) > 0))
+                while ((j > 0) && (this.Compare(rows[j - 1], b) > 0))
 				{
-					this.Set(j, this.TableModel.Rows[j-1]);
+                    this.Set(j, rows[j - 1]);
 					
 					--j;
 				}

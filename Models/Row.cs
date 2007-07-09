@@ -55,7 +55,17 @@ namespace XPTable.Models
 		/// </summary>
 		public event RowEventHandler CellRemoved;
 
-		/// <summary>
+        /// <summary>
+        /// Occurs when a SubRow is added to the Row
+        /// </summary>
+        public event RowEventHandler SubRowAdded;
+
+        /// <summary>
+        /// Occurs when a SubRow is removed from the Row
+        /// </summary>
+        public event RowEventHandler SubRowRemoved;
+        
+        /// <summary>
 		/// Occurs when the value of a Row's property changes
 		/// </summary>
 		public event RowEventHandler PropertyChanged;
@@ -73,6 +83,21 @@ namespace XPTable.Models
 		/// The collection of Cells's contained in the Row
 		/// </summary>
 		private CellCollection cells;
+
+        /// <summary>
+        /// The collection of subrows contained in this Row
+        /// </summary>
+        private RowCollection subrows;
+
+        /// <summary>
+        /// The row that is the parent to this one (if this is a sub row)
+        /// </summary>
+        private Row parentrow;
+
+        /// <summary>
+        /// The index that gives the order this row was added in
+        /// </summary>
+        private int childindex;
 
         /// <summary>
         /// The actual rendered height of this row. If negative then it has not been rendered and height is unknown.
@@ -118,6 +143,11 @@ namespace XPTable.Models
 
         private int wordWrapIndex;
 
+		/// <summary>
+		/// Indicates whether this row's sub-rows are shown or hidden.
+		/// </summary>
+		private bool expandSubRows = true;
+
 		#endregion
 
 
@@ -131,6 +161,15 @@ namespace XPTable.Models
 			this.Init();
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the Row class with default settings and a parent row. The new row
+        /// is a sub row
+        /// </summary>
+        public Row(Row parent)
+        {
+            this.Init();
+            this.parentrow = parent;
+        }
 
 		/// <summary>
 		/// Initializes a new instance of the Row class with an array of strings 
@@ -385,6 +424,73 @@ namespace XPTable.Models
 			}
 		}
 
+        /// <summary>
+        /// A RowCollection representing the collection of 
+        /// SubRows contained within the Row
+        /// </summary>
+        [Category("Data"),
+        Description("SubRow Collection"),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden),
+        Editor(typeof(RowCollectionEditor), typeof(UITypeEditor))]
+        public RowCollection SubRows
+        {
+            get
+            {
+                if (this.subrows == null)
+                {
+                    this.subrows = new RowCollection(this);
+                }
+
+                return this.subrows;
+            }
+        }
+
+        /// <summary>
+        /// The Row that is the parent (if this row is a sub-row).
+        /// </summary>
+        [Category("Data"),
+        Description("Parent Row"),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Row Parent
+        {
+            get
+            {
+                return this.parentrow;
+            }
+            set
+            {
+                this.parentrow = value;
+            }
+        }
+
+		/// <summary>
+		/// Gets or sets whether this row's sub-rows are shown or hidden. Is True by default.
+		/// </summary>
+		[Browsable(true), 
+		Category("Appearance"),
+		Description("Gets or sets whether this row's sub-rows are shown or hidden. Is True by default.")]
+		public bool ExpandSubRows
+		{
+			get { return expandSubRows; }
+			set { expandSubRows = value; }
+		}
+
+        /// <summary>
+        /// If this is a sub-row (i.e. it has a Parent), this gets the index of the Row within its Parent.
+        /// Used when sorting.
+        /// </summary>
+        [Browsable(false)]
+        public int ChildIndex
+        {
+            get
+            {
+                return this.childindex;
+            }
+            set
+            {
+                this.childindex = value;
+            }
+        }
 
 		/// <summary>
 		/// Gets or sets the object that contains data about the Row
@@ -1153,6 +1259,34 @@ namespace XPTable.Models
 				}
 			}
 		}
+
+        /// <summary>
+        /// Raises the SubRowAdded event
+        /// </summary>
+        /// <param name="e"></param>
+        protected internal virtual void OnSubRowAdded(RowEventArgs e)
+        {
+            this.TableModel.Rows.Add(e.Row);
+
+            if (SubRowAdded != null)
+            {
+                SubRowAdded(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Raises the SubRowRemoved event
+        /// </summary>
+        /// <param name="e"></param>
+        protected internal virtual void OnSubRowRemoved(RowEventArgs e)
+        {
+            this.TableModel.Rows.Remove(e.Row);
+
+            if (SubRowRemoved != null)
+            {
+                SubRowRemoved(this, e);
+            }
+        }
 
 
 		/// <summary>

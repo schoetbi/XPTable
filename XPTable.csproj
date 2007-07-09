@@ -651,6 +651,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Sorting\IComparerCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Sorting\ImageComparer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -672,6 +677,16 @@
                 />
                 <File
                     RelPath = "Sorting\ShellSorter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Sorting\SortColumn.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Sorting\SortColumnCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

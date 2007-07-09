@@ -45,6 +45,11 @@ namespace XPTable.Models
 		/// </summary>
 		private TableModel owner;
 
+        /// <summary>
+        /// A Row that owns this row
+        /// </summary>
+        private Row rowowner;
+
 		#endregion
 
 
@@ -66,6 +71,22 @@ namespace XPTable.Models
 			this.owner = owner;
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the RowCollection class 
+        /// that belongs to the specified Row
+        /// </summary>
+        /// <param name="owner"></param>
+        public RowCollection(Row owner)
+            : base()
+        {
+            if (owner == null)
+            {
+                throw new ArgumentNullException("owner");
+            }
+
+            this.rowowner = owner;
+        }
+
 		#endregion
 		
 
@@ -84,7 +105,16 @@ namespace XPTable.Models
 
 			int index = this.List.Add(row);
 
-			this.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
+            if (owner != null)
+    			this.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
+
+            else if (rowowner != null)
+            {
+                // this is a sub row, so it needs a parent
+                row.Parent = rowowner;
+                row.ChildIndex = this.List.Count;
+                this.OnRowAdded(new RowEventArgs(row, RowEventType.Unknown));
+            }
 
 			return index;
 		}
@@ -155,8 +185,12 @@ namespace XPTable.Models
 			
 				this.List.RemoveAt(index);
 
-				this.OnRowRemoved(new TableModelEventArgs(this.owner, row, index, index));
-			}
+                if (owner != null)
+    				this.OnRowRemoved(new TableModelEventArgs(this.owner, row, index, index));
+
+                else if (rowowner != null)
+                    this.OnRowRemoved(new RowEventArgs(row, RowEventType.Unknown));
+            }
 		}
 
 
@@ -178,8 +212,12 @@ namespace XPTable.Models
 			base.Clear();
 			this.InnerList.Capacity = 0;
 
-			this.owner.OnRowRemoved(new TableModelEventArgs(this.owner, null, -1, -1));
-		}
+            if (owner != null)
+                this.owner.OnRowRemoved(new TableModelEventArgs(this.owner, null, -1, -1));
+
+            else if (rowowner != null)
+                this.OnRowRemoved(new RowEventArgs(null, RowEventType.Unknown));
+        }
 
 
 		/// <summary>
@@ -208,8 +246,12 @@ namespace XPTable.Models
 			{
 				base.List.Insert(index, row);
 
-				this.owner.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
-			}
+                if (owner != null)
+                    this.owner.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
+
+                else if (rowowner != null)
+                    this.OnRowAdded(new RowEventArgs(row, RowEventType.Unknown));
+            }
 		}
 
 
@@ -333,6 +375,24 @@ namespace XPTable.Models
 			this.owner.OnRowRemoved(e);
 		}
 
+		/// <summary>
+		/// Raises the RowAdded event
+		/// </summary>
+		/// <param name="e">A TableModelEventArgs that contains the event data</param>
+		protected virtual void OnRowAdded(RowEventArgs e)
+		{
+			this.rowowner.OnSubRowAdded(e);
+		}
+
+
+		/// <summary>
+		/// Raises the RowRemoved event
+		/// </summary>
+		/// <param name="e">A TableModelEventArgs that contains the event data</param>
+        protected virtual void OnRowRemoved(RowEventArgs e)
+		{
+            this.rowowner.OnSubRowRemoved(e);
+		}
 		#endregion
 	}
 }

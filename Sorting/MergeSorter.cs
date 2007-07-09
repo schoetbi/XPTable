@@ -92,7 +92,7 @@ namespace XPTable.Sorting
 
 				while (fromPos <= end_low & start_high <= toPos) 
 				{
-					if (this.Compare(this.TableModel[fromPos, this.SortColumn], this.TableModel[start_high, this.SortColumn]) < 0) 
+					if (this.Compare(this.TableModel.Rows[fromPos], this.TableModel.Rows[start_high]) < 0) 
 					{
 						fromPos++;
 					} 

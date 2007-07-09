@@ -88,7 +88,7 @@ namespace XPTable.Sorting
 					{
 						if (j >= h) 
 						{
-							if (this.Compare(this.TableModel[j - h, this.SortColumn], b.Cells[this.SortColumn]) > 0) 
+                            if (this.Compare(this.TableModel.Rows[j - h], b) > 0)
 							{
 								this.Set(j, j-h);
 								

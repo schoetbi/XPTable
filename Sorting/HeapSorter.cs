@@ -99,13 +99,13 @@ namespace XPTable.Sorting
 
 				if (j < n) 
 				{
-					if (this.Compare(this.TableModel[j-1, this.SortColumn], this.TableModel[j, this.SortColumn]) < 0) 
+					if (this.Compare(this.TableModel.Rows[j-1], this.TableModel.Rows[j]) < 0) 
 					{					
 						j++;
 					}
 				}	
 
-				if (this.Compare(this.TableModel[k-1, this.SortColumn], this.TableModel[j-1, this.SortColumn]) >= 0) 
+				if (this.Compare(this.TableModel.Rows[k-1], this.TableModel.Rows[j-1]) >= 0) 
 				{
 					loop = false;
 				} 

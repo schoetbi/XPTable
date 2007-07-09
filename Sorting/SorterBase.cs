@@ -66,6 +66,16 @@ namespace XPTable.Sorting
 		/// </summary>
 		private SortOrder sortOrder;
 
+        /// <summary>
+        /// Specifies a collection of underlying sort order(s)
+        /// </summary>
+        private SortColumnCollection secondarySortOrder;
+
+        /// <summary>
+        /// Specifies a collection of comparers for the underlying sort order(s)
+        /// </summary>
+        private IComparerCollection secondaryComparers;
+
 		#endregion
 		
 
@@ -85,6 +95,8 @@ namespace XPTable.Sorting
 			this.column = column;
 			this.comparer = comparer;
 			this.sortOrder = sortOrder;
+            this.secondarySortOrder = new SortColumnCollection();
+            this.secondaryComparers = new IComparerCollection();
 		}
 
 		#endregion
@@ -93,27 +105,174 @@ namespace XPTable.Sorting
 		#region Methods
 
 		/// <summary>
-		/// Compares two objects and returns a value indicating whether one is less 
-		/// than, equal to or greater than the other
+		/// Compares two rows and returns a value indicating whether one is less 
+		/// than, equal to or greater than the other. Takes into account the sort order.
 		/// </summary>
-		/// <param name="a">First object to compare</param>
-		/// <param name="b">Second object to compare</param>
+		/// <param name="row1">First row to compare</param>
+        /// <param name="row2">Second row to compare</param>
 		/// <returns>-1 if a is less than b, 1 if a is greater than b, or 0 if a equals b</returns>
-		protected int Compare(Cell a, Cell b)
-		{
-			switch (this.SortOrder)
-			{
-				case SortOrder.None:
-					return 0;
+        protected int Compare(Row row1, Row row2)
+        {
+            int result = 0;
 
-				case SortOrder.Descending:
-					return -this.Comparer.Compare(a, b);
+            if (this.SortOrder == SortOrder.None)
+            {
+                result = 0;
+            }
 
-				default:
-					return this.Comparer.Compare(a, b);
-			}
-		}
+            // check for null rows
+            else if (row1 == null && row2 == null)
+            {
+                result = 0;
+            }
+            else if (row1 == null)
+            {
+                result = -1;
+            }
+            else if (row2 == null)
+            {
+                result = 1;
+            }
+            else
+            {
+                /*
+                 * 1. If both are subrows and from the same parent, then compare the rows
+                 * 2. If both are subrows, but from different parents, then compare parent rows
+                 * 3. If only one is a subrow, then compare the row against the parent row
+                 * 4. If both are not subrows, then just compare the rows
+                 * */
 
+                if (row1.Parent == null)
+                {
+                    if (row2.Parent == null)
+                    {
+                        // 4. If both are not subrows, then just compare the rows
+                        result = CompareRows(row1, row2);
+                    }
+                    else
+                    {
+                        // 3. If only one is a subrow, then compare the row against the parent row
+                        result = CompareRows(row1, row2.Parent);
+                    }
+                }
+                else
+                {
+                    if (row2.Parent == null)
+                    {
+                        // 3. If only one is a subrow, then compare the row against the parent row
+                        result = CompareRows(row1.Parent, row2);
+                    }
+                    else
+                    {
+                        // Both input rows are sub rows
+
+                        if (row1.Parent.Index == row2.Parent.Index)
+                        {
+                            // 1. From the same parent - compare subrows...
+                            //                    result = CompareRows(row1, row2);
+
+                            // ...or keep them in 'insert' order
+                            result = row1.ChildIndex.CompareTo(row2.ChildIndex);
+
+                            // If we are sorting in reverse order, then this would put the subrows in reverse
+                            // order too, bt we want to preserve the top-down order, so need to reverse the comparison
+
+                            //if (this.SortOrder == SortOrder.Descending)
+                            //    result = -result;
+                        }
+                        else
+                        {
+                            // 2. From different parents - compare parents
+                            result = CompareRows(row1.Parent, row2.Parent);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Compares two rows and returns a value indicating whether one is less 
+        /// than, equal to or greater than the other.
+        /// Compares the given rows without considering parent/sub-rows.
+        /// </summary>
+        /// <param name="row1"></param>
+        /// <param name="row2"></param>
+        /// <returns></returns>
+        protected virtual int CompareRows(Row row1, Row row2)
+        {
+
+            int result = CompareRows(row1, row2, this.SortColumn, this.Comparer);
+
+            if (result == 0)
+            {
+                int i = 0;  // used to get the right comparer out of the collection
+
+                foreach (SortColumn col in this.SecondarySortOrders)
+                {
+                    IComparer comparer = this.SecondaryComparers[i];
+                    result = CompareRows(row1, row2, col.SortColumnIndex, comparer);
+
+                    if (result != 0)
+                    {
+                        if (col.SortOrder == SortOrder.Descending)
+                            result = -result;
+
+                        // Need to invert the result if a DESC sort order was used
+
+                        break;
+                    }
+
+                    i++;
+                }
+            }
+
+            // If we do this then the direction of the secondary sorting is NOT reversed when
+            // the main sort order is DESC
+            else if (this.SortOrder == SortOrder.Descending)
+                result = -result;
+
+            // If we do this then the direction of the secondary sorting IS reversed when
+            // the main sort order is DESC
+            //if (this.SortOrder == SortOrder.Descending)
+            //    result = -result;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Compares two rows and returns a value indicating whether one is less 
+        /// than, equal to or greater than the other.
+        /// Compares the given rows without considering parent/sub-rows.
+        /// </summary>
+        /// <param name="row1"></param>
+        /// <param name="row2"></param>
+        /// <param name="column"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
+        protected virtual int CompareRows(Row row1, Row row2, int column, IComparer comparer)
+        {
+            Cell cell1 = row1.Cells[column];
+            Cell cell2 = row2.Cells[column];
+
+            // check for null cells
+            if (cell1 == null && cell2 == null)
+            {
+                return 0;
+            }
+            else if (cell1 == null)
+            {
+                return -1;
+            }
+            else if (cell2 == null)
+            {
+                return 1;
+            }
+
+            int result = comparer.Compare(cell1, cell2);
+
+            return result;
+        }
 
 		/// <summary>
 		/// Starts sorting the Cells in the TableModel
@@ -208,6 +367,36 @@ namespace XPTable.Sorting
 				return this.sortOrder;
 			}
 		}
+
+        /// <summary>
+        /// Gets or sets a collection of underlying sort order(s)
+        /// </summary>
+        public SortColumnCollection SecondarySortOrders
+        {
+            get
+            {
+                return this.secondarySortOrder;
+            }
+            set
+            {
+                this.secondarySortOrder = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a collection of comparers for the underlying sort order(s)
+        /// </summary>
+        public IComparerCollection SecondaryComparers
+        {
+            get
+            {
+                return this.secondaryComparers;
+            }
+            set
+            {
+                this.secondaryComparers = value;
+            }
+        }
 
 		#endregion
 	}

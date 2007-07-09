@@ -2839,6 +2839,9 @@ namespace XPTable.Models
 				}
 			}
 
+            sorter.SecondarySortOrders = this.ColumnModel.SecondarySortOrders;
+            sorter.SecondaryComparers = this.GetSecondaryComparers(this.ColumnModel.SecondarySortOrders);
+
 			// don't let the table redraw
 			this.BeginUpdate();
 
@@ -2867,6 +2870,34 @@ namespace XPTable.Models
 			this.EndUpdate();
 		}
 
+        /// <summary>
+        /// Gets a collection of comparers for the underlying sort order(s)
+        /// </summary>
+        /// <param name="secondarySortOrders"></param>
+        /// <returns></returns>
+        private IComparerCollection GetSecondaryComparers(SortColumnCollection secondarySortOrders)
+        {
+            IComparerCollection comparers = new IComparerCollection();
+
+            foreach (SortColumn sort in secondarySortOrders)
+            {
+                ComparerBase comparer = null;
+                Column column = this.ColumnModel.Columns[sort.SortColumnIndex];
+
+                if (column.Comparer != null)
+                {
+                    comparer = (ComparerBase)Activator.CreateInstance(column.Comparer, new object[] { this.TableModel, sort.SortColumnIndex, sort.SortOrder });
+                }
+                else if (column.DefaultComparerType != null)
+                {
+                    comparer = (ComparerBase)Activator.CreateInstance(column.DefaultComparerType, new object[] { this.TableModel, sort.SortColumnIndex, sort.SortOrder });
+                }
+                if (comparer != null)
+                    comparers.Add(comparer);
+            }
+
+            return comparers;
+        }
 
 		/// <summary>
 		/// Returns whether a Column exists at the specified index in the 
@@ -8193,6 +8224,16 @@ namespace XPTable.Models
 			{
 				this.PerformLayout();
 				this.Invalidate();
+
+                // Removing a parent row should also remove the child rows...
+				// Fix (Colby Dillion)
+				if (e.Row != null && e.Row.SubRows != null)
+				{
+					foreach (Row row in e.Row.SubRows)
+					{
+						e.TableModel.Rows.Remove(row);
+					}
+				}
 
 				if (RowRemoved != null)
 				{
