@@ -362,6 +362,23 @@
                     SubType = "Component"
                     BuildAction = "Compile"
                 />
+
+                <File
+                    RelPath = "Models\ControlColumn.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Models\ControlFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Models\DataSourceColumnBinder.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+
                 <File
                     RelPath = "Models\DateTimeColumn.cs"
                     SubType = "Component"
@@ -379,6 +396,11 @@
                 />
                 <File
                     RelPath = "Models\GridLineStyle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Models\GroupColumn.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -546,6 +568,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Renderers\ControlCellRenderer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Renderers\ControlRendererData.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Renderers\DateTimeCellRenderer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -567,6 +599,16 @@
                 />
                 <File
                     RelPath = "Renderers\GradientHeaderRenderer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Renderers\GroupCellRenderer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Renderers\GroupRendererData.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
