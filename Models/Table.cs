@@ -769,6 +769,11 @@ namespace XPTable.Models
 			// showSelectionRectangle defaults to true
 			this.showSelectionRectangle = true;
 
+            // for data binding
+            listChangedHandler = new ListChangedEventHandler(dataManager_ListChanged);
+			positionChangedHandler = new EventHandler(dataManager_PositionChanged);
+            dataSourceColumnBinder = new DataSourceColumnBinder();
+
 			// finished setting up
 			this.beginUpdateCount = 0;
 			this.init = false;
@@ -8240,6 +8245,321 @@ namespace XPTable.Models
 					RowRemoved(e.TableModel, e);
 				}
 			}
+		}
+
+		#endregion
+
+		#endregion
+
+
+        #region Data binding
+
+		// Taken directly from http://www.codeproject.com/cs/database/DataBindCustomControls.asp
+
+		#region Class data
+
+		/// <summary>
+		/// Manages the data bindings.
+		/// </summary>
+		private CurrencyManager dataManager;
+
+		/// <summary>
+		/// Delegate for the handler of the ListChanged event.
+		/// </summary>
+        private ListChangedEventHandler listChangedHandler;
+
+		/// <summary>
+		/// Delegate for the handler of the PositionChanged event.
+		/// </summary>
+		private EventHandler positionChangedHandler;
+
+		/// <summary>
+		/// Provides mapping from the data source to the XPTable.
+		/// </summary>
+        private DataSourceColumnBinder dataSourceColumnBinder;
+
+		/// <summary>
+		/// The data source to bind to.
+		/// </summary>
+		private object dataSource;
+
+		/// <summary>
+		/// The member to use in the data source.
+		/// </summary>
+		private string dataMember;
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets or sets the binder that provides mapping from the data source to the XPTable.
+		/// </summary>
+        [Browsable(false)]
+        public DataSourceColumnBinder DataSourceColumnBinder
+        {
+            get { return dataSourceColumnBinder; }
+            set { dataSourceColumnBinder = value; } 
+        }
+
+		/// <summary>
+		/// Gets or sets the data source to bind to.
+		/// </summary>
+        [TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
+        [Category("Data")]
+        [DefaultValue(null)]
+        public object DataSource
+        {
+            get
+            {
+                return this.dataSource;
+            }
+            set
+            {
+                if (this.dataSource != value)
+                {
+                    this.dataSource = value;
+                    TryDataBinding();
+                }
+            }
+        }
+
+		/// <summary>
+		/// Gets or sets the member to use in the data source.
+		/// </summary>
+        [Category("Data")]
+        [Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design", "System.Drawing.Design.UITypeEditor, System.Drawing")]
+        [DefaultValue("")]
+        public string DataMember
+        {
+            get
+            {
+                return this.dataMember;
+            }
+            set
+            {
+                if (this.dataMember != value)
+                {
+                    this.dataMember = value;
+                    TryDataBinding();
+                }
+            }
+        }
+
+		#endregion
+
+		#region Event handlers
+        /// <summary>
+        /// Fires the BindingContextChanged event.
+        /// Called when something has changed
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnBindingContextChanged(EventArgs e)
+        {
+            this.TryDataBinding();
+            base.OnBindingContextChanged(e);
+        }
+
+		/// <summary>
+		/// Fired when any data is changed, removed or added to the data source.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void dataManager_ListChanged(object sender, ListChangedEventArgs e)
+		{
+			if (e.ListChangedType == ListChangedType.Reset ||
+				e.ListChangedType == ListChangedType.ItemMoved)
+			{
+				// Update all data
+				UpdateAllData();
+			}
+			else if (e.ListChangedType == ListChangedType.ItemAdded)
+			{
+				// Add new Item
+				AddItem(e.NewIndex);
+			}
+			else if (e.ListChangedType == ListChangedType.ItemChanged)
+			{
+				// Change Item
+				UpdateItem(e.NewIndex);
+			}
+			else if (e.ListChangedType == ListChangedType.ItemDeleted)
+			{
+				// Delete Item
+				DeleteItem(e.NewIndex);
+			}
+			else
+			{
+				// Update metadata and all data
+				CalculateColumns();
+				UpdateAllData();
+			}
+		}
+
+		/// <summary>
+		/// Called when the selected row in the data source changes.
+		/// Ensures the Table keeps this row in view.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void dataManager_PositionChanged(object sender, EventArgs e)
+		{
+			if (this.TableModel.Rows.Count > dataManager.Position)
+			{
+				this.TableModel.Selections.SelectCell(dataManager.Position, 0);
+				this.EnsureVisible(dataManager.Position, 0);
+			}
+		}
+		#endregion
+
+		#region Methods
+        /// <summary>
+        /// Gets the CurrencyManager by the BindingContext, unwires the old CurrencyManager (if needed), 
+        /// and wires the new CurrencyManager. 
+        /// Then it calls calculateColumns and updateAllData.
+        /// </summary>
+        private void TryDataBinding()
+        {
+            if (this.DataSource == null || base.BindingContext == null)
+                return;
+
+            CurrencyManager cm;
+            try
+            {
+                cm = (CurrencyManager)base.BindingContext[this.DataSource, this.DataMember];
+            }
+            catch (System.ArgumentException)
+            {
+                // If no CurrencyManager was found
+                return;
+            }
+
+            if (this.dataManager != cm)
+            {
+                // Unwire the old CurrencyManager
+                if (this.dataManager != null)
+                {
+//                    this.dataManager.ListChanged -= listChangedHandler;	// only in .Net 2.0
+                    this.dataManager.PositionChanged -= positionChangedHandler;
+					if (this.dataManager.List is IBindingList)
+						((IBindingList)this.dataManager.List).ListChanged -= listChangedHandler;	// OK for .Net 1.1
+					}
+                this.dataManager = cm;
+
+                // Wire the new CurrencyManager
+                if (this.dataManager != null)
+                {
+//                    this.dataManager.ListChanged += listChangedHandler;	// only in .Net 2.0
+					if (this.dataManager.List is IBindingList)
+						((IBindingList)this.dataManager.List).ListChanged += listChangedHandler;	// OK for .Net 1.1
+					this.dataManager.PositionChanged += positionChangedHandler;
+                }
+
+                // Update metadata and data
+                CalculateColumns();
+
+                UpdateAllData();
+            }
+        }
+
+        /// <summary>
+        /// Creates a ColumnModel for the columns the data source provides and assigns it to the Table.
+        /// </summary>
+        private void CalculateColumns()
+        {
+            ColumnModel columns = new ColumnModel();
+
+            if (dataManager == null)
+                return;
+
+            int index = 0;
+            foreach (PropertyDescriptor prop in dataManager.GetItemProperties())
+            {
+                Column column = this.DataSourceColumnBinder.GetColumn(prop, index);
+                columns.Columns.Add(column);
+                index++;
+            }
+
+            this.ColumnModel = columns;
+        }
+
+
+		/// <summary>
+		/// Clears and re-adds all data from the data source.
+		/// </summary>
+        private void UpdateAllData()
+        {
+            if (this.TableModel == null)
+                this.TableModel = new TableModel();
+
+            this.TableModel.Rows.Clear();
+            for (int i = 0; i < dataManager.Count; i++)
+            {
+                AddItem(i);
+            }
+        }
+
+		/// <summary>
+		/// Returns a row (ready to be added into the TableModel) derived from the given index in the data source.
+		/// </summary>
+		/// <param name="index"></param>
+		/// <returns></returns>
+        private Row GetRowFromDataSource(int index)
+        {
+            object row = dataManager.List[index];
+            PropertyDescriptorCollection propColl = dataManager.GetItemProperties();
+
+			Cell [] cells = new Cell [this.ColumnModel.Columns.Count];
+
+            // Fill value for each column
+			int i = 0;
+            foreach (Column column in this.ColumnModel.Columns)
+            {
+                PropertyDescriptor prop = null;
+                prop = propColl.Find(column.Text, false);
+                if (prop != null)
+                {
+					object val = prop.GetValue(row);
+					Cell cell = this.DataSourceColumnBinder.GetCell(column, val);
+					cells.SetValue(cell, i);
+                }
+				i++;
+            }
+
+			return new Row(cells);
+        }
+
+		/// <summary>
+		/// Inserts the item at the given index from the data source.
+		/// </summary>
+		/// <param name="index"></param>
+		private void AddItem(int index)
+		{
+			Row row = this.GetRowFromDataSource(index);
+			this.TableModel.Rows.Insert(index, row);
+		}
+
+		/// <summary>
+		/// Refreshes the given item in the TableModel.
+		/// </summary>
+		/// <param name="index"></param>
+		private void UpdateItem(int index)
+		{
+			if (index >= 0 && index < this.TableModel.Rows.Count)
+			{
+				Row item = GetRowFromDataSource(index);
+				this.TableModel.Rows.SetRow(index, item);
+			}
+		}
+
+		/// <summary>
+		/// Removes the given item from the TableModel.
+		/// </summary>
+		/// <param name="index"></param>
+		private void DeleteItem(int index)
+		{
+			if (index >= 0 && index < this.TableModel.Rows.Count)
+				this.TableModel.Rows.RemoveAt(index);
 		}
 
 		#endregion
