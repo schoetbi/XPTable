@@ -215,7 +215,7 @@ namespace XPTable.Models
 		/// <summary>
 		/// Occurs when the value of the Table's ColumnModel property changes 
 		/// </summary>
-		public event EventHandler ColumnModelChanged;
+		public event TableEventHandler ColumnModelChanged; // PJD TEA change
 		
 		/// <summary>
 		/// Occurs when a Column is added to the ColumnModel
@@ -310,7 +310,7 @@ namespace XPTable.Models
 		/// <summary>
 		/// Occurs when the value of the Table's TableModel property changes 
 		/// </summary>
-		public event EventHandler TableModelChanged;
+		public event TableEventHandler TableModelChanged; // PJD TEA change
 		
 		/// <summary>
 		/// Occurs when a Row is added into the TableModel
@@ -3179,6 +3179,8 @@ namespace XPTable.Models
 						this.columnModel.InternalTable = null;
 					}
 
+					ColumnModel oldValue = this.columnModel;
+
 					this.columnModel = value;
 
 					if (value != null)
@@ -3186,7 +3188,7 @@ namespace XPTable.Models
 						value.InternalTable = this;
 					}
 
-					this.OnColumnModelChanged(EventArgs.Empty);
+					this.OnColumnModelChanged(new TableEventArgs(this, TableEventType.ColumnModelChanged, oldValue)); // PJD TEA change
 				}
 			}
 		}
@@ -4468,6 +4470,8 @@ namespace XPTable.Models
 						this.tableModel.InternalTable = null;
 					}
 
+					TableModel oldValue = this.tableModel;// PJD TEA add
+
 					this.tableModel = value;
 
 					if (value != null)
@@ -4475,7 +4479,7 @@ namespace XPTable.Models
 						value.InternalTable = this;
 					}
 
-					this.OnTableModelChanged(EventArgs.Empty);
+					this.OnTableModelChanged(new TableEventArgs(this, TableEventType.TableModelChanged, oldValue));// PJD TEA change
 				}
 			}
 		}
@@ -5949,7 +5953,7 @@ namespace XPTable.Models
 		/// Raises the ColumnModelChanged event
 		/// </summary>
 		/// <param name="e">An EventArgs that contains the event data</param>
-		protected virtual void OnColumnModelChanged(EventArgs e)
+		protected virtual void OnColumnModelChanged(TableEventArgs e)	// PJD TEA change
 		{
 			if (this.CanRaiseEvents)
 			{
@@ -8122,7 +8126,7 @@ namespace XPTable.Models
 		/// Raises the TableModelChanged event
 		/// </summary>
 		/// <param name="e">An EventArgs that contains the event data</param>
-		protected internal virtual void OnTableModelChanged(EventArgs e)
+		protected internal virtual void OnTableModelChanged(TableEventArgs e) // PJD TEA change
 		{
 			if (this.CanRaiseEvents)
 			{

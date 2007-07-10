@@ -269,6 +269,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Events\TableEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Events\TableEventType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Events\TableModelEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -365,7 +375,7 @@
 
                 <File
                     RelPath = "Models\ControlColumn.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -375,7 +385,7 @@
                 />
                 <File
                     RelPath = "Models\DataSourceColumnBinder.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
 
@@ -401,7 +411,7 @@
                 />
                 <File
                     RelPath = "Models\GroupColumn.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
