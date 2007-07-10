@@ -2923,10 +2923,38 @@ namespace XPTable.Models
 
 		#endregion
 
-		#endregion
+        #region Controls
+        /// <summary>
+        /// Returns the cell that contains the given Control (in a ControlColumn).
+        /// Returns null if the control is not in a valid cell.
+        /// </summary>
+        /// <param name="control">The control that is part of a Cell.</param>
+        /// <exception cref="ArgumentException">If the control is not added to this table.</exception>
+        /// <returns></returns>
+        public Cell GetContainingCell(Control control)
+        {
+            if (control.Parent != this)
+                throw new ArgumentException("Control is not part of this table.", "control");
+
+            Point p = control.Location;
+            CellPos cellPos = new CellPos(this.RowIndexAt(p), this.ColumnIndexAt(p));
+
+            if (this.IsValidCell(cellPos))
+            {
+                // Adjust this to take colspan into account
+                // LastMouseCell may be a cell that is 'under' a colspan cell
+                CellPos realCell = this.ResolveColspan(cellPos);
+                Cell cell = tableModel[realCell];
+                return cell;
+            }
+            return null;
+        }
+        #endregion
+
+        #endregion
 
 
-		#region Properties
+        #region Properties
 
 		#region Borders
 

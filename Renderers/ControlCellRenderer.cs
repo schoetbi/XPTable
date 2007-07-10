@@ -99,10 +99,11 @@ namespace XPTable.Renderers
 		{
 			object rendererData = this.GetRendererData(cell);
 
-			if (rendererData == null || !(rendererData is ControlRendererData))
-			{
-                if (this.ControlFactory != null)
+            if (this.ControlFactory != null)
+            {
+                if (rendererData == null || !(rendererData is ControlRendererData))
                 {
+                    // Never shown a control, so ask what we should do
                     Control control = this.ControlFactory.GetControl(cell);
                     if (control != null)
                     {
@@ -114,7 +115,24 @@ namespace XPTable.Renderers
                         rendererData = data;
                     }
                 }
-			}
+                else
+                {
+                    // Already got a control, but should we swap it for another
+                    ControlRendererData data = (ControlRendererData)rendererData;
+                    Control oldControl = data.Control;
+                    // This next call allows the properties of the control to be updated, or to provide
+                    // an entirely new control
+                    Control newControl = this.ControlFactory.UpdateControl(cell, data.Control);
+                    if (newControl != null)
+                    {
+                        // We need to take off the old control and wire up the new one
+                        cell.Row.TableModel.Table.Controls.Remove(oldControl);
+                        cell.Row.TableModel.Table.Controls.Add(newControl);
+                        data.Control = newControl;
+                        newControl.BringToFront();
+                    }
+                }
+            }
 
             return (ControlRendererData)rendererData;
         }

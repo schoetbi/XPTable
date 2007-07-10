@@ -32,6 +32,7 @@ namespace XPTable.Renderers
         public Control Control
         {
             get { return this.control; }
+            set { this.control = value; }
         }
         #endregion
     }
