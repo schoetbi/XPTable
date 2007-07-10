@@ -59,7 +59,7 @@ namespace XPTable.Models.Design
         public PropertyGrid PropertyGrid
         {
             get { return this.propertyGrid; }
-            private set { this.propertyGrid = value; }
+//            private set { this.propertyGrid = value; }
         }
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace XPTable.Models.Design
 		{
 			if (control is PropertyGrid)
 			{
-				this.PropertyGrid = (PropertyGrid) control;
+				propertyGrid = (PropertyGrid) control;
 				return true;
 			}
 

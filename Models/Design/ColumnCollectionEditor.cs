@@ -69,7 +69,7 @@ namespace XPTable.Models.Design
 			if (this.PropertyGrid != null)
 			{
 				this.PropertyGrid.HelpVisible = true;
-				this.PropertyGrid.HelpBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+				this.PropertyGrid.HelpBackColor = System.Drawing.SystemColors.InactiveCaption;
 				this.PropertyGrid.CommandsVisibleIfAvailable = true;
 			}
 
