@@ -3909,7 +3909,7 @@ namespace XPTable.Models
 		/// plus the height of the column headers
 		/// </summary>
 		[Browsable(false)]
-		protected int TotalRowAndHeaderHeight
+		public int TotalRowAndHeaderHeight
 		{
 			get
 			{
