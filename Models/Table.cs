@@ -351,6 +351,15 @@ namespace XPTable.Models
 		/// </summary>
 		private BorderStyle borderStyle;
 
+		/// <summary>
+		/// The colour of the Table's border
+		/// </summary>
+		private Color borderColor;
+
+		/// <summary>
+		/// The colour of the Table's border when the table does not have the focus
+		/// </summary>
+		private Color unfocusedBorderColor;
 		#endregion
 
 		#region Cells
@@ -708,6 +717,8 @@ namespace XPTable.Models
 
 			// borders
 			this.borderStyle = BorderStyle.Fixed3D;
+			this.borderColor = Color.Black;
+			this.unfocusedBorderColor = Color.Black;
 
 			// scrolling
 			this.scrollable = true;
@@ -2987,6 +2998,44 @@ namespace XPTable.Models
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the background color of the table.
+		/// </summary>
+		[Category("Appearance"),
+		Description("The background color of the table")]
+		public Color BorderColor
+		{
+			get { return this.borderColor; }
+			set
+			{
+				if (this.borderColor != value)
+				{
+					this.borderColor = value;
+
+					this.Invalidate(true);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the background color of the table when the table does not have focus.
+		/// </summary>
+		[Category("Appearance"),
+		Description("The background color of the table")]
+		public Color UnfocusedBorderColor
+		{
+			get { return this.unfocusedBorderColor; }
+			set
+			{
+				if (this.unfocusedBorderColor != value)
+				{
+					this.unfocusedBorderColor = value;
+
+					if (!this.Focused)
+						this.Invalidate(true);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets the width of the Tables border
@@ -6132,6 +6181,9 @@ namespace XPTable.Models
 				this.Invalidate(this.CellDataRect);
 			}
 
+			if (this.BorderColor != this.UnfocusedBorderColor)
+				this.Invalidate(false);
+
 			base.OnGotFocus(e);
 		}
 
@@ -6152,6 +6204,9 @@ namespace XPTable.Models
 				this.Invalidate(this.CellDataRect);
 			}
 			
+			if (this.BorderColor != this.UnfocusedBorderColor)
+				this.Invalidate(false);
+
 			base.OnLostFocus(e);
 		}
 
@@ -7331,7 +7386,12 @@ namespace XPTable.Models
 			}
 			else if (this.BorderStyle == BorderStyle.FixedSingle)
 			{
-				e.Graphics.DrawRectangle(Pens.Black, 0, 0, this.Width-1, this.Height-1);
+				Color color = this.Focused ? color = this.BorderColor : color = this.UnfocusedBorderColor;
+
+				using (Pen borderPen = new Pen(color))
+				{
+					e.Graphics.DrawRectangle(borderPen, 0, 0, this.Width-1, this.Height-1);
+				}
 			}
 			
 			if (this.HScroll && this.VScroll)
