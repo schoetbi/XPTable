@@ -1,0 +1,439 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Philip Daniels">
+	<META NAME="CREATED" CONTENT="20070809;7483300">
+	<META NAME="CHANGEDBY" CONTENT="Susan Johnson">
+	<META NAME="CHANGED" CONTENT="20070816;11450067">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; widows: 0; orphans: 0 }
+		P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt }
+		P.ctl { font-family: "Tahoma"; font-size: 12pt }
+		TD P { margin-bottom: 0cm; direction: ltr; color: #000000; widows: 0; orphans: 0 }
+		TD P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		TD P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt }
+		TD P.ctl { font-family: "Tahoma"; font-size: 12pt }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-GB" TEXT="#000000" DIR="LTR">
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>This
+class provides set of disparate services via static Properties and
+Methods, none of which are specific to XPTable.</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2><SPAN LANG=""><FONT COLOR="#0000ff">	public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#2b91af">TableHelpers</FONT></SPAN></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Static Properties</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=64*>
+	<COL WIDTH=56*>
+	<COL WIDTH=137*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">DigitsAsString</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of numeric digit characters as a string</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">DigitsAsCharArray</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">char[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of numeric digit characters as a character array</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">DigitsAsList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ArrayList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of numeric digit characters as a character list</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">LowerCaseAsString</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of lower case alphabetical characters as a string</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">LowerCaseAsCharArray</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">char[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of lower case alphabetical characters as a character array</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">LowerCaseAsList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ArrayList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of lower case alphabetical characters as a character list</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">PunctuationAsString</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of punctuation and spacial  characters as a string</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">PunctuationAsCharArray</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">char[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of punctuation and spacial  characters as a character array</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">PunctuationAsList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ArrayList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of punctuation and spacial  characters as a character list.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">UpperCaseAsString</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of upper case alphabetical characters as a string</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">UpperCaseAsCharArray</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">char[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of upper case alphabetical characters as a character array</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">UpperCaseAsList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ArrayList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			set of upper case alphabetical characters as a character list.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2><SPAN STYLE="font-weight: medium">Public</SPAN><B>
+</B><SPAN STYLE="font-weight: medium">Static </SPAN><B><FONT SIZE=2 STYLE="font-size: 9pt"><FONT COLOR="#000000">Methods</FONT></FONT></B></FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=64*>
+	<COL WIDTH=56*>
+	<COL WIDTH=137*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">MethodIdentity()</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			a string containing the invoking methods DeclaringType.Name and
+			the method Name  itself.  Useful for Exception and TraceLog
+			messages</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ParameterName</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">
+			   </FONT><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">
+			_paramIndex</FONT></FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Return
+			the name of the parameter defined by the _<I>paramIndex</I>
+			parameter of the calling method.  Useful for Exception and
+			TraceLog messages</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ParameterNames</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">String[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			an array of strings containing the calling methods parameter
+			names.  Useful for Exception and TraceLog messages</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm; font-weight: medium">
+			<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">IsEnumName&lt;Tenum&gt;</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm; font-weight: medium">
+			<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm; font-weight: medium">
+			    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string
+			_name</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm; font-weight: medium">
+			<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)
+			</FONT></FONT>
+			</P>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">where
+			Tenum : struct</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P LANG="" CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">bool
+			</FONT></FONT>
+			</P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western" STYLE="font-weight: medium"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			true if the _<I>name</I> string matches the name of a member of
+			the enum specified by the <I>Tenum</I> type parameter and false if
+			it doesn't.  Easier to understand than Enum equivalent.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">EnumAsPhrase&lt;TEnum&gt;</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">TEnum
+			_value</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)
+			</FONT></FONT>
+			</P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">where
+			TEnum : struct</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			a string representation of an enum value where the words within a
+			Pascal cased enumerated value name are space separated so that
+			PascalStringValue will yield &ldquo;Pascal String Value&rdquo;,
+			also works for camel cased names.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">EnumAsWords&lt;TEnum&gt;</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">TEnum
+			_value</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+			<P LANG="" CLASS="western"> <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">where
+			TEnum : struct</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			a string array representation of an enum value where the words
+			within a Pascal cased enumerated value name are separated separate
+			array entries, so that PascalStringValue will yield {&ldquo;Pascal&rdquo;,
+			&ldquo;String&rdquo;, &ldquo;Value&rdquo;}, also works for camel
+			cased names.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">PascalStringToWords</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string
+			_pascalString</FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">strin[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			a string representation of an string which contains a Pascal cased
+			value name, each word is space separated so that
+			&ldquo;PascalStringValue&rdquo; will yield &ldquo;Pascal String
+			Value&rdquo;, also works for camel cased names.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">WordsToPhrase</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string[]
+			words</FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=22%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			a string array representation within a Pascal cased string value
+			name are separated separate array entries, so that
+			&ldquo;PascalStringValue&rdquo; will yield {&ldquo;Pascal&rdquo;,
+			&ldquo;String&rdquo;, &ldquo;Value&rdquo;}, also works for camel
+			cased names.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal; font-weight: medium">
+<FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Notes</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal; font-weight: medium">
+<FONT FACE="Verdana, sans-serif"><FONT SIZE=2>The base values for the
+Digits, LowerCase, Punctuation and UpperCase properties are as
+follows:</FONT></FONT></P>
+<TABLE WIDTH=566 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=258>
+	<COL WIDTH=289>
+	<TR VALIGN=TOP>
+		<TD WIDTH=258 HEIGHT=13>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Digits
+						</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=289>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">0123456789</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=258>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Upper
+			Case 		</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=289>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ABCDEFGHIJKLMNOPQRSTUVWXYZ</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=258>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Lower
+			Case 		</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=289>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">abcdefghijklmnopqrstuvwxyz</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=258>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Punctuation
+					</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=289>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">,.;:?!'&amp;@$%*(){}[]&lt;&gt;/\|-_+=&quot;</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal; font-weight: medium">
+<BR><BR>
+</P>
+<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>		</FONT></FONT></P>
+<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>		</FONT></FONT></P>
+<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>		;</FONT></FONT></P>
+<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>		</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal; font-weight: medium">
+<BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal; font-weight: medium">
+<BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal; font-weight: medium">
+<BR><BR>
+</P>
+</BODY>
+</HTML>

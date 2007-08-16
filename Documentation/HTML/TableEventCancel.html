@@ -1,0 +1,456 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Philip Daniels">
+	<META NAME="CREATED" CONTENT="20070809;7483300">
+	<META NAME="CHANGEDBY" CONTENT="Susan Johnson">
+	<META NAME="CHANGED" CONTENT="20070816;11431155">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; widows: 0; orphans: 0 }
+		P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt }
+		P.ctl { font-family: "Tahoma"; font-size: 12pt }
+		TD P { margin-bottom: 0cm; direction: ltr; color: #000000; widows: 0; orphans: 0 }
+		TD P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		TD P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt }
+		TD P.ctl { font-family: "Tahoma"; font-size: 12pt }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-GB" TEXT="#000000" DIR="LTR">
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>This
+class provides an augmentation to XPTable, in the form of ToolStrip
+and an optional companion ContextMenuStrip.</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2><SPAN LANG="">	<FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">abstract</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#2b91af">TableEventCancel</FONT><FONT COLOR="#000000">&lt;TTData&gt;
+</FONT><FONT COLOR="#0000ff">where</FONT><FONT COLOR="#000000">
+TTData : System.ComponentModel.</FONT><FONT COLOR="#2b91af">CancelEventArgs</FONT></SPAN></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>	[<FONT COLOR="#2b91af">ToolboxItem</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#0000ff">true</FONT><FONT COLOR="#000000">)]</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2><FONT COLOR="#000000">	[</FONT><FONT COLOR="#2b91af">ToolboxBitmap</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#0000ff">typeof</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#2b91af">ToolStrip</FONT><FONT COLOR="#000000">))]</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2><FONT COLOR="#000000">	</FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">sealed</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#2b91af">TableActionStrip</FONT><FONT COLOR="#000000">
+: </FONT><FONT COLOR="#2b91af">ToolStrip</FONT><FONT COLOR="#000000">,
+</FONT><FONT COLOR="#2b91af">ISupportInitialize</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>The
+ToolStrip is a collection of buttons that correspond to values
+enumerated by TablesActions,  an option is provided to create a
+corresponding ContextMenuStrip to be assigned to the Tables
+ContextMenuStrip property.  The TableActionStrip is designed to be
+hosted within one of the peripheral panels of a ToolStripContainer
+(ie the Left, Right, Top or Bottom Panels) with the associated Table
+docked in the ToolStripContainer's Content panel.  In design mode the
+button images will always be those designed for the Left ToolStrip
+Panel irrespective of which panel the TableActionStrip occupies.
+however at run time the images are adjusted to reflect the actual
+panel in which the TableActionStrip is contained.</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Constructors</FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">TableActionStrip
+			</FONT></FONT>
+			</P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructor</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Builds
+			TableActionStrip object</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Properties <FONT SIZE=2 STYLE="font-size: 9pt"><FONT COLOR="#000000">(underlining
+indicates property is Browsable in the PropertyGrid)</FONT></FONT></FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>Table</U></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">XPTable.Table</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			table with which the tool strip is associated</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>ContextMenuRequired</U></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Bool</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Determines
+			whether or not a ContextMenuStrip should be created with the same
+			options as the ToolStrip which is set into the associated Table's
+			ContextMenuStrip property.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>RequiresOneRow</U></FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>(static
+			read only)</U></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ArrayList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Access
+			an array of TableActions values that require at least one row to
+			be present in the associated Table.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>RequiresMultipleRows</U></FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>(static
+			read only)</U></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ArrayList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Access
+			an array of TableActions values that require at multiples rows to
+			be present in the associated Table.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>RequiresNoRows</U></FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>(static
+			read only)</U></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ArrayList</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Access
+			an array of TableActions values that require no need for the
+			associated Table to have any rows.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Methods</FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">BeginInit()</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">void</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Does
+			nothing, need for ISupportInitialize conformance.  Should only be
+			called via Designer code.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">EndInit()</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">void</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Adjusts
+			the ToolStripButton images to reflect the ToolStripContainer pane 
+			in which it is located.  If required the ContextMenuStrip is
+			constructed and assigned to the associated Table's
+			ContextMenuStrip property.  Should only be called via Designer
+			code.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal; page-break-before: always">
+<FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public Events</FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ActionRequest
+			</FONT></FONT>
+			</P>
+		</TD>
+		<TD WIDTH=27%>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">TableActionStrip.request.Handler</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">This
+			is a common event that is raised irrespective of which action the
+			user selects (whether that be via a ToolStripButton or a
+			ContextMenuStrip MenuItem.  See the nested type
+			TableActionStrip.request for further discussion</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2><U>Public
+Nested Types - TableActionStrip.request</U></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>This
+class is an implementation of XPTable.Addins.TableEventStandard which
+is separately documented elsewhere.  It is used to signal selection
+of any one of the buttons linked to a TableActions value on the
+TableActionStrip or a corresponding MenuItem in the ContextMenuStrip.</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><FONT COLOR="#0000ff"> 
+<SPAN STYLE="font-style: normal"><FONT SIZE=2><FONT FACE="Verdana, sans-serif">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT>request<FONT COLOR="#000000"> :
+XpTable.AddIns.</FONT><FONT COLOR="#2b91af">TableEventStandard</FONT><FONT COLOR="#000000">&lt;</FONT><SPAN STYLE="text-decoration: none"><FONT COLOR="#2b91af">TableActionStrip.request</FONT><FONT COLOR="#000000">.</FONT><FONT COLOR="#2b91af">Data</FONT></SPAN><FONT COLOR="#000000">&gt;</FONT></FONT></FONT></SPAN></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Nested Types</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Data</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">System.EventArgs</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			data block that is passed to event handlers in the _eventData
+			parameter.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Internal
+Methods</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Return
+			Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Raise</FONT></FONT></P>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P CLASS="western">   <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">TableActions
+			  _action</FONT></FONT></P>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">void</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructs
+			a <SPAN STYLE="text-decoration: none"><SPAN STYLE="font-style: normal"><FONT COLOR="#000000">TableActionStrip.request.Data</FONT></SPAN></SPAN>
+			object , and passes on to the OnEvent method as implemented in
+			XPTable.Addins.TableEventStandard.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal; page-break-before: always">
+<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 10pt"><U>TableActionStrip.request.Data</U></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>This
+class is an implementation of System.EventArgs.  It defines the data
+that is available to <SPAN STYLE="text-decoration: none"><FONT SIZE=2 STYLE="font-size: 10pt">TableActionStrip.request</FONT></SPAN>.Handler
+ methods in the _eventData parameter.</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><FONT SIZE=2><FONT COLOR="#0000ff">	<FONT FACE="Verdana, sans-serif">public</FONT></FONT><FONT FACE="Verdana, sans-serif"><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000"> </FONT><FONT COLOR="#2b91af">Data</FONT><FONT COLOR="#000000">
+: System.</FONT><FONT COLOR="#2b91af">EventArgs</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Properties</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Action
+			(read only)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">TableActions</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			TableActions value selected</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Internal
+Constructors</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Data</FONT></FONT></P>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P CLASS="western">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">TableActions
+			_action</FONT></FONT></P>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructor</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Shovels
+			the parameter into the corresponding property backing field.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+</BODY>
+</HTML>

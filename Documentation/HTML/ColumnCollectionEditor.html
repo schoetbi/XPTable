@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Philip Daniels">
+	<META NAME="CREATED" CONTENT="20070809;7483300">
+	<META NAME="CHANGEDBY" CONTENT="Susan Johnson">
+	<META NAME="CHANGED" CONTENT="20070816;11133530">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm }
+		TD P { margin-bottom: 0cm }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-GB" DIR="LTR">
+<P STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>This
+class has been essentially rewritten.  The initial objective was to
+overcome the problem relating to attempting to use editor more than
+once, on the second and subsequent invocations it would fail with a
+message indicating that it was attempting to access disposed objects.
+ Fixing this problem removed considerably more code than was added.  </FONT></FONT>
+</P>
+<P STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Several
+other enhancements have been subsequently implemented.  </FONT></FONT>
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>The
+	Comments and Designer Verb panes of the
+	CollectionEditor.CollectionForm's PropertyGrid control are
+	displayed.  </FONT></FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>The
+	array of Types returned by the CreateNewItemTypes override is no
+	longer derived from a constant.  Instead it is determined by
+	interrogating the loaded assemblies for Types that have the
+	ColumnAttribute in their CustomAttribute collection.  These types
+	are further interrogated to find one with the
+	ColumnCollectionEditor.defaultAttribute. only one XPTable.Column
+	derived class should be endowed with this attribute.  The returned
+	value is sorted into Type.Name sequence with the default type being
+	forced into the first element of the array irrespective of its Name.</FONT></FONT></P>
+	<LI><P STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>When
+	the editor is closed it's size is stashed in the
+	XPTable.Properties.Settings Default object, the next time the editor
+	is used this size is maintained.</FONT></FONT></P>
+</OL>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>	<FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#2b91af">ColumnCollectionEditor</FONT><FONT COLOR="#000000">
+: XPTable.Models.Design.</FONT><FONT COLOR="#2b91af">HelpfulCollectionEditor</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Constructors</FONT></FONT></P>
+<P STYLE="font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=63*>
+	<COL WIDTH=54*>
+	<COL WIDTH=139*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Name</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=54%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ColumnCollectionEditor</FONT></FONT></FONT></P>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></FONT></P>
+			<P><FONT COLOR="#000000">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Type
+			_type</FONT></FONT></FONT></P>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructor</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=54%>
+			<P STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			Type of the CollectionEditor, this is a required parameter of
+			CollectionEditor, upon which ColumnCollectionEditor is ultimately
+			based.  This value is normally specified via an EditorAttribute
+			being applied to a Collection class object e.g. </FONT></FONT>
+			</P>
+			<P STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><FONT COLOR="#2b91af">Editor
+			</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#0000ff">typeof</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#2b91af">ColumnCollectionEditor</FONT><FONT COLOR="#000000">),
+			</FONT><FONT COLOR="#0000ff">typeof</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#2b91af">UITypeEditor</FONT><FONT COLOR="#000000">))]</FONT></FONT></FONT></P>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+			</FONT><FONT COLOR="#2b91af">ColumnCollection</FONT><FONT COLOR="#000000">
+			Columns{...}</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+<FONT COLOR="#000000">Override </FONT>Methods</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=63*>
+	<COL WIDTH=59*>
+	<COL WIDTH=134*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Return
+			Type</B></FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">EditValue</FONT></FONT></FONT></P>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></FONT></P>
+			<P><FONT COLOR="#000000">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ITypeDescriptorContext
+			context, </FONT></FONT></FONT>
+			</P>
+			<P><FONT COLOR="#000000">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">IServiceProvider
+			isp, </FONT></FONT></FONT>
+			</P>
+			<P><FONT COLOR="#000000">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">object
+			value</FONT></FONT></FONT></P>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">object
+			</FONT></FONT></FONT>
+			</P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			primary purpose of this override is to keep the main designer view
+			of the Table in synch with what is happening in editing the
+			ColumnCollection.  </FONT></FONT></FONT>
+			</P>
+			<P><BR>
+			</P>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">To
+			this end the method, bubbles Column Property Change events up to
+			the Column Model object that &ldquo;owns&rdquo; the
+			ColumnCollection under edit.  When editing is complete the Table
+			itself is laid out and refreshed to ensure that it's visual
+			character reflect the values of it's components properties.</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; page-break-before: always">
+<BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Protected
+Override Methods</FONT></FONT></P>
+<P STYLE="font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=63*>
+	<COL WIDTH=59*>
+	<COL WIDTH=134*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Name</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">CreateCollectionForm()</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">CollectionEditor.CollectionForm</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Adjusts
+			the PropertyGrid's appearance and adds a handler to the Form's
+			dispose event to stashes the Form's size in the
+			XPTable.Properties.Settings Default object.</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">CreateNewItemTypes()</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Type[]</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			an ordered array of Types that are defined as Columns by the fact
+			that they are endowed with a  ColumnAttribute</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">CreateInstance(Type
+			itemType)</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Object</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Uses
+			the base method to create an instance of the column, which it then
+			adds to its collection, and attaches a handler to column property
+			change event that bubbles the event up to the ColumnCollection
+			owner ColumnModel object.</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">DestroyInstance(object
+			instance)</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">void</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Removes
+			the column specified in the <I>instance</I> parameter from the
+			ColumnCollection under edit, removes the handler from property
+			change event and disposes the column.</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Nested Types <FONT SIZE=1 STYLE="font-size: 8pt">(each of these is
+documented in detail within its own subsection)</FONT></FONT></FONT></P>
+<P STYLE="font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=63*>
+	<COL WIDTH=59*>
+	<COL WIDTH=134*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Name</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Base
+			Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=25% HEIGHT=7>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">defaultAttribute</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">System.Attribute</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">A
+			presence attribute (ie one that inherits from Attribute but
+			implements no members) that is used to specify the default Column
+			Type.  The Type is shown as the first item in the DropDownList of
+			Column  Types.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+</BODY>
+</HTML>

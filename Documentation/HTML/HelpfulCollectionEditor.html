@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Philip Daniels">
+	<META NAME="CREATED" CONTENT="20070809;7483300">
+	<META NAME="CHANGEDBY" CONTENT="Susan Johnson">
+	<META NAME="CHANGED" CONTENT="20070816;11332071">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm }
+		TD P { margin-bottom: 0cm }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-GB" DIR="LTR">
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>In
+resolving the &ldquo;Attempting to Access Disposed Object&rdquo;
+problem in the ColumnCollectionEditor it was inevitable that this
+class be examined.  The actual purpose of the class was somewhat
+obscure, except that it appeared to have something to do with the
+PropertyGrid.  It became apparent that the intent was that the
+HelpfulCollectionEditor would change the PropertyGrid's to display
+the Comments and Designer Verb panes.  However the discovery of the
+PropertyGrid object was implemented in a presumptive manner.</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Discovery
+of the PropertyGrid was changed to locate the PropertyGrid object in
+a more conventional manner.  The class itself no longer changes the
+PropertyGrid, instead it exposes it's reference to inheritors so that
+they can adjust the PropertyGrid properties to suit there
+requirements.  However inheritors should make no assumptions that the
+PropertyGrid will be available at all points in the processing cycle.
+ </FONT></FONT>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=2><FONT FACE="Verdana, sans-serif"><SPAN STYLE="font-style: normal">The
+recommended place to interrogate and make changes to the PropertyGrid
+is in the CreateCollectionForm method override.  It likely that it
+will be available <B>after </B>invoking the base method to get the<FONT COLOR="#000000">
+</FONT></SPAN><FONT COLOR="#000000">CollectionEditor.CollectionForm
+object; for it is in it's override of this method that
+HelpfulCollectionEditor attempts to discover the PropertyGrid. 
+However drilling into a Controls collection of Controls (which is
+what HelpfulCollectionEditor now does) is NOT a 100% guaranteed
+method of finding what you want, although under current
+implementations of .NET etc it's nearly so.</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2><FONT COLOR="#0000ff">	public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#2b91af">HelpfulCollectionEditor</FONT><FONT COLOR="#000000">
+: System.ComponentModel.</FONT><FONT COLOR="#2b91af">CollectionEditor</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Constructors</FONT></FONT></P>
+<P STYLE="font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Name</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">HelpfulCollectionEditor</FONT></FONT></P>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P>    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Type
+			 _type</FONT></FONT></P>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructor</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			Type of the ultimate CollectionEditor, this is a required
+			parameter of CollectionEditor, upon which HelpfulCollectionEditor
+			is based.  This value is normally specified via an EditorAttribute
+			being applied to a Collection class object e.g. </FONT></FONT>
+			</P>
+			<P STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><FONT COLOR="#2b91af">Editor
+			</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#0000ff">typeof</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#2b91af">ColumnCollectionEditor</FONT><FONT COLOR="#000000">),
+			</FONT><FONT COLOR="#0000ff">typeof</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#2b91af">UITypeEditor</FONT><FONT COLOR="#000000">))]</FONT></FONT></FONT></P>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+			</FONT><FONT COLOR="#2b91af">ColumnCollection</FONT><FONT COLOR="#000000">
+			Columns{...}</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<P STYLE="font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Properties</FONT></FONT></P>
+<P STYLE="font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 STYLE="page-break-before: auto">
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Name</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31% HEIGHT=35>
+			<P STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">PropertyGrid</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">PropertyGrid</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">One
+			of the four modes must be specified, they are <I>Normal</I>,
+			<I>Autosize, Percent </I><SPAN STYLE="font-style: normal">and
+			</SPAN><I>Stretch</I><SPAN STYLE="font-style: normal"> &ndash; see
+			Nested Types for further discussion.  </SPAN></FONT></FONT>
+			</P>
+			<P STYLE="font-style: normal"><BR>
+			</P>
+			<P STYLE="font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			availability of modes for a Column may be restricted by endowing
+			the Column class with a  ColumnWidth.constraintsAttribute.  The
+			XPTable.Column class is abstract and is implemented via &ldquo;type&rdquo;
+			specific classes such as TextColumn, ButtonColumn, each of which
+			has its own ColumnWidth.constraintsAttribute.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; page-break-before: always"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Methods</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Return
+			Type</B></FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">protected
+			override CreateCollectionForm()</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">CollectionEditor.CollectionForm</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">This
+			method gets the default collection editor from it's base, and then
+			invokes a recursive method to drill into the
+			CollectionEditorCollectionForm Controls property to find the first
+			Control of Type PropertyGrid, if it's found it is set into the
+			PropertyGrid backing field.</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+</BODY>
+</HTML>

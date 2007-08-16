@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Philip Daniels">
+	<META NAME="CREATED" CONTENT="20070809;7483300">
+	<META NAME="CHANGEDBY" CONTENT="Susan Johnson">
+	<META NAME="CHANGED" CONTENT="20070816;11352765">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; widows: 0; orphans: 0 }
+		P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt }
+		P.ctl { font-family: "Tahoma"; font-size: 12pt }
+		TD P { margin-bottom: 0cm; direction: ltr; color: #000000; widows: 0; orphans: 0 }
+		TD P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		TD P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt }
+		TD P.ctl { font-family: "Tahoma"; font-size: 12pt }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-GB" TEXT="#000000" DIR="LTR">
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>This
+class implements an attribute that can be attached to Properties in
+oder to specify the order of the properties in an expandable property
+which specifies the TypeConverter    
+<FONT COLOR="#000000">SortedExpandableObjectConverter. </FONT></FONT></FONT>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 10pt"><SPAN LANG="">	[<FONT COLOR="#2b91af">AttributeUsage</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#2b91af">AttributeTargets</FONT><FONT COLOR="#000000">.Property,
+AllowMultiple=</FONT><FONT COLOR="#0000ff">false</FONT><FONT COLOR="#000000">,
+Inherited=</FONT><FONT COLOR="#0000ff">true</FONT><FONT COLOR="#000000">)]</FONT></SPAN></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 10pt"><SPAN LANG=""><FONT COLOR="#000000">	</FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#2b91af">PropertyOrderAttribute</FONT><FONT COLOR="#000000">
+: </FONT><FONT COLOR="#2b91af">Attribute</FONT></SPAN></FONT></FONT></P>
+<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Constructors</FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">PropertyOrderAttribute</FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P LANG="" CLASS="western">    <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">int
+			<I>_sortOrder</I></FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructor</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Shovels
+			the <I>_sortOrder</I> parameter into the SortOrder property
+			backing field.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Properties</FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=79*>
+	<COL WIDTH=70*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31%>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">SortOrder</FONT></FONT></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{read
+			only)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=27%>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Int</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">An
+			integer value representing the order in which the property is to
+			be shown.  It is suggested that Properties be given SortOrder
+			values that increment by something larger than 1 (e.g. 5) so that
+			new properties can be more easily introduced.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm"><BR><BR>
+</P>
+</BODY>
+</HTML>
