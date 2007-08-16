@@ -1,0 +1,368 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Philip Daniels">
+	<META NAME="CREATED" CONTENT="20070809;7483300">
+	<META NAME="CHANGEDBY" CONTENT="Susan Johnson">
+	<META NAME="CHANGED" CONTENT="20070816;11102225">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt; so-language:  }
+		P.ctl { font-family: "Tahoma"; font-size: 12pt; so-language:  }
+		TD P { margin-bottom: 0cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		TD P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-GB }
+		TD P.cjk { font-family: "Lucida Sans Unicode"; font-size: 12pt; so-language:  }
+		TD P.ctl { font-family: "Tahoma"; font-size: 12pt; so-language:  }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-GB" TEXT="#000000" DIR="LTR">
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 10pt">The
+ColumnAttribute class is, not unsurprisingly an implementation of the
+Attribute class, which can be applied to class members of an
+assembly.  In practice it is only applied to classes inheriting from
+the XPTable.Column class although that rule is not specifically
+implemented.  The attribute serves three purposes:-</FONT></FONT></P>
+<OL>
+	<LI><P CLASS="western" STYLE="margin-top: 0.1cm; margin-bottom: 0.3cm; font-style: normal">
+	<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 10pt">Its
+	presence indicates on a class definition will cause that class to
+	appear in the drop down list of types in the ColumnCollectionEditor.
+	 The name displayed in that list is derived from the Type name of
+	the Column class.</FONT></FONT></P>
+</OL>
+<OL>
+	<LI><P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal">
+	<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 10pt">It
+	contains information pertinent to DataSource columns, specifically
+	the property name from which a cells value is obtained.</FONT></FONT></P>
+	<LI><P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal">
+	<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 10pt">It
+	contains constraints and default values pertinent to the ColumnWidth
+	property of the Column.</FONT></FONT></P>
+</OL>
+<P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0cm"><SPAN STYLE="font-style: normal"><SPAN LANG=""><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif"><FONT COLOR="#000000">[System.</FONT><FONT COLOR="#2b91af">AttributeUsage</FONT><FONT COLOR="#000000">(System.</FONT><FONT COLOR="#2b91af">AttributeTargets</FONT><FONT COLOR="#000000">.Class,
+AllowMultiple = </FONT><FONT COLOR="#0000ff">false</FONT><FONT COLOR="#000000">,
+Inherited = </FONT><FONT COLOR="#0000ff">true</FONT><FONT COLOR="#000000">)]</FONT></FONT></FONT></SPAN></SPAN></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0.3cm"><SPAN LANG=""><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif"><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#2b91af">ColumnAttribute</FONT><FONT COLOR="#000000">
+: System.</FONT><FONT COLOR="#2b91af">Attribute</FONT></FONT></FONT></SPAN></P>
+<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Constructors</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0.3cm; font-style: normal">
+<FONT FACE="Verdana, sans-serif"><FONT SIZE=2>It is anticipated that
+most of the property values that this attribute contains will not
+vary from default values that are held in the
+XPTable.Properties.Settings.Default object, hence property values
+other than AllowableModes and ValueProperty are specified via the
+named parameter feature offered by the Attribute class.</FONT></FONT></P>
+<TABLE WIDTH=1134 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=270>
+	<COL WIDTH=234>
+	<COL WIDTH=604>
+	<TR VALIGN=TOP>
+		<TD WIDTH=270>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Name</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=234>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=604>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=270>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ColumnAttribute</FONT></FONT></P>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P CLASS="western"><FONT COLOR="#000000">    <SPAN LANG=""><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif">ColumnWidth.modes
+			allowableModes</FONT></FONT></FONT></SPAN></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=234>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructor</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=604>
+			<P CLASS="western"><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif"><FONT COLOR="#000000"><SPAN LANG="en-GB">The
+			allowable </SPAN><SPAN LANG="">ColumnWidth.modes are specified by
+			adding the permisible values together, by convention this is done
+			via OR'ing the values &ndash; e.g.ColumnWidth.modes.Normal |
+			ColumnWidth.modes.Percent.</SPAN></FONT></FONT></FONT></P>
+			<P LANG="" CLASS="western"><BR>
+			</P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">All
+			other values are set to their default values as specified in
+			XPTable.Properties.Settings.Default, unlees</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=270>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ColumnAttribute</FONT></FONT></P>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">(</FONT></FONT></P>
+			<P CLASS="western"><FONT COLOR="#000000">    <SPAN LANG=""><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif">ColumnWidth.modes
+			allowableModes,</FONT></FONT></FONT></SPAN></P>
+			<P CLASS="western"><FONT COLOR="#000000">    <SPAN LANG=""><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif">string
+			valueProperty</FONT></FONT></FONT></SPAN></P>
+			<P LANG="" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=234>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Constructor</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=604>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">See
+			prior comments</FONT></FONT></P>
+			<P CLASS="western"><BR>
+			</P>
+			<P CLASS="western"><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif"><FONT COLOR="#000000">the
+			<I>valueProperty</I> parameter sets the value of the ValueProperty
+			property</FONT></FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="font-style: normal"><BR>
+</P>
+<P CLASS="western" STYLE="font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Properties </FONT></FONT>
+</P>
+<P CLASS="western" STYLE="font-style: normal"><BR>
+</P>
+<P CLASS="western"><FONT SIZE=2 STYLE="font-size: 9pt"><FONT FACE="Verdana, sans-serif"><SPAN STYLE="font-style: normal">The
+Default values defines the XPTable.Properties.Settings Default object
+property in which the default is contained, the value is that stored
+therein at the time of writing it may change so readers are advised
+to look at the actual values via the Settings editor.  Note the
+values in Settings are referred to as the </SPAN><B><I>absolute
+</I></B><SPAN STYLE="font-weight: medium"><SPAN STYLE="text-decoration: none"><SPAN STYLE="font-style: normal">default
+values, the values specified via a ColumnAttribute constructor are
+also default values for the Column Type to which the attribute is
+attached.</SPAN></SPAN></SPAN></FONT></FONT></P>
+<P CLASS="western" STYLE="font-style: normal"><BR>
+</P>
+<TABLE WIDTH=1134 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=123>
+	<COL WIDTH=329>
+	<COL WIDTH=158>
+	<COL WIDTH=490>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Name</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Default
+			Value</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">AllowableModes</FONT></FONT></P>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{readonly)</FONT></FONT></P>
+			<P CLASS="western" STYLE="text-decoration: none"><BR>
+			</P>
+		</TD>
+		<TD WIDTH=329>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">none</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ColumnWidth.modes[]</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western" STYLE="font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			array of ColumnWidth.modes  permitted for the Column</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Default</FONT></FONT></P>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{static
+			read only)</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">None</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ColumnAttribute</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western" STYLE="font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			a ColumnAttribute object containing the absolute default values.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Maximum</FONT></FONT></P>
+			<P CLASS="western" STYLE="text-decoration: none"><BR>
+			</P>
+		</TD>
+		<TD WIDTH=329>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">ColumnWidthAbsoluteDefaultMaximum
+			= 1024</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">int</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western" STYLE="page-break-inside: avoid"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			upper limit of the columns width, a column's width will never
+			exceed this width.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Minimum</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">ColumnWidthAbsoluteDefaultMinimum
+			= 2 * ColumnWidthAbsoluteDefaultResizePadding</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">int</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			lower limit of the column's width, a column's width will never be
+			less than this value.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Normal</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">ColumnWidthAbsoluteDefaultNormal
+			= 75</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">int</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			default width, expressed as a pixel count if Normal columns.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Percent</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">ColumnWidthAbsoluteDefaultPercent
+			= 12.5</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">int</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			percentage width that a Percent Column with occupy</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ResizePadding</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">ColumnWidthAbsoluteDefaultResizePadding
+			= 8</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">int</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">This
+			is the distance, measured in pixels, from the edge of a column
+			which is regarded as close enough to regard a left button mouse
+			drag as a resining operation.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=36>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">SingleLineHeaders</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">ColumnWidthAbsoluteDefaultSingleLineHeaders
+			= True</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">bool</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Indicates
+			whether a columns Header text is to kept on a single line.</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=123 HEIGHT=35>
+			<P CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ValueProperty</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=329>
+			<P LANG="" CLASS="western" STYLE="text-decoration: none"><FONT FACE="Verdana, sans-serif"><FONT SIZE=1 STYLE="font-size: 8pt">DataBoundColumnDefaultValueProperty
+			= &ldquo;Text&rdquo;</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=158>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=490>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">The
+			name of the property from which the cells value is obtained &ndash;
+			only pertinent to DataSource'd columns.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm; page-break-before: always">
+<BR>
+</P>
+<P LANG="" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Public
+Methods</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><BR>
+</P>
+<TABLE WIDTH=1134 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=293>
+	<COL WIDTH=257>
+	<COL WIDTH=558>
+	<TR VALIGN=TOP>
+		<TD WIDTH=293>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Definition</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=257>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Return
+			Type</B></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=558>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>Comments</B></FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=293>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">ToString()</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=257>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">string</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=558>
+			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Returns
+			a comprehensive multi-line value is returned containing the string
+			 representation of all public Properties with the exception of the
+			Default Property.</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+</BODY>
+</HTML>
