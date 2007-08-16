@@ -7,7 +7,7 @@
 	<META NAME="AUTHOR" CONTENT="Philip Daniels">
 	<META NAME="CREATED" CONTENT="20070809;7483300">
 	<META NAME="CHANGEDBY" CONTENT="Philip Daniels">
-	<META NAME="CHANGED" CONTENT="20070816;19230001">
+	<META NAME="CHANGED" CONTENT="20070816;19224826">
 	<STYLE>
 	<!--
 		@page { size: 21cm 29.7cm; margin: 2cm }
@@ -31,26 +31,21 @@
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
 </FONT><FONT COLOR="#0000ff">abstract</FONT><FONT COLOR="#000000">
 </FONT><FONT COLOR="#0000ff">class</FONT><FONT COLOR="#000000">
-</FONT><FONT COLOR="#2b91af">TableEventCancel</FONT><FONT COLOR="#000000">&lt;TTData&gt;
+</FONT><FONT COLOR="#2b91af">TableEventStandard</FONT><FONT COLOR="#000000">&lt;TTData&gt;
 </FONT><FONT COLOR="#0000ff">where</FONT><FONT COLOR="#000000">
 TTData : System.</FONT><FONT COLOR="#2b91af">EventArgs</FONT></FONT></FONT></P>
 <P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Provides
-a abstract generic class for Cancel-able events . It encapsulates the
-essential components required to process events, the event handler
-definition, the core event and the OnEvent method, in addition it
-provides a lock over the event when delegates are added to or removed
-from the event or the delegates are being invoked when the relevant
-event is signalled via the OnEvent method (in actual fact the lock is
-only held whilst the handler list is copied, it is this copy that is
-used to invoke the handlers, this is sone to prevent wedging if a
-handler happens to spin into a long running process).</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>The
-difference between the TableEventCancel and TableEventStandard is in
-the base class, the CancelEventStandard class has a read/write Cancel
-property.  It's usage is illustrated in the Usage section at the end
-of this document.  TableEventCancel itself does not access or act on
-the Cancel property itself, that is left to the the inheriting class.</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-bottom: 0.3cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Class
+a abstract generic class for standard events (i.e. those that cannot
+be cancelled). It encapsulates the essential components required to
+process events, the event handler definition, the core event and the
+OnEvent method, in addition it provides a lock over the event when
+delegates are added to or removed from the event or the delegates are
+being invoked when the relevant event is signalled via the OnEvent
+method (in actual fact the lock is only held whilst the handler list
+is copied, it is this copy that is used to invoke the handlers, this
+is sone to prevent wedging if a handler happens to spin into a long
+running process).</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; font-style: normal"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Class
 Type Parameters</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
 </P>
@@ -74,12 +69,12 @@ Type Parameters</FONT></FONT></P>
 			<P LANG="zxx" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><U>TTData</U></FONT></FONT></P>
 		</TD>
 		<TD WIDTH=21%>
-			<P LANG="zxx" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">System.ComponetModelCancel.EventArgs</FONT></FONT></P>
+			<P LANG="zxx" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">System.EventArgs</FONT></FONT></P>
 		</TD>
 		<TD WIDTH=54%>
 			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">This
 			is the data structure that will be made available to event
-			handlers, it MUST inherit from CancelEventArgs</FONT></FONT></P>
+			handlers, it MUST inherit from SystemEventArgs</FONT></FONT></P>
 		</TD>
 	</TR>
 </TABLE>
@@ -165,7 +160,7 @@ Delegates</FONT></FONT></P>
 			</P>
 		</TD>
 		<TD WIDTH=21%>
-			<P LANG="zxx" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">void</FONT></FONT></P>
+			<P LANG="zxx" CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Void</FONT></FONT></P>
 		</TD>
 		<TD WIDTH=54%>
 			<P CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Locks
@@ -242,62 +237,43 @@ MyClass</FONT></FONT></P>
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">public
-class CounterChangingEvent :TableEventCencel&lt;MyEvent.Data&gt;</FONT></FONT></P>
+class CounterChangedEvent :TableEventStandard&lt;MyEvent.Data&gt;</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">public
-class Data : System.ComponentModel.EventArgs</FONT></FONT></P>
+class Data : System.EventArgs</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">public
-int CurrentCounter { get {return this.theCurrentCounter; } }</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">public
-int ProposedCounter { get {return this.theProposedCounter ; } }</FONT></FONT></P>
+int OldCounter { get {return this.theOldCounter; } }</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <BR>
 </P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">internal
-Data(int _currentCounter, int _proposedCounter)</FONT></FONT></P>
+Data(int _oldCounter)</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">this.theCurrentCounter
-= _currentCounter;</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">this.theProposedCounter
-= _proposedCounter;</FONT></FONT></P>
+<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">this.theOldCounter
+= _oldCounter;</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">private
-theCurrentCounter;</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">private
-theProposedCounter;</FONT></FONT></P>
+int theOLdCounter;</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">internal
-bool Raise(object _sender, int _currentCounter, int
-_proposedCounter))</FONT></FONT></P>
+void Raise(object _sender, int _oldCounter)</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">Data
-__data = new Data(_currentCounter, _proposedCounter)</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">__data,Cancel
-= false;</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">this.OnEvent(_sender,
-__data));</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">return
-data.Cancel;</FONT></FONT></P>
+new Data(_oldCounter));</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; background: transparent; line-height: 100%; widows: 0; orphans: 0">
@@ -305,7 +281,7 @@ data.Cancel;</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <BR>
 </P>
-<P CLASS="western" STYLE="margin-left: 0.95cm; margin-bottom: 0.3cm; font-style: normal">
+<P CLASS="western" STYLE="margin-left: 0.95cm; margin-bottom: 0.3cm; font-style: normal; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2>Note the Raise method
 is not enforced, it is a convention adopted by the developer.
 Inheritors can use another name or they may choose to override the
@@ -315,14 +291,15 @@ rather an OnEvent override is that the latter would require the
 author finds it clearer to have &ldquo;event raising code&rdquo;
 invoke a local method with direct arguments rather than via a the
 data block constructor.</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 0.95cm; margin-bottom: 0.3cm"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2>An
-instance of the class can be declared and instanced thus</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-left: 0.97cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
+<FONT FACE="Verdana, sans-serif"><FONT SIZE=2>An instance of the
+class can be declared and instanced thus</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <BR>
 </P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">private
-CounterChangingEvent theCounterChanging;</FONT></FONT></P>
+CounterChangedEvent theCounterChanged;</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <BR>
 </P>
@@ -334,15 +311,15 @@ CounterChanged event can be provided thus</FONT></FONT></P>
 </P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">public
-event CounterChangingEvent.Handler CounterChanging</FONT></FONT></P>
+event CounterChangedEvent.Handler CounterChanged</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">add{
-this.theCounterChangingEvent.Event += value; }</FONT></FONT></P>
+this.theCounterChangedEvent.Event += value; }</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">remove{
-this.theCounterChangingEvent.Event -= value; }</FONT></FONT></P>
+this.theCounterChangedEvent.Event -= value; }</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 2.5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
@@ -372,23 +349,13 @@ int Counter</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
-<BR>
-</P>
-<P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">if
-(this.theCounterChangingEvent.Raise(this, this.theCounter, value))</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">{</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 7.5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">int
 __oldCounter = this.theCounter</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 7.5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
+<P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">this.theCounter=value;</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 7.5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
+<P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">this.theCounterChangedEvent.Raise(this,
 __oldCounter);</FONT></FONT></P>
-<P CLASS="western" STYLE="margin-left: 6.25cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
-<FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 5cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
 <FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt">}</FONT></FONT></P>
 <P CLASS="western" STYLE="margin-left: 3.75cm; margin-bottom: 0cm; line-height: 100%; widows: 0; orphans: 0">
