@@ -99,8 +99,10 @@ namespace XPTable.Editors
 		{
 			this.TextBox.KeyPress += new KeyPressEventHandler(OnKeyPress);
 			this.TextBox.LostFocus += new EventHandler(OnLostFocus);
-			
-			base.StartEditing();
+
+            this.TextBox.Multiline = (this.EditingTable.EnableWordWrap && this.EditingCell.WordWrap);
+
+            base.StartEditing();
 
 			this.TextBox.Focus();
 		}
