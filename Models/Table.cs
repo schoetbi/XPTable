@@ -805,8 +805,22 @@ namespace XPTable.Models
 
 		#region Coordinate Translation
 
-		#region ClientToDisplayRect
+        /// <summary>
+        /// Computes the height of the rows that are not visible (i.e. above the top row currently displayed).
+        /// </summary>
+        /// <returns></returns>
+        private int VScrollOffset()
+        {
+            int yOffset;
+            // This adds on the total height we can't see
+            if (this.EnableWordWrap)
+                yOffset = this.RowY(this.TopIndex);
+            else
+                yOffset = this.TopIndex * this.RowHeight;
+            return yOffset;
+        }
 
+		#region ClientToDisplayRect
 		/// <summary>
 		/// Computes the location of the specified client point into coordinates 
 		/// relative to the display rectangle
@@ -819,17 +833,13 @@ namespace XPTable.Models
 		{
 			int xPos = x - this.BorderWidth;
 
-			if (this.HScroll)
-			{
-				xPos += this.hScrollBar.Value;
-			}
+	        if (this.HScroll)
+		        xPos += this.hScrollBar.Value;
 
 			int yPos = y - this.BorderWidth;
 
 			if (this.VScroll)
-			{
-				yPos += this.TopIndex * this.RowHeight;
-			}
+                yPos += this.VScrollOffset();
 
 			return new Point(xPos, yPos);
 		}
@@ -860,11 +870,9 @@ namespace XPTable.Models
 		{
 			return new Rectangle(this.ClientToDisplayRect(rect.Location), rect.Size);
 		}
-
 		#endregion
 
 		#region DisplayRectToClient
-
 		/// <summary>
 		/// Computes the location of the specified point relative to the display 
 		/// rectangle point into client coordinates 
@@ -878,16 +886,12 @@ namespace XPTable.Models
 			int xPos = x + this.BorderWidth;
 
 			if (this.HScroll)
-			{
 				xPos -= this.hScrollBar.Value;
-			}
 
 			int yPos = y + this.BorderWidth;
 
 			if (this.VScroll)
-			{
-				yPos -= this.TopIndex * this.RowHeight;
-			}
+                yPos -= this.VScrollOffset();
 
 			return new Point(xPos, yPos);
 		}
@@ -918,7 +922,6 @@ namespace XPTable.Models
 		{
 			return new Rectangle(this.DisplayRectToClient(rect.Location), rect.Size);
 		}
-
 		#endregion
 
 		#region Cells
@@ -1525,17 +1528,7 @@ namespace XPTable.Models
 			}
 
 			if (this.VScroll)
-			{
-				// This adds on the total height we can't see
-				if (this.EnableWordWrap)
-				{
-					y += this.RowY(this.TopIndex);   // * this.RowHeight;
-				}
-				else
-				{
-					y += this.TopIndex * this.RowHeight;
-				}
-			}
+                y += this.VScrollOffset();
 
 			return this.TableModel.RowIndexAt(y);
 		}
