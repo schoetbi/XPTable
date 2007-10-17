@@ -4536,7 +4536,7 @@ namespace XPTable.Models
 		[Browsable(true)]
 		[Category("Behavior")]
 		[DefaultValue(SortType.AutoSort)]
-		[DisplayName("Sort Type")]
+//      [DisplayName("Sort Type")]                  // .Net 2.0 only
 		[Description("Select the type of sort to be used - use AutoSort to have system determine based on number of rows and whether or not a stable sort is required")]
 		public SortType SortType { get { return this.theSortType; } set { this.theSortType = value; } }
 		/// <summary>
@@ -4545,7 +4545,7 @@ namespace XPTable.Models
 		[Browsable(true)]
 		[Category("Behavior")]
 		[DefaultValue(true)]
-		[DisplayName("Stable Sort Required ?")]
+//		[DisplayName("Stable Sort Required ?")]     // .Net 2.0 only
 		[Description("Only relevant if AutoSort is specified, determines whether or not the system uses a stable sorting alogorithm")]
 		public bool StableSort { get { return this.theStableSort; } set { this.theStableSort = value; } }
 
