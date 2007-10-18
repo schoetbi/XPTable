@@ -1652,6 +1652,35 @@ namespace XPTable.Models
 				return -ydiff;
 			}
 		}
+
+		/// <summary>
+		/// Returns the number of visible rows, determined by iterating over all visible rows.
+		/// Copes with word-wrapped rows.
+		/// </summary>
+		/// <returns></returns>
+		private int VisibleRowCountExact()
+		{
+			int ydiff = 0;
+			RowCollection rows = this.TableModel.Rows;
+			int visibleHeight = this.CellDataRect.Height;
+			int bottomMostRow = 0;
+			for (int i = this.TopIndex; i < rows.Count; i++)
+			{
+				bottomMostRow = i;
+
+				// Don't count this row if it is currently a hidden subrow
+				Row row = rows[i];
+				if (row.Parent == null || row.Parent.ExpandSubRows)
+					ydiff += row.Height;
+
+				if (ydiff >= visibleHeight)
+				{
+					break;
+				}
+			}
+
+			return bottomMostRow - this.TopIndex + 0;
+		}
 		#endregion
 
 		#region Hit Tests
@@ -3950,14 +3979,16 @@ namespace XPTable.Models
 		{
 			get
 			{
-				// (This is only used for scroll bar stuff and is ok as an approximation)
-				int count = this.CellDataRect.Height / this.RowHeight;
-
-				if ((this.CellDataRect.Height % this.RowHeight) > 0)
+				int count ;
+				if (this.EnableWordWrap)
+					count = this.VisibleRowCountExact();
+				else
 				{
-					count++;
-				}
+					count = this.CellDataRect.Height / this.RowHeight;
 
+					if ((this.CellDataRect.Height % this.RowHeight) > 0)
+						count++;
+				}
 				return count;
 			}
 		}
@@ -4735,7 +4766,7 @@ namespace XPTable.Models
 		/// <summary>
 		/// Gets whether the Table is able to raise events
 		/// </summary>
-		protected new internal bool CanRaiseEvents
+		protected internal bool CanRaiseEvents
 		{
 			get
 			{
