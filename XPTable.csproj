@@ -748,6 +748,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Sorting\SortType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Sorting\TextComparer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
