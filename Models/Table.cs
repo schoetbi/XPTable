@@ -2274,31 +2274,23 @@ namespace XPTable.Models
 		/// </summary>
 		public void UpdateScrollBars()
 		{
-			if (!this.Scrollable || this.ColumnModel == null)
-			{
-				return;
-			}
-
 			// fix: Add width/height check as otherwise minimize 
 			//      causes a crash
 			//      Portia4ever (kangxj@126.com)
 			//      13/09/2005
 			//      v1.0.1
-			if (this.Width == 0 || this.Height == 0)
-			{
+			if (!this.Scrollable || this.ColumnModel == null || this.Width == 0 || this.Height == 0)
 				return;
-			}
 
 			bool hscroll = (this.ColumnModel.VisibleColumnsWidth > this.Width - (this.BorderWidth * 2));
 			bool vscroll = this.TotalRowAndHeaderHeight > (this.Height - (this.BorderWidth * 2) - (hscroll ? SystemInformation.HorizontalScrollBarHeight : 0));
 
 			if (vscroll)
-			{
 				hscroll = (this.ColumnModel.VisibleColumnsWidth > this.Width - (this.BorderWidth * 2) - SystemInformation.VerticalScrollBarWidth);
-			}
 
 			if (hscroll)
 			{
+                #region Set up the horizontal scrollbar
 				Rectangle hscrollBounds = new Rectangle(this.BorderWidth,
 					this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight,
 					this.Width - (this.BorderWidth * 2),
@@ -2321,9 +2313,8 @@ namespace XPTable.Models
 				this.hScrollBar.LargeChange = (hscrollBounds.Width <= 0) ? 0 : (hscrollBounds.Width - 1);
 
 				if (this.hScrollBar.Value > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
-				{
 					this.hScrollBar.Value = this.hScrollBar.Maximum - this.hScrollBar.LargeChange;
-				}
+                #endregion
 			}
 			else
 			{
@@ -2339,9 +2330,7 @@ namespace XPTable.Models
 					this.Height - (this.BorderWidth * 2));
 
 				if (hscroll)
-				{
 					vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
-				}
 
 				this.vScrollBar.Visible = true;
 				this.vScrollBar.Bounds = vscrollBounds;
@@ -2355,9 +2344,7 @@ namespace XPTable.Models
 				this.vScrollBar.LargeChange = this.VisibleRowCount - 1 <= 0 ? 0 : this.VisibleRowCount - 1;
 
 				if (this.vScrollBar.Value > this.vScrollBar.Maximum - this.vScrollBar.LargeChange)
-				{
 					this.vScrollBar.Value = this.vScrollBar.Maximum - this.vScrollBar.LargeChange;
-				}
 			}
 			else
 			{
@@ -2383,9 +2370,7 @@ namespace XPTable.Models
 				NativeMethods.ScrollWindow(this.Handle, scrollVal, 0, ref scrollRect, ref scrollRect);
 
 				if (scrollVal < 0)
-				{
 					invalidateRect.X = invalidateRect.Right + scrollVal;
-				}
 
 				invalidateRect.Width = Math.Abs(scrollVal);
 
@@ -2419,22 +2404,18 @@ namespace XPTable.Models
 
 				Rectangle invalidateRect = scrollRect.ToRectangle();
 
-				int scrollVal = 0;
-				if (this.EnableWordWrap)
-				{
-					if (scrollDiff < 0)
-					{
-						scrollVal = this.RowYDifference(this.TopIndex - scrollDiff, this.TopIndex);
-					}
-					else
-					{
-						scrollVal = this.RowYDifference(this.TopIndex, this.TopIndex + scrollDiff);
-					}
-				}
-				else
-				{
-					scrollVal = scrollDiff * this.RowHeight;
-				}
+                int scrollVal = 0;
+                if (this.EnableWordWrap)
+                {
+                    if (scrollDiff < 0)
+                        scrollVal = this.RowYDifference(this.TopIndex - scrollDiff, this.TopIndex);
+                    else
+                        scrollVal = this.RowYDifference(this.TopIndex, this.TopIndex + scrollDiff);
+                }
+                else
+                {
+                    scrollVal = scrollDiff * this.RowHeight;
+                }
 
 				NativeMethods.ScrollWindow(this.Handle, 0, scrollVal, ref scrollRect, ref scrollRect);
 
@@ -6875,6 +6856,7 @@ namespace XPTable.Models
 				return;
 			}
 
+            #region Left mouse button
 			// if the left mouse button is down, check if the LastMouseDownCell 
 			// references a valid cell.  if it does, send the mouse move message 
 			// to the cell and then exit (this will stop other cells/headers 
@@ -6893,7 +6875,9 @@ namespace XPTable.Models
 					}
 				}
 			}
+            #endregion
 
+            #region Column resizing
 			// are we resizing a column?
 			if (this.resizingColumnIndex != -1)
 			{
@@ -6923,6 +6907,7 @@ namespace XPTable.Models
 
 				return;
 			}
+            #endregion
 
 			// work out the potential state of play
 			this.CalcTableState(e.X, e.Y);
@@ -7898,11 +7883,13 @@ namespace XPTable.Models
 
 								renderer.Bounds = new Rectangle(this.GetColumnLeft(column), rowRect.Y, this.GetColumnWidth(column, varCell), rowRect.Height);
 
+                                // If this comes back zero then we have to go with the default
 								int newheight = renderer.GetCellHeight(e.Graphics, varCell);
-								int newMax = Math.Max(row.Height, newheight);
-								this.TableModel.Rows[i].InternalHeight = newMax;
-								if (newMax != rowRect.Height)
-									rowRect.Height = newMax;
+                                if (newheight == 0)
+                                    newheight = row.Height;
+                                this.TableModel.Rows[i].InternalHeight = newheight;
+                                if (newheight != rowRect.Height)
+                                    rowRect.Height = newheight;
 							}
 						}
 					}
@@ -8199,9 +8186,7 @@ namespace XPTable.Models
 			// stop editing as the editor doesn't move while 
 			// the table scrolls
 			if (this.IsEditing)
-			{
 				this.StopEditing();
-			}
 
 			if (this.CanRaiseEvents)
 			{
