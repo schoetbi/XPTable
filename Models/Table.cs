@@ -2332,10 +2332,14 @@ namespace XPTable.Models
 				if (hscroll)
 					vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
 
+				// fixed by giangian on 27/11/07
+				int offset = this.HeaderStyle == ColumnHeaderStyle.None ? 0 : 1;
+				
 				this.vScrollBar.Visible = true;
 				this.vScrollBar.Bounds = vscrollBounds;
 				this.vScrollBar.Minimum = 0;
-				this.vScrollBar.Maximum = (this.RowCount > this.VisibleRowCount ? this.RowCount - 1 : this.VisibleRowCount);
+				// fixed by giangian on 27/11/07
+				this.vScrollBar.Maximum = (this.RowCount > this.VisibleRowCount ? this.RowCount - offset : this.VisibleRowCount);
 				//netus - fix by Kosmokrat Hismoom  - added check for property Maximum
 				// as otherwise resizing could lead to a crash - 12/01/06
 				this.vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
