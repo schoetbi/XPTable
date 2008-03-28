@@ -185,18 +185,12 @@ namespace XPTable.Models
 		{
             int row = 0;
             if (this.Table.EnableWordWrap)
-            {
                 row = this.RowIndexAtExact(yPosition);
-            }
             else
-            {
                 row = yPosition / this.RowHeight;
-            }
 
 			if (row < 0 || row > this.Rows.Count - 1)
-			{
 				return -1;
-			}
 
 			return row;
 		}
@@ -634,7 +628,6 @@ namespace XPTable.Models
 
 			#endregion
 
-
 			#region Constructor
 
 			/// <summary>
@@ -658,7 +651,6 @@ namespace XPTable.Models
 			}
 
 			#endregion
-
 
 			#region Methods
 
@@ -1218,9 +1210,7 @@ namespace XPTable.Models
 
 			#endregion
 
-
 			#region Properties
-
 			/// <summary>
 			/// Gets an array that contains the currently selected Rows
 			/// </summary>
@@ -1229,9 +1219,7 @@ namespace XPTable.Models
 				get
 				{
 					if (this.rows.Count == 0)
-					{
 						return new Row[0];
-					}
 
 					this.rows.Sort(new RowComparer());
 
@@ -1248,9 +1236,7 @@ namespace XPTable.Models
 				get
 				{
 					if (this.rows.Count == 0)
-					{
 						return new int[0];
-					}
 
 					this.rows.Sort(new RowComparer());
 
@@ -1274,9 +1260,7 @@ namespace XPTable.Models
 				get
 				{
 					if (this.rows.Count == 0)
-					{
 						return Rectangle.Empty;
-					}
 
 					int[] indicies = this.SelectedIndicies;
 
@@ -1298,9 +1282,7 @@ namespace XPTable.Models
 				Rectangle bounds = new Rectangle();
 
 				if (this.owner.Table != null && this.owner.Table.ColumnModel != null)
-				{
 					bounds.Width = this.owner.Table.ColumnModel.VisibleColumnsWidth;
-				}
 
                 if (this.owner.Table.EnableWordWrap)
                 {
@@ -1310,12 +1292,16 @@ namespace XPTable.Models
 
                     if (start == end)
                     {
-                        bounds.Height = this.owner.Rows[start].Height;
+                        // no object when using subrows here
+                        // fix by CINAMON
+                        if (this.owner.rows[start] != null)
+                            bounds.Height = this.owner.Rows[start].Height;
+                        else
+                            bounds.Height = this.owner.RowHeight;
                     }
                     else
                     {
-                        bounds.Height = this.owner.Table.RowYDifference(start, end) +
-                            this.owner.Rows[end].Height;
+                        bounds.Height = this.owner.Table.RowYDifference(start, end) + this.owner.Rows[end].Height;
                     }
                 }
                 else
@@ -1323,21 +1309,15 @@ namespace XPTable.Models
                     bounds.Y = start * this.owner.RowHeight;
 
                     if (start == end)
-                    {
                         bounds.Height = this.owner.RowHeight;
-                    }
                     else
-                    {
                         bounds.Height = ((end + 1) * this.owner.RowHeight) - bounds.Y;
-                    }
                 }
 
 				return bounds;
 			}
-
 			#endregion
 		}
-
 		#endregion
 	}
 }
