@@ -7,9 +7,11 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
+	/// <summary>
+	/// Contains the control shown in a control column.
+	/// </summary>
 	public class ControlRendererData
     {
-
         #region Class Data
         private Control control;
         #endregion
