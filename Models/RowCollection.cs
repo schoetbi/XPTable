@@ -50,6 +50,7 @@ namespace XPTable.Models
         /// </summary>
         private Row rowowner;
 
+        private RowEventHandler propertyChangedEventHandler;
 		#endregion
 
 
@@ -69,6 +70,8 @@ namespace XPTable.Models
 			}
 				
 			this.owner = owner;
+
+            propertyChangedEventHandler = new RowEventHandler(row_PropertyChanged);
 		}
 
         /// <summary>
@@ -99,15 +102,14 @@ namespace XPTable.Models
 		public int Add(Row row)
 		{
 			if (row == null) 
-			{
 				throw new System.ArgumentNullException("Row is null");
-			}
 
 			int index = this.List.Add(row);
 
             if (owner != null)
-    			this.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
-
+            {
+                this.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
+            }
             else if (rowowner != null)
             {
                 // this is a sub row, so it needs a parent
@@ -116,7 +118,31 @@ namespace XPTable.Models
                 this.OnRowAdded(new RowEventArgs(row, RowEventType.Unknown));
             }
 
+            row.PropertyChanged += propertyChangedEventHandler;
+
 			return index;
+		}
+
+        private int _totalHiddenSubRows = 0;
+
+        /// <summary>
+        /// Gets the total number of subrows that are currently not expanded.
+        /// </summary>
+        public int HiddenSubRows
+        {
+            get { return _totalHiddenSubRows; }
+        }
+
+        private void row_PropertyChanged(object sender, RowEventArgs e)
+        {
+            if (e.EventType == RowEventType.ExpandSubRowsChanged)
+            {
+                if (!e.Row.ExpandSubRows)
+                    _totalHiddenSubRows += e.Row.SubRows.Count;
+                else
+                    _totalHiddenSubRows -= e.Row.SubRows.Count;
+
+            }
 		}
 
 
@@ -190,6 +216,8 @@ namespace XPTable.Models
 
                 else if (rowowner != null)
                     this.OnRowRemoved(new RowEventArgs(row, RowEventType.Unknown));
+
+                row.PropertyChanged -= propertyChangedEventHandler;
             }
 		}
 

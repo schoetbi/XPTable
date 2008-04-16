@@ -334,8 +334,19 @@ namespace XPTable.Models
 
 		#endregion
 
-		#endregion
+        #region Tooltips
+        /// <summary>
+        /// Occurs before a cell tooltip is shown.
+        /// </summary>
+        public event CellToolTipEventHandler CellToolTipPopup;
 
+        /// <summary>
+        /// Occurs before a header tooltip is shown.
+        /// </summary>
+        public event HeaderToolTipEventHandler HeaderToolTipPopup;
+        #endregion
+
+        #endregion
 
 		#region Class Data
 
@@ -1664,6 +1675,7 @@ namespace XPTable.Models
 			RowCollection rows = this.TableModel.Rows;
 			int visibleHeight = this.CellDataRect.Height;
 			int bottomMostRow = 0;
+            int count = 0;
 			for (int i = this.TopIndex; i < rows.Count; i++)
 			{
 				bottomMostRow = i;
@@ -1671,15 +1683,15 @@ namespace XPTable.Models
 				// Don't count this row if it is currently a hidden subrow
 				Row row = rows[i];
 				if (row.Parent == null || row.Parent.ExpandSubRows)
-					ydiff += row.Height;
+                {
+                    ydiff += row.Height;
 
-				if (ydiff >= visibleHeight)
-				{
-					break;
-				}
-			}
+                    if (ydiff < visibleHeight)
+                        count++;
+                }
+            }
 
-			return bottomMostRow - this.TopIndex + 0;
+            return count;
 		}
 		#endregion
 
@@ -2207,6 +2219,9 @@ namespace XPTable.Models
 
 				this.PerformLayout();
 				this.Invalidate(true);
+
+                if (this.EnableWordWrap)
+                    this.UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
 			}
 		}
 
@@ -2332,23 +2347,19 @@ namespace XPTable.Models
 				if (hscroll)
 					vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
 
-				// fixed by giangian on 27/11/07
-				int offset = this.HeaderStyle == ColumnHeaderStyle.None ? 0 : 1;
-				
+                int visibleRowCount = this.GetVisibleRowCount();
 				this.vScrollBar.Visible = true;
 				this.vScrollBar.Bounds = vscrollBounds;
 				this.vScrollBar.Minimum = 0;
-				// fixed by giangian on 27/11/07
-				this.vScrollBar.Maximum = (this.RowCount > this.VisibleRowCount ? this.RowCount - offset : this.VisibleRowCount);
-				//netus - fix by Kosmokrat Hismoom  - added check for property Maximum
+                this.vScrollBar.SmallChange = 1;
+
+                // When at the very bottom,     Large + Value = Max + 1
+                int rowcount = this.RowCount - this.TableModel.Rows.HiddenSubRows;
+                vScrollBar.Maximum = rowcount;
 				// as otherwise resizing could lead to a crash - 12/01/06
 				this.vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
-				this.vScrollBar.SmallChange = 1;
-				// fixed by Kosmokrat Hismoom on 7 jan 2006
-				this.vScrollBar.LargeChange = this.VisibleRowCount - 1 <= 0 ? 0 : this.VisibleRowCount - 1;
+				vScrollBar.LargeChange = visibleRowCount + 1;
 
-				if (this.vScrollBar.Value > this.vScrollBar.Maximum - this.vScrollBar.LargeChange)
-					this.vScrollBar.Value = this.vScrollBar.Maximum - this.vScrollBar.LargeChange;
 			}
 			else
 			{
@@ -2358,7 +2369,87 @@ namespace XPTable.Models
 		}
 
 
-		/// <summary>
+        /// <summary>
+        /// Scrolls the contents of the Table vertically to the specified value
+        /// </summary>
+        /// <param name="value">The value to scroll to</param>
+        protected void VerticalScroll(int value)
+        {
+            int scrollDiff = this.vScrollBar.Value - value;
+
+            if (scrollDiff != 0)
+            {
+                // scrollDiff < 0: going down
+
+                RECT scrollRect = RECT.FromRectangle(this.CellDataRect);
+
+                Rectangle invalidateRect = scrollRect.ToRectangle();
+
+                int scrollVal = 0;
+                if (this.EnableWordWrap)
+                {
+                    int hidden = 0;
+                    // If RowYDifference returns 0 then we are trying to scroll to a hidden subrow
+                    // so keep looping till we are scrolling to a visible row
+                    while (scrollVal == 0)
+                    {
+                        int from;
+                        int to;
+
+                        if (scrollDiff < 0)
+                        {
+                            from = this.TopIndex - scrollDiff;
+                            to = this.TopIndex;
+                        }
+                        else
+                        {
+                            from = this.TopIndex;
+                            to = this.TopIndex + scrollDiff;
+                        }
+
+                        scrollVal = this.RowYDifference(from, to);
+
+                        Console.WriteLine("VS A scrollVal={0}; scrollDiff={1}; vScrollBar.Value={3}; this.TopIndex={4}; hidden={2}",
+                            scrollVal, scrollDiff, hidden, vScrollBar.Value, this.TopIndex);
+
+                        if (scrollVal == 0)
+                        {
+                            if (scrollDiff < 0)
+                                scrollDiff = scrollDiff - 1;
+                            else
+                                scrollDiff = scrollDiff + 1;
+                        }
+                    }
+                }
+                else
+                {
+                    scrollVal = scrollDiff * this.RowHeight;
+                }
+
+                NativeMethods.ScrollWindow(this.Handle, 0, scrollVal, ref scrollRect, ref scrollRect);
+
+                if (scrollVal < 0)
+					invalidateRect.Y = invalidateRect.Bottom + scrollVal;
+
+                // Can't afford to do this if variable height grid
+                if (!this.EnableWordWrap)
+                    invalidateRect.Height = Math.Abs(scrollVal);
+
+                this.Invalidate(invalidateRect, false);
+
+                if (this.HScroll)
+                {
+                    this.Invalidate(new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
+                        this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight,
+                        SystemInformation.VerticalScrollBarWidth,
+                        SystemInformation.HorizontalScrollBarHeight),
+                        false);
+                }
+                UpdateScrollBars();
+            }
+        }
+
+        /// <summary>
 		/// Scrolls the contents of the Table horizontally to the specified value
 		/// </summary>
 		/// <param name="value">The value to scroll to</param>
@@ -2391,62 +2482,7 @@ namespace XPTable.Models
 			}
 		}
 
-
-		/// <summary>
-		/// Scrolls the contents of the Table vertically to the specified value
-		/// </summary>
-		/// <param name="value">The value to scroll to</param>
-		protected void VerticalScroll(int value)
-		{
-			int scrollDiff = this.vScrollBar.Value - value;
-
-			if (scrollDiff != 0)
-			{
-				// scrollDiff < 0: going down
-
-				RECT scrollRect = RECT.FromRectangle(this.CellDataRect);
-
-				Rectangle invalidateRect = scrollRect.ToRectangle();
-
-                int scrollVal = 0;
-                if (this.EnableWordWrap)
-                {
-                    if (scrollDiff < 0)
-                        scrollVal = this.RowYDifference(this.TopIndex - scrollDiff, this.TopIndex);
-                    else
-                        scrollVal = this.RowYDifference(this.TopIndex, this.TopIndex + scrollDiff);
-                }
-                else
-                {
-                    scrollVal = scrollDiff * this.RowHeight;
-                }
-
-				NativeMethods.ScrollWindow(this.Handle, 0, scrollVal, ref scrollRect, ref scrollRect);
-
-				if (scrollVal < 0)
-				{
-					invalidateRect.Y = invalidateRect.Bottom + scrollVal;
-				}
-
-				// Can't afford to do this if variable height grid
-				if (!this.EnableWordWrap)
-					invalidateRect.Height = Math.Abs(scrollVal);
-
-				this.Invalidate(invalidateRect, false);
-
-				if (this.HScroll)
-				{
-					this.Invalidate(new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
-						this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight,
-						SystemInformation.VerticalScrollBarWidth,
-						SystemInformation.HorizontalScrollBarHeight),
-						false);
-				}
-			}
-		}
-
-
-		/// <summary>
+        /// <summary>
 		/// Ensures that the Cell at the specified row and column is visible 
 		/// within the Table, scrolling the contents of the Table if necessary
 		/// </summary>
@@ -3960,9 +3996,7 @@ namespace XPTable.Models
 		/// Gets the number of rows that are visible in the Table
 		/// </summary>
 		[Browsable(false)]
-		public int VisibleRowCount
-		{
-			get
+        public int GetVisibleRowCount()
 			{
 				int count ;
 				if (this.EnableWordWrap)
@@ -3973,10 +4007,10 @@ namespace XPTable.Models
 
 					if ((this.CellDataRect.Height % this.RowHeight) > 0)
 						count++;
-				}
-				return count;
-			}
-		}
+            }
+
+            return count;
+        }
 
 
 		/// <summary>
@@ -4646,17 +4680,9 @@ namespace XPTable.Models
 		/// </summary>
 		protected TableState TableState
 		{
-			get
-			{
-				return this.tableState;
-			}
-
-			set
-			{
-				this.tableState = value;
-			}
-		}
-
+            get { return this.tableState; }
+            set { this.tableState = value; }
+        }
 
 		/// <summary>
 		/// Calculates the state of the Table at the specified 
@@ -4752,12 +4778,9 @@ namespace XPTable.Models
 		/// Gets whether the Table is able to raise events
 		/// </summary>
 		protected internal bool CanRaiseEvents
-		{
-			get
-			{
-				return (this.IsHandleCreated && this.beginUpdateCount == 0);
-			}
-		}
+        {
+            get { return (this.IsHandleCreated && this.beginUpdateCount == 0); }
+        }
 
 
 		/// <summary>
@@ -4766,17 +4789,9 @@ namespace XPTable.Models
 		/// </summary>
 		internal bool Preview
 		{
-			get
-			{
-				return this.preview;
-			}
-
-			set
-			{
-				this.preview = value;
-			}
-		}
-
+            get { return this.preview; }
+            set { this.preview = value; }
+        }
 		#endregion
 
 		#region Word wrapping
@@ -8206,12 +8221,17 @@ namespace XPTable.Models
 							this.Invalidate(this.CellDataRect, false);
 						}
 					}
-				}
-				else
-				{
-					this.VerticalScroll(e.NewValue);
-				}
-			}
+                    if (this.EnableWordWrap)
+                        this.UpdateScrollBars();
+                }
+                else
+                {
+                    this.VerticalScroll(e.NewValue);
+
+                    if (this.EnableWordWrap)
+                        this.UpdateScrollBars();
+                }
+            }
 		}
 
 
@@ -8296,7 +8316,7 @@ namespace XPTable.Models
 						invalidateRect.Y += this.HeaderHeight;
 					}
 
-					this.Invalidate(invalidateRect);
+                    this.InvalidateRect(invalidateRect);
 				}
 
 				if (e.NewSelectionBounds != Rectangle.Empty)
@@ -8308,7 +8328,7 @@ namespace XPTable.Models
 						invalidateRect.Y += this.HeaderHeight;
 					}
 
-					this.Invalidate(invalidateRect);
+                    this.InvalidateRect(invalidateRect);
 				}
 
 				if (SelectionChanged != null)
@@ -8392,8 +8412,29 @@ namespace XPTable.Models
 
 		#endregion
 
-		#endregion
+        #region Tooltips
+        /// <summary>
+        /// Raises the CellToolTipPopup event
+        /// </summary>
+        /// <param name="e">A CellToolTipEventArgs that contains the event data</param>
+        protected internal virtual void OnCellToolTipPopup(CellToolTipEventArgs e)
+        {
+            if (this.CanRaiseEvents && CellToolTipPopup != null)
+                CellToolTipPopup(this, e);
+        }
 
+        /// <summary>
+        /// Raises the HeaderToolTipPopup event
+        /// </summary>
+        /// <param name="e">A HeaderToolTipEventArgs that contains the event data</param>
+        protected internal virtual void OnHeaderToolTipPopup(HeaderToolTipEventArgs e)
+        {
+            if (this.CanRaiseEvents && HeaderToolTipPopup != null)
+                HeaderToolTipPopup(this, e);
+        }
+        #endregion
+
+        #endregion
 
 		#region Data binding
 

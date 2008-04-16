@@ -75,6 +75,16 @@ namespace XPTable.Renderers
                 return 0;
         }
 
+        private bool IsTextTrimmed(Graphics graphics, Cell cell, Font font, StringFormat format)
+        {
+            int chars;
+            int lines;
+
+            graphics.MeasureString(cell.Text, font, this.ClientRectangle.Size, format, out chars, out lines);
+
+            return chars < cell.Text.Length;
+        }
+
 		#region Events
 
 		#region Paint
@@ -89,22 +99,22 @@ namespace XPTable.Renderers
 			
 			// don't bother going any further if the Cell is null 
 			if (e.Cell == null)
-			{
 				return;
-			}
 
 			string text = e.Cell.Text;
 
 			if (text != null && text.Length != 0)
 			{
 				if (e.Enabled)
-				{
 					e.Graphics.DrawString(text, this.Font, this.ForeBrush, this.ClientRectangle, this.StringFormat);
-				}
 				else
-				{
 					e.Graphics.DrawString(text, this.Font, this.GrayTextBrush, this.ClientRectangle, this.StringFormat);
-				}
+            
+                // Also, determine whether we need a tooltip, if the text was truncated.
+                if (e.Table.EnableToolTips)
+                {
+                    e.Cell.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, e.Cell, this.Font, this.StringFormat);
+                }
 			}
 			
 			if( (e.Focused && e.Enabled)

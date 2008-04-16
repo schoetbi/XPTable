@@ -288,32 +288,41 @@ namespace XPTable.Renderers
 		{
 			this.Bounds = e.CellRect;
 
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
-			
+            this.Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
+
 			bool tooltipActive = e.Table.ToolTip.Active;
 
 			if (tooltipActive)
-			{
 				e.Table.ToolTip.Active = false;
-			}
 
 			e.Table.ResetMouseEventArgs();
 
-			e.Table.ToolTip.SetToolTip(e.Table, e.Cell.ToolTipText);
-
 			if (tooltipActive)
 			{
+                if (e.Cell != null)
+                {
+                    CellToolTipEventArgs args = new CellToolTipEventArgs(e.Cell, new Point(e.X, e.Y));
+
+                    // The default tooltip is to show the full text for any cell that has been truncated
+                    if (e.Cell.IsTextTrimmed)
+                        args.ToolTipText = e.Cell.Text;
+
+                    // Allow the outside world to modify the text or cancel this tooltip
+                    e.Table.OnCellToolTipPopup(args);
+
+                    // Even if this tooltip has been cancelled we need to get rid of the old tooltip
+                    if (args.Cancel)
+                        e.Table.ToolTip.SetToolTip(e.Table, string.Empty);
+                    else
+                        e.Table.ToolTip.SetToolTip(e.Table, args.ToolTipText);
+                }
+                else
+                {
+                    e.Table.ToolTip.SetToolTip(e.Table, string.Empty);
+                }
 				e.Table.ToolTip.Active = true;
 			}
 		}
-
 		#endregion
 
 		#region MouseLeave

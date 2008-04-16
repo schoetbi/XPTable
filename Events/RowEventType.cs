@@ -74,6 +74,11 @@ namespace XPTable.Events
 		/// <summary>
 		/// Occurs when the value of a Row's Editable property changes
 		/// </summary>
-		EditableChanged = 7
+		EditableChanged = 7,
+
+        /// <summary>
+        /// Occurs when the value of a Row's ExpandSubRows property changes
+        /// </summary>
+        ExpandSubRowsChanged = 8
 	}
 }

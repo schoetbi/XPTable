@@ -284,6 +284,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Events\ToolTipEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Models\ButtonColumn.cs"
                     SubType = "Component"
                     BuildAction = "Compile"

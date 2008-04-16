@@ -137,20 +137,31 @@ namespace XPTable.Renderers
 			bool tooltipActive = e.Table.ToolTip.Active;
 
 			if (tooltipActive)
-			{
 				e.Table.ToolTip.Active = false;
-			}
 
 			e.Table.ResetMouseEventArgs();
 
-			e.Table.ToolTip.SetToolTip(e.Table, e.Column.ToolTipText);
-
 			if (tooltipActive)
 			{
+                if (e.Column != null)
+                {
+                    HeaderToolTipEventArgs args = new HeaderToolTipEventArgs(e.Column, new Point(e.X, e.Y));
+
+                    // Allow the outside world to modify the text or cancel this tooltip
+                    e.Table.OnHeaderToolTipPopup(args);
+
+                    if (args.Cancel)
+                        e.Table.ToolTip.SetToolTip(e.Table, string.Empty);
+                    else
+                        e.Table.ToolTip.SetToolTip(e.Table, args.ToolTipText);
+                }
+                else
+                {
+                    e.Table.ToolTip.SetToolTip(e.Table, string.Empty);
+                }
 				e.Table.ToolTip.Active = true;
 			}
 		}
-
 		#endregion
 
 		#region MouseLeave

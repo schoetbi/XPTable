@@ -472,7 +472,14 @@ namespace XPTable.Models
 		public bool ExpandSubRows
 		{
 			get { return expandSubRows; }
-			set { expandSubRows = value; }
+            set
+            {
+                if (expandSubRows != value)
+                {
+                    expandSubRows = value;
+                    this.OnPropertyChanged(new RowEventArgs(this, RowEventType.ExpandSubRowsChanged));
+                }
+            }
 		}
 
         /// <summary>

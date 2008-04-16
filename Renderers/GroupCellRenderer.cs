@@ -323,6 +323,7 @@ namespace XPTable.Renderers
         }
         #endregion
 
+        #region Style 2
         /// <summary>
         /// Draws a line down the middle
         /// </summary>
@@ -368,8 +369,8 @@ namespace XPTable.Renderers
             // and connect it to the box
             int x2 = (int)Math.Floor(rect.X + (double)rect.Width / 2);
             g.DrawLine(p, x, top, x2 + 4, top);
-
         }
+        #endregion
 
 		/// <summary>
 		/// Raises the Paint event
