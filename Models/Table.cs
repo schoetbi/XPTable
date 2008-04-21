@@ -24,7 +24,6 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -39,7 +38,6 @@ using XPTable.Renderers;
 using XPTable.Sorting;
 using XPTable.Themes;
 using XPTable.Win32;
-
 
 namespace XPTable.Models
 {
@@ -549,9 +547,21 @@ namespace XPTable.Models
 		private HScrollBar hScrollBar;
 
 		/// <summary>
-		/// The Table's vertical ScrollBar
+		/// The Table's vertical ScrollBar. The Value property of this scrollbar is not the index of the
+		/// topmost row, but the index of the topmost *visible* row.
 		/// </summary>
 		private VScrollBar vScrollBar;
+
+		/// <summary>
+		/// Holds the index of the topmost row.
+		/// </summary>
+		private int topIndex;
+
+		/// <summary>
+		/// Holds the VScroll.Value property. Used to compare with the new VScroll.Value in the
+		/// ValueChanged event.
+		/// </summary>
+		private int lastVScrollValue;
 
 		#endregion
 
@@ -686,7 +696,6 @@ namespace XPTable.Models
 
 		#endregion
 
-
 		#region Constructor
 
 		/// <summary>
@@ -753,6 +762,7 @@ namespace XPTable.Models
 			this.vScrollBar.Location = new Point(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth, this.BorderWidth);
 			this.vScrollBar.Height = this.Height - (this.BorderWidth * 2) - SystemInformation.HorizontalScrollBarHeight;
 			this.vScrollBar.Scroll += new ScrollEventHandler(this.OnVerticalScroll);
+			this.vScrollBar.ValueChanged += new EventHandler(vScrollBar_ValueChanged);
 			this.Controls.Add(this.vScrollBar);
 
 			//
@@ -810,7 +820,6 @@ namespace XPTable.Models
 		}
 
 		#endregion
-
 
 		#region Methods
 
@@ -1153,7 +1162,7 @@ namespace XPTable.Models
 							}
 						}
 
-						if (this.IsValidCell(i, j) && this.IsValidColumn(j) && this.TableModel[i, j].Enabled && this.ColumnModel.Columns[j].Enabled && this.ColumnModel.Columns[j].Visible)
+						if (IsCellVisibleAndEnabled(i, j))
 						{
 							return new CellPos(i, j);
 						}
@@ -1205,7 +1214,7 @@ namespace XPTable.Models
 							}
 						}
 
-						if (this.IsValidCell(i, j) && this.IsValidColumn(j) && this.TableModel[i, j].Enabled && this.ColumnModel.Columns[j].Enabled && this.ColumnModel.Columns[j].Visible)
+						if (IsCellVisibleAndEnabled(i, j))
 						{
 							return new CellPos(i, j);
 						}
@@ -1231,6 +1240,28 @@ namespace XPTable.Models
 			}
 
 			return CellPos.Empty;
+		}
+
+
+		private bool IsCellVisibleAndEnabled(int row, int column)
+		{
+			bool ok = (this.IsValidCell(row, column) && 
+				this.IsValidColumn(column) && 
+				this.TableModel[row, column].Enabled && 
+				this.ColumnModel.Columns[column].Enabled && 
+				this.ColumnModel.Columns[column].Visible);
+
+			if (ok)
+			{
+				// If this cell belongs to a row that is in fact a sub row, and this subrow is hidden, then return false.
+				Cell cell = this.TableModel[row, column];
+				if (cell.Row.Parent != null)
+				{
+					ok = cell.Row.Parent.ExpandSubRows;
+				}
+			}
+
+			return ok;
 		}
 
 		/// <summary>
@@ -2348,18 +2379,21 @@ namespace XPTable.Models
 					vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
 
                 int visibleRowCount = this.GetVisibleRowCount();
+
 				this.vScrollBar.Visible = true;
 				this.vScrollBar.Bounds = vscrollBounds;
 				this.vScrollBar.Minimum = 0;
                 this.vScrollBar.SmallChange = 1;
 
-                // When at the very bottom,     Large + Value = Max + 1
+                // When at the very bottom,     LargeChange + Value = Maximum + 1
+
+				// This is the total number of rows in the table that are not hidden
                 int rowcount = this.RowCount - this.TableModel.Rows.HiddenSubRows;
+
                 vScrollBar.Maximum = rowcount;
 				// as otherwise resizing could lead to a crash - 12/01/06
 				this.vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
 				vScrollBar.LargeChange = visibleRowCount + 1;
-
 			}
 			else
 			{
@@ -2368,85 +2402,54 @@ namespace XPTable.Models
 			}
 		}
 
+		/// <summary>
+		/// Returns the correct new value for the scrollbar.Value property.
+		/// The ValueChanged event handler invalidates the control, because if
+		/// the thumb track is clicked, then the Value property is changed without coming
+		/// through this method.
+		/// </summary>
+        /// <param name="previousTopRowIndex"></param>
+        /// <param name="howMany"></param>
+		/// <returns>The index of the row that should be used to set the .Value property of the scrollbar.</returns>
+		protected int GetNewTopRowIndex(int previousTopRowIndex, int howMany)
+		{
+			int visibleRows = this.vScrollBar.LargeChange - 1;
+            bool down = (howMany > 0);
+
+            int max = Math.Abs(howMany);
+
+            CellPos newCell = new CellPos(previousTopRowIndex, 0);  // The row currently at the top
+            for (int i = 0; i < max; i++)
+            {
+                // The first cell on the row we are going to (if all is well)
+                newCell = this.FindNextVisibleEnabledCell(newCell, true, down, false, false);
+            }
+
+            return newCell.Row;
+		}
 
         /// <summary>
-        /// Scrolls the contents of the Table vertically to the specified value
+        /// Returns a safe value that can be used for the .Value property of the V scrollbar (that is 
+        /// within the min and max).
         /// </summary>
-        /// <param name="value">The value to scroll to</param>
-        protected void VerticalScroll(int value)
+        /// <param name="newValue"></param>
+        /// <returns></returns>
+        private int EnsureSafeVScrollValue(int newValue)
         {
-            int scrollDiff = this.vScrollBar.Value - value;
+            int newTopRowIndex = newValue;
+            int visibleRows = this.vScrollBar.LargeChange - 1;
 
-            if (scrollDiff != 0)
-            {
-                // scrollDiff < 0: going down
-
-                RECT scrollRect = RECT.FromRectangle(this.CellDataRect);
-
-                Rectangle invalidateRect = scrollRect.ToRectangle();
-
-                int scrollVal = 0;
-                if (this.EnableWordWrap)
-                {
-                    int hidden = 0;
-                    // If RowYDifference returns 0 then we are trying to scroll to a hidden subrow
-                    // so keep looping till we are scrolling to a visible row
-                    while (scrollVal == 0)
-                    {
-                        int from;
-                        int to;
-
-                        if (scrollDiff < 0)
-                        {
-                            from = this.TopIndex - scrollDiff;
-                            to = this.TopIndex;
-                        }
-                        else
-                        {
-                            from = this.TopIndex;
-                            to = this.TopIndex + scrollDiff;
-                        }
-
-                        scrollVal = this.RowYDifference(from, to);
-
-                        Console.WriteLine("VS A scrollVal={0}; scrollDiff={1}; vScrollBar.Value={3}; this.TopIndex={4}; hidden={2}",
-                            scrollVal, scrollDiff, hidden, vScrollBar.Value, this.TopIndex);
-
-                        if (scrollVal == 0)
-                        {
-                            if (scrollDiff < 0)
-                                scrollDiff = scrollDiff - 1;
-                            else
-                                scrollDiff = scrollDiff + 1;
-                        }
-                    }
-                }
-                else
-                {
-                    scrollVal = scrollDiff * this.RowHeight;
-                }
-
-                NativeMethods.ScrollWindow(this.Handle, 0, scrollVal, ref scrollRect, ref scrollRect);
-
-                if (scrollVal < 0)
-					invalidateRect.Y = invalidateRect.Bottom + scrollVal;
-
-                // Can't afford to do this if variable height grid
-                if (!this.EnableWordWrap)
-                    invalidateRect.Height = Math.Abs(scrollVal);
-
-                this.Invalidate(invalidateRect, false);
-
-                if (this.HScroll)
-                {
-                    this.Invalidate(new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
-                        this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight,
-                        SystemInformation.VerticalScrollBarWidth,
-                        SystemInformation.HorizontalScrollBarHeight),
-                        false);
-                }
-                UpdateScrollBars();
+			if (newTopRowIndex < 0)
+			{
+				// Can get here with the mousewheel going up
+				newTopRowIndex = 0;
+			}
+			else if (newTopRowIndex > this.vScrollBar.Maximum - visibleRows)
+			{
+				// Can get here with the mousewheel going down
+				newTopRowIndex = this.vScrollBar.Maximum - visibleRows;
             }
+            return newTopRowIndex;
         }
 
         /// <summary>
@@ -2635,27 +2638,19 @@ namespace XPTable.Models
 			get
 			{
 				if (this.ColumnModel == null || this.ColumnModel.VisibleColumnCount == 0)
-				{
 					return -1;
-				}
 
 				int rightEdge = this.hScrollBar.Value + this.PseudoClientRect.Right;
 
 				if (this.VScroll)
-				{
 					rightEdge -= this.vScrollBar.Width;
-				}
 
 				int col = this.ColumnModel.ColumnIndexAtX(rightEdge);
 
 				if (col == -1)
-				{
 					return this.ColumnModel.PreviousVisibleColumn(this.ColumnModel.Columns.Count);
-				}
 				else if (!this.ColumnModel.Columns[col].Visible)
-				{
 					return this.ColumnModel.PreviousVisibleColumn(col);
-				}
 
 				return col;
 			}
@@ -2923,9 +2918,7 @@ namespace XPTable.Models
 			Row focusedRow = null;
 
 			if (this.FocusedCell != CellPos.Empty)
-			{
-				focusedRow = this.tableModel.Rows[this.FocusedCell.Row];
-			}
+	            focusedRow = this.tableModel.Rows[ this.FocusedCell.Row ];
 
 			sorter.Sort();
 
@@ -3019,7 +3012,6 @@ namespace XPTable.Models
 		#endregion
 
 		#endregion
-
 
 		#region Properties
 
@@ -3925,9 +3917,7 @@ namespace XPTable.Models
 			get
 			{
 				if (this.TableModel == null)
-				{
 					return 0;
-				}
 
 				return this.TableModel.RowHeight;
 			}
@@ -3944,18 +3934,12 @@ namespace XPTable.Models
 			{
 				// v1.1.1 fix (jover) - used to error if no rows were added
 				if (this.TableModel == null || this.TableModel.Rows.Count == 0)
-				{
 					return 0;
-				}
 
 				if (this.EnableWordWrap)
-				{
 					return this.RowYDifference(0, this.TableModel.Rows.Count) + this.TableModel.Rows[this.TableModel.Rows.Count - 1].Height;
-				}
 				else
-				{
 					return this.TableModel.Rows.Count * this.RowHeight;
-				}
 			}
 		}
 
@@ -3967,10 +3951,7 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public int TotalRowAndHeaderHeight
 		{
-			get
-			{
-				return this.TotalRowHeight + this.HeaderHeight;
-			}
+			get	{ return this.TotalRowHeight + this.HeaderHeight; }
 		}
 
 
@@ -3983,9 +3964,7 @@ namespace XPTable.Models
 			get
 			{
 				if (this.TableModel == null)
-				{
 					return 0;
-				}
 
 				return this.TableModel.Rows.Count;
 			}
@@ -3993,21 +3972,16 @@ namespace XPTable.Models
 
 
 		/// <summary>
-		/// Gets the number of rows that are visible in the Table
+		/// Gets the number of whole rows that are visible in the Table
 		/// </summary>
 		[Browsable(false)]
         public int GetVisibleRowCount()
-			{
-				int count ;
-				if (this.EnableWordWrap)
-					count = this.VisibleRowCountExact();
-				else
-				{
-					count = this.CellDataRect.Height / this.RowHeight;
-
-					if ((this.CellDataRect.Height % this.RowHeight) > 0)
-						count++;
-            }
+		{
+			int count ;
+			if (this.EnableWordWrap)
+				count = this.VisibleRowCountExact();
+			else
+				count = this.CellDataRect.Height / this.RowHeight;
 
             return count;
         }
@@ -4022,14 +3996,10 @@ namespace XPTable.Models
 			get
 			{
 				if (this.TableModel == null || this.TableModel.Rows.Count == 0)
-				{
 					return -1;
-				}
 
 				if (this.VScroll)
-				{
-					return this.vScrollBar.Value;
-				}
+                    return topIndex;
 
 				return 0;
 			}
@@ -4967,7 +4937,6 @@ namespace XPTable.Models
 		#endregion
 
 		#endregion
-
 
 		#region Events
 
@@ -6293,6 +6262,7 @@ namespace XPTable.Models
 
 					if (key == Keys.Up || key == Keys.Down || key == Keys.Left || key == Keys.Right)
 					{
+						#region Arrow keys
 						CellPos nextCell;
 
 						if (key == Keys.Up)
@@ -6325,78 +6295,46 @@ namespace XPTable.Models
 								this.TableModel.Selections.SelectCell(this.FocusedCell);
 							}
 						}
+						#endregion
 					}
 					else if (e.KeyData == Keys.PageUp)
 					{
+						#region Page Up
 						if (this.RowCount > 0)
 						{
-							CellPos nextCell;
-
-							if (!this.VScroll)
-							{
-								nextCell = this.FindNextVisibleEnabledCell(new CellPos(0, this.FocusedCell.Column), true, true, true, false);
-							}
-							else
-							{
-								if (this.FocusedCell.Row > this.vScrollBar.Value && this.TableModel[this.vScrollBar.Value, this.FocusedCell.Column].Enabled)
-								{
-									nextCell = this.FindNextVisibleEnabledCell(new CellPos(this.vScrollBar.Value, this.FocusedCell.Column), true, true, true, false);
-								}
-								else
-								{
-									nextCell = this.FindNextVisibleEnabledCell(new CellPos(Math.Max(-1, this.vScrollBar.Value - (this.vScrollBar.LargeChange - 1)), this.FocusedCell.Column), true, true, true, false);
-								}
-							}
+							int i = GetNewIndexFromPageUp();;
+							CellPos temp = new CellPos(i, this.FocusedCell.Column);;
+							CellPos nextCell = this.FindNextVisibleEnabledCell(temp, true, false, true, false);
 
 							if (nextCell != CellPos.Empty)
 							{
 								this.FocusedCell = nextCell;
-
 								this.TableModel.Selections.SelectCell(this.FocusedCell);
 							}
-						}
-					}
+                        }
+						#endregion
+                    }
 					else if (e.KeyData == Keys.PageDown)
-					{
-						if (this.RowCount > 0)
-						{
-							CellPos nextCell;
+                    {
+						#region Page Down
+                        if (this.RowCount > 0)
+                        {
+							int i = GetNewIndexFromPageDown();;
+							CellPos temp = new CellPos(i, this.FocusedCell.Column);
+							CellPos nextCell = this.FindNextVisibleEnabledCell(temp, true, false, true, false);
 
-							if (!this.VScroll)
-							{
-								nextCell = this.FindNextVisibleEnabledCell(new CellPos(this.RowCount - 1, this.FocusedCell.Column), true, false, true, false);
-							}
-							else
-							{
-								if (this.FocusedCell.Row < this.vScrollBar.Value + this.vScrollBar.LargeChange)
-								{
-									if (this.FocusedCell.Row == (this.vScrollBar.Value + this.vScrollBar.LargeChange) - 1 &&
-										this.RowRect(this.vScrollBar.Value + this.vScrollBar.LargeChange).Bottom > this.CellDataRect.Bottom)
-									{
-										nextCell = this.FindNextVisibleEnabledCell(new CellPos(Math.Min(this.RowCount - 1, this.FocusedCell.Row - 1 + this.vScrollBar.LargeChange), this.FocusedCell.Column), true, false, true, false);
-									}
-									else
-									{
-										nextCell = this.FindNextVisibleEnabledCell(new CellPos(this.vScrollBar.Value + this.vScrollBar.LargeChange - 1, this.FocusedCell.Column), true, false, true, false);
-									}
-								}
-								else
-								{
-									nextCell = this.FindNextVisibleEnabledCell(new CellPos(Math.Min(this.RowCount - 1, this.FocusedCell.Row + this.vScrollBar.LargeChange), this.FocusedCell.Column), true, false, true, false);
-								}
-							}
-
-							if (nextCell != CellPos.Empty)
+                            if (nextCell != CellPos.Empty)
 							{
 								this.FocusedCell = nextCell;
-
 								this.TableModel.Selections.SelectCell(this.FocusedCell);
 							}
-						}
-					}
-					else if (e.KeyData == Keys.Home || e.KeyData == Keys.End)
-					{
-						if (this.RowCount > 0)
+                        }
+						#endregion
+                    }
+                    else if (e.KeyData == Keys.Home || e.KeyData == Keys.End)
+                    {
+						#region Home, End
+                        if (this.RowCount > 0)
 						{
 							CellPos nextCell;
 
@@ -6415,8 +6353,9 @@ namespace XPTable.Models
 
 								this.TableModel.Selections.SelectCell(this.FocusedCell);
 							}
-						}
-					}
+                        }
+						#endregion
+                    }
 				}
 				else
 				{
@@ -6436,8 +6375,9 @@ namespace XPTable.Models
 			else
 			{
 				if (this.FocusedCell == CellPos.Empty)
-				{
-					Keys key = e.KeyData & Keys.KeyCode;
+                {
+					#region Cell is Empty
+                    Keys key = e.KeyData & Keys.KeyCode;
 
 					if (this.IsReservedKey(e.KeyData))
 					{
@@ -6468,11 +6408,62 @@ namespace XPTable.Models
 								}
 							}
 						}
-					}
-				}
+                    }
+					#endregion
+                }
 			}
 		}
 
+		private int GetNewIndexFromPageUp()
+		{
+			int i;
+			if (!this.VScroll)
+			{
+				// Not enough data to scroll, so go to the top row
+				i = 0;
+			}
+			else
+			{
+				int x = topIndex;
+				int y = this.vScrollBar.Value - (this.vScrollBar.LargeChange - 1);
+
+				if (this.FocusedCell.Row > topIndex && this.TableModel[topIndex, this.FocusedCell.Column].Enabled)
+				{
+					// Focus is not on the topmost visible row, so without scrolling, put focus on the topmost row
+					i = topIndex;
+				}
+				else
+				{
+					// We are already on the topmost visible row, so scroll up by a page
+					i = Math.Max(-1, this.vScrollBar.Value - (this.vScrollBar.LargeChange - 1));
+				}
+			}
+			return i;
+		}
+
+		private int GetNewIndexFromPageDown()
+		{
+			int i;
+			if (!this.VScroll)
+			{
+				// Not enough data to scroll, so go to the bottom row
+				i = this.RowCount - 1;
+			}
+			else
+			{
+				int currentRow = this.FocusedCell.Row;
+				int bottomRow = topIndex + vScrollBar.LargeChange - 2;
+				if (currentRow < bottomRow)
+				{
+					i = bottomRow;
+				}
+				else
+				{
+					i = Math.Min(this.RowCount - 1, currentRow - 2 + this.vScrollBar.LargeChange);
+				}
+			}
+			return i;
+		}
 		#endregion
 
 		#region KeyUp
@@ -7214,17 +7205,7 @@ namespace XPTable.Models
 			{
 				int newVal = this.vScrollBar.Value - ((e.Delta / 120) * SystemInformation.MouseWheelScrollLines);
 
-				if (newVal < 0)
-				{
-					newVal = 0;
-				}
-				else if (newVal > this.vScrollBar.Maximum - this.vScrollBar.LargeChange + 1)
-				{
-					newVal = this.vScrollBar.Maximum - this.vScrollBar.LargeChange + 1;
-				}
-
-				this.VerticalScroll(newVal);
-				this.vScrollBar.Value = newVal;
+                this.vScrollBar.Value = this.EnsureSafeVScrollValue(newVal);
 			}
 			else if (this.HScroll)
 			{
@@ -8083,14 +8064,25 @@ namespace XPTable.Models
 		{
 			if (this.CanRaiseEvents)
 			{
-				this.InvalidateRow(e.Index);
-
-				if (RowPropertyChanged != null)
+				if (e.EventType == RowEventType.ExpandSubRowsChanged)
 				{
-					RowPropertyChanged(e.Row, e);
+					// This changes the whole table
+					this.Invalidate();
+
+					UpdateScrollBars();
 				}
-			}
-		}
+				else
+				{
+					// These events just change the row itself
+					this.InvalidateRow(e.Index);
+
+					if (RowPropertyChanged != null)
+					{
+						RowPropertyChanged(e.Row, e);
+					}
+				}
+            }
+        }
 
 
 		/// <summary>
@@ -8209,31 +8201,30 @@ namespace XPTable.Models
 
 			if (this.CanRaiseEvents)
 			{
-				// non-solid column lines develop artifacts while scrolling 
-				// with the thumb so we invalidate the table once thumb 
-				// scrolling has finished to make them look nice again
-				if (e.Type == ScrollEventType.ThumbPosition)
-				{
-					if (this.GridLineStyle != GridLineStyle.Solid)
-					{
-						if (this.GridLines == GridLines.Columns || this.GridLines == GridLines.Both)
-						{
-							this.Invalidate(this.CellDataRect, false);
-						}
-					}
-                    if (this.EnableWordWrap)
-                        this.UpdateScrollBars();
-                }
-                else
+                if (e.Type == ScrollEventType.EndScroll
+                    || e.Type == ScrollEventType.SmallIncrement
+                    || e.Type == ScrollEventType.SmallDecrement)
                 {
-                    this.VerticalScroll(e.NewValue);
-
-                    if (this.EnableWordWrap)
-                        this.UpdateScrollBars();
+                    int i = EnsureSafeVScrollValue(e.NewValue);
+                    e.NewValue = i;
                 }
             }
-		}
+        }
 
+
+		private void vScrollBar_ValueChanged(object sender, EventArgs e)
+		{
+            int newtopIndex = GetNewTopRowIndex(topIndex, vScrollBar.Value - lastVScrollValue);
+
+            topIndex = newtopIndex;
+
+            this.Invalidate();
+
+			if (this.EnableWordWrap)
+				UpdateScrollBars();
+
+            lastVScrollValue = vScrollBar.Value;
+		}
 
 		/// <summary>
 		/// Handler for a ScrollBars GotFocus event

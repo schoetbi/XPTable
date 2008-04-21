@@ -231,8 +231,6 @@ namespace XPTable.Renderers
 
 			Row r = e.Table.TableModel.Rows[e.Row];
 			r.ExpandSubRows = !r.ExpandSubRows;
-
-			e.Table.Invalidate();
 		}
 
 		#endregion

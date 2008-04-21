@@ -1162,15 +1162,11 @@ namespace XPTable.Models
 			
 			if (this.CanRaiseEvents)
 			{
-				if (this.TableModel != null)
-				{
-					this.TableModel.OnRowPropertyChanged(e);
-				}
-				
 				if (PropertyChanged != null)
-				{
 					PropertyChanged(this, e);
-				}
+
+				if (this.TableModel != null)
+					this.TableModel.OnRowPropertyChanged(e);
 			}
 		}
 
