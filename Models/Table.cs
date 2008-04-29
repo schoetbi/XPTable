@@ -580,7 +580,12 @@ namespace XPTable.Models
 		/// <summary>
 		/// Specifies whether multiple rows and cells can be selected
 		/// </summary>
-		private bool multiSelect;
+        private bool multiSelect;
+
+        /// <summary>
+        /// Specifies whether all rows in the family are selected (i.e. parent, children and siblings)
+        /// </summary>
+        private bool familyRowSelect;
 
 		/// <summary>
 		/// Specifies whether clicking a row selects all its cells
@@ -4262,6 +4267,27 @@ namespace XPTable.Models
 		}
 
 
+        /// <summary>
+        /// Gets or sets whether clicking on a cell selects the 'family' of rows (i.e. the parent and all children)
+        /// Only if FullRowSelect is also true.
+        /// </summary>
+        [Category("Selection"),
+        DefaultValue(false),
+        Description("Specifies whether all rows in the family are selected (i.e. parent, children and siblings)")]
+        public bool FamilyRowSelect
+        {
+            get
+            {
+                return this.familyRowSelect;
+            }
+
+            set
+            {
+                if (this.familyRowSelect != value)
+                    this.familyRowSelect = value;
+            }
+        }
+
 		/// <summary>
 		/// Gets or sets whether all other cells in the row are highlighted 
 		/// when a cell is selected
@@ -6732,21 +6758,15 @@ namespace XPTable.Models
 			if (region == TableRegion.Cells)
 			{
 				if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right)
-				{
 					return;
-				}
 
-				if ((!this.AllowRMBSelection)
-					&& (e.Button == MouseButtons.Right))
-				{
+				if ((!this.AllowRMBSelection) && (e.Button == MouseButtons.Right))
 					return;
-				}
 
 				if (!this.IsValidCell(row, column) || !this.IsCellEnabled(row, column))
 				{
 					// clear selections
 					this.TableModel.Selections.Clear();
-
 					return;
 				}
 
@@ -6759,9 +6779,7 @@ namespace XPTable.Models
 				// don't bother going any further if the user 
 				// double clicked or we're not allowed to select
 				if (e.Clicks > 1 || !this.AllowSelection)
-				{
 					return;
-				}
 
 				this.lastMouseDownCell.Row = row;
 				this.lastMouseDownCell.Column = column;
@@ -6770,13 +6788,12 @@ namespace XPTable.Models
 				this.RaiseCellMouseDown(new CellPos(row, column), e);
 
 				if (!this.ColumnModel.Columns[column].Selectable)
-				{
 					return;
-				}
 
 				//
 
-				if ((ModifierKeys & Keys.Shift) == Keys.Shift && this.MultiSelect)
+                #region Multiselect - shift
+                if ((ModifierKeys & Keys.Shift) == Keys.Shift && this.MultiSelect)
 				{
 					if ((e.Button == MouseButtons.Right)
 						// Mateusz [PEYN] Adamus (peyn@tlen.pl)
@@ -6789,9 +6806,11 @@ namespace XPTable.Models
 					this.TableModel.Selections.AddShiftSelectedCell(row, column);
 
 					return;
-				}
+                }
+                #endregion
 
-				if ((ModifierKeys & Keys.Control) == Keys.Control && this.MultiSelect)
+                #region Multiselect - control
+                if ((ModifierKeys & Keys.Control) == Keys.Control && this.MultiSelect)
 				{
 					if ((e.Button == MouseButtons.Right)
 						// Mateusz [PEYN] Adamus (peyn@tlen.pl)
@@ -6810,7 +6829,6 @@ namespace XPTable.Models
 						if (this.TableModel.Selections.IsRowSelected(row))
 						{
 							this.TableModel.Selections.RemoveRow(row);
-
 							return;
 						}
 					}
@@ -6825,24 +6843,49 @@ namespace XPTable.Models
 						{
 							// we deselect it
 							this.TableModel.Selections.RemoveRow(row);
-
 							return;
 						}
 					}
 
 					if (this.TableModel.Selections.IsCellSelected(row, column))
-					{
 						this.TableModel.Selections.RemoveCell(row, column);
-					}
 					else
-					{
 						this.TableModel.Selections.AddCell(row, column);
-					}
 
 					return;
-				}
+                }
+                #endregion
 
-				this.TableModel.Selections.SelectCell(row, column);
+                if (this.familyRowSelect && this.fullRowSelect)
+                {
+                    // family select is where we select all the rows either:
+                    // under the clicked (parent) row, or
+                    // that are siblings of the clicked (chlid) row
+                    if (r.Parent != null)
+                    {
+                        // this is a child so select all the siblings
+                        this.TableModel.Selections.SelectCell(r.Parent.Index, column);
+                        this.tableModel.Selections.AddShiftSelectedCell(r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column); // last child row
+                    }
+                    else
+                    {
+                        // this is not a child, so if it is a parent, select all children
+                        if (r.SubRows.Count == 0)
+                        {
+                            this.TableModel.Selections.SelectCell(row, column);
+                        }
+                        else
+                        {
+                            this.TableModel.Selections.SelectCell(row, column);
+                            this.tableModel.Selections.AddShiftSelectedCell(r.SubRows[r.SubRows.Count - 1].Index, column); // last child row
+                        }
+                    }
+                }
+                else
+                {
+                    // 'normal' secletion mode - just select what was clicked
+                    this.TableModel.Selections.SelectCell(row, column);
+                }
 			}
 
 			#endregion
