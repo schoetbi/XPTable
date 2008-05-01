@@ -129,6 +129,23 @@ namespace XPTable.Editors
 		#endregion
 		
 
+		#region Events
+		/// <summary>
+		/// Occurs when the CellEditor is just about to change the value
+		/// </summary>
+		public event NumericCellEditEventHandler BeforeChange;
+
+		/// <summary>
+		/// Raises the BeforeChange event
+		/// </summary>
+		/// <param name="e">A CellEditEventArgs that contains the event data</param>
+		protected virtual void OnBeforeChange(NumericCellEditEventArgs e)
+		{
+			if (this.BeforeChange != null)
+				this.BeforeChange(this, e);
+		}
+		#endregion
+
 		#region Constructor
 		
 		/// <summary>
@@ -311,7 +328,15 @@ namespace XPTable.Editors
 				}
 			}
 
-			this.Value = num;
+			//Cell source, ICellEditor editor, Table table, int row, int column, Rectangle cellRect
+			NumericCellEditEventArgs e = new NumericCellEditEventArgs(this.cell, this, this.table, this.cell.Row.Index, 
+				this.cellPos.Column, this.cellRect, this.currentValue);
+			e.NewValue = num;
+
+			OnBeforeChange(e);
+
+			if (!e.Cancel)
+				this.Value = e.NewValue;
 		}
 
 
@@ -341,7 +366,14 @@ namespace XPTable.Editors
 				}
 			}
 
-			this.Value = num;
+			NumericCellEditEventArgs e = new NumericCellEditEventArgs(this.cell, this, this.table, this.cell.Row.Index, 
+				this.cellPos.Column, this.cellRect, this.currentValue);
+			e.NewValue = num;
+
+			OnBeforeChange(e);
+
+			if (!e.Cancel)
+				this.Value = e.NewValue;
 		}
 
 
@@ -468,9 +500,7 @@ namespace XPTable.Editors
 			get
 			{
 				if (this.UserEdit)
-				{
 					this.ValidateEditText();
-				}
 
 				return this.currentValue;
 			}
@@ -480,14 +510,10 @@ namespace XPTable.Editors
 				if (value != this.currentValue)
 				{
 					if (value < this.minimum)
-					{
-						value = this.maximum;
-					}
+						value = this.minimum;
 
 					if (value > this.maximum)
-					{
 						value = this.maximum;
-					}
 
 					this.currentValue = value;
 

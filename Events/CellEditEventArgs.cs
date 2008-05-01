@@ -92,7 +92,8 @@ namespace XPTable.Events
 		/// <param name="source">The Cell that Raised the event</param>
 		/// <param name="editor">The CellEditor used to edit the Cell</param>
 		/// <param name="table">The Table that the Cell belongs to</param>
-		public CellEditEventArgs(Cell source, ICellEditor editor, Table table) : this(source, editor, table, -1, -1, Rectangle.Empty)
+		private CellEditEventArgs(Cell source, ICellEditor editor, Table table) 
+			: this(source, editor, table, -1, -1, Rectangle.Empty)
 		{
 			
 		}
@@ -108,7 +109,8 @@ namespace XPTable.Events
 		/// <param name="row">The Column index of the Cell</param>
 		/// <param name="column">The Row index of the Cell</param>
 		/// <param name="cellRect"></param>
-		public CellEditEventArgs(Cell source, ICellEditor editor, Table table, int row, int column, Rectangle cellRect) : base(source, column, row)
+		public CellEditEventArgs(Cell source, ICellEditor editor, Table table, int row, int column, Rectangle cellRect) 
+			: base(source, column, row)
 		{
 			this.editor = editor;
 			this.table = table;

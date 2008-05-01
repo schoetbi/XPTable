@@ -77,17 +77,17 @@ namespace XPTable.Editors
 		/// <summary>
 		/// The Table that contains the Cell being edited
 		/// </summary>
-		private Table table;
+		protected Table table;
 
 		/// <summary>
 		/// A CellPos that represents the position of the Cell being edited
 		/// </summary>
-		private CellPos cellPos;
+		protected CellPos cellPos;
 
 		/// <summary>
 		/// The Rectangle that represents the Cells location and size
 		/// </summary>
-		private Rectangle cellRect;
+		protected Rectangle cellRect;
 
 		/// <summary>
 		/// A MouseMessageFilter that receives mouse messages before they 

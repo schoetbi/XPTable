@@ -244,6 +244,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Events\NumericCellEditEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Events\PaintCellEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
