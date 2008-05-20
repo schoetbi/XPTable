@@ -2397,8 +2397,9 @@ namespace XPTable.Models
 
                 vScrollBar.Maximum = rowcount;
 				// as otherwise resizing could lead to a crash - 12/01/06
-				this.vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
-				vScrollBar.LargeChange = visibleRowCount + 1;
+				vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
+                // as otherwise minimising could lead to a crash
+                vScrollBar.LargeChange = visibleRowCount < 0 ? 0 : visibleRowCount + 1;
 			}
 			else
 			{
