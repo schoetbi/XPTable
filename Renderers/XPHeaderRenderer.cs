@@ -126,8 +126,17 @@ namespace XPTable.Renderers
 			{
 				Rectangle arrowRect = this.CalcSortArrowRect();
 				
+                if (this.Alignment == ColumnAlignment.Right)
+                {
+                    arrowRect.X = textRect.Left;
+                    textRect.Width -= arrowRect.Width;
+                    textRect.X += arrowRect.Width;
+                }
+                else
+                {
 				arrowRect.X = textRect.Right - arrowRect.Width;
 				textRect.Width -= arrowRect.Width;
+                }
 
 				this.DrawSortArrow(e.Graphics, arrowRect, e.Column.SortOrder, e.Column.Enabled);
 			}

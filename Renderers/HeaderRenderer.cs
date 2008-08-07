@@ -254,6 +254,10 @@ namespace XPTable.Renderers
 		/// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
 		public virtual void OnPaintHeader(PaintHeaderEventArgs e)
 		{
+            // Apply the column alignment to the header
+            if ((e.Column != null) && (e.Table != null) && (e.Table.HeaderAlignWithColumn))
+                this.Alignment = e.Column.Alignment;
+
 			// paint the Column header's background
 			this.OnPaintBackground(e);
 
@@ -324,6 +328,9 @@ namespace XPTable.Renderers
 				{
 					using (StringFormat format = new StringFormat())
 					{
+                        if (this.Alignment == XPTable.Models.ColumnAlignment.Right)
+                            format.Alignment = StringAlignment.Near;
+                        else
 						format.Alignment = StringAlignment.Far;
 						format.LineAlignment = StringAlignment.Center;
 

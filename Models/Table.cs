@@ -507,6 +507,11 @@ namespace XPTable.Models
 		/// </summary>
 		private ColumnHeaderStyle headerStyle;
 
+        /// <summary>
+        /// Should the header text use the column alignment
+        /// </summary>
+        private bool headerAlignWithColumn;
+
 		/// <summary>
 		/// The Renderer used to paint the column headers
 		/// </summary>
@@ -3767,6 +3772,27 @@ namespace XPTable.Models
 			}
 		}
 
+        /// <summary>
+        /// Gets or sets the column header alignemnt
+        /// </summary>
+        [Category("Columns"),
+        DefaultValue(false),
+        Description("Defines whether the header text uses the column alignment")]
+        public bool HeaderAlignWithColumn
+        {
+            get
+            {
+                return this.headerAlignWithColumn;
+            }
+
+            set
+            {
+                if (this.headerAlignWithColumn != value)
+                {
+                    this.headerAlignWithColumn = value;
+                }
+            }
+        }
 
 		/// <summary>
 		/// Gets the height of the column headers
