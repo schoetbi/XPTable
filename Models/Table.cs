@@ -2424,8 +2424,10 @@ namespace XPTable.Models
 
             int max = Math.Abs(howMany);
 
-            CellPos newCell = new CellPos(previousTopRowIndex, 0);  // The row currently at the top
-            for (int i = 0; i < max; i++)
+			int column = this.ColumnModel.NextVisibleColumn(-1);
+            CellPos newCell = new CellPos(previousTopRowIndex, column);  // The row currently at the top
+
+			for (int i = 0; i < max; i++)
             {
                 // The first cell on the row we are going to (if all is well)
                 newCell = this.FindNextVisibleEnabledCell(newCell, true, down, false, false);
