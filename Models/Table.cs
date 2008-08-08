@@ -4659,6 +4659,12 @@ namespace XPTable.Models
 					if (value != null)
 					{
 						value.InternalTable = this;
+
+						if (this.lastVScrollValue > this.tableModel.Rows.Count)
+						{
+							this.lastVScrollValue = this.topIndex = 0;
+							this.vScrollBar.Value = 0;
+						}
 					}
 
 					this.OnTableModelChanged(new TableEventArgs(this, TableEventType.TableModelChanged, oldValue));// PJD TEA change
