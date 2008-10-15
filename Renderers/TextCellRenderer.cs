@@ -85,6 +85,18 @@ namespace XPTable.Renderers
             return chars < cell.Text.Length;
         }
 
+        /// <summary>
+        /// Returns the width required to fully display this text.
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        private int GetCellWidth(Graphics graphics, Cell cell)
+        {
+            SizeF size = graphics.MeasureString(cell.Text, this.Font);
+            return (int)Math.Ceiling(size.Width);
+        }
+
 		#region Events
 
 		#region Paint
@@ -101,7 +113,17 @@ namespace XPTable.Renderers
 			if (e.Cell == null)
 				return;
 
-			string text = e.Cell.Text;
+            Cell c = e.Cell;
+
+            //////////////////
+            if (c.WidthNotSet)
+            {
+                int w = GetCellWidth(e.Graphics, c);
+                c.ContentWidth = w;
+            }
+            //////////////////
+
+            string text = c.Text;
 
 			if (text != null && text.Length != 0)
 			{
@@ -113,7 +135,7 @@ namespace XPTable.Renderers
                 // Also, determine whether we need a tooltip, if the text was truncated.
                 if (e.Table.EnableToolTips)
                 {
-                    e.Cell.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, e.Cell, this.Font, this.StringFormat);
+                    c.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, c, this.Font, this.StringFormat);
                 }
 			}
 			

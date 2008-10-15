@@ -85,17 +85,30 @@ namespace XPTable.Renderers
 			}
 
 			// draw the text
-			if (e.Cell.Text != null && e.Cell.Text.Length != 0)
-			{
-				if (e.Enabled)
-				{
-					e.Graphics.DrawString(e.Cell.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
-				}
-				else
-				{
-					e.Graphics.DrawString(e.Cell.Text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
-				}
-			}
+            if (e.Cell.Text != null && e.Cell.Text.Length != 0)
+            {
+                if (e.Enabled)
+                {
+                    e.Graphics.DrawString(e.Cell.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
+                }
+                else
+                {
+                    e.Graphics.DrawString(e.Cell.Text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
+                }
+
+                if (e.Cell.WidthNotSet)
+                {
+                    SizeF size = e.Graphics.MeasureString(e.Cell.Text, this.Font);
+                    e.Cell.ContentWidth = (int)Math.Ceiling(size.Width) + (this.ShowDropDownButton ? buttonRect.Width : 0);
+                }
+            }
+            else
+            {
+                if (e.Cell.WidthNotSet)
+                {
+                    e.Cell.ContentWidth = this.ShowDropDownButton ? buttonRect.Width : 0;
+                }
+            }
 			
 			if( (e.Focused && e.Enabled)
 				// only if we want to show selection rectangle

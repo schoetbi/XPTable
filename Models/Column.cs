@@ -493,6 +493,33 @@ namespace XPTable.Models
 			return this.Width != Column.DefaultWidth;
 		}
 
+        private int _internalContentWidth;
+
+        /// <summary>
+        /// Gets or sets the minimum width required to display this column header.
+        /// </summary>
+        [Browsable(false)]
+        public int ContentWidth
+        {
+            get { return _internalContentWidth; }
+            set
+            {
+                _internalContentWidth = value;
+                _internalWidthSet = true;
+            }
+        }
+
+        private bool _internalWidthSet = false;
+
+        /// <summary>
+        /// Returns true if the cells width property has been assigned.
+        /// </summary>
+        [Browsable(false)]
+        public bool WidthNotSet
+        {
+            get { return !_internalWidthSet; }
+        }
+
 
 		/// <summary>
 		/// Gets or sets the Image displayed in the Column's header
@@ -795,6 +822,8 @@ namespace XPTable.Models
 					SortOrder oldOrder = this.sortOrder;
 					
 					this.sortOrder = value;
+
+                    this._internalWidthSet = false; // Need to re-calc width with/without the arrow
 
 					this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.SortOrderChanged, oldOrder));
 				}

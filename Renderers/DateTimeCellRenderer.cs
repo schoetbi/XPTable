@@ -144,16 +144,24 @@ namespace XPTable.Renderers
 				textRect.Width -= buttonRect.Width - 1;
 			}
 
+            string dateText = FormatDate((DateTime) e.Cell.Data);
+
 			// draw the text
 			if (e.Enabled)
 			{
-				this.DrawText((DateTime) e.Cell.Data, e.Graphics, this.ForeBrush, textRect);
+                e.Graphics.DrawString(dateText, this.Font, this.ForeBrush, textRect, this.StringFormat);
 			}
 			else
 			{
-				this.DrawText((DateTime) e.Cell.Data, e.Graphics, this.GrayTextBrush, textRect);
+                e.Graphics.DrawString(dateText, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
 			}
-			
+
+            if (e.Cell.WidthNotSet)
+            {
+                SizeF size = e.Graphics.MeasureString(dateText, this.Font);
+                e.Cell.ContentWidth = (int)Math.Ceiling(size.Width) + (this.ShowDropDownButton ? buttonRect.Width : 0);
+            }
+
 			if( (e.Focused && e.Enabled)
 				// only if we want to show selection rectangle
 				&& ( e.Table.ShowSelectionRectangle ) )
@@ -169,41 +177,38 @@ namespace XPTable.Renderers
 			}
 		}
 
+        /// <summary>
+        /// Returns the string used to display this date.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        protected string FormatDate(DateTime dateTime)
+        {
+            // get the custom format
+            string format = this.Format;
 
-		/// <summary>
-		/// Draws the DateTime text
-		/// </summary>
-		/// <param name="dateTime">The DateTime value to be drawn</param>
-		/// <param name="g">The Graphics to draw on</param>
-		/// <param name="brush">The Brush to draw the text with</param>
-		/// <param name="textRect">A Rectangle that specifies the bounds of the text</param>
-		protected void DrawText(DateTime dateTime, Graphics g, Brush brush, Rectangle textRect)
-		{
-			// get the custom format
-			string format = this.Format;
-			
-			// if a custom format hasn't been defined, use 
-			// one of the default formats
-			if (format.Length == 0)
-			{
-				switch (this.DateTimeFormat)
-				{
-					case DateTimePickerFormat.Long:	
-						format = DateTimeColumn.LongDateFormat;
-						break;
+            // if a custom format hasn't been defined, use 
+            // one of the default formats
+            if (format.Length == 0)
+            {
+                switch (this.DateTimeFormat)
+                {
+                    case DateTimePickerFormat.Long:
+                        format = DateTimeColumn.LongDateFormat;
+                        break;
 
-					case DateTimePickerFormat.Short:	
-						format = DateTimeColumn.ShortDateFormat;
-						break;
+                    case DateTimePickerFormat.Short:
+                        format = DateTimeColumn.ShortDateFormat;
+                        break;
 
-					case DateTimePickerFormat.Time:	
-						format = DateTimeColumn.TimeFormat;
-						break;
-				}
-			}
+                    case DateTimePickerFormat.Time:
+                        format = DateTimeColumn.TimeFormat;
+                        break;
+                }
+            }
 
-			g.DrawString(dateTime.ToString(format), this.Font, brush, textRect, this.StringFormat);
-		}
+            return dateTime.ToString(format);
+        }
 
 		#endregion
 

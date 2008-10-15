@@ -500,6 +500,8 @@ namespace XPTable.Models
 					
 					this.text = value;
 
+                    this._widthSet = false; // Need to re-calc the width
+
 					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ValueChanged, oldText));
 				}
 			}
@@ -527,6 +529,8 @@ namespace XPTable.Models
 					object oldData = this.Data;
 					
 					this.data = value;
+
+                    this._widthSet = false; // Need to re-calc the width
 
 					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ValueChanged, oldData));
 				}
@@ -1204,6 +1208,33 @@ namespace XPTable.Models
         public bool IsTextTrimmed
         {
             get { return _isTextTrimmed; }
+        }
+
+        private int _width;
+
+        /// <summary>
+        /// Gets or sets the minimum width required to display this cell.
+        /// </summary>
+        [Browsable(false)]
+        public int ContentWidth
+        {
+            get { return _width; }
+            set
+            {
+                _width = value;
+                _widthSet = true;
+            }
+        }
+
+        private bool _widthSet = false;
+
+        /// <summary>
+        /// Returns true if the cells width property has been assigned.
+        /// </summary>
+        [Browsable(false)]
+        public bool WidthNotSet
+        {
+            get { return !_widthSet; }
         }
 
         /// <summary>

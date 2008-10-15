@@ -190,7 +190,8 @@ namespace XPTable.Renderers
 			}
 
 			e.Graphics.SetClip(textRect);
-			
+
+            int colourWidth = 0;
 			if (this.ShowColor)
 			{
 				Rectangle colorRect = this.CalcColorRect(e.Table.TableModel.Rows[e.Row].Alignment, e.Table.ColumnModel.Columns[e.Column].Alignment);
@@ -217,6 +218,7 @@ namespace XPTable.Renderers
 								ControlPaint.DrawImageDisabled(e.Graphics, b, colorRect.X, colorRect.Y, this.BackColor);
 							}
 						}
+                        colourWidth = colorRect.Width;
 					}
 
 					textRect.X = colorRect.Right + 2;
@@ -224,6 +226,7 @@ namespace XPTable.Renderers
 				}
 			}
 
+            int textWidth = 0;
 			if (this.ShowColorName)
 			{
 				string text = "";
@@ -254,8 +257,19 @@ namespace XPTable.Renderers
 				{
 					e.Graphics.DrawString(text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
 				}
+
+                if (e.Cell.WidthNotSet)
+                {
+                    SizeF size = e.Graphics.MeasureString(text, this.Font);
+                    textWidth = (int)Math.Ceiling(size.Width);
+                }
 			}
-			
+
+            if (e.Cell.WidthNotSet)
+            {
+                e.Cell.ContentWidth = colourWidth + textWidth + (this.ShowDropDownButton ? buttonRect.Width : 0);
+            }
+
 			if( (e.Focused && e.Enabled)
 				// only if we want to show selection rectangle
 				&& ( e.Table.ShowSelectionRectangle ) )

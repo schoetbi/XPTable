@@ -94,6 +94,10 @@ namespace XPTable.Renderers
 			Rectangle textRect = this.ClientRectangle;
 			Rectangle imageRect = Rectangle.Empty;
 
+            int imageWidth = 0;
+            int arrowWidth = 0;
+            int textWidth = 0;
+
 			if (e.Column.Image != null)
 			{
 				imageRect = this.CalcImageRect();
@@ -114,6 +118,7 @@ namespace XPTable.Renderers
 				}
 
 				this.DrawColumnHeaderImage(e.Graphics, e.Column.Image, imageRect, e.Column.Enabled);
+                imageWidth = imageRect.Width;
 			}
 
 			if (!ThemeManager.VisualStylesEnabled && e.Column.ColumnState == ColumnState.Pressed)
@@ -139,27 +144,34 @@ namespace XPTable.Renderers
                 }
 
 				this.DrawSortArrow(e.Graphics, arrowRect, e.Column.SortOrder, e.Column.Enabled);
+                arrowWidth = arrowRect.Width;
 			}
 
-			if (e.Column.Text == null)
-			{
-				return;
-			}
+            if (e.Column.Text != null && e.Column.Text.Length > 0 && textRect.Width > 0)
+            {
+                if (e.Column.Enabled)
+                {
+                    e.Graphics.DrawString(e.Column.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
+                }
+                else
+                {
+                    using (SolidBrush brush = new SolidBrush(SystemPens.GrayText.Color))
+                    {
+                        e.Graphics.DrawString(e.Column.Text, this.Font, brush, textRect, this.StringFormat);
+                    }
+                }
 
-			if (e.Column.Text.Length > 0 && textRect.Width > 0)
-			{
-				if (e.Column.Enabled)
-				{
-					e.Graphics.DrawString(e.Column.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
-				}
-				else
-				{
-					using (SolidBrush brush = new SolidBrush(SystemPens.GrayText.Color))
-					{
-						e.Graphics.DrawString(e.Column.Text, this.Font, brush, textRect, this.StringFormat);
-					}
-				}
-			}
+                if (e.Column.WidthNotSet)
+                {
+                    SizeF size = e.Graphics.MeasureString(e.Column.Text, this.Font);
+                    textWidth = (int)Math.Ceiling(size.Width);
+
+                }
+            }
+            if (e.Column.WidthNotSet)
+            {
+                e.Column.ContentWidth = imageWidth + arrowWidth + textWidth;
+            }
 		}
 
 		#endregion

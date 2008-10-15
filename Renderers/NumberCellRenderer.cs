@@ -657,14 +657,21 @@ namespace XPTable.Renderers
 						textRect.X = this.ClientRectangle.Right - textRect.Width;
 					}
 				}
-				
+
+                string text = decimalVal.ToString(this.Format);
+                if (e.Cell.WidthNotSet)
+                {
+                    SizeF size = e.Graphics.MeasureString(text, this.Font);
+                    e.Cell.ContentWidth = (int)Math.Ceiling(size.Width);
+                }
+
 				if (e.Enabled)
 				{
-					e.Graphics.DrawString(decimalVal.ToString(this.Format), this.Font, this.ForeBrush, textRect, this.StringFormat);
+					e.Graphics.DrawString(text, this.Font, this.ForeBrush, textRect, this.StringFormat);
 				}
 				else
 				{
-					e.Graphics.DrawString(decimalVal.ToString(this.Format), this.Font, this.GrayTextBrush, textRect, this.StringFormat);
+                    e.Graphics.DrawString(text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
 				}
 			}
 			

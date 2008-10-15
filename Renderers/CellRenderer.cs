@@ -129,7 +129,8 @@ namespace XPTable.Renderers
         {
             return 0;
         }
-		#endregion
+
+        #endregion
 
 
 		#region Properties

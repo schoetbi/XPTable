@@ -157,6 +157,11 @@ namespace XPTable.Models
 		/// </summary>
 		public event ColumnEventHandler ColumnPropertyChanged;
 
+        /// <summary>
+        /// Occurs when the column has its width automatically calculated.
+        /// </summary>
+        public event ColumnEventHandler ColumnAutoResize;
+
 		#endregion
 
 		#region Column Headers
@@ -527,6 +532,8 @@ namespace XPTable.Models
 		/// </summary>
 		private HeaderContextMenu headerContextMenu;
 
+        private bool includeHeaderInAutoWidth;
+
 		#endregion
 
 		#region Items
@@ -743,6 +750,7 @@ namespace XPTable.Models
 			//this.headerRenderer = new FlatHeaderRenderer();
 			this.headerRenderer.Font = this.headerFont;
 			this.headerContextMenu = new HeaderContextMenu();
+            this.includeHeaderInAutoWidth = true;
 
 			this.columnResizing = true;
 			this.resizingColumnIndex = -1;
@@ -1549,6 +1557,50 @@ namespace XPTable.Models
 		{
 			return this.ColumnRect(column).Left;
 		}
+
+        /// <summary>
+        /// Resizes all columns to their minimum width that still shows all the cells content.
+        /// </summary>
+        public void AutoResizeColumnWidths()
+        {
+            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            {
+                Column c = this.ColumnModel.Columns[i];
+                ColumnEventArgs args = new ColumnEventArgs(c, i, ColumnEventType.WidthChanged, c.Width);
+                OnColumnAutoResize(args);
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimum column width that will show all the columns contents.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        private int GetAutoColumnwidth(int column)
+        {
+            RowCollection rows = this.TableModel.Rows;
+            int maxwidth = 0;
+
+            if (this.includeHeaderInAutoWidth)
+            {
+                Column c = this.ColumnModel.Columns[column];
+                maxwidth = c.ContentWidth;
+            }
+
+            for (int i = 0; i < rows.Count; i++)
+            {
+                // Don't count this row if it is currently a hidden subrow
+                Row row = rows[i];
+                if (row.Parent == null || row.Parent.ExpandSubRows)
+                {
+                    int w = row.Cells[column].ContentWidth;
+                    if (w > maxwidth)
+                        maxwidth = w;
+                }
+            }
+
+            return maxwidth;
+        }
 		#endregion
 
 		#region Rows
@@ -3938,6 +3990,17 @@ namespace XPTable.Models
 			}
 		}
 
+        /// <summary>
+        /// Indicates whether the Column Headers are included when determining the minimim width of a column
+        /// </summary>
+        [Category("Columns"),
+        DefaultValue(true),
+        Description("Indicates whether the Column Headers are included when determining the minimim width of a column")]
+        public bool IncludeHeaderInAutoWidth
+        {
+            get { return this.includeHeaderInAutoWidth; }
+            set { this.includeHeaderInAutoWidth = value;}
+        }
 		#endregion
 
 		#region Rows
@@ -5790,6 +5853,23 @@ namespace XPTable.Models
 			}
 		}
 
+        /// <summary>
+        /// Raises the ColumnAutoResize event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected internal virtual void OnColumnAutoResize(ColumnEventArgs e)
+        {
+            if (this.CanRaiseEvents)
+            {
+                int w = GetAutoColumnwidth(e.Index);
+                if (w > 0)
+                    e.Column.Width = w + 5;
+
+                if (ColumnAutoResize != null)
+                    ColumnAutoResize(e.Column, e);
+            }
+        }
+
 		#endregion
 
 		#region Column Headers
@@ -7371,7 +7451,15 @@ namespace XPTable.Models
 			}
 			else if (this.hotColumn != -1)
 			{
-				this.OnHeaderDoubleClick(new HeaderMouseEventArgs(this.ColumnModel.Columns[this.hotColumn], this, this.hotColumn, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(this.hotColumn))));
+                if (this.TableState == TableState.ColumnResizing)
+                {
+                    Column column = this.ColumnModel.Columns[this.hotColumn];
+                    this.OnColumnAutoResize(new ColumnEventArgs(column, this.hotColumn, ColumnEventType.WidthChanged, column.Width));
+                }
+                else
+                {
+                    this.OnHeaderDoubleClick(new HeaderMouseEventArgs(this.ColumnModel.Columns[this.hotColumn], this, this.hotColumn, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(this.hotColumn))));
+                }
 			}
 		}
 

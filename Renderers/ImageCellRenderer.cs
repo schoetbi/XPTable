@@ -206,11 +206,19 @@ namespace XPTable.Renderers
 			bool scaled = (this.DrawText || e.Cell.ImageSizeMode != ImageSizeMode.Normal);
 			this.DrawImage(e.Graphics, e.Cell.Image, imageRect, scaled, e.Table.Enabled);
 
+            int textWidth = 0;
+
 			// check if we need to draw any text
 			if (this.DrawText)
 			{
 				if (e.Cell.Text != null && e.Cell.Text.Length != 0)
 				{
+                    if (e.Cell.WidthNotSet)
+                    {
+                        SizeF size = e.Graphics.MeasureString(e.Cell.Text, this.Font);
+                        textWidth = (int)Math.Ceiling(size.Width);
+                    }
+
 					// rectangle the text will be drawn in
 					Rectangle textRect = this.ClientRectangle;
 				
@@ -234,7 +242,13 @@ namespace XPTable.Renderers
 					}
 				}
 			}
-			
+
+            if (e.Cell.WidthNotSet)
+            {
+                SizeF size = e.Graphics.MeasureString(e.Cell.Text, this.Font);
+                e.Cell.ContentWidth = textWidth + e.Cell.Image.Width;
+            }
+
 			if( (e.Focused && e.Enabled)
 				// only if we want to show selection rectangle
 				&& ( e.Table.ShowSelectionRectangle ) )

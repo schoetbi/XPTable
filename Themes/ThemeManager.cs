@@ -816,11 +816,11 @@ namespace XPTable.Themes
 
 
 		#region Properties
-
 		/// <summary>
 		/// Gets whether Visual Styles are supported by the system
 		/// </summary>
-		public static bool VisualStylesSupported
+        [Obsolete("No longer used by XPTable")]
+        public static bool VisualStylesSupported
 		{
 			get
 			{
@@ -836,39 +836,9 @@ namespace XPTable.Themes
 		{
 			get
 			{
-				if (VisualStylesSupported)
-				{
-					// are themes enabled
-					if (NativeMethods.IsThemeActive() && NativeMethods.IsAppThemed())
-					{
-						return GetComctlVersion().Major >= 6;
-					}
-				}
-
-				return false;
+                return Application.RenderWithVisualStyles;
 			}
 		}
-
-
-		/// <summary>
-		/// Returns a Version object that contains information about the verion 
-		/// of the CommonControls that the application is using
-		/// </summary>
-		/// <returns>A Version object that contains information about the verion 
-		/// of the CommonControls that the application is using</returns>
-		private static Version GetComctlVersion()
-		{
-			DLLVERSIONINFO comctlVersion = new DLLVERSIONINFO();
-			comctlVersion.cbSize = Marshal.SizeOf(typeof(DLLVERSIONINFO));
-
-			if (NativeMethods.DllGetVersion(ref comctlVersion) == 0)
-			{
-				return new Version(comctlVersion.dwMajorVersion, comctlVersion.dwMinorVersion, comctlVersion.dwBuildNumber);
-			}
-
-			return new Version();
-		}
-
 		#endregion
 	}
 }

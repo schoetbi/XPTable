@@ -559,6 +559,9 @@ namespace XPTable.Renderers
 			Rectangle textRect = this.CalcButtonBounds();
 			textRect.Inflate(-4, -2);
 
+            int imageWidth = 0;
+            int textWidth = 0;
+
 			if (e.Cell.Image != null)
 			{
 				Rectangle imageRect = this.CalcImageRect(e.Cell.Image, this.ImageAlignment);
@@ -570,6 +573,7 @@ namespace XPTable.Renderers
 				}
 				
 				this.DrawImage(e.Graphics, e.Cell.Image, imageRect, e.Enabled);
+                imageWidth = imageRect.Width;
 			}
 
 			// draw the text
@@ -598,7 +602,18 @@ namespace XPTable.Renderers
 				{
 					e.Graphics.DrawString(e.Cell.Text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
 				}
-			}
+
+                if (e.Cell.WidthNotSet)
+                {
+                    SizeF size = e.Graphics.MeasureString(e.Cell.Text, this.Font);
+                    textWidth = (int)Math.Ceiling(size.Width);
+                }
+            }
+
+            if (e.Cell.WidthNotSet)
+            {
+                e.Cell.ContentWidth = imageWidth + textWidth;
+            }
 
 			// draw focus
 			if( (e.Focused && e.Enabled)

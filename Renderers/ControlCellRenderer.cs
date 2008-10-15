@@ -210,6 +210,9 @@ namespace XPTable.Renderers
 				controlData.Control.Size = controlRect.Size;
 				controlData.Control.Location = controlRect.Location;
 				controlData.Control.BringToFront();
+
+                if (e.Cell.WidthNotSet)
+                    e.Cell.ContentWidth = controlRect.Size.Width;
 			}
 		}
 

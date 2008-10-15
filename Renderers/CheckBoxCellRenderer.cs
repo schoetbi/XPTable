@@ -643,26 +643,37 @@ namespace XPTable.Renderers
 				ThemeManager.DrawCheck(e.Graphics, checkRect, state);
 			}
 
-			if (this.DrawText)
-			{
-				string text = e.Cell.Text;
+            if (this.DrawText)
+            {
+                string text = e.Cell.Text;
 
-				if (text != null && text.Length != 0)
-				{
-					Rectangle textRect = this.ClientRectangle;
-					textRect.X += checkRect.Width + 1;
-					textRect.Width -= checkRect.Width + 1;
+                if (text != null && text.Length != 0)
+                {
+                    Rectangle textRect = this.ClientRectangle;
+                    textRect.X += checkRect.Width + 1;
+                    textRect.Width -= checkRect.Width + 1;
 
-					if (e.Enabled)
-					{
-						e.Graphics.DrawString(e.Cell.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
-					}
-					else
-					{
-						e.Graphics.DrawString(e.Cell.Text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
-					}
-				}
-			}
+                    if (e.Enabled)
+                    {
+                        e.Graphics.DrawString(e.Cell.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
+                    }
+                    else
+                    {
+                        e.Graphics.DrawString(e.Cell.Text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
+                    }
+                }
+
+                if (e.Cell.WidthNotSet)
+                {
+                    SizeF size = e.Graphics.MeasureString(e.Cell.Text, this.Font);
+                    e.Cell.ContentWidth = checkSize.Width + (int)Math.Ceiling(size.Width);
+                }
+            }
+            else
+            {
+                if (e.Cell.WidthNotSet)
+                    e.Cell.ContentWidth = checkSize.Width;
+            }
 			
 			if( (e.Focused && e.Enabled)
 				// only if we want to show selection rectangle
