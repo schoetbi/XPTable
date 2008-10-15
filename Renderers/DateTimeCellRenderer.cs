@@ -207,7 +207,7 @@ namespace XPTable.Renderers
                 }
             }
 
-            return dateTime.ToString(format);
+            return dateTime.ToString(format, this.FormatProvider);
         }
 
 		#endregion

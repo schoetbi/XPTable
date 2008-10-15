@@ -49,6 +49,11 @@ namespace XPTable.Renderers
 		/// </summary>
 		private string format;
 
+        /// <summary>
+        /// An object that controls how cell contents are formatted.
+        /// </summary>
+        private IFormatProvider formatProvider;
+
 		/// <summary>
 		/// The Brush used to draw disabled text
 		/// </summary>
@@ -70,6 +75,7 @@ namespace XPTable.Renderers
 		protected CellRenderer() : base()
 		{
 			this.format = "";
+            this.formatProvider = System.Globalization.CultureInfo.CurrentUICulture;
 
 			this.grayTextBrush = new SolidBrush(SystemColors.GrayText);
 			this.padding = CellPadding.Empty;
@@ -164,27 +170,25 @@ namespace XPTable.Renderers
 		/// </summary>
 		protected string Format
 		{
-			get
-			{
-				return this.format;
-			}
-
-			set
-			{
-				this.format = value;
-			}
+			get { return this.format; }
+			set { this.format = value; }
 		}
 
+        /// <summary>
+        /// Gets or sets the object that controls how cell contents are formatted
+        /// </summary>
+        protected IFormatProvider FormatProvider
+        {
+            get { return this.formatProvider; }
+            set { this.formatProvider = value; }
+        }
 
 		/// <summary>
 		/// Gets the Brush used to draw disabled text
 		/// </summary>
 		protected Brush GrayTextBrush
 		{
-			get
-			{
-				return this.grayTextBrush;
-			}
+			get { return this.grayTextBrush; }
 		}
 
 

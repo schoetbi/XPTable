@@ -658,7 +658,8 @@ namespace XPTable.Renderers
 					}
 				}
 
-                string text = decimalVal.ToString(this.Format);
+                string text = decimalVal.ToString(this.Format, this.FormatProvider);
+
                 if (e.Cell.WidthNotSet)
                 {
                     SizeF size = e.Graphics.MeasureString(text, this.Font);
