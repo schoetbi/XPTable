@@ -38,36 +38,36 @@ namespace XPTable.Win32
 	/// </summary>
 	internal abstract class NativeMethods
 	{
-        ///// <summary>
-        ///// Implemented by many of the Microsoft® Windows® Shell dynamic-link libraries 
-        ///// (DLLs) to allow applications to obtain DLL-specific version information
-        ///// </summary>
-        ///// <param name="pdvi">Pointer to a DLLVERSIONINFO structure that receives the 
-        ///// version information. The cbSize member must be filled in before calling 
-        ///// the function</param>
-        ///// <returns>Returns NOERROR if successful, or an OLE-defined error value otherwise</returns>
-        //[DllImport("Comctl32.dll", CharSet=CharSet.Auto, SetLastError=true)] 
-        //internal static extern int DllGetVersion(ref DLLVERSIONINFO pdvi);
+		/// <summary>
+		/// Implemented by many of the Microsoft® Windows® Shell dynamic-link libraries 
+		/// (DLLs) to allow applications to obtain DLL-specific version information
+		/// </summary>
+		/// <param name="pdvi">Pointer to a DLLVERSIONINFO structure that receives the 
+		/// version information. The cbSize member must be filled in before calling 
+		/// the function</param>
+		/// <returns>Returns NOERROR if successful, or an OLE-defined error value otherwise</returns>
+		[DllImport("Comctl32.dll", CharSet=CharSet.Auto, SetLastError=true)] 
+		internal static extern int DllGetVersion(ref DLLVERSIONINFO pdvi);
 
 
-        ///// <summary>
-        ///// Tests if a visual style for the current application is active
-        ///// </summary>
-        ///// <returns>TRUE if a visual style is enabled, and windows with 
-        ///// visual styles applied should call OpenThemeData to start using 
-        ///// theme drawing services, FALSE otherwise</returns>
-        //[DllImport("UxTheme.dll", CharSet=CharSet.Auto, SetLastError=true)]
-        //internal static extern bool IsThemeActive();
+		/// <summary>
+		/// Tests if a visual style for the current application is active
+		/// </summary>
+		/// <returns>TRUE if a visual style is enabled, and windows with 
+		/// visual styles applied should call OpenThemeData to start using 
+		/// theme drawing services, FALSE otherwise</returns>
+		[DllImport("UxTheme.dll", CharSet=CharSet.Auto, SetLastError=true)]
+		internal static extern bool IsThemeActive();
 
 
-        ///// <summary>
-        ///// Reports whether the current application's user interface 
-        ///// displays using visual styles
-        ///// </summary>
-        ///// <returns>TRUE if the application has a visual style applied,
-        ///// FALSE otherwise</returns>
-        //[DllImport("UxTheme.dll", CharSet=CharSet.Auto, SetLastError=true)]
-        //internal static extern bool IsAppThemed();
+		/// <summary>
+		/// Reports whether the current application's user interface 
+		/// displays using visual styles
+		/// </summary>
+		/// <returns>TRUE if the application has a visual style applied,
+		/// FALSE otherwise</returns>
+		[DllImport("UxTheme.dll", CharSet=CharSet.Auto, SetLastError=true)]
+		internal static extern bool IsAppThemed();
 
 
 		/// <summary>
