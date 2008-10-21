@@ -744,6 +744,7 @@ namespace XPTable.Models
 
 			// header
 			this.headerStyle = ColumnHeaderStyle.Clickable;
+            this.headerAlignWithColumn = false;
 			this.headerFont = this.Font;
 			this.headerRenderer = new XPHeaderRenderer();
 			//this.headerRenderer = new GradientHeaderRenderer();

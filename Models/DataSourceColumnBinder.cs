@@ -26,34 +26,63 @@ namespace XPTable.Models
         /// <returns></returns>
         public virtual Column GetColumn(PropertyDescriptor prop, int index)
         {
-			Column column = null;
-			switch (prop.PropertyType.Name)
-			{
-				case "Int32":
-				case "Double":
-				case "Float":
-				case "Int16":
-				case "Int64":
-				case "Decimal":
-					column = new NumberColumn(prop.Name);
-					break;
+            NumberColumn numCol = null;
+            Column column = null;
+            switch (prop.PropertyType.Name)
+            {
+                case "Int32":
+                    numCol = new NumberColumn(prop.Name);
+                    numCol.Maximum = Int32.MaxValue;
+                    numCol.Minimum = Int32.MinValue;
+                    column = numCol;
+                    break;
+                case "Double":
+                    numCol = new NumberColumn(prop.Name);
+                    numCol.Maximum = Decimal.MaxValue;
+                    numCol.Minimum = Decimal.MinValue;
+                    column = numCol;
+                    break;
+                case "Float":
+                    numCol = new NumberColumn(prop.Name);
+                    numCol.Maximum = Convert.ToDecimal(float.MaxValue);
+                    numCol.Minimum = Convert.ToDecimal(float.MinValue);
+                    column = numCol;
+                    break;
+                case "Int16":
+                    numCol = new NumberColumn(prop.Name);
+                    numCol.Maximum = Int16.MaxValue;
+                    numCol.Minimum = Int16.MinValue;
+                    column = numCol;
+                    break;
+                case "Int64":
+                    numCol = new NumberColumn(prop.Name);
+                    numCol.Maximum = Int64.MaxValue;
+                    numCol.Minimum = Int64.MinValue;
+                    column = numCol;
+                    break;
+                case "Decimal":
+                    numCol = new NumberColumn(prop.Name);
+                    numCol.Maximum = Decimal.MaxValue;
+                    numCol.Minimum = Decimal.MinValue;
+                    column = numCol;
+                    break;
 
-				case "DateTime":
-					column = new DateTimeColumn(prop.Name);
-					break;
+                case "DateTime":
+                    column = new DateTimeColumn(prop.Name);
+                    break;
 
-				case "Color":
-					column = new ColorColumn(prop.Name);
-					break;
+                case "Color":
+                    column = new ColorColumn(prop.Name);
+                    break;
 
-				case "Boolean":
-					column = new CheckBoxColumn(prop.Name);
-					break;
+                case "Boolean":
+                    column = new CheckBoxColumn(prop.Name);
+                    break;
 
-				default:
-					column = new TextColumn(prop.Name);
-					break;
-			}
+                default:
+                    column = new TextColumn(prop.Name);
+                    break;
+            }
             return column;
         }
 
