@@ -108,6 +108,7 @@ namespace XPTable.Models
 
             if (owner != null)
             {
+                // this RowCollection is the collection of toplevel rows
                 this.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
             }
             else if (rowowner != null)
@@ -115,7 +116,7 @@ namespace XPTable.Models
                 // this is a sub row, so it needs a parent
                 row.Parent = rowowner;
                 row.ChildIndex = this.List.Count;
-                this.OnRowAdded(new RowEventArgs(row, RowEventType.Unknown));
+                this.OnRowAdded(new RowEventArgs(row, RowEventType.SubRowAdded, rowowner));
             }
 
             row.PropertyChanged += propertyChangedEventHandler;
@@ -215,7 +216,7 @@ namespace XPTable.Models
     				this.OnRowRemoved(new TableModelEventArgs(this.owner, row, index, index));
 
                 else if (rowowner != null)
-                    this.OnRowRemoved(new RowEventArgs(row, RowEventType.Unknown));
+                    this.OnRowRemoved(new RowEventArgs(row, RowEventType.SubRowRemoved, rowowner));
 
                 row.PropertyChanged -= propertyChangedEventHandler;
             }
@@ -244,7 +245,7 @@ namespace XPTable.Models
                 this.owner.OnRowRemoved(new TableModelEventArgs(this.owner, null, -1, -1));
 
             else if (rowowner != null)
-                this.OnRowRemoved(new RowEventArgs(null, RowEventType.Unknown));
+                this.OnRowRemoved(new RowEventArgs(null, RowEventType.SubRowRemoved, rowowner));
         }
 
 
@@ -278,7 +279,7 @@ namespace XPTable.Models
                     this.owner.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
 
                 else if (rowowner != null)
-                    this.OnRowAdded(new RowEventArgs(row, RowEventType.Unknown));
+                    this.OnRowAdded(new RowEventArgs(row, RowEventType.SubRowAdded, rowowner));
             }
 		}
 

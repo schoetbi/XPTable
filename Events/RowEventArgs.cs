@@ -59,6 +59,11 @@ namespace XPTable.Events
 		/// </summary>
 		private Row source;
 
+        /// <summary>
+        /// The parent Row (for SubRow events)
+        /// </summary>
+        private Row parentRow;
+
 		/// <summary>
 		/// The index of the Row
 		/// </summary>
@@ -86,9 +91,7 @@ namespace XPTable.Events
 
 		#endregion
 
-
 		#region Constructor
-
 		/// <summary>
 		/// Initializes a new instance of the RowEventArgs class with 
 		/// the specified Row source, row index, start index, end index 
@@ -96,11 +99,16 @@ namespace XPTable.Events
 		/// </summary>
 		/// <param name="source">The Row that originated the event</param>
 		/// <param name="eventType">The type of event</param>
-		public RowEventArgs(Row source, RowEventType eventType) : this(source, -1, null, -1, -1, eventType)
+		public RowEventArgs(Row source, RowEventType eventType) 
+            : this(source, -1, null, -1, -1, eventType)
 		{
-			
 		}
 
+        public RowEventArgs(Row source, RowEventType eventType, Row parentRow)
+            : this(source, -1, null, -1, -1, eventType)
+        {
+            this.parentRow = parentRow;
+        }
 
 		/// <summary>
 		/// Initializes a new instance of the RowEventArgs class with 
@@ -111,11 +119,10 @@ namespace XPTable.Events
 		/// <param name="cell">The affected Cell</param>
 		/// <param name="cellFromIndex">The start index of the affected Cell(s)</param>
 		/// <param name="cellToIndex">The end index of the affected Cell(s)</param>
-		public RowEventArgs(Row source, Cell cell, int cellFromIndex, int cellToIndex) : this(source, -1, cell, cellFromIndex, cellToIndex, RowEventType.Unknown)
+		public RowEventArgs(Row source, Cell cell, int cellFromIndex, int cellToIndex) 
+            : this(source, -1, cell, cellFromIndex, cellToIndex, RowEventType.Unknown)
 		{
-			
 		}
-
 		
 		/// <summary>
 		/// Initializes a new instance of the RowEventArgs class with 
@@ -128,21 +135,21 @@ namespace XPTable.Events
 		/// <param name="cellFromIndex">The start index of the affected Cell(s)</param>
 		/// <param name="cellToIndex">The end index of the affected Cell(s)</param>
 		/// <param name="eventType">The type of event</param>
-		public RowEventArgs(Row source, int rowIndex, Cell cell, int cellFromIndex, int cellToIndex, RowEventType eventType) : base()
+		private RowEventArgs(Row source, int rowIndex, Cell cell, int cellFromIndex, int cellToIndex, RowEventType eventType) 
+            : base()
 		{
 			this.source = source;
 			this.rowIndex = rowIndex;
+            if (source != null)
+                rowIndex = source.Index;
 			this.cell = cell;
 			this.cellFromIndex = cellFromIndex;
 			this.cellToIndex = cellToIndex;
 			this.eventType = eventType;
 		}
-
 		#endregion
 
-
 		#region Properties
-
 		/// <summary>
 		/// Gets the Row that Raised the event
 		/// </summary>
@@ -154,18 +161,21 @@ namespace XPTable.Events
 			}
 		}
 
+        /// <summary>
+        /// Gets the parent of the row that has been added or remove. SubRow events only).
+        /// </summary>
+        public Row ParentRow
+        {
+            get { return this.parentRow; }
+        }
 
 		/// <summary>
 		/// Gets the index of the Row
 		/// </summary>
 		public int Index
 		{
-			get
-			{
-				return this.rowIndex;
-			}
+			get { return this.rowIndex; }
 		}
-
 
 		/// <summary>
 		/// 
@@ -175,7 +185,6 @@ namespace XPTable.Events
 		{
 			this.rowIndex = rowIndex;
 		}
-
 
 		/// <summary>
 		/// Gets the affected Cell
@@ -188,7 +197,6 @@ namespace XPTable.Events
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the start index of the affected Cell(s)
 		/// </summary>
@@ -199,7 +207,6 @@ namespace XPTable.Events
 				return this.cellFromIndex;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the end index of the affected Cell(s)

@@ -79,6 +79,16 @@ namespace XPTable.Events
         /// <summary>
         /// Occurs when the value of a Row's ExpandSubRows property changes
         /// </summary>
-        ExpandSubRowsChanged = 8
+        ExpandSubRowsChanged = 8,
+
+        /// <summary>
+        /// Occurs when a sub row is added
+        /// </summary>
+        SubRowAdded = 9,
+
+        /// <summary>
+        /// Occurs when a sub row is removed
+        /// </summary>
+        SubRowRemoved = 10
 	}
 }
