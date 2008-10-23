@@ -1269,7 +1269,7 @@ namespace XPTable.Models
         /// <param name="e"></param>
         protected internal virtual void OnSubRowAdded(RowEventArgs e)
         {
-            this.TableModel.Rows.Add(e.Row);
+            this.TableModel.Rows.Insert(e.ParentRow.Index + e.ParentRow.SubRows.Count, e.Row);
 
             if (SubRowAdded != null)
             {
