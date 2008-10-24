@@ -1776,7 +1776,7 @@ namespace XPTable.Models
 
 				// Don't count this row if it is currently a hidden subrow
 				Row row = rows[i];
-				if (row.Parent == null || row.Parent.ExpandSubRows)
+				if (row != null && (row.Parent == null || row.Parent.ExpandSubRows))
                 {
                     ydiff += row.Height;
 
@@ -8027,7 +8027,7 @@ namespace XPTable.Models
 			for (int i = this.TopIndex; i < this.TableModel.Rows.Count; i++)
 			{
 				Row row = this.TableModel.Rows[i];
-				if (row.Parent == null || row.Parent.ExpandSubRows)
+				if (row != null && (row.Parent == null || row.Parent.ExpandSubRows))
 				{
 					rowRect.Height = row.Height;
 
