@@ -638,7 +638,10 @@ namespace XPTable.Renderers
 			// get the Cells value
 			decimal decimalVal = decimal.MinValue;
 
-			if (e.Cell.Data != null && (e.Cell.Data is int || e.Cell.Data is double || e.Cell.Data is float || e.Cell.Data is decimal))
+            if (e.Cell.Data != null && 
+				(e.Cell.Data is uint || e.Cell.Data is UInt16 || e.Cell.Data is UInt32 || e.Cell.Data is UInt64 || 
+				e.Cell.Data is int || e.Cell.Data is Int16 || e.Cell.Data is Int32 || e.Cell.Data is Int64 || 
+				e.Cell.Data is double || e.Cell.Data is float || e.Cell.Data is decimal))
 			{
 				decimalVal = Convert.ToDecimal(e.Cell.Data);
 			}
