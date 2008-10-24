@@ -1592,7 +1592,7 @@ namespace XPTable.Models
             {
                 // Don't count this row if it is currently a hidden subrow
                 Row row = rows[i];
-                if (row.Parent == null || row.Parent.ExpandSubRows)
+                if ((row.Parent == null || row.Parent.ExpandSubRows) && (row.Cells.Count > column))
                 {
                     int w = row.Cells[column].ContentWidth;
                     if (w > maxwidth)
