@@ -19,15 +19,15 @@
         </documenter>
         <documenter name="MSDN">
             <property name="OutputDirectory" value=".\doc\" />
-            <property name="HtmlHelpName" value="Documentation" />
-            <property name="Title" value="An NDoc Documented Class Library" />
+            <property name="HtmlHelpName" value="XPTable" />
+            <property name="Title" value="XPTable Class Library" />
         </documenter>
         <documenter name="MSDN 2003">
             <property name="OutputDirectory" value=".\doc\" />
             <property name="HtmlHelpName" value="XPTable" />
             <property name="Title" value="XPTable Control Library" />
             <property name="OutputTarget" value="HtmlHelp" />
-            <property name="Version" value="1.0.2.0" />
+            <property name="Version" value="1.1.12" />
             <property name="DocumentProtectedInternalAsProtected" value="True" />
             <property name="AssemblyVersionInfo" value="AssemblyVersion" />
             <property name="CopyrightText" value="© 2005, Mathew Hall. All rights reserved." />

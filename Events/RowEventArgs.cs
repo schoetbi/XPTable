@@ -104,6 +104,14 @@ namespace XPTable.Events
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the RowEventArgs class with 
+		/// the specified Row source, row index, start index, end index 
+		/// and affected Cell. Only for SubRow type events.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="eventType"></param>
+		/// <param name="parentRow"></param>
         public RowEventArgs(Row source, RowEventType eventType, Row parentRow)
             : this(source, -1, null, -1, -1, eventType)
         {
