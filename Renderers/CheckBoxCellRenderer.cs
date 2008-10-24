@@ -190,7 +190,7 @@ namespace XPTable.Renderers
 					}
 					else if (rendererData.CheckState <= CheckBoxStates.CheckedDisabled)
 					{
-						rendererData.CheckState |= (CheckBoxStates) 4;
+						rendererData.CheckState += 4;
 					}
 					
 					break;
