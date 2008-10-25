@@ -751,33 +751,37 @@ namespace XPTable.Editors
 			string character = e.KeyChar.ToString();
 
 			// netus fix by Richard Sadler on 2006-01-13 - added backspace key
-			if ((!char.IsDigit(e.KeyChar) && !character.Equals(decimalSeparator) && !character.Equals(groupSeparator)) && 
-				!character.Equals(negativeSign) && (e.KeyChar != tab) && (e.KeyChar != backspace))
-			{
-				if ((Control.ModifierKeys & (Keys.Alt | Keys.Control)) == Keys.None)
-				{
-					e.Handled = true;
+            if ((!char.IsDigit(e.KeyChar) && !character.Equals(decimalSeparator) && !character.Equals(groupSeparator)) &&
+                !character.Equals(negativeSign) && (e.KeyChar != tab) && (e.KeyChar != backspace))
+            {
+                if ((Control.ModifierKeys & (Keys.Alt | Keys.Control)) == Keys.None)
+                {
+                    e.Handled = true;
 
-					if (e.KeyChar == enter)
-					{
-						if (this.EditingTable != null)
-						{
-							this.EditingTable.StopEditing();
-						}
-					}
-					else if (e.KeyChar == escape)
-					{
-						if (this.EditingTable != null)
-						{
-							this.EditingTable.CancelEditing();
-						}
-					}
-					else
-					{
-						NativeMethods.MessageBeep(0 /*MB_OK*/);
-					}
-				}
-			}
+                    if (e.KeyChar == enter)
+                    {
+                        if (this.EditingTable != null)
+                        {
+                            this.EditingTable.StopEditing();
+                        }
+                    }
+                    else if (e.KeyChar == escape)
+                    {
+                        if (this.EditingTable != null)
+                        {
+                            this.EditingTable.CancelEditing();
+                        }
+                    }
+                    else
+                    {
+                        NativeMethods.MessageBeep(0 /*MB_OK*/);
+                    }
+                }
+            }
+            else
+            {
+                this.userEdit = true;
+            }
 		}
 
 
