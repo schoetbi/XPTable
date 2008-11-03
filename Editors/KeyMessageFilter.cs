@@ -102,7 +102,7 @@ namespace XPTable.Editors
 			uiPermission.Demand();
 			Control target = Control.FromChildHandle(m.HWnd);
 
-			return this.Client.ProcessKeyMessage(target, (WindowMessage) m.Msg, m.WParam.ToInt32(), m.LParam.ToInt32());
+			return this.Client.ProcessKeyMessage(target, (WindowMessage) m.Msg, m.WParam.ToInt64(), m.LParam.ToInt64());
 		}
 	}
 }
