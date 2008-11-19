@@ -499,13 +499,15 @@ namespace XPTable.Models
         /// Gets or sets the minimum width required to display this column header.
         /// </summary>
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int ContentWidth
         {
             get { return _internalContentWidth; }
             set
             {
                 _internalContentWidth = value;
-                _internalWidthSet = true;
+                if (value > 0)
+                    _internalWidthSet = true;
             }
         }
 
