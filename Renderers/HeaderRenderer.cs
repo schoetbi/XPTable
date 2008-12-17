@@ -147,6 +147,10 @@ namespace XPTable.Renderers
                 {
                     HeaderToolTipEventArgs args = new HeaderToolTipEventArgs(e.Column, new Point(e.X, e.Y));
 
+                    // The default tooltip is to show the full text for any cell that has been truncated
+                    if (e.Column.IsTextTrimmed)
+                        args.ToolTipText = e.Column.Text;
+
                     // Allow the outside world to modify the text or cancel this tooltip
                     e.Table.OnHeaderToolTipPopup(args);
 

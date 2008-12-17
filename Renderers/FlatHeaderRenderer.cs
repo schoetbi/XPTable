@@ -147,7 +147,12 @@ namespace XPTable.Renderers
                 {
                     SizeF size = e.Graphics.MeasureString(e.Column.Text, this.Font);
                     textWidth = (int)Math.Ceiling(size.Width);
+                }
 
+                // Also, determine whether we need a tooltip, if the text was truncated.
+                if (e.Table.EnableToolTips)
+                {
+                    e.Column.IsTextTrimmed = this.IsTextTrimmed(e.Graphics, e.Column.Text);
                 }
             }
             if (e.Column.WidthNotSet)

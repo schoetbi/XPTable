@@ -75,15 +75,7 @@ namespace XPTable.Renderers
                 return 0;
         }
 
-        private bool IsTextTrimmed(Graphics graphics, Cell cell, Font font, StringFormat format)
-        {
-            int chars;
-            int lines;
-
-            graphics.MeasureString(cell.Text, font, this.ClientRectangle.Size, format, out chars, out lines);
-
-            return chars < cell.Text.Length;
-        }
+        
 
         /// <summary>
         /// Returns the width required to fully display this text.
@@ -135,7 +127,7 @@ namespace XPTable.Renderers
                 // Also, determine whether we need a tooltip, if the text was truncated.
                 if (e.Table.EnableToolTips)
                 {
-                    c.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, c, this.Font, this.StringFormat);
+                    c.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, c.Text);
                 }
 			}
 			

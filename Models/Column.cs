@@ -493,6 +493,21 @@ namespace XPTable.Models
 			return this.Width != Column.DefaultWidth;
 		}
 
+        /// <summary>
+        /// Indicates whether the text has all been shown when rendered.
+        /// </summary>
+        private bool _isTextTrimmed = false;
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the text has all been shown when rendered.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsTextTrimmed
+        {
+            get { return _isTextTrimmed; }
+            set { _isTextTrimmed = value; }
+        }
+
         private int _internalContentWidth;
 
         /// <summary>

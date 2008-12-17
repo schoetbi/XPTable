@@ -76,7 +76,6 @@ namespace XPTable.Renderers
 
 		#endregion
 
-
 		#region Constructor
 
 		/// <summary>
@@ -99,9 +98,7 @@ namespace XPTable.Renderers
 
 		#endregion
 
-
 		#region Methods
-
 		/// <summary>
 		/// Releases the unmanaged resources used by the Renderer and 
 		/// optionally releases the managed resources
@@ -121,7 +118,6 @@ namespace XPTable.Renderers
 			}
 		}
 
-
 		/// <summary>
 		/// Sets the color of the brush used to draw the background
 		/// </summary>
@@ -129,11 +125,8 @@ namespace XPTable.Renderers
 		protected void SetBackBrushColor(Color color)
 		{
 			if (this.BackBrush.Color != color)
-			{
 				this.BackBrush.Color = color;
-			}
 		}
-
 
 		/// <summary>
 		/// Sets the color of the brush used to draw the foreground
@@ -142,13 +135,25 @@ namespace XPTable.Renderers
 		protected void SetForeBrushColor(Color color)
 		{
 			if (this.ForeBrush.Color != color)
-			{
 				this.ForeBrush.Color = color;
-			}
 		}
 
-		#endregion
+        /// <summary>
+        /// Returns true if the given text is too long to be displayed in the client rectangle.
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        protected bool IsTextTrimmed(Graphics graphics, string text)
+        {
+            int chars;
+            int lines;
 
+            graphics.MeasureString(text, this.Font, this.ClientRectangle.Size, this.StringFormat, out chars, out lines);
+
+            return chars < text.Length;
+        }
+		#endregion
 
 		#region Properties
 
