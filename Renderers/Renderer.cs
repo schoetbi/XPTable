@@ -142,7 +142,7 @@ namespace XPTable.Renderers
         /// Returns true if the given text is too long to be displayed in the client rectangle.
         /// </summary>
         /// <param name="graphics"></param>
-        /// <param name="cell"></param>
+        /// <param name="text"></param>
         /// <returns></returns>
         protected bool IsTextTrimmed(Graphics graphics, string text)
         {
