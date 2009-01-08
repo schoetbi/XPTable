@@ -386,29 +386,35 @@ namespace XPTable.Renderers
 
 			Rectangle checkRect = this.CalcCheckRect(this.LineAlignment, this.Alignment);
 
-			if (!this.IsSubRow(e.Cell))
-			{
-				GroupRendererData data = this.GetGroupRendererData(e.Cell);
+            if (!this.IsSubRow(e.Cell))
+            {
+                // Draw nothing if this row has no child rows
+                if (e.Cell.Row.SubRows.Count > 0)
+                {
+                    // This is a parent row - draw a + or - in a box
+                    GroupRendererData data = this.GetGroupRendererData(e.Cell);
 
-				DrawBox(e.Graphics, this.LineColorPen, checkRect);
+                    DrawBox(e.Graphics, this.LineColorPen, checkRect);
 
-				if (data.Grouped)
-				{
-					DrawCross(e.Graphics, Pens.Gray, checkRect);
-				}
-				else
-				{
-					DrawMinus(e.Graphics, Pens.Gray, checkRect);
-					DrawHalfLine2(e.Graphics, this.LineColorPen, checkRect);
-				}
-			}
-			else
-			{
+                    if (data.Grouped)
+                    {
+                        DrawCross(e.Graphics, Pens.Gray, checkRect);
+                    }
+                    else
+                    {
+                        DrawMinus(e.Graphics, Pens.Gray, checkRect);
+                        DrawHalfLine2(e.Graphics, this.LineColorPen, checkRect);
+                    }
+                }
+            }
+            else
+            {
+                // This is a subrow so either draw the end-line or the normal line
                 if (this.IsLastRow(e.Cell))
                     DrawEndLine2(e.Graphics, this.LineColorPen, checkRect);
                 else
-             		DrawLine2(e.Graphics, this.LineColorPen, checkRect);
-			}
+                    DrawLine2(e.Graphics, this.LineColorPen, checkRect);
+            }
 
 			#region Draw text
 			if (this.drawText)
