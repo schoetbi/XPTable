@@ -4872,11 +4872,18 @@ namespace XPTable.Models
 		/// <summary>
 		/// Gets whether the Table is able to raise events
 		/// </summary>
-		protected internal bool CanRaiseEvents
+        protected override bool CanRaiseEvents
         {
             get { return (this.IsHandleCreated && this.beginUpdateCount == 0); }
         }
 
+        /// <summary>
+        /// Gets the value for CanRaiseEvents.
+        /// </summary>
+        protected internal bool CanRaiseEventsInternal
+        {
+            get { return this.CanRaiseEvents; }
+        }
 
 		/// <summary>
 		/// Gets or sets whether the Table is being used as a preview Table in 

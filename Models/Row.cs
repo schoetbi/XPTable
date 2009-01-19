@@ -973,7 +973,7 @@ namespace XPTable.Models
 			{
 				if (this.TableModel != null)
 				{
-					return this.TableModel.CanRaiseEvents;
+					return this.TableModel.CanRaiseEventsInternal;
 				}
 				
 				return true;

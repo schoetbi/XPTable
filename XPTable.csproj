@@ -1,939 +1,601 @@
-<VisualStudioProject>
-    <CSHARP
-        ProjectType = "Local"
-        ProductVersion = "7.10.3077"
-        SchemaVersion = "2.0"
-        ProjectGuid = "{1ADD2ECB-2B24-4162-8965-3EFAA9BB041E}"
-    >
-        <Build>
-            <Settings
-                ApplicationIcon = ""
-                AssemblyKeyContainerName = ""
-                AssemblyName = "XPTable"
-                AssemblyOriginatorKeyFile = ""
-                DefaultClientScript = "JScript"
-                DefaultHTMLPageLayout = "Grid"
-                DefaultTargetSchema = "IE50"
-                DelaySign = "false"
-                OutputType = "Library"
-                PreBuildEvent = ""
-                PostBuildEvent = ""
-                RootNamespace = "XPTable"
-                RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = ""
-            >
-                <Config
-                    Name = "Debug"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = "XPTable.xml"
-                    DebugSymbols = "true"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
-                    Optimize = "false"
-                    OutputPath = "bin\Debug\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-                <Config
-                    Name = "Release"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
-                    DocumentationFile = "XPTable.xml"
-                    DebugSymbols = "false"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
-                    Optimize = "true"
-                    OutputPath = "bin\Release\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-            </Settings>
-            <References>
-                <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
-                />
-                <Reference
-                    Name = "System.Design"
-                    AssemblyName = "System.Design"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Design.dll"
-                />
-                <Reference
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
-                />
-                <Reference
-                    Name = "System.Windows.Forms"
-                    AssemblyName = "System.Windows.Forms"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
-                />
-            </References>
-        </Build>
-        <Files>
-            <Include>
-                <File
-                    RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\CellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\ColorCellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\ComboBoxCellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\DateTimeCellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\DropDownCellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\DropDownContainer.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\DropDownContainer.resx"
-                    DependentUpon = "DropDownContainer.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Editors\DropDownStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\EditStartAction.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\ICellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\IEditorUsesRendererButtons.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\IKeyMessageFilterClient.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\IMouseMessageFilterClient.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\KeyMessageFilter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\MouseMessageFilter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\NumberCellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Editors\TextCellEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellButtonEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellCheckBoxEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellEditEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellEventArgsBase.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellEventType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellFocusEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellKeyEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\CellMouseEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\ColumnEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\ColumnEventType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\ColumnModelEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\HeaderMouseEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\NumericCellEditEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\PaintCellEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\PaintHeaderEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\RowEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\RowEventType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\SelectionEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\TableEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\TableEventType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\TableModelEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Events\ToolTipEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ButtonColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Cell.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CellCheckStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CellCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CellImageStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CellPadding.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CellPos.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CellStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CheckBoxColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\CheckBoxColumnStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ColorColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Column.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ColumnAlignment.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ColumnCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ColumnModel.bmp"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Models\ColumnModel.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ColumnState.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ComboBoxColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-
-                <File
-                    RelPath = "Models\ControlColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ControlFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\DataSourceColumnBinder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-
-                <File
-                    RelPath = "Models\DateTimeColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\DropDownColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\GridLines.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\GridLineStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\GroupColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\HeaderContextMenu.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ImageColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ImageSizeMode.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\NumberColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\ProgressBarColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Row.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\RowAlignment.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\RowCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\RowStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\SelectionStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Table.bmp"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Models\Table.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Table.resx"
-                    DependentUpon = "Table.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Models\TableModel.bmp"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Models\TableModel.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\TableModel.resx"
-                    DependentUpon = "TableModel.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Models\TableRegion.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\TableState.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\TextColumn.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Design\CellCollectionEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Design\CellConverter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Design\ColumnCollectionEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Design\HelpfulCollectionEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Design\RowCollectionEditor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Design\RowComparer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Models\Design\RowConverter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ButtonCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ButtonRendererData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\CellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\CheckBoxCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\CheckBoxRendererData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ColorCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ComboBoxCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ControlCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ControlRendererData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\DateTimeCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\DropDownCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\DropDownRendererData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\FlatHeaderRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\GradientHeaderRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\GroupCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\GroupRendererData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\HeaderRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ICellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\IHeaderRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ImageCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\IRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\NumberCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\NumberRendererData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\ProgressBarCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\Renderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\TextCellRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Renderers\XPHeaderRenderer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\CheckBoxComparer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\ColorComparer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\ComparerBase.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\DateTimeComparer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\HeapSorter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\IComparerCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\ImageComparer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\InsertionSorter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\MergeSorter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\NumberComparer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\ShellSorter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\SortColumn.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\SortColumnCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\SorterBase.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\SortType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Sorting\TextComparer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ButtonParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\CheckBoxStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ColumnHeaderParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ColumnHeaderStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ComboBoxParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ComboBoxStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ListViewParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ListViewStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ProgressBarParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\PushButtonStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\RadioButtonStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ScrollBarParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ScrollBarStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\TabParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\TextBoxParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\TextBoxStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ThemeClasses.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\ThemeManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\UpDownParts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Themes\UpDownStates.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\AsciiChars.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\DLLVERSIONINFO.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\KeyEventFFlags.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\MSG.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\NativeMethods.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\NativeWindow.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\POINT.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\RECT.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\SIZE.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\TRACKMOUSEEVENT.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\WindowExtendedStyles.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\WindowMessages.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32\WindowStyles.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-            </Include>
-        </Files>
-    </CSHARP>
-</VisualStudioProject>
-
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1ADD2ECB-2B24-4162-8965-3EFAA9BB041E}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>XPTable</AssemblyName>
+    <AssemblyOriginatorKeyFile>XPTable.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>XPTable</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>XPTable.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>XPTable.xml</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Design">
+      <Name>System.Design</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\CellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\ColorCellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\ComboBoxCellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\DateTimeCellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\DropDownCellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\DropDownContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\DropDownStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\EditStartAction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\ICellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\IEditorUsesRendererButtons.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\IKeyMessageFilterClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\IMouseMessageFilterClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\KeyMessageFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\MouseMessageFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\NumberCellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editors\TextCellEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellButtonEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellCheckBoxEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellEditEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellEventArgsBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellEventType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellFocusEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellKeyEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\CellMouseEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\ColumnEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\ColumnEventType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\ColumnModelEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\HeaderMouseEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\NumericCellEditEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\PaintCellEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\PaintHeaderEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\RowEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\RowEventType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\SelectionEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\TableEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\TableEventType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\TableModelEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\ToolTipEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\ButtonColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\Cell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\CellCheckStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\CellCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\CellImageStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\CellPadding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\CellPos.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\CellStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\CheckBoxColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\CheckBoxColumnStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\ColorColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\Column.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\ColumnAlignment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\ColumnCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\ColumnModel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\ColumnState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\ComboBoxColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\ControlColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\ControlFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\DataSourceColumnBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\DateTimeColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\Design\CellCollectionEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Design\CellConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Design\ColumnCollectionEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Design\HelpfulCollectionEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Design\RowCollectionEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Design\RowComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Design\RowConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\DropDownColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\GridLines.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\GridLineStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\GroupColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\HeaderContextMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\ImageColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\ImageSizeMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\NumberColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\ProgressBarColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\Row.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\RowAlignment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\RowCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\RowStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\SelectionStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Table.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\TableModel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\TableRegion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\TableState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\TextColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Renderers\ButtonCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ButtonRendererData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\CellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\CheckBoxCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\CheckBoxRendererData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ColorCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ComboBoxCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ControlCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ControlRendererData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\DateTimeCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\DropDownCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\DropDownRendererData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\FlatHeaderRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\GradientHeaderRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\GroupCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\GroupRendererData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\HeaderRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ICellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\IHeaderRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ImageCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\IRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\NumberCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\NumberRendererData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\ProgressBarCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\Renderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\TextCellRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderers\XPHeaderRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\CheckBoxComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\ColorComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\ComparerBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\DateTimeComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\HeapSorter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\IComparerCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\ImageComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\InsertionSorter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\MergeSorter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\NumberComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\ShellSorter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\SortColumn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\SortColumnCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\SorterBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\SortType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sorting\TextComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ButtonParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\CheckBoxStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ColumnHeaderParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ColumnHeaderStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ComboBoxParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ComboBoxStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ListViewParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ListViewStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ProgressBarParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\PushButtonStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\RadioButtonStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ScrollBarParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ScrollBarStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\TabParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\TextBoxParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\TextBoxStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ThemeClasses.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\ThemeManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\UpDownParts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Themes\UpDownStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\AsciiChars.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\DLLVERSIONINFO.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\KeyEventFFlags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\MSG.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\NativeMethods.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\NativeWindow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\POINT.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\RECT.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\SIZE.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\TRACKMOUSEEVENT.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\WindowExtendedStyles.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\WindowMessages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Win32\WindowStyles.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Editors\DropDownContainer.resx">
+      <DependentUpon>DropDownContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Models\ColumnModel.bmp" />
+    <EmbeddedResource Include="Models\Table.bmp" />
+    <EmbeddedResource Include="Models\Table.resx">
+      <DependentUpon>Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Models\TableModel.bmp" />
+    <EmbeddedResource Include="Models\TableModel.resx">
+      <DependentUpon>TableModel.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="XPTable.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

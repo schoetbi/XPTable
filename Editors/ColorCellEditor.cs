@@ -3669,7 +3669,7 @@ namespace XPTable.Editors
 
 					#region Events
 
-					public event EventHandler Scroll;
+					public new event EventHandler Scroll;
 
 					#endregion
 
@@ -4511,7 +4511,7 @@ namespace XPTable.Editors
 
 					#region Events
 
-					public event EventHandler Scroll;
+					public new event EventHandler Scroll;
 
 					#endregion
 

@@ -1078,7 +1078,7 @@ namespace XPTable.Models
         /// <summary>
         /// Gets whether the Column is able to raise events
         /// </summary>
-        protected bool CanRaiseEvents
+		protected override bool CanRaiseEvents
         {
             get
             {
@@ -1086,13 +1086,20 @@ namespace XPTable.Models
                 // raise events (if it can't, the Colum shouldn't raise events either)
                 if (this.ColumnModel != null)
                 {
-                    return this.ColumnModel.CanRaiseEvents;
+					return this.ColumnModel.CanRaiseEventsInternal;
                 }
 
                 return true;
             }
         }
 
+        /// <summary>
+        /// Gets the value for CanRaiseEvents.
+        /// </summary>
+        protected internal bool CanRaiseEventsInternal
+        {
+            get { return this.CanRaiseEvents; }
+        }
         #endregion
 
 
