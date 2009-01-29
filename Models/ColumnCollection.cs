@@ -178,7 +178,8 @@ namespace XPTable.Models
 			if (index >= 0 && index < this.Count) 
 			{
 				Column column = this[index];
-				
+
+				this.RemoveControlIfRequired(index);
 				this.List.RemoveAt(index);
 
 				this.RecalcWidthCache();
@@ -186,7 +187,6 @@ namespace XPTable.Models
 				this.OnColumnRemoved(new ColumnModelEventArgs(this.owner, column, index, index));
 			}
 		}
-
 
 		/// <summary>
 		/// Removes all Columns from the collection
@@ -200,6 +200,7 @@ namespace XPTable.Models
 
 			for (int i=0; i<this.Count; i++)
 			{
+				this.RemoveControlIfRequired(i);
 				this[i].ColumnModel = null;
 			}
 
@@ -209,6 +210,19 @@ namespace XPTable.Models
 			this.RecalcWidthCache();
 
 			this.OnColumnRemoved(new ColumnModelEventArgs(this.owner, null, -1, -1));
+		}
+
+		private void RemoveControlIfRequired(int index)
+		{
+			for (int i = 0; i < this.owner.Table.RowCount; i++)
+			{
+				Cell cell = this.owner.Table.TableModel.Rows[i].Cells[index];
+				if (cell.RendererData is XPTable.Renderers.ControlRendererData)
+				{
+					if ((cell.RendererData as XPTable.Renderers.ControlRendererData).Control != null)
+						cell.Row.TableModel.Table.Controls.Remove((cell.RendererData as XPTable.Renderers.ControlRendererData).Control);
+				}
+			}
 		}
 
 

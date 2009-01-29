@@ -1870,6 +1870,23 @@ namespace XPTable.Models
 			{
 				this.TableModel = null;
 			}
+
+			ClearAllRowControls();
+		}
+
+		/// <summary>
+		/// Clears all the controls from the Controls collection except the scroll bars
+		/// </summary>
+		public void ClearAllRowControls()
+		{
+			int i = 0;
+			while (i < this.Controls.Count)
+			{
+				if ((this.Controls[i] == this.hScrollBar) || (this.Controls[i] == this.hScrollBar))
+					i++;
+				else
+					this.Controls.RemoveAt(i);
+			}
 		}
 
 		#endregion

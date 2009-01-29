@@ -210,6 +210,7 @@ namespace XPTable.Models
 			{
 				Row row = this[index];
 			
+				row.ClearSelection();
 				this.List.RemoveAt(index);
 
                 if (owner != null)
@@ -233,6 +234,7 @@ namespace XPTable.Models
 				return;
 			}
 
+			this[0].InternalTableModel.Table.ClearAllRowControls();
 			for (int i=0; i<this.Count; i++)
 			{
 				this[i].InternalTableModel = null;
@@ -247,7 +249,6 @@ namespace XPTable.Models
             else if (rowowner != null)
                 this.OnRowRemoved(new RowEventArgs(null, RowEventType.SubRowRemoved, rowowner));
         }
-
 
 		/// <summary>
 		/// Inserts a Row into the collection at the specified index

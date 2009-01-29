@@ -158,12 +158,13 @@ namespace XPTable.Models
 			{
 				Cell cell = this[index];
 			
+                RemoveControlIfRequired(cell);
+
 				this.List.RemoveAt(index);
 
 				this.OnCellRemoved(new RowEventArgs(this.owner, cell, index, index));
 			}
 		}
-
 
 		/// <summary>
 		/// Removes all Cells from the collection
@@ -177,6 +178,7 @@ namespace XPTable.Models
 
 			for (int i=0; i<this.Count; i++)
 			{
+                RemoveControlIfRequired(this[i]);
 				this[i].InternalRow = null;
 			}
 
@@ -186,6 +188,14 @@ namespace XPTable.Models
 			this.OnCellRemoved(new RowEventArgs(this.owner, null, -1, -1));
 		}
 
+        private void RemoveControlIfRequired(Cell cell)
+        {
+            if (cell.RendererData is XPTable.Renderers.ControlRendererData)
+            {
+                if ((cell.RendererData as XPTable.Renderers.ControlRendererData).Control != null)
+                    cell.Row.TableModel.Table.Controls.Remove((cell.RendererData as XPTable.Renderers.ControlRendererData).Control);
+            }
+        }
 
 		/// <summary>
 		/// Inserts a Cell into the collection at the specified index
