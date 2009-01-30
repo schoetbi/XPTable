@@ -210,7 +210,7 @@ namespace XPTable.Models
 			{
 				Row row = this[index];
 			
-				row.ClearSelection();
+				RemoveControlIfRequired(index);
 				this.List.RemoveAt(index);
 
                 if (owner != null)
@@ -223,6 +223,18 @@ namespace XPTable.Models
             }
 		}
 
+        private void RemoveControlIfRequired(int index)
+        {
+            for (int i = 0; i < this[index].Cells.Count; i++)
+            {
+                Cell cell = this[index].Cells[i];
+                if (cell.RendererData is XPTable.Renderers.ControlRendererData)
+                {
+                    if ((cell.RendererData as XPTable.Renderers.ControlRendererData).Control != null)
+                        cell.Row.TableModel.Table.Controls.Remove((cell.RendererData as XPTable.Renderers.ControlRendererData).Control);
+                }
+            }
+        }
 
 		/// <summary>
 		/// Removes all Rows from the collection

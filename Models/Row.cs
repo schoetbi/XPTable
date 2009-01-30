@@ -1081,11 +1081,6 @@ namespace XPTable.Models
 
 			for (int i=0; i<this.Cells.Count; i++)
 			{
-				if (this.Cells[i].RendererData is XPTable.Renderers.ControlRendererData)
-				{
-					if ((this.Cells[i].RendererData as XPTable.Renderers.ControlRendererData).Control != null)
-						this.Cells[i].Row.TableModel.Table.Controls.Remove((this.Cells[i].RendererData as XPTable.Renderers.ControlRendererData).Control);
-				}
 				this.Cells[i].SetSelected(false);
 			}
 		}
