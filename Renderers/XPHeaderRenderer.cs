@@ -28,6 +28,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Events;
 using XPTable.Models;
@@ -69,11 +70,11 @@ namespace XPTable.Renderers
 
 			if (e.Column == null)
 			{
-				ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, ColumnHeaderStates.Normal);
+				ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, ColumnHeaderState.Normal);
 			}
 			else
 			{
-				ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, (ColumnHeaderStates) e.Column.ColumnState);
+				ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, (ColumnHeaderState) e.Column.ColumnState);
 			}
 		}
 

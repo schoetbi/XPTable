@@ -30,6 +30,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Events;
 using XPTable.Models;
@@ -48,7 +49,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// Specifies the alignment of the Image displayed on the button
 		/// </summary>
-		private ContentAlignment imageAlignment;
+		private System.Drawing.ContentAlignment imageAlignment;
 
 		#endregion
 		
@@ -61,7 +62,7 @@ namespace XPTable.Renderers
 		/// </summary>
 		public ButtonCellRenderer() : base()
 		{
-			this.imageAlignment = ContentAlignment.MiddleCenter;
+			this.imageAlignment = System.Drawing.ContentAlignment.MiddleCenter;
 		}
 
 		#endregion
@@ -106,24 +107,24 @@ namespace XPTable.Renderers
 		/// <param name="image">The buttons image</param>
 		/// <param name="imageAlignment">The alignment of the image</param>
 		/// <returns>A Rectangle that specifies the size and location of the buttons Image</returns>
-		protected Rectangle CalcImageRect(Image image, ContentAlignment imageAlignment)
+		protected Rectangle CalcImageRect(Image image, System.Drawing.ContentAlignment imageAlignment)
 		{
 			Rectangle imageRect = new Rectangle(this.ClientRectangle.X, this.ClientRectangle.Y, image.Width, image.Height);
 
 			switch (imageAlignment)
 			{
-				case ContentAlignment.TopCenter:
-				case ContentAlignment.MiddleCenter:
-				case ContentAlignment.BottomCenter:
+				case System.Drawing.ContentAlignment.TopCenter:
+				case System.Drawing.ContentAlignment.MiddleCenter:
+				case System.Drawing.ContentAlignment.BottomCenter:
 				{
 					imageRect.X += (this.ClientRectangle.Width - image.Width) / 2;
 
 					break;
 				}
 
-				case ContentAlignment.TopRight:
-				case ContentAlignment.MiddleRight:
-				case ContentAlignment.BottomRight:
+				case System.Drawing.ContentAlignment.TopRight:
+				case System.Drawing.ContentAlignment.MiddleRight:
+				case System.Drawing.ContentAlignment.BottomRight:
 				{
 					imageRect.X = this.ClientRectangle.Right - image.Width;
 
@@ -133,27 +134,27 @@ namespace XPTable.Renderers
 
 			switch (imageAlignment)
 			{
-				case ContentAlignment.TopLeft:
-				case ContentAlignment.TopCenter:
-				case ContentAlignment.TopRight:
+				case System.Drawing.ContentAlignment.TopLeft:
+				case System.Drawing.ContentAlignment.TopCenter:
+				case System.Drawing.ContentAlignment.TopRight:
 				{
 					imageRect.Y += 2;
 
 					break;
 				}
 				
-				case ContentAlignment.MiddleLeft:
-				case ContentAlignment.MiddleCenter:
-				case ContentAlignment.MiddleRight:
+				case System.Drawing.ContentAlignment.MiddleLeft:
+				case System.Drawing.ContentAlignment.MiddleCenter:
+				case System.Drawing.ContentAlignment.MiddleRight:
 				{
 					imageRect.Y += (this.ClientRectangle.Height - image.Height) / 2;
 
 					break;
 				}
 
-				case ContentAlignment.BottomLeft:
-				case ContentAlignment.BottomCenter:
-				case ContentAlignment.BottomRight:
+				case System.Drawing.ContentAlignment.BottomLeft:
+				case System.Drawing.ContentAlignment.BottomCenter:
+				case System.Drawing.ContentAlignment.BottomRight:
 				{
 					imageRect.Y = this.ClientRectangle.Bottom - image.Height - 2;
 
@@ -172,7 +173,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// Gets or sets the alignment of the Image displayed on the buttons
 		/// </summary>
-		public ContentAlignment ImageAlignment
+		public System.Drawing.ContentAlignment ImageAlignment
 		{
 			get
 			{
@@ -235,7 +236,7 @@ namespace XPTable.Renderers
 			// 
 			if (e.KeyData == Keys.Enter || e.KeyData == Keys.Space)
 			{
-				rendererData.ButtonState = PushButtonStates.Pressed;
+				rendererData.ButtonState = PushButtonState.Pressed;
 
 				e.Table.Invalidate(e.CellRect);
 			}
@@ -256,7 +257,7 @@ namespace XPTable.Renderers
 			// 
 			if (e.KeyData == Keys.Enter || e.KeyData == Keys.Space)
 			{
-				rendererData.ButtonState = PushButtonStates.Normal;
+				rendererData.ButtonState = PushButtonState.Normal;
 
 				e.Table.Invalidate(e.CellRect);
 				e.Table.OnCellButtonClicked(new CellButtonEventArgs(e.Cell, e.Column, e.Row));
@@ -283,9 +284,9 @@ namespace XPTable.Renderers
 			// if the mouse is inside the button, make sure it is "hot"
 			if (this.CalcButtonBounds().Contains(e.X, e.Y))
 			{
-				if (rendererData.ButtonState != PushButtonStates.Hot)
+				if (rendererData.ButtonState != PushButtonState.Hot)
 				{
-					rendererData.ButtonState = PushButtonStates.Hot;
+					rendererData.ButtonState = PushButtonState.Hot;
 
 					e.Table.Invalidate(e.CellRect);
 				}
@@ -293,9 +294,9 @@ namespace XPTable.Renderers
 				// the mouse isn't inside the button, so it is in its normal state
 			else
 			{
-				if (rendererData.ButtonState != PushButtonStates.Normal)
+				if (rendererData.ButtonState != PushButtonState.Normal)
 				{
-					rendererData.ButtonState = PushButtonStates.Normal;
+					rendererData.ButtonState = PushButtonState.Normal;
 
 					e.Table.Invalidate(e.CellRect);
 				}
@@ -318,9 +319,9 @@ namespace XPTable.Renderers
 			ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
 
 			// make sure the button is in its normal state
-			if (rendererData.ButtonState != PushButtonStates.Normal)
+			if (rendererData.ButtonState != PushButtonState.Normal)
 			{
-				rendererData.ButtonState = PushButtonStates.Normal;
+				rendererData.ButtonState = PushButtonState.Normal;
 
 				e.Table.Invalidate(e.CellRect);
 			}
@@ -350,7 +351,7 @@ namespace XPTable.Renderers
 				// the button is "hot"
 				if (buttonRect.Contains(e.X, e.Y))
 				{
-					rendererData.ButtonState = PushButtonStates.Hot;
+					rendererData.ButtonState = PushButtonState.Hot;
 
 					e.Table.Invalidate(e.CellRect);
 
@@ -365,9 +366,9 @@ namespace XPTable.Renderers
 				{
 					// the mouse was released somewhere outside of the button, 
 					// so make set the button back to its normal state
-					if (rendererData.ButtonState != PushButtonStates.Normal)
+					if (rendererData.ButtonState != PushButtonState.Normal)
 					{
-						rendererData.ButtonState = PushButtonStates.Normal;
+						rendererData.ButtonState = PushButtonState.Normal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
@@ -402,7 +403,7 @@ namespace XPTable.Renderers
 				// if the click was inside the button, set the button state to pressed
 				if (this.CalcButtonBounds().Contains(rendererData.ClickPoint))
 				{
-					rendererData.ButtonState = PushButtonStates.Pressed;
+					rendererData.ButtonState = PushButtonState.Pressed;
 
 					e.Table.Invalidate(e.CellRect);
 				}
@@ -436,9 +437,9 @@ namespace XPTable.Renderers
 					if (buttonRect.Contains(e.X, e.Y))
 					{
 						// make sure the button is pressed
-						if (rendererData.ButtonState != PushButtonStates.Pressed)
+						if (rendererData.ButtonState != PushButtonState.Pressed)
 						{
-							rendererData.ButtonState = PushButtonStates.Pressed;
+							rendererData.ButtonState = PushButtonState.Pressed;
 
 							e.Table.Invalidate(e.CellRect);
 						}
@@ -446,9 +447,9 @@ namespace XPTable.Renderers
 					else
 					{
 						// the mouse isn't inside the button so make sure it is "hot"
-						if (rendererData.ButtonState != PushButtonStates.Hot)
+						if (rendererData.ButtonState != PushButtonState.Hot)
 						{
-							rendererData.ButtonState = PushButtonStates.Hot;
+							rendererData.ButtonState = PushButtonState.Hot;
 
 							e.Table.Invalidate(e.CellRect);
 						}
@@ -461,9 +462,9 @@ namespace XPTable.Renderers
 				if (buttonRect.Contains(e.X, e.Y))
 				{
 					// the mouse is inside the button so make sure it is "hot"
-					if (rendererData.ButtonState != PushButtonStates.Hot)
+					if (rendererData.ButtonState != PushButtonState.Hot)
 					{
-						rendererData.ButtonState = PushButtonStates.Hot;
+						rendererData.ButtonState = PushButtonState.Hot;
 
 						e.Table.Invalidate(e.CellRect);
 					}
@@ -471,9 +472,9 @@ namespace XPTable.Renderers
 				else
 				{
 					// not inside the button so make sure it is in its normal state
-					if (rendererData.ButtonState != PushButtonStates.Normal)
+					if (rendererData.ButtonState != PushButtonState.Normal)
 					{
-						rendererData.ButtonState = PushButtonStates.Normal;
+						rendererData.ButtonState = PushButtonState.Normal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
@@ -499,7 +500,7 @@ namespace XPTable.Renderers
 			}
 			else
 			{
-				this.ImageAlignment = ContentAlignment.MiddleLeft;
+				this.ImageAlignment = System.Drawing.ContentAlignment.MiddleLeft;
 			}
 			
 			base.OnPaintCell(e);
@@ -522,19 +523,19 @@ namespace XPTable.Renderers
 
 			// get the button state
 			ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
-			PushButtonStates state = rendererData.ButtonState;
+			PushButtonState state = rendererData.ButtonState;
 
 			// if the cell has focus and is in its normal state, 
 			// make the button look like a default button
-			if (state == PushButtonStates.Normal && e.Focused)
+			if (state == PushButtonState.Normal && e.Focused)
 			{
-				state = PushButtonStates.Default;
+				state = PushButtonState.Default;
 			}
 
 			// if the table is not enabled, make sure the button is disabled
 			if (!e.Enabled)
 			{
-				state = PushButtonStates.Disabled;
+				state = PushButtonState.Disabled;
 			}
 
 			// draw the button
@@ -566,7 +567,7 @@ namespace XPTable.Renderers
 			{
 				Rectangle imageRect = this.CalcImageRect(e.Cell.Image, this.ImageAlignment);
 
-				if (this.GetButtonRendererData(e.Cell).ButtonState == PushButtonStates.Pressed && !ThemeManager.VisualStylesEnabled)
+				if (this.GetButtonRendererData(e.Cell).ButtonState == PushButtonState.Pressed && !ThemeManager.VisualStylesEnabled)
 				{
 					imageRect.X += 1;
 					imageRect.Y += 1;
@@ -581,7 +582,7 @@ namespace XPTable.Renderers
 			{
 				if (e.Enabled)
 				{
-					if (!ThemeManager.VisualStylesEnabled && this.GetButtonRendererData(e.Cell).ButtonState == PushButtonStates.Pressed)
+					if (!ThemeManager.VisualStylesEnabled && this.GetButtonRendererData(e.Cell).ButtonState == PushButtonState.Pressed)
 					{
 						textRect.X += 1;
 						textRect.Y += 1;
@@ -626,7 +627,7 @@ namespace XPTable.Renderers
 				{
 					focusRect.Inflate(-3, -3);
 
-					if (this.GetButtonRendererData(e.Cell).ButtonState != PushButtonStates.Pressed)
+					if (this.GetButtonRendererData(e.Cell).ButtonState != PushButtonState.Pressed)
 					{
 						ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
 					}

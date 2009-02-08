@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -476,61 +476,10 @@
     <Compile Include="Sorting\TextComparer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Themes\ButtonParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\CheckBoxStates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ColumnHeaderParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Themes\ColumnHeaderStates.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Themes\ComboBoxParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ComboBoxStates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ListViewParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ListViewStates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ProgressBarParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\PushButtonStates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\RadioButtonStates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ScrollBarParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ScrollBarStates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\TabParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\TextBoxParts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\TextBoxStates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\ThemeClasses.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Themes\ThemeManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Themes\UpDownParts.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Themes\UpDownStates.cs">

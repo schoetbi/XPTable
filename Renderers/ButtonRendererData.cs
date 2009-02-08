@@ -28,6 +28,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Themes;
 
@@ -44,7 +45,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// The current state of the button
 		/// </summary>
-		private PushButtonStates buttonState;
+		private PushButtonState buttonState;
 		
 		/// <summary>
 		/// The x coordinate of the last mouse click point
@@ -66,7 +67,7 @@ namespace XPTable.Renderers
 		/// </summary>
 		public ButtonRendererData()
 		{
-			this.buttonState = PushButtonStates.Normal;
+			this.buttonState = PushButtonState.Normal;
 			this.clickX = -1;
 			this.clickY = -1;
 		}
@@ -79,7 +80,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// Gets or sets the current state of the button
 		/// </summary>
-		public PushButtonStates ButtonState
+		public PushButtonState ButtonState
 		{
 			get
 			{
@@ -88,9 +89,9 @@ namespace XPTable.Renderers
 
 			set
 			{
-				if (!Enum.IsDefined(typeof(PushButtonStates), value)) 
+				if (!Enum.IsDefined(typeof(PushButtonState), value)) 
 				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(PushButtonStates));
+					throw new InvalidEnumArgumentException("value", (int) value, typeof(PushButtonState));
 				}
 					
 				this.buttonState = value;

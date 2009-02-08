@@ -28,6 +28,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Editors;
 using XPTable.Events;
@@ -178,9 +179,9 @@ namespace XPTable.Renderers
 					// get the button renderer data
 					DropDownRendererData rendererData = this.GetDropDownRendererData(e.Cell);
 
-					if (rendererData.ButtonState != ComboBoxStates.Normal)
+					if (rendererData.ButtonState != ComboBoxState.Normal)
 					{
-						rendererData.ButtonState = ComboBoxStates.Normal;
+						rendererData.ButtonState = ComboBoxState.Normal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
@@ -209,7 +210,7 @@ namespace XPTable.Renderers
 
 					if (this.CalcDropDownButtonBounds().Contains(e.X, e.Y))
 					{
-						rendererData.ButtonState = ComboBoxStates.Hot;
+						rendererData.ButtonState = ComboBoxState.Hot;
 
 						e.Table.Invalidate(e.CellRect);
 					}
@@ -243,7 +244,7 @@ namespace XPTable.Renderers
 							throw new InvalidOperationException("Cannot edit Cell as DropDownCellRenderer requires a DropDownColumn that uses a DropDownCellEditor");
 						}
 						
-						rendererData.ButtonState = ComboBoxStates.Pressed;
+						rendererData.ButtonState = ComboBoxState.Pressed;
 						
 						if (!e.Table.IsEditing)
 						{
@@ -283,15 +284,15 @@ namespace XPTable.Renderers
 
 					if (this.CalcDropDownButtonBounds().Contains(e.X, e.Y))
 					{
-						if (rendererData.ButtonState == ComboBoxStates.Normal)
+						if (rendererData.ButtonState == ComboBoxState.Normal)
 						{
 							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
 							{
-								rendererData.ButtonState = ComboBoxStates.Pressed;
+								rendererData.ButtonState = ComboBoxState.Pressed;
 							}
 							else
 							{
-								rendererData.ButtonState = ComboBoxStates.Hot;
+								rendererData.ButtonState = ComboBoxState.Hot;
 							}
 
 							e.Table.Invalidate(e.CellRect);
@@ -299,9 +300,9 @@ namespace XPTable.Renderers
 					}
 					else
 					{
-						if (rendererData.ButtonState != ComboBoxStates.Normal)
+						if (rendererData.ButtonState != ComboBoxState.Normal)
 						{
-							rendererData.ButtonState = ComboBoxStates.Normal;
+							rendererData.ButtonState = ComboBoxState.Normal;
 
 							e.Table.Invalidate(e.CellRect);
 						}
@@ -351,11 +352,11 @@ namespace XPTable.Renderers
 
 			if (this.ShowDropDownButton || (e.Table.IsEditing && e.CellPos == e.Table.EditingCell))
 			{
-				ComboBoxStates state = this.GetDropDownRendererData(e.Cell).ButtonState;
+				ComboBoxState state = this.GetDropDownRendererData(e.Cell).ButtonState;
 
 				if (!e.Enabled)
 				{
-					state = ComboBoxStates.Disabled;
+					state = ComboBoxState.Disabled;
 				}
 
 				ThemeManager.DrawComboBoxButton(e.Graphics, this.CalcDropDownButtonBounds(), state);

@@ -27,6 +27,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Themes;
 
@@ -43,7 +44,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// The current state of the Cells check box
 		/// </summary>
-		private CheckBoxStates checkState;
+		private CheckBoxState checkState;
 
 		#endregion
 
@@ -55,7 +56,7 @@ namespace XPTable.Renderers
 		/// specified CheckBox state
 		/// </summary>
 		/// <param name="checkState">The current state of the Cells CheckBox</param>
-		public CheckBoxRendererData(CheckBoxStates checkState)
+		public CheckBoxRendererData(CheckBoxState checkState)
 		{
 			this.checkState = checkState;
 		}
@@ -68,7 +69,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// Gets or sets the current state of the Cells checkbox
 		/// </summary>
-		public CheckBoxStates CheckState
+		public CheckBoxState CheckState
 		{
 			get
 			{
@@ -77,9 +78,9 @@ namespace XPTable.Renderers
 
 			set
 			{
-				if (!Enum.IsDefined(typeof(CheckBoxStates), value)) 
+				if (!Enum.IsDefined(typeof(CheckBoxState), value)) 
 				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(CheckBoxStates));
+					throw new InvalidEnumArgumentException("value", (int) value, typeof(CheckBoxState));
 				}
 					
 				this.checkState = value;

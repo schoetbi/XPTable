@@ -29,6 +29,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Editors;
 using XPTable.Events;
@@ -314,15 +315,15 @@ namespace XPTable.Renderers
 					// get the button renderer data
 					NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
 
-					if (rendererData.UpButtonState != UpDownStates.Normal)
+					if (rendererData.UpButtonState != UpDownState.Normal)
 					{
-						rendererData.UpButtonState = UpDownStates.Normal;
+						rendererData.UpButtonState = UpDownState.Normal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
-					else if (rendererData.DownButtonState != UpDownStates.Normal)
+					else if (rendererData.DownButtonState != UpDownState.Normal)
 					{
-						rendererData.DownButtonState = UpDownStates.Normal;
+						rendererData.DownButtonState = UpDownState.Normal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
@@ -354,7 +355,7 @@ namespace XPTable.Renderers
 
 					if (this.GetUpButtonBounds().Contains(e.X, e.Y))
 					{
-						rendererData.UpButtonState = UpDownStates.Hot;
+						rendererData.UpButtonState = UpDownState.Hot;
 
 						if (!e.Table.IsEditing)
 						{
@@ -367,7 +368,7 @@ namespace XPTable.Renderers
 					}
 					else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
 					{
-						rendererData.DownButtonState = UpDownStates.Hot;
+						rendererData.DownButtonState = UpDownState.Hot;
 
 						if (!e.Table.IsEditing)
 						{
@@ -418,7 +419,7 @@ namespace XPTable.Renderers
 						
 						if (this.GetUpButtonBounds().Contains(e.X, e.Y))
 						{
-							rendererData.UpButtonState = UpDownStates.Pressed;
+							rendererData.UpButtonState = UpDownState.Pressed;
 
 							((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
 
@@ -426,7 +427,7 @@ namespace XPTable.Renderers
 						}
 						else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
 						{
-							rendererData.DownButtonState = UpDownStates.Pressed;
+							rendererData.DownButtonState = UpDownState.Pressed;
 
 							((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
 
@@ -458,13 +459,13 @@ namespace XPTable.Renderers
 
 					if (this.GetUpButtonBounds().Contains(e.X, e.Y))
 					{
-						if (rendererData.UpButtonState == UpDownStates.Normal)
+						if (rendererData.UpButtonState == UpDownState.Normal)
 						{
 							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
 							{
 								if (this.GetUpButtonBounds().Contains(rendererData.ClickPoint))
 								{
-									rendererData.UpButtonState = UpDownStates.Pressed;
+									rendererData.UpButtonState = UpDownState.Pressed;
 
 									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
 									{
@@ -473,7 +474,7 @@ namespace XPTable.Renderers
 								}
 								else if (this.GetDownButtonBounds().Contains(rendererData.ClickPoint))
 								{
-									rendererData.DownButtonState = UpDownStates.Normal;
+									rendererData.DownButtonState = UpDownState.Normal;
 
 									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
 									{
@@ -483,11 +484,11 @@ namespace XPTable.Renderers
 							}
 							else
 							{
-								rendererData.UpButtonState = UpDownStates.Hot;
+								rendererData.UpButtonState = UpDownState.Hot;
 
-								if (rendererData.DownButtonState == UpDownStates.Hot)
+								if (rendererData.DownButtonState == UpDownState.Hot)
 								{
-									rendererData.DownButtonState = UpDownStates.Normal;
+									rendererData.DownButtonState = UpDownState.Normal;
 								}
 							}
 
@@ -496,13 +497,13 @@ namespace XPTable.Renderers
 					}
 					else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
 					{
-						if (rendererData.DownButtonState == UpDownStates.Normal)
+						if (rendererData.DownButtonState == UpDownState.Normal)
 						{
 							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
 							{
 								if (this.GetDownButtonBounds().Contains(rendererData.ClickPoint))
 								{
-									rendererData.DownButtonState = UpDownStates.Pressed;
+									rendererData.DownButtonState = UpDownState.Pressed;
 
 									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
 									{
@@ -511,7 +512,7 @@ namespace XPTable.Renderers
 								}
 								else if (this.GetUpButtonBounds().Contains(rendererData.ClickPoint))
 								{
-									rendererData.UpButtonState = UpDownStates.Normal;
+									rendererData.UpButtonState = UpDownState.Normal;
 
 									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
 									{
@@ -521,11 +522,11 @@ namespace XPTable.Renderers
 							}
 							else
 							{
-								rendererData.DownButtonState = UpDownStates.Hot;
+								rendererData.DownButtonState = UpDownState.Hot;
 
-								if (rendererData.UpButtonState == UpDownStates.Hot)
+								if (rendererData.UpButtonState == UpDownState.Hot)
 								{
-									rendererData.UpButtonState = UpDownStates.Normal;
+									rendererData.UpButtonState = UpDownState.Normal;
 								}
 							}
 
@@ -534,10 +535,10 @@ namespace XPTable.Renderers
 					}
 					else
 					{
-						if (rendererData.UpButtonState != UpDownStates.Normal || rendererData.DownButtonState != UpDownStates.Normal)
+						if (rendererData.UpButtonState != UpDownState.Normal || rendererData.DownButtonState != UpDownState.Normal)
 						{
-							rendererData.UpButtonState = UpDownStates.Normal;
-							rendererData.DownButtonState = UpDownStates.Normal;
+							rendererData.UpButtonState = UpDownState.Normal;
+							rendererData.DownButtonState = UpDownState.Normal;
 
 							if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
 							{
@@ -607,13 +608,13 @@ namespace XPTable.Renderers
 
 			if (this.ShowUpDownButtons)
 			{
-				UpDownStates upButtonState = this.GetNumberRendererData(e.Cell).UpButtonState;
-				UpDownStates downButtonState = this.GetNumberRendererData(e.Cell).DownButtonState;
+				UpDownState upButtonState = this.GetNumberRendererData(e.Cell).UpButtonState;
+				UpDownState downButtonState = this.GetNumberRendererData(e.Cell).DownButtonState;
 				
 				if (!e.Enabled)
 				{
-					upButtonState = UpDownStates.Disabled;
-					downButtonState = UpDownStates.Disabled;
+					upButtonState = UpDownState.Disabled;
+					downButtonState = UpDownState.Disabled;
 				}
 
 				ThemeManager.DrawUpDownButtons(e.Graphics, this.GetUpButtonBounds(), upButtonState, this.GetDownButtonBounds(), downButtonState);

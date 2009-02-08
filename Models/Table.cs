@@ -30,6 +30,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Editors;
 using XPTable.Events;
@@ -7582,10 +7583,10 @@ namespace XPTable.Models
 			{
 				if (ThemeManager.VisualStylesEnabled)
 				{
-					TextBoxStates state = TextBoxStates.Normal;
+					TextBoxState state = TextBoxState.Normal;
 					if (!this.Enabled)
 					{
-						state = TextBoxStates.Disabled;
+						state = TextBoxState.Disabled;
 					}
 
 					// draw the left border

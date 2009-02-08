@@ -33,7 +33,7 @@ namespace XPTable.Themes
 	/// <summary>
 	/// Represents the different states of a Column Header
 	/// </summary>
-	public enum ColumnHeaderStates
+	public enum ColumnHeaderState
 	{
 		/// <summary>
 		/// The Column Header is in its normal state

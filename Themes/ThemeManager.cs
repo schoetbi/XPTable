@@ -24,13 +24,13 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
 using System.Drawing;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Win32;
 
@@ -68,9 +68,9 @@ namespace XPTable.Themes
 		/// <param name="g">The Graphics to draw on</param>
 		/// <param name="buttonRect">The Rectangle that represents the dimensions 
 		/// of the button</param>
-		/// <param name="state">A PushButtonStates value that specifies the 
+		/// <param name="state">A PushButtonState value that specifies the 
 		/// state to draw the button in</param>
-		public static void DrawButton(Graphics g, Rectangle buttonRect, PushButtonStates state)
+		public static void DrawButton(Graphics g, Rectangle buttonRect, PushButtonState state)
 		{
 			ThemeManager.DrawButton(g, buttonRect, buttonRect, state);
 		}
@@ -84,9 +84,9 @@ namespace XPTable.Themes
 		/// <param name="buttonRect">The Rectangle that represents the dimensions 
 		/// of the button</param>
 		/// <param name="clipRect">The Rectangle that represents the clipping area</param>
-		/// <param name="state">A PushButtonStates value that specifies the 
+		/// <param name="state">A PushButtonState value that specifies the 
 		/// state to draw the button in</param>
-		public static void DrawButton(Graphics g, Rectangle buttonRect, Rectangle clipRect, PushButtonStates state)
+		public static void DrawButton(Graphics g, Rectangle buttonRect, Rectangle clipRect, PushButtonState state)
 		{
 			if (g == null || buttonRect.Width <= 0 || buttonRect.Height <= 0 || clipRect.Width <= 0 || clipRect.Height <= 0)
 			{
@@ -95,7 +95,27 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.Button, (int) ButtonParts.PushButton, (int) state, buttonRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.Button, (int) ButtonParts.PushButton, (int) state, buttonRect, clipRect);
+				VisualStyleRenderer renderer;
+				switch (state)
+				{
+					case PushButtonState.Disabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.PushButton.Disabled);
+						break;
+					case PushButtonState.Hot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.PushButton.Hot);
+						break;
+					case PushButtonState.Normal:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.PushButton.Normal);
+						break;
+					case PushButtonState.Pressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.PushButton.Pressed);
+						break;
+					default:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.PushButton.Default);
+						break;
+				}
+				renderer.DrawBackground(g, buttonRect, clipRect);
 			}
 			else
 			{
@@ -105,21 +125,21 @@ namespace XPTable.Themes
 
 
 		/// <summary>
-		/// Converts the specified PushButtonStates value to a ButtonState value
+		/// Converts the specified PushButtonState value to a ButtonState value
 		/// </summary>
-		/// <param name="state">The PushButtonStates value to be converted</param>
-		/// <returns>A ButtonState value that represents the specified PushButtonStates 
+		/// <param name="state">The PushButtonState value to be converted</param>
+		/// <returns>A ButtonState value that represents the specified PushButtonState 
 		/// value</returns>
-		private static ButtonState ConvertPushButtonStateToButtonState(PushButtonStates state)
+		private static ButtonState ConvertPushButtonStateToButtonState(PushButtonState state)
 		{
 			switch (state)
 			{
-				case PushButtonStates.Pressed:
+				case PushButtonState.Pressed:
 				{
 					return ButtonState.Pushed;
 				}
 
-				case PushButtonStates.Disabled:
+				case PushButtonState.Disabled:
 				{
 					return ButtonState.Inactive;
 				}
@@ -139,9 +159,9 @@ namespace XPTable.Themes
 		/// <param name="g">The Graphics to draw on</param>
 		/// <param name="checkRect">The Rectangle that represents the dimensions 
 		/// of the check box</param>
-		/// <param name="state">A CheckBoxStates value that specifies the 
+		/// <param name="state">A CheckBoxState value that specifies the 
 		/// state to draw the check box in</param>
-		public static void DrawCheck(Graphics g, Rectangle checkRect, CheckBoxStates state)
+		public static void DrawCheck(Graphics g, Rectangle checkRect, CheckBoxState state)
 		{
 			ThemeManager.DrawCheck(g, checkRect, checkRect, state);
 		}
@@ -155,9 +175,9 @@ namespace XPTable.Themes
 		/// <param name="checkRect">The Rectangle that represents the dimensions 
 		/// of the check box</param>
 		/// <param name="clipRect">The Rectangle that represents the clipping area</param>
-		/// <param name="state">A CheckBoxStates value that specifies the 
+		/// <param name="state">A CheckBoxState value that specifies the 
 		/// state to draw the check box in</param>
-		public static void DrawCheck(Graphics g, Rectangle checkRect, Rectangle clipRect, CheckBoxStates state)
+		public static void DrawCheck(Graphics g, Rectangle checkRect, Rectangle clipRect, CheckBoxState state)
 		{
 			if (g == null || checkRect.Width <= 0 || checkRect.Height <= 0)
 			{
@@ -166,7 +186,49 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.Button, (int) ButtonParts.CheckBox, (int) state, checkRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.Button, (int) ButtonParts.CheckBox, (int) state, checkRect, clipRect);
+				VisualStyleRenderer renderer;
+				switch (state)
+				{
+					case CheckBoxState.CheckedDisabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.CheckedDisabled);
+						break;
+					case CheckBoxState.CheckedHot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.CheckedHot);
+						break;
+					case CheckBoxState.CheckedNormal:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.CheckedNormal);
+						break;
+					case CheckBoxState.CheckedPressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.CheckedPressed);
+						break;
+					case CheckBoxState.MixedDisabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.MixedDisabled);
+						break;
+					case CheckBoxState.MixedHot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.MixedHot);
+						break;
+					case CheckBoxState.MixedNormal:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.MixedNormal);
+						break;
+					case CheckBoxState.MixedPressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.MixedPressed);
+						break;
+					case CheckBoxState.UncheckedDisabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.UncheckedDisabled);
+						break;
+					case CheckBoxState.UncheckedHot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.UncheckedHot);
+						break;
+					case CheckBoxState.UncheckedPressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.UncheckedPressed);
+						break;
+					case CheckBoxState.UncheckedNormal:
+					default:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.CheckBox.UncheckedNormal);
+						break;
+				}
+				renderer.DrawBackground(g, checkRect, clipRect);
 			}
 			else
 			{
@@ -183,53 +245,53 @@ namespace XPTable.Themes
 
 
 		/// <summary>
-		/// Converts the specified CheckBoxStates value to a ButtonState value
+		/// Converts the specified CheckBoxState value to a ButtonState value
 		/// </summary>
-		/// <param name="state">The CheckBoxStates value to be converted</param>
-		/// <returns>A ButtonState value that represents the specified CheckBoxStates 
+		/// <param name="state">The CheckBoxState value to be converted</param>
+		/// <returns>A ButtonState value that represents the specified CheckBoxState 
 		/// value</returns>
-		private static ButtonState ConvertCheckBoxStateToButtonState(CheckBoxStates state)
+		private static ButtonState ConvertCheckBoxStateToButtonState(CheckBoxState state)
 		{
 			switch (state)
 			{
-				case CheckBoxStates.UncheckedPressed:
+				case CheckBoxState.UncheckedPressed:
 				{
 					return ButtonState.Pushed;
 				}
 
-				case CheckBoxStates.UncheckedDisabled:
+				case CheckBoxState.UncheckedDisabled:
 				{
 					return ButtonState.Inactive;
 				}
 
-				case CheckBoxStates.CheckedNormal:
-				case CheckBoxStates.CheckedHot:
+				case CheckBoxState.CheckedNormal:
+				case CheckBoxState.CheckedHot:
 				{
 					return ButtonState.Checked;
 				}
 
-				case CheckBoxStates.CheckedPressed:
+				case CheckBoxState.CheckedPressed:
 				{
 					return (ButtonState.Checked | ButtonState.Pushed);
 				}
 
-				case CheckBoxStates.CheckedDisabled:
+				case CheckBoxState.CheckedDisabled:
 				{
 					return (ButtonState.Checked | ButtonState.Inactive);
 				}
 
-				case CheckBoxStates.MixedNormal:
-				case CheckBoxStates.MixedHot:
+				case CheckBoxState.MixedNormal:
+				case CheckBoxState.MixedHot:
 				{
 					return ButtonState.Checked;
 				}
 
-				case CheckBoxStates.MixedPressed:
+				case CheckBoxState.MixedPressed:
 				{
 					return (ButtonState.Checked | ButtonState.Pushed);
 				}
 
-				case CheckBoxStates.MixedDisabled:
+				case CheckBoxState.MixedDisabled:
 				{
 					return (ButtonState.Checked | ButtonState.Inactive);
 				}
@@ -240,20 +302,20 @@ namespace XPTable.Themes
 
 
 		/// <summary>
-		/// Returns whether the specified CheckBoxStates value is in an 
+		/// Returns whether the specified CheckBoxState value is in an 
 		/// indeterminate state
 		/// </summary>
-		/// <param name="state">The CheckBoxStates value to be checked</param>
-		/// <returns>true if the specified CheckBoxStates value is in an 
+		/// <param name="state">The CheckBoxState value to be checked</param>
+		/// <returns>true if the specified CheckBoxState value is in an 
 		/// indeterminate state, false otherwise</returns>
-		private static bool IsMixed(CheckBoxStates state)
+		private static bool IsMixed(CheckBoxState state)
 		{
 			switch (state)
 			{
-				case CheckBoxStates.MixedNormal:
-				case CheckBoxStates.MixedHot:
-				case CheckBoxStates.MixedPressed:
-				case CheckBoxStates.MixedDisabled:
+				case CheckBoxState.MixedNormal:
+				case CheckBoxState.MixedHot:
+				case CheckBoxState.MixedPressed:
+				case CheckBoxState.MixedDisabled:
 				{
 					return true;
 				}
@@ -273,9 +335,9 @@ namespace XPTable.Themes
 		/// <param name="g">The Graphics to draw on</param>
 		/// <param name="headerRect">The Rectangle that represents the dimensions 
 		/// of the column header</param>
-		/// <param name="state">A ColumnHeaderStates value that specifies the 
+		/// <param name="state">A ColumnHeaderState value that specifies the 
 		/// state to draw the column header in</param>
-		public static void DrawColumnHeader(Graphics g, Rectangle headerRect, ColumnHeaderStates state)
+		public static void DrawColumnHeader(Graphics g, Rectangle headerRect, ColumnHeaderState state)
 		{
 			ThemeManager.DrawColumnHeader(g, headerRect, headerRect, state);
 		}
@@ -289,9 +351,9 @@ namespace XPTable.Themes
 		/// <param name="headerRect">The Rectangle that represents the dimensions 
 		/// of the column header</param>
 		/// <param name="clipRect">The Rectangle that represents the clipping area</param>
-		/// <param name="state">A ColumnHeaderStates value that specifies the 
+		/// <param name="state">A ColumnHeaderState value that specifies the 
 		/// state to draw the column header in</param>
-		public static void DrawColumnHeader(Graphics g, Rectangle headerRect, Rectangle clipRect, ColumnHeaderStates state)
+		public static void DrawColumnHeader(Graphics g, Rectangle headerRect, Rectangle clipRect, ColumnHeaderState state)
 		{
 			if (g == null || headerRect.Width <= 0 || headerRect.Height <= 0 || clipRect.Width <= 0 || clipRect.Height <= 0)
 			{
@@ -300,13 +362,28 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.ColumnHeader, (int) ColumnHeaderParts.HeaderItem, (int) state, headerRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.ColumnHeader, (int) ColumnHeaderParts.HeaderItem, (int) state, headerRect, clipRect);
+				VisualStyleRenderer renderer;
+				switch (state)
+				{
+					case ColumnHeaderState.Hot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Header.Item.Hot);
+						break;
+					case ColumnHeaderState.Pressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Header.Item.Pressed);
+						break;
+					case ColumnHeaderState.Normal:
+					default:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Header.Item.Normal);
+						break;
+				}
+				renderer.DrawBackground(g, headerRect, clipRect);
 			}
 			else
 			{
 				g.FillRectangle(SystemBrushes.Control, headerRect);
 
-				if (state == ColumnHeaderStates.Pressed)
+				if (state == ColumnHeaderState.Pressed)
 				{
 					g.DrawRectangle(SystemPens.ControlDark, headerRect.X, headerRect.Y, headerRect.Width-1, headerRect.Height-1);
 				}
@@ -328,9 +405,9 @@ namespace XPTable.Themes
 		/// <param name="g">The Graphics to draw on</param>
 		/// <param name="buttonRect">The Rectangle that represents the dimensions 
 		/// of the combobox button</param>
-		/// <param name="state">A ComboBoxStates value that specifies the 
+		/// <param name="state">A ComboBoxState value that specifies the 
 		/// state to draw the combobox button in</param>
-		public static void DrawComboBoxButton(Graphics g, Rectangle buttonRect, ComboBoxStates state)
+		public static void DrawComboBoxButton(Graphics g, Rectangle buttonRect, ComboBoxState state)
 		{
 			ThemeManager.DrawComboBoxButton(g, buttonRect, buttonRect, state);
 		}
@@ -344,9 +421,9 @@ namespace XPTable.Themes
 		/// <param name="buttonRect">The Rectangle that represents the dimensions 
 		/// of the button</param>
 		/// <param name="clipRect">The Rectangle that represents the clipping area</param>
-		/// <param name="state">A ComboBoxStates value that specifies the 
+		/// <param name="state">A ComboBoxState value that specifies the 
 		/// state to draw the combobox button in</param>
-		public static void DrawComboBoxButton(Graphics g, Rectangle buttonRect, Rectangle clipRect, ComboBoxStates state)
+		public static void DrawComboBoxButton(Graphics g, Rectangle buttonRect, Rectangle clipRect, ComboBoxState state)
 		{
 			if (g == null || buttonRect.Width <= 0 || buttonRect.Height <= 0 || clipRect.Width <= 0 || clipRect.Height <= 0)
 			{
@@ -355,7 +432,25 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.ComboBox, (int) ComboBoxParts.DropDownButton, (int) state, buttonRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.ComboBox, (int) ComboBoxParts.DropDownButton, (int) state, buttonRect, clipRect);
+				VisualStyleRenderer renderer;
+				switch (state)
+				{
+					case ComboBoxState.Disabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.ComboBox.DropDownButton.Disabled);
+						break;
+					case ComboBoxState.Hot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.ComboBox.DropDownButton.Hot);
+						break;
+					case ComboBoxState.Pressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.ComboBox.DropDownButton.Pressed);
+						break;
+					case ComboBoxState.Normal:
+					default:
+						renderer = new VisualStyleRenderer(VisualStyleElement.ComboBox.DropDownButton.Normal);
+						break;
+				}
+				renderer.DrawBackground(g, buttonRect, clipRect);
 			}
 			else
 			{
@@ -365,21 +460,21 @@ namespace XPTable.Themes
 
 
 		/// <summary>
-		/// Converts the specified ComboBoxStates value to a ButtonState value
+		/// Converts the specified ComboBoxState value to a ButtonState value
 		/// </summary>
-		/// <param name="state">The ComboBoxStates value to be converted</param>
-		/// <returns>A ButtonState value that represents the specified ComboBoxStates 
+		/// <param name="state">The ComboBoxState value to be converted</param>
+		/// <returns>A ButtonState value that represents the specified ComboBoxState 
 		/// value</returns>
-		private static ButtonState ConvertComboBoxStateToButtonState(ComboBoxStates state)
+		private static ButtonState ConvertComboBoxStateToButtonState(ComboBoxState state)
 		{
 			switch (state)
 			{
-				case ComboBoxStates.Pressed:
+				case ComboBoxState.Pressed:
 				{
 					return ButtonState.Pushed;
 				}
 
-				case ComboBoxStates.Disabled:
+				case ComboBoxState.Disabled:
 				{
 					return ButtonState.Inactive;
 				}
@@ -422,7 +517,9 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.ProgressBar, (int) ProgressBarParts.Bar, 0, drawRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.ProgressBar, (int) ProgressBarParts.Bar, 0, drawRect, clipRect);
+				VisualStyleRenderer renderer = new VisualStyleRenderer(VisualStyleElement.ProgressBar.Bar.Normal);
+				renderer.DrawBackground(g, drawRect, clipRect);
 			}
 			else
 			{
@@ -468,7 +565,9 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.ProgressBar, (int) ProgressBarParts.Chunk, 0, drawRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.ProgressBar, (int) ProgressBarParts.Chunk, 0, drawRect, clipRect);
+				VisualStyleRenderer renderer = new VisualStyleRenderer(VisualStyleElement.ProgressBar.Chunk.Normal);
+				renderer.DrawBackground(g, drawRect, clipRect);
 			}
 			else
 			{
@@ -487,9 +586,9 @@ namespace XPTable.Themes
 		/// <param name="g">The Graphics to draw on</param>
 		/// <param name="checkRect">The Rectangle that represents the dimensions 
 		/// of the RadioButton</param>
-		/// <param name="state">A RadioButtonStates value that specifies the 
+		/// <param name="state">A RadioButtonState value that specifies the 
 		/// state to draw the RadioButton in</param>
-		public static void DrawRadioButton(Graphics g, Rectangle checkRect, RadioButtonStates state)
+		public static void DrawRadioButton(Graphics g, Rectangle checkRect, RadioButtonState state)
 		{
 			ThemeManager.DrawRadioButton(g, checkRect, checkRect, state);
 		}
@@ -503,9 +602,9 @@ namespace XPTable.Themes
 		/// <param name="checkRect">The Rectangle that represents the dimensions 
 		/// of the RadioButton</param>
 		/// <param name="clipRect">The Rectangle that represents the clipping area</param>
-		/// <param name="state">A RadioButtonStates value that specifies the 
+		/// <param name="state">A RadioButtonState value that specifies the 
 		/// state to draw the RadioButton in</param>
-		public static void DrawRadioButton(Graphics g, Rectangle checkRect, Rectangle clipRect, RadioButtonStates state)
+		public static void DrawRadioButton(Graphics g, Rectangle checkRect, Rectangle clipRect, RadioButtonState state)
 		{
 			if (g == null || checkRect.Width <= 0 || checkRect.Height <= 0)
 			{
@@ -514,7 +613,37 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.Button, (int) ButtonParts.RadioButton, (int) state, checkRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.Button, (int) ButtonParts.RadioButton, (int) state, checkRect, clipRect);
+				VisualStyleRenderer renderer;
+				switch (state)
+				{
+					case RadioButtonState.CheckedDisabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.CheckedDisabled);
+						break;
+					case RadioButtonState.CheckedHot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.CheckedHot);
+						break;
+					case RadioButtonState.CheckedNormal:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.CheckedNormal);
+						break;
+					case RadioButtonState.CheckedPressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.CheckedPressed);
+						break;
+					case RadioButtonState.UncheckedDisabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.UncheckedDisabled);
+						break;
+					case RadioButtonState.UncheckedHot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.UncheckedHot);
+						break;
+					case RadioButtonState.UncheckedPressed:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.UncheckedPressed);
+						break;
+					case RadioButtonState.UncheckedNormal:
+					default:
+						renderer = new VisualStyleRenderer(VisualStyleElement.Button.RadioButton.UncheckedNormal);
+						break;
+				}
+				renderer.DrawBackground(g, checkRect, clipRect);
 			}
 			else
 			{
@@ -524,37 +653,37 @@ namespace XPTable.Themes
 
 
 		/// <summary>
-		/// Converts the specified RadioButtonStates value to a ButtonState value
+		/// Converts the specified RadioButtonState value to a ButtonState value
 		/// </summary>
-		/// <param name="state">The RadioButtonStates value to be converted</param>
-		/// <returns>A ButtonState value that represents the specified RadioButtonStates 
+		/// <param name="state">The RadioButtonState value to be converted</param>
+		/// <returns>A ButtonState value that represents the specified RadioButtonState 
 		/// value</returns>
-		private static ButtonState ConvertRadioButtonStateToButtonState(RadioButtonStates state)
+		private static ButtonState ConvertRadioButtonStateToButtonState(RadioButtonState state)
 		{
 			switch (state)
 			{
-				case RadioButtonStates.UncheckedPressed:
+				case RadioButtonState.UncheckedPressed:
 				{
 					return ButtonState.Pushed;
 				}
 
-				case RadioButtonStates.UncheckedDisabled:
+				case RadioButtonState.UncheckedDisabled:
 				{
 					return ButtonState.Inactive;
 				}
 
-				case RadioButtonStates.CheckedNormal:
-				case RadioButtonStates.CheckedHot:
+				case RadioButtonState.CheckedNormal:
+				case RadioButtonState.CheckedHot:
 				{
 					return ButtonState.Checked;
 				}
 
-				case RadioButtonStates.CheckedPressed:
+				case RadioButtonState.CheckedPressed:
 				{
 					return (ButtonState.Checked | ButtonState.Pushed);
 				}
 
-				case RadioButtonStates.CheckedDisabled:
+				case RadioButtonState.CheckedDisabled:
 				{
 					return (ButtonState.Checked | ButtonState.Inactive);
 				}
@@ -597,7 +726,9 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.TabControl, (int) TabParts.Body, 0, tabRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.TabControl, (int) TabParts.Body, 0, tabRect, clipRect);
+				VisualStyleRenderer renderer = new VisualStyleRenderer(VisualStyleElement.Tab.Body.Normal);
+				renderer.DrawBackground(g, tabRect, clipRect);
 			}
 			else
 			{
@@ -616,9 +747,9 @@ namespace XPTable.Themes
 		/// <param name="g">The Graphics to draw on</param>
 		/// <param name="textRect">The Rectangle that represents the dimensions 
 		/// of the TextBox</param>
-		/// <param name="state">A TextBoxStates value that specifies the 
+		/// <param name="state">A TextBoxState value that specifies the 
 		/// state to draw the TextBox in</param>
-		public static void DrawTextBox(Graphics g, Rectangle textRect, TextBoxStates state)
+		public static void DrawTextBox(Graphics g, Rectangle textRect, TextBoxState state)
 		{
 			ThemeManager.DrawTextBox(g, textRect, textRect, state);
 		}
@@ -632,9 +763,9 @@ namespace XPTable.Themes
 		/// <param name="textRect">The Rectangle that represents the dimensions 
 		/// of the TextBox</param>
 		/// <param name="clipRect">The Rectangle that represents the clipping area</param>
-		/// <param name="state">A TextBoxStates value that specifies the 
+		/// <param name="state">A TextBoxState value that specifies the 
 		/// state to draw the TextBox in</param>
-		public static void DrawTextBox(Graphics g, Rectangle textRect, Rectangle clipRect, TextBoxStates state)
+		public static void DrawTextBox(Graphics g, Rectangle textRect, Rectangle clipRect, TextBoxState state)
 		{
 			if (g == null || textRect.Width <= 0 || textRect.Height <= 0 || clipRect.Width <= 0 || clipRect.Height <= 0)
 			{
@@ -643,7 +774,30 @@ namespace XPTable.Themes
 
 			if (ThemeManager.VisualStylesEnabled)
 			{
-				ThemeManager.DrawThemeBackground(g, ThemeClasses.TextBox, (int) TextBoxParts.EditText, (int) state, textRect, clipRect);
+				//ThemeManager.DrawThemeBackground(g, ThemeClasses.TextBox, (int) TextBoxParts.EditText, (int) state, textRect, clipRect);
+				VisualStyleRenderer renderer;
+				switch (state)
+				{
+					case TextBoxState.Disabled:
+						renderer = new VisualStyleRenderer(VisualStyleElement.TextBox.TextEdit.Disabled);
+						break;
+					case TextBoxState.Hot:
+						renderer = new VisualStyleRenderer(VisualStyleElement.TextBox.TextEdit.Hot);
+						break;
+					case TextBoxState.Readonly:
+						renderer = new VisualStyleRenderer(VisualStyleElement.TextBox.TextEdit.ReadOnly);
+						break;
+					case TextBoxState.Selected:
+						renderer = new VisualStyleRenderer(VisualStyleElement.TextBox.TextEdit.Selected);
+						break;
+					case TextBoxState.Normal:
+						renderer = new VisualStyleRenderer(VisualStyleElement.TextBox.TextEdit.Normal);
+						break;
+					default:
+						renderer = new VisualStyleRenderer(VisualStyleElement.TextBox.TextEdit.Focused);
+						break;
+				}
+				renderer.DrawBackground(g, textRect, clipRect);
 			}
 			else
 			{
@@ -662,13 +816,13 @@ namespace XPTable.Themes
 		/// <param name="g">The Graphics to draw on</param>
 		/// <param name="upButtonRect">The Rectangle that represents the dimensions 
 		/// of the up button</param>
-		/// <param name="upButtonState">An UpDownStates value that specifies the 
+		/// <param name="upButtonState">An UpDownState value that specifies the 
 		/// state to draw the up button in</param>
 		/// <param name="downButtonRect">The Rectangle that represents the dimensions 
 		/// of the down button</param>
-		/// <param name="downButtonState">An UpDownStates value that specifies the 
+		/// <param name="downButtonState">An UpDownState value that specifies the 
 		/// state to draw the down button in</param>
-		public static void DrawUpDownButtons(Graphics g, Rectangle upButtonRect, UpDownStates upButtonState, Rectangle downButtonRect, UpDownStates downButtonState)
+		public static void DrawUpDownButtons(Graphics g, Rectangle upButtonRect, UpDownState upButtonState, Rectangle downButtonRect, UpDownState downButtonState)
 		{
 			ThemeManager.DrawUpDownButtons(g, upButtonRect, upButtonRect, upButtonState, downButtonRect, downButtonRect, downButtonState);
 		}
@@ -683,15 +837,15 @@ namespace XPTable.Themes
 		/// of the up button</param>
 		/// <param name="upButtonClipRect">The Rectangle that represents the clipping area
 		/// for the up button</param>
-		/// <param name="upButtonState">An UpDownStates value that specifies the 
+		/// <param name="upButtonState">An UpDownState value that specifies the 
 		/// state to draw the up button in</param>
 		/// <param name="downButtonRect">The Rectangle that represents the dimensions 
 		/// of the down button</param>
 		/// <param name="downButtonClipRect">The Rectangle that represents the clipping area
 		/// for the down button</param>
-		/// <param name="downButtonState">An UpDownStates value that specifies the 
+		/// <param name="downButtonState">An UpDownState value that specifies the 
 		/// state to draw the down button in</param>
-		public static void DrawUpDownButtons(Graphics g, Rectangle upButtonRect, Rectangle upButtonClipRect, UpDownStates upButtonState, Rectangle downButtonRect, Rectangle downButtonClipRect, UpDownStates downButtonState)
+		public static void DrawUpDownButtons(Graphics g, Rectangle upButtonRect, Rectangle upButtonClipRect, UpDownState upButtonState, Rectangle downButtonRect, Rectangle downButtonClipRect, UpDownState downButtonState)
 		{
 			if (g == null)
 			{
@@ -702,7 +856,25 @@ namespace XPTable.Themes
 			{
 				if (ThemeManager.VisualStylesEnabled)
 				{
-					ThemeManager.DrawThemeBackground(g, ThemeClasses.UpDown, (int) UpDownParts.Up, (int) upButtonState, upButtonRect, upButtonClipRect);
+					//ThemeManager.DrawThemeBackground(g, ThemeClasses.UpDown, (int) UpDownParts.Up, (int) upButtonState, upButtonRect, upButtonClipRect);
+					VisualStyleRenderer renderer;
+					switch (upButtonState)
+					{
+						case UpDownState.Disabled:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Up.Disabled);
+							break;
+						case UpDownState.Hot:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Up.Hot);
+							break;
+						case UpDownState.Pressed:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Up.Pressed);
+							break;
+						case UpDownState.Normal:
+						default:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Up.Normal);
+							break;
+					}
+					renderer.DrawBackground(g, upButtonRect, upButtonClipRect);
 				}
 				else
 				{
@@ -714,7 +886,25 @@ namespace XPTable.Themes
 			{
 				if (ThemeManager.VisualStylesEnabled)
 				{
-					ThemeManager.DrawThemeBackground(g, ThemeClasses.UpDown, (int) UpDownParts.Down, (int) downButtonState, downButtonRect, downButtonClipRect);
+					//ThemeManager.DrawThemeBackground(g, ThemeClasses.UpDown, (int) UpDownParts.Down, (int) downButtonState, downButtonRect, downButtonClipRect);
+					VisualStyleRenderer renderer;
+					switch (downButtonState)
+					{
+						case UpDownState.Disabled:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Down.Disabled);
+							break;
+						case UpDownState.Hot:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Down.Hot);
+							break;
+						case UpDownState.Pressed:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Down.Pressed);
+							break;
+						case UpDownState.Normal:
+						default:
+							renderer = new VisualStyleRenderer(VisualStyleElement.Spin.Down.Normal);
+							break;
+					}
+					renderer.DrawBackground(g, downButtonRect, downButtonClipRect);
 				}
 				else
 				{
@@ -725,87 +915,27 @@ namespace XPTable.Themes
 
 
 		/// <summary>
-		/// Converts the specified UpDownStates value to a ButtonState value
+		/// Converts the specified UpDownState value to a ButtonState value
 		/// </summary>
-		/// <param name="state">The UpDownStates value to be converted</param>
-		/// <returns>A ButtonState value that represents the specified UpDownStates 
+		/// <param name="state">The UpDownState value to be converted</param>
+		/// <returns>A ButtonState value that represents the specified UpDownState 
 		/// value</returns>
-		private static ButtonState ConvertUpDownStateToButtonState(UpDownStates state)
+		private static ButtonState ConvertUpDownStateToButtonState(UpDownState state)
 		{
 			switch (state)
 			{
-				case UpDownStates.Pressed:
+				case UpDownState.Pressed:
 				{
 					return ButtonState.Pushed;
 				}
 
-				case UpDownStates.Disabled:
+				case UpDownState.Disabled:
 				{
 					return ButtonState.Inactive;
 				}
 			}
 
 			return ButtonState.Normal;
-		}
-
-		#endregion
-
-		#region Theme Background
-
-		/// <summary>
-		/// Draws the background image defined by the visual style for the specified control part
-		/// </summary>
-		/// <param name="g">The Graphics to draw on</param>
-		/// <param name="windowClass">The class of the part to draw</param>
-		/// <param name="part">The part to draw</param>
-		/// <param name="partState">The state of the part to draw</param>
-		/// <param name="drawRect">The Rectangle in which the part is drawn</param>
-		public static void DrawThemeBackground(Graphics g, string windowClass, int part, int partState, Rectangle drawRect)
-		{
-			//
-			ThemeManager.DrawThemeBackground(g, windowClass, part, partState, drawRect, drawRect);
-		}
-		
-
-		/// <summary>
-		/// Draws the background image defined by the visual style for the specified control part
-		/// </summary>
-		/// <param name="g">The Graphics to draw on</param>
-		/// <param name="windowClass">The class of the part to draw</param>
-		/// <param name="part">The part to draw</param>
-		/// <param name="partState">The state of the part to draw</param>
-		/// <param name="drawRect">The Rectangle in which the part is drawn</param>
-		/// <param name="clipRect">The Rectangle that represents the clipping area for the part</param>
-		public static void DrawThemeBackground(Graphics g, string windowClass, int part, int partState, Rectangle drawRect, Rectangle clipRect)
-		{
-			if (g == null || drawRect.Width <= 0 || drawRect.Height <= 0 || clipRect.Width <= 0 || clipRect.Height <= 0)
-			{
-				return;
-			}
-
-			// open theme data
-			IntPtr hTheme = IntPtr.Zero;
-			hTheme = NativeMethods.OpenThemeData(hTheme, windowClass);
-
-			// make sure we have a valid handle
-			if (hTheme != IntPtr.Zero)
-			{
-				// get a graphics object the UxTheme can draw into
-				IntPtr hdc = g.GetHdc();
-
-				// get the draw and clipping rectangles
-				RECT dRect = RECT.FromRectangle(drawRect);
-				RECT cRect = RECT.FromRectangle(clipRect);
-
-				// draw the themed background
-				NativeMethods.DrawThemeBackground(hTheme, hdc, part, partState, ref dRect, ref cRect);
-
-				// clean up resources
-				g.ReleaseHdc(hdc);
-			}
-
-			// close the theme handle
-			NativeMethods.CloseThemeData(hTheme);
 		}
 
 		#endregion
@@ -838,9 +968,9 @@ namespace XPTable.Themes
 				if (VisualStylesSupported)
 				{
 					// are themes enabled
-					if (NativeMethods.IsThemeActive() && NativeMethods.IsAppThemed())
+					if (VisualStyleInformation.IsSupportedByOS && VisualStyleInformation.IsEnabledByUser)
 					{
-						return GetComctlVersion().Major >= 6;
+						return Application.RenderWithVisualStyles;
 					}
 				}
 
@@ -848,25 +978,6 @@ namespace XPTable.Themes
 			}
 		}
 
-
-		/// <summary>
-		/// Returns a Version object that contains information about the verion 
-		/// of the CommonControls that the application is using
-		/// </summary>
-		/// <returns>A Version object that contains information about the verion 
-		/// of the CommonControls that the application is using</returns>
-		private static Version GetComctlVersion()
-		{
-			DLLVERSIONINFO comctlVersion = new DLLVERSIONINFO();
-			comctlVersion.cbSize = Marshal.SizeOf(typeof(DLLVERSIONINFO));
-
-			if (NativeMethods.DllGetVersion(ref comctlVersion) == 0)
-			{
-				return new Version(comctlVersion.dwMajorVersion, comctlVersion.dwMinorVersion, comctlVersion.dwBuildNumber);
-			}
-
-			return new Version();
-		}
 		#endregion
 	}
 }

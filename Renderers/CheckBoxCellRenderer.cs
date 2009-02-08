@@ -30,6 +30,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Events;
 using XPTable.Models;
@@ -138,15 +139,15 @@ namespace XPTable.Renderers
 			{
 				if (cell.CheckState == CheckState.Unchecked)
 				{
-					rendererData = new CheckBoxRendererData(CheckBoxStates.UncheckedNormal);
+					rendererData = new CheckBoxRendererData(CheckBoxState.UncheckedNormal);
 				}
 				else if (cell.CheckState == CheckState.Indeterminate && cell.ThreeState)
 				{
-					rendererData = new CheckBoxRendererData(CheckBoxStates.MixedNormal);
+					rendererData = new CheckBoxRendererData(CheckBoxState.MixedNormal);
 				}
 				else 
 				{
-					rendererData = new CheckBoxRendererData(CheckBoxStates.CheckedNormal);
+					rendererData = new CheckBoxRendererData(CheckBoxState.CheckedNormal);
 				}
 
 				this.SetRendererData(cell, rendererData);
@@ -170,13 +171,13 @@ namespace XPTable.Renderers
 			{
 				case CheckState.Checked:
 				{		
-					if (rendererData.CheckState <= CheckBoxStates.UncheckedDisabled)
+					if (rendererData.CheckState <= CheckBoxState.UncheckedDisabled)
 					{
-						rendererData.CheckState |= (CheckBoxStates) 4;
+						rendererData.CheckState |= (CheckBoxState) 4;
 					}
-					else if (rendererData.CheckState >= CheckBoxStates.MixedNormal)
+					else if (rendererData.CheckState >= CheckBoxState.MixedNormal)
 					{
-						rendererData.CheckState -= (CheckBoxStates) 4;
+						rendererData.CheckState -= (CheckBoxState) 4;
 					}
 					
 					break;
@@ -184,11 +185,11 @@ namespace XPTable.Renderers
 
 				case CheckState.Indeterminate:
 				{		
-					if (rendererData.CheckState <= CheckBoxStates.UncheckedDisabled)
+					if (rendererData.CheckState <= CheckBoxState.UncheckedDisabled)
 					{
-						rendererData.CheckState |= (CheckBoxStates) 8;
+						rendererData.CheckState |= (CheckBoxState) 8;
 					}
-					else if (rendererData.CheckState <= CheckBoxStates.CheckedDisabled)
+					else if (rendererData.CheckState <= CheckBoxState.CheckedDisabled)
 					{
 						rendererData.CheckState += 4;
 					}
@@ -198,13 +199,13 @@ namespace XPTable.Renderers
 
 				default:
 				{
-					if (rendererData.CheckState >= CheckBoxStates.MixedNormal)
+					if (rendererData.CheckState >= CheckBoxState.MixedNormal)
 					{
-						rendererData.CheckState -= (CheckBoxStates) 8;
+						rendererData.CheckState -= (CheckBoxState) 8;
 					}
-					else if (rendererData.CheckState >= CheckBoxStates.CheckedNormal)
+					else if (rendererData.CheckState >= CheckBoxState.CheckedNormal)
 					{
-						rendererData.CheckState -= (CheckBoxStates) 4;
+						rendererData.CheckState -= (CheckBoxState) 4;
 					}
 					
 					break;
@@ -263,15 +264,15 @@ namespace XPTable.Renderers
 				//
 				if (e.Cell.CheckState == CheckState.Checked)
 				{
-					rendererData.CheckState = CheckBoxStates.CheckedPressed;
+					rendererData.CheckState = CheckBoxState.CheckedPressed;
 				}
 				else if (e.Cell.CheckState == CheckState.Indeterminate)
 				{
-					rendererData.CheckState = CheckBoxStates.MixedPressed;
+					rendererData.CheckState = CheckBoxState.MixedPressed;
 				}
 				else //if (e.Cell.CheckState == CheckState.Unchecked)
 				{
-					rendererData.CheckState = CheckBoxStates.UncheckedPressed;
+					rendererData.CheckState = CheckBoxState.UncheckedPressed;
 				}
 
 				e.Table.Invalidate(e.CellRect);
@@ -298,23 +299,23 @@ namespace XPTable.Renderers
 					if (!e.Cell.ThreeState || !(e.Table.ColumnModel.Columns[e.Column] is CheckBoxColumn) || 
 						((CheckBoxColumn) e.Table.ColumnModel.Columns[e.Column]).CheckStyle == CheckBoxColumnStyle.RadioButton)
 					{
-						rendererData.CheckState = CheckBoxStates.UncheckedNormal;
+						rendererData.CheckState = CheckBoxState.UncheckedNormal;
 						e.Cell.CheckState = CheckState.Unchecked;
 					}
 					else
 					{
-						rendererData.CheckState = CheckBoxStates.MixedNormal;
+						rendererData.CheckState = CheckBoxState.MixedNormal;
 						e.Cell.CheckState = CheckState.Indeterminate;
 					}
 				}
 				else if (e.Cell.CheckState == CheckState.Indeterminate)
 				{
-					rendererData.CheckState = CheckBoxStates.UncheckedNormal;
+					rendererData.CheckState = CheckBoxState.UncheckedNormal;
 					e.Cell.CheckState = CheckState.Unchecked;
 				}
 				else //if (e.Cell.CheckState == CheckState.Unchecked)
 				{
-					rendererData.CheckState = CheckBoxStates.CheckedNormal;
+					rendererData.CheckState = CheckBoxState.CheckedNormal;
 					e.Cell.CheckState = CheckState.Checked;
 				}
 
@@ -343,27 +344,27 @@ namespace XPTable.Renderers
 
 				if (e.Cell.CheckState == CheckState.Checked)
 				{
-					if (rendererData.CheckState != CheckBoxStates.CheckedNormal)
+					if (rendererData.CheckState != CheckBoxState.CheckedNormal)
 					{
-						rendererData.CheckState = CheckBoxStates.CheckedNormal;
+						rendererData.CheckState = CheckBoxState.CheckedNormal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
 				}
 				else if (e.Cell.CheckState == CheckState.Indeterminate)
 				{
-					if (rendererData.CheckState != CheckBoxStates.MixedNormal)
+					if (rendererData.CheckState != CheckBoxState.MixedNormal)
 					{
-						rendererData.CheckState = CheckBoxStates.MixedNormal;
+						rendererData.CheckState = CheckBoxState.MixedNormal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
 				}
 				else //if (e.Cell.CheckState == CheckState.Unchecked)
 				{
-					if (rendererData.CheckState != CheckBoxStates.UncheckedNormal)
+					if (rendererData.CheckState != CheckBoxState.UncheckedNormal)
 					{
-						rendererData.CheckState = CheckBoxStates.UncheckedNormal;
+						rendererData.CheckState = CheckBoxState.UncheckedNormal;
 
 						e.Table.Invalidate(e.CellRect);
 					}
@@ -398,23 +399,23 @@ namespace XPTable.Renderers
 							if (!e.Cell.ThreeState || !(e.Table.ColumnModel.Columns[e.Column] is CheckBoxColumn) || 
 								((CheckBoxColumn) e.Table.ColumnModel.Columns[e.Column]).CheckStyle == CheckBoxColumnStyle.RadioButton)
 							{
-								rendererData.CheckState = CheckBoxStates.UncheckedHot;
+								rendererData.CheckState = CheckBoxState.UncheckedHot;
 								e.Cell.CheckState = CheckState.Unchecked;
 							}
 							else
 							{
-								rendererData.CheckState = CheckBoxStates.MixedHot;
+								rendererData.CheckState = CheckBoxState.MixedHot;
 								e.Cell.CheckState = CheckState.Indeterminate;
 							}
 						}
 						else if (e.Cell.CheckState == CheckState.Indeterminate)
 						{
-							rendererData.CheckState = CheckBoxStates.UncheckedHot;
+							rendererData.CheckState = CheckBoxState.UncheckedHot;
 							e.Cell.CheckState = CheckState.Unchecked;
 						}
 						else //if (e.Cell.CheckState == CheckState.Unchecked)
 						{
-							rendererData.CheckState = CheckBoxStates.CheckedHot;
+							rendererData.CheckState = CheckBoxState.CheckedHot;
 							e.Cell.CheckState = CheckState.Checked;
 						}
 
@@ -446,15 +447,15 @@ namespace XPTable.Renderers
 					//
 					if (e.Cell.CheckState == CheckState.Checked)
 					{
-						rendererData.CheckState = CheckBoxStates.CheckedPressed;
+						rendererData.CheckState = CheckBoxState.CheckedPressed;
 					}
 					else if (e.Cell.CheckState == CheckState.Indeterminate)
 					{
-						rendererData.CheckState = CheckBoxStates.MixedPressed;
+						rendererData.CheckState = CheckBoxState.MixedPressed;
 					}
 					else //if (e.Cell.CheckState == CheckState.Unchecked)
 					{
-						rendererData.CheckState = CheckBoxStates.UncheckedPressed;
+						rendererData.CheckState = CheckBoxState.UncheckedPressed;
 					}
 
 					e.Table.Invalidate(e.CellRect);
@@ -483,15 +484,15 @@ namespace XPTable.Renderers
 				{
 					if (e.Cell.CheckState == CheckState.Checked)
 					{
-						if (rendererData.CheckState == CheckBoxStates.CheckedNormal)
+						if (rendererData.CheckState == CheckBoxState.CheckedNormal)
 						{
 							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
 							{
-								rendererData.CheckState = CheckBoxStates.CheckedPressed;
+								rendererData.CheckState = CheckBoxState.CheckedPressed;
 							}
 							else
 							{
-								rendererData.CheckState = CheckBoxStates.CheckedHot;
+								rendererData.CheckState = CheckBoxState.CheckedHot;
 							}
 
 							e.Table.Invalidate(e.CellRect);
@@ -499,15 +500,15 @@ namespace XPTable.Renderers
 					}
 					else if (e.Cell.CheckState == CheckState.Indeterminate)
 					{
-						if (rendererData.CheckState == CheckBoxStates.MixedNormal)
+						if (rendererData.CheckState == CheckBoxState.MixedNormal)
 						{
 							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
 							{
-								rendererData.CheckState = CheckBoxStates.MixedPressed;
+								rendererData.CheckState = CheckBoxState.MixedPressed;
 							}
 							else
 							{
-								rendererData.CheckState = CheckBoxStates.MixedHot;
+								rendererData.CheckState = CheckBoxState.MixedHot;
 							}
 
 							e.Table.Invalidate(e.CellRect);
@@ -515,15 +516,15 @@ namespace XPTable.Renderers
 					}
 					else //if (e.Cell.CheckState == CheckState.Unchecked)
 					{
-						if (rendererData.CheckState == CheckBoxStates.UncheckedNormal)
+						if (rendererData.CheckState == CheckBoxState.UncheckedNormal)
 						{
 							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
 							{
-								rendererData.CheckState = CheckBoxStates.UncheckedPressed;
+								rendererData.CheckState = CheckBoxState.UncheckedPressed;
 							}
 							else
 							{
-								rendererData.CheckState = CheckBoxStates.UncheckedHot;
+								rendererData.CheckState = CheckBoxState.UncheckedHot;
 							}
 
 							e.Table.Invalidate(e.CellRect);
@@ -534,15 +535,15 @@ namespace XPTable.Renderers
 				{
 					if (e.Cell.CheckState == CheckState.Checked)
 					{
-						rendererData.CheckState = CheckBoxStates.CheckedNormal;
+						rendererData.CheckState = CheckBoxState.CheckedNormal;
 					}
 					else if (e.Cell.CheckState == CheckState.Indeterminate)
 					{
-						rendererData.CheckState = CheckBoxStates.MixedNormal;
+						rendererData.CheckState = CheckBoxState.MixedNormal;
 					}
 					else //if (e.Cell.CheckState == CheckState.Unchecked)
 					{
-						rendererData.CheckState = CheckBoxStates.UncheckedNormal;
+						rendererData.CheckState = CheckBoxState.UncheckedNormal;
 					}
 
 					e.Table.Invalidate(e.CellRect);
@@ -595,21 +596,21 @@ namespace XPTable.Renderers
 
 			Rectangle checkRect = this.CalcCheckRect(this.LineAlignment, this.Alignment);
 
-			CheckBoxStates state = this.GetCheckBoxRendererData(e.Cell).CheckState;
+			CheckBoxState state = this.GetCheckBoxRendererData(e.Cell).CheckState;
 
 			if (!e.Enabled)
 			{
 				if (e.Cell.CheckState == CheckState.Checked)
 				{
-					state = CheckBoxStates.CheckedDisabled;
+					state = CheckBoxState.CheckedDisabled;
 				}
 				else if (e.Cell.CheckState == CheckState.Indeterminate)
 				{
-					state = CheckBoxStates.MixedDisabled;
+					state = CheckBoxState.MixedDisabled;
 				}
 				else // if (e.Cell.CheckState == CheckState.Unchecked)
 				{
-					state = CheckBoxStates.UncheckedDisabled;
+					state = CheckBoxState.UncheckedDisabled;
 				}
 			}
 			
@@ -619,24 +620,24 @@ namespace XPTable.Renderers
 				// remove any mixed states
 				switch (state)
 				{
-					case CheckBoxStates.MixedNormal:
-						state = CheckBoxStates.CheckedNormal;
+					case CheckBoxState.MixedNormal:
+						state = CheckBoxState.CheckedNormal;
 						break;
 
-					case CheckBoxStates.MixedHot:
-						state = CheckBoxStates.CheckedHot;
+					case CheckBoxState.MixedHot:
+						state = CheckBoxState.CheckedHot;
 						break;
 
-					case CheckBoxStates.MixedPressed:
-						state = CheckBoxStates.CheckedPressed;
+					case CheckBoxState.MixedPressed:
+						state = CheckBoxState.CheckedPressed;
 						break;
 
-					case CheckBoxStates.MixedDisabled:
-						state = CheckBoxStates.CheckedDisabled;
+					case CheckBoxState.MixedDisabled:
+						state = CheckBoxState.CheckedDisabled;
 						break;
 				}
 				
-				ThemeManager.DrawRadioButton(e.Graphics, checkRect, (RadioButtonStates) state);
+				ThemeManager.DrawRadioButton(e.Graphics, checkRect, (RadioButtonState) state);
 			}
 			else
 			{

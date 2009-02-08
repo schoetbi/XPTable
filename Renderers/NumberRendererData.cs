@@ -28,6 +28,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Themes;
 
@@ -45,12 +46,12 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// The current state of the up button
 		/// </summary>
-		private UpDownStates upState;
+		private UpDownState upState;
 
 		/// <summary>
 		/// The current state of the down button
 		/// </summary>
-		private UpDownStates downState;
+		private UpDownState downState;
 		
 		/// <summary>
 		/// The x coordinate of the last mouse click point
@@ -72,8 +73,8 @@ namespace XPTable.Renderers
 		/// </summary>
 		public NumberRendererData()
 		{
-			this.upState = UpDownStates.Normal;
-			this.downState = UpDownStates.Normal;
+			this.upState = UpDownState.Normal;
+			this.downState = UpDownState.Normal;
 			this.clickX = -1;
 			this.clickY = -1;
 		}
@@ -86,7 +87,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// Gets or sets the current state of the up button
 		/// </summary>
-		public UpDownStates UpButtonState
+		public UpDownState UpButtonState
 		{
 			get
 			{
@@ -95,9 +96,9 @@ namespace XPTable.Renderers
 
 			set
 			{
-				if (!Enum.IsDefined(typeof(UpDownStates), value)) 
+				if (!Enum.IsDefined(typeof(UpDownState), value)) 
 				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(UpDownStates));
+					throw new InvalidEnumArgumentException("value", (int) value, typeof(UpDownState));
 				}
 					
 				this.upState = value;
@@ -108,7 +109,7 @@ namespace XPTable.Renderers
 		/// <summary>
 		/// Gets or sets the current state of the down button
 		/// </summary>
-		public UpDownStates DownButtonState
+		public UpDownState DownButtonState
 		{
 			get
 			{
@@ -117,9 +118,9 @@ namespace XPTable.Renderers
 
 			set
 			{
-				if (!Enum.IsDefined(typeof(UpDownStates), value)) 
+				if (!Enum.IsDefined(typeof(UpDownState), value)) 
 				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(UpDownStates));
+					throw new InvalidEnumArgumentException("value", (int) value, typeof(UpDownState));
 				}
 					
 				this.downState = value;

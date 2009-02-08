@@ -33,7 +33,7 @@ namespace XPTable.Themes
 	/// <summary>
 	/// Represents the different states of a UpDown control's button
 	/// </summary>
-	public enum UpDownStates
+	public enum UpDownState
 	{
 		/// <summary>
 		/// The UpDown button is in its normal state
