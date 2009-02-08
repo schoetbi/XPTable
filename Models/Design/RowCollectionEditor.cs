@@ -76,7 +76,16 @@ namespace XPTable.Models.Design
 
 			object returnObject = base.EditValue(context, isp, value);
 
-			TableModel model = (TableModel) context.Instance;
+			TableModel model;
+			try
+			{
+				model = (TableModel) context.Instance;
+			}
+			catch
+			{
+				// This must be a sub row
+				model = ((Row)context.Instance).TableModel;
+			}
 
 			// make sure the TableModel's Table redraws any additions/deletions
 			if (model.Table != null)
