@@ -1883,7 +1883,7 @@ namespace XPTable.Models
 			int i = 0;
 			while (i < this.Controls.Count)
 			{
-				if ((this.Controls[i] == this.hScrollBar) || (this.Controls[i] == this.hScrollBar))
+				if ((this.Controls[i] == this.hScrollBar) || (this.Controls[i] == this.vScrollBar))
 					i++;
 				else
 					this.Controls.RemoveAt(i);
