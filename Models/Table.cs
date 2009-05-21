@@ -287,6 +287,11 @@ namespace XPTable.Models
 
 		#region Painting
 
+        /// <summary>
+        /// Occurs just after the first Paint event occurs
+        /// </summary>
+        public event EventHandler AfterFirstPaint;
+
 		/// <summary>
 		/// Occurs before a Cell is painted
 		/// </summary>
@@ -358,6 +363,12 @@ namespace XPTable.Models
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+
+        /// <summary>
+        /// Is false until the first Paint event has been processed
+        /// </summary>
+        bool painted = false;
+
 
 		#region Border
 
@@ -7793,6 +7804,18 @@ namespace XPTable.Models
 				AfterPaintCell(this, e);
 			}
 		}
+
+        /// <summary>
+        /// Raises the AfterFirstPaint event
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnAfterFirstPaint(EventArgs e)
+        {
+            if (AfterFirstPaint != null)
+            {
+                AfterFirstPaint(this, e);
+            }
+        }
 
 		#endregion
 
