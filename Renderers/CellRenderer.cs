@@ -133,6 +133,8 @@ namespace XPTable.Renderers
         /// <returns></returns>
         public virtual int GetCellHeight(Graphics graphics, Cell cell)
         {
+            this.Padding = cell.Padding;
+            this.Font = cell.Font;
             return 0;
         }
 

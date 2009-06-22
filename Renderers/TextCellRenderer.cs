@@ -64,6 +64,8 @@ namespace XPTable.Renderers
         /// <returns></returns>
         public override int GetCellHeight(Graphics graphics, Cell cell)
         {
+            base.GetCellHeight(graphics, cell);
+
             if (cell != null)
             {
                 this.Font = cell.Font;
