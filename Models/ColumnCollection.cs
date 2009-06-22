@@ -39,7 +39,6 @@ namespace XPTable.Models
 	public class ColumnCollection : CollectionBase
 	{
 		#region Class Data
-
 		/// <summary>
 		/// The ColumnModel that owns the CollumnCollection
 		/// </summary>
@@ -64,12 +63,9 @@ namespace XPTable.Models
 		/// A local cache of the last visible column in the collection
 		/// </summary>
 		private int lastVisibleColumn;
-
 		#endregion
 
-
 		#region Constructor
-
 		/// <summary>
 		/// Initializes a new instance of the ColumnModel.ColumnCollection class 
 		/// that belongs to the specified ColumnModel
@@ -79,9 +75,7 @@ namespace XPTable.Models
 		public ColumnCollection(ColumnModel owner) : base()
 		{
 			if (owner == null)
-			{
 				throw new ArgumentNullException("owner");
-			}
 				
 			this.owner = owner;
 			this.totalColumnWidth = 0;
@@ -89,12 +83,9 @@ namespace XPTable.Models
 			this.visibleColumnCount = 0;
 			this.lastVisibleColumn = -1;
 		}
-
 		#endregion
 		
-
 		#region Methods
-		
 		/// <summary>
 		/// Adds the specified Column to the end of the collection
 		/// </summary>
@@ -102,9 +93,7 @@ namespace XPTable.Models
 		public int Add(Column column)
 		{
 			if (column == null) 
-			{
 				throw new System.ArgumentNullException("Column is null");
-			}
 
 			int index = this.List.Add(column);
 			
@@ -115,7 +104,6 @@ namespace XPTable.Models
 			return index;
 		}
 
-
 		/// <summary>
 		/// Adds an array of Column objects to the collection
 		/// </summary>
@@ -124,16 +112,13 @@ namespace XPTable.Models
 		public void AddRange(Column[] columns)
 		{
 			if (columns == null) 
-			{
 				throw new System.ArgumentNullException("Column[] is null");
-			}
 
 			for (int i=0; i<columns.Length; i++)
 			{
 				this.Add(columns[i]);
 			}
 		}
-
 
 		/// <summary>
 		/// Removes the specified Column from the model
@@ -144,12 +129,9 @@ namespace XPTable.Models
 			int columnIndex = this.IndexOf(column);
 
 			if (columnIndex != -1) 
-			{
 				this.RemoveAt(columnIndex);
-			}
 		}
-
-
+        
 		/// <summary>
 		/// Removes an array of Column objects from the collection
 		/// </summary>
@@ -158,16 +140,13 @@ namespace XPTable.Models
 		public void RemoveRange(Column[] columns)
 		{
 			if (columns == null) 
-			{
 				throw new System.ArgumentNullException("Column[] is null");
-			}
 
 			for (int i=0; i<columns.Length; i++)
 			{
 				this.Remove(columns[i]);
 			}
 		}
-
 
 		/// <summary>
 		/// Removes the Column at the specified index from the collection
@@ -194,9 +173,7 @@ namespace XPTable.Models
 		public new void Clear()
 		{
 			if (this.Count == 0)
-			{
 				return;
-			}
 
 			for (int i=0; i<this.Count; i++)
 			{
@@ -205,6 +182,7 @@ namespace XPTable.Models
 			}
 
 			base.Clear();
+
 			this.InnerList.Capacity = 0;
 
 			this.RecalcWidthCache();
@@ -225,7 +203,6 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		///	Returns the index of the specified Column in the model
 		/// </summary>
@@ -243,7 +220,6 @@ namespace XPTable.Models
 
 			return -1;
 		}
-
 
 		/// <summary>
 		/// Recalculates the total combined width of all columns
@@ -272,12 +248,9 @@ namespace XPTable.Models
 			this.visibleColumnsWidth = visibleWidth;
 			this.visibleColumnCount = visibleCount;
 		}
-
 		#endregion
 
-
 		#region Properties
-
 		/// <summary>
 		/// Gets the Column at the specified index
 		/// </summary>
@@ -286,79 +259,54 @@ namespace XPTable.Models
 			get
 			{
 				if (index < 0 || index >= this.Count)
-				{
 					return null;
-				}
 					
 				return this.List[index] as Column;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the ColumnModel that owns this ColumnCollection
 		/// </summary>
 		public ColumnModel ColumnModel
 		{
-			get
-			{
-				return this.owner;
-			}
+			get { return this.owner; }
 		}
-
 
 		/// <summary>
 		/// Returns the total width of all the Columns in the model
 		/// </summary>
 		internal int TotalColumnWidth
 		{
-			get
-			{
-				return this.totalColumnWidth;
-			}
+			get { return this.totalColumnWidth; }
 		}
-
 
 		/// <summary>
 		/// Returns the total width of all the visible Columns in the model
 		/// </summary>
 		internal int VisibleColumnsWidth
 		{
-			get
-			{
-				return this.visibleColumnsWidth;
-			}
+			get { return this.visibleColumnsWidth; }
 		}
-
 
 		/// <summary>
 		/// Returns the number of visible Columns in the model
 		/// </summary>
 		internal int VisibleColumnCount
 		{
-			get
-			{
-				return this.visibleColumnCount;
-			}
+			get { return this.visibleColumnCount; }
 		}
-
 
 		/// <summary>
 		/// Returns the index of the last visible Column in the model
 		/// </summary>
 		internal int LastVisibleColumn
 		{
-			get
-			{
-				return this.lastVisibleColumn;
-			}
+			get { return this.lastVisibleColumn; }
 		}
-
 		#endregion
 
-
 		#region Events
-
 		/// <summary>
 		/// Raises the ColumnAdded event
 		/// </summary>
@@ -368,7 +316,6 @@ namespace XPTable.Models
 			this.owner.OnColumnAdded(e);
 		}
 
-
 		/// <summary>
 		/// Raises the ColumnRemoved event
 		/// </summary>
@@ -377,7 +324,6 @@ namespace XPTable.Models
 		{
 			this.owner.OnColumnRemoved(e);
 		}
-
 		#endregion
 	}
 }

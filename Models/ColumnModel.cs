@@ -624,9 +624,7 @@ namespace XPTable.Models
 
 		#endregion
 
-
 		#region Properties
-
 		/// <summary>
 		/// A ColumnCollection representing the collection of 
 		/// Columns contained within the ColumnModel
@@ -640,14 +638,11 @@ namespace XPTable.Models
 			get
 			{
 				if (this.columns == null)
-				{
 					this.columns = new ColumnCollection(this);
-				}
 				
 				return this.columns;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the height of the column headers
@@ -656,31 +651,22 @@ namespace XPTable.Models
 		Description("The height of the column headers")]
 		public int HeaderHeight
 		{
-			get
-			{
-				return this.headerHeight;
-			}
+			get { return this.headerHeight; }
 
 			set
 			{
 				if (value < ColumnModel.MinimumHeaderHeight)
-				{
 					value = ColumnModel.MinimumHeaderHeight;
-				}
 				else if (value > ColumnModel.MaximumHeaderHeight)
-				{
 					value = ColumnModel.MaximumHeaderHeight;
-				}
 				
 				if (this.headerHeight != value)
 				{
 					this.headerHeight = value;
-
 					this.OnHeaderHeightChanged(EventArgs.Empty);
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Specifies whether the HeaderHeight property should be serialized at 
@@ -688,11 +674,10 @@ namespace XPTable.Models
 		/// </summary>
 		/// <returns>true if the HeaderHeight property should be serialized, 
 		/// false otherwise</returns>
-		private bool ShouldSerializeHeaderHeight()
-		{
-			return this.headerHeight != ColumnModel.DefaultHeaderHeight;
-		}
-
+        private bool ShouldSerializeHeaderHeight()
+        {
+            return this.headerHeight != ColumnModel.DefaultHeaderHeight;
+        }
 
 		/// <summary>
 		/// Gets a rectangle that specifies the width and height of all the 
@@ -704,14 +689,11 @@ namespace XPTable.Models
 			get
 			{
 				if (this.VisibleColumnCount == 0)
-				{
 					return Rectangle.Empty;
-				}
 				
 				return new Rectangle(0, 0, this.VisibleColumnsWidth, this.HeaderHeight);
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the total width of all the Columns in the model
@@ -719,12 +701,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public int TotalColumnWidth
 		{
-			get
-			{
-				return this.Columns.TotalColumnWidth;
-			}
+			get { return this.Columns.TotalColumnWidth; }
 		}
-
 
 		/// <summary>
 		/// Gets the total width of all the visible Columns in the model
@@ -732,12 +710,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public int VisibleColumnsWidth
 		{
-			get
-			{
-				return this.Columns.VisibleColumnsWidth;
-			}
+			get { return this.Columns.VisibleColumnsWidth; }
 		}
-
 
 		/// <summary>
 		/// Gets the index of the last Column that is not hidden
@@ -745,12 +719,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public int LastVisibleColumnIndex
 		{
-			get
-			{
-				return this.Columns.LastVisibleColumn;
-			}
+			get { return this.Columns.LastVisibleColumn; }
 		}
-
 
 		/// <summary>
 		/// Gets the number of Columns in the ColumnModel that are visible
@@ -758,12 +728,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public int VisibleColumnCount
 		{
-			get
-			{
-				return this.Columns.VisibleColumnCount;
-			}
+			get { return this.Columns.VisibleColumnCount; }
 		}
-
 
 		/// <summary>
 		/// Gets the Table the ColumnModel belongs to
@@ -771,10 +737,7 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public Table Table
 		{
-			get
-			{
-				return this.table;
-			}
+			get { return this.table; }
 		}
 
         /// <summary>
@@ -783,14 +746,8 @@ namespace XPTable.Models
         [Browsable(false)]
         public SortColumnCollection SecondarySortOrders
         {
-            get
-            {
-                return this.secondarySortOrder;
-            }
-            set
-            {
-                this.secondarySortOrder = value;
-            }
+            get { return this.secondarySortOrder; }
+            set { this.secondarySortOrder = value; }
         }
 
 		/// <summary>
@@ -798,17 +755,9 @@ namespace XPTable.Models
 		/// </summary>
 		internal Table InternalTable
 		{
-			get
-			{
-				return this.table;
-			}
-
-			set
-			{
-				this.table = value;
-			}
+			get { return this.table; }
+			set { this.table = value; }
 		}
-
 
 		/// <summary>
 		/// Gets whether the ColumnModel is able to raise events
@@ -821,9 +770,7 @@ namespace XPTable.Models
 				// raise events (if it can't, the ColumModel shouldn't raise 
 				// events either)
 				if (this.Table != null)
-				{
 					return this.Table.CanRaiseEventsInternal;
-				}
 
 				return true;
 			}
@@ -845,20 +792,15 @@ namespace XPTable.Models
 			get
 			{
 				if (this.Table == null)
-				{
 					return true;
-				}
 
 				return this.Table.Enabled;
 			}
 		}
-
 		#endregion
 
-
-		#region Events
-
-		/// <summary>
+        #region Events
+        /// <summary>
 		/// Raises the ColumnAdded event
 		/// </summary>
 		/// <param name="e">A ColumnModelEventArgs that contains the event data</param>
