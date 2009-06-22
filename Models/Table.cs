@@ -2341,6 +2341,9 @@ namespace XPTable.Models
 				NativeMethods.SendMessage(this.Handle, 11, -1, 0);
 
 				this.PerformLayout();
+
+                this.ColumnModel.Columns.RecalcWidthCache();
+
 				this.Invalidate(true);
 
                 if (this.EnableWordWrap)
@@ -5900,7 +5903,11 @@ namespace XPTable.Models
             {
                 int w = GetAutoColumnwidth(e.Index);
                 if (w > 0)
+                {
+                    if (e.Column.Width != w + 5)
+                        this.Invalidate();
                     e.Column.Width = w + 5;
+                }
 
                 if (ColumnAutoResize != null)
                     ColumnAutoResize(e.Column, e);
@@ -7564,6 +7571,12 @@ namespace XPTable.Models
 			this.OnPaintEmptyTableText(e);
 
 			this.OnPaintBorder(e);
+
+            if (!painted)
+            {
+                OnAfterFirstPaint(EventArgs.Empty);
+                painted = true;
+            }
 		}
 
 
