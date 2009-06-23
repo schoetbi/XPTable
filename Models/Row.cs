@@ -1268,7 +1268,10 @@ namespace XPTable.Models
         /// <param name="e"></param>
         protected internal virtual void OnSubRowAdded(RowEventArgs e)
         {
-            this.TableModel.Rows.Insert(e.ParentRow.Index + e.ParentRow.SubRows.Count, e.Row);
+            // Add doesn specify the index, Insert does
+            int childIndex = e.Index > -1 ? e.Index + 1 : e.ParentRow.SubRows.Count;
+
+            this.TableModel.Rows.Insert(e.ParentRow.Index + childIndex, e.Row);
 
             if (SubRowAdded != null)
             {

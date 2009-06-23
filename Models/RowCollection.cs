@@ -292,7 +292,11 @@ namespace XPTable.Models
                     this.owner.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
 
                 else if (rowowner != null)
-                    this.OnRowAdded(new RowEventArgs(row, RowEventType.SubRowAdded, rowowner));
+                {
+                    RowEventArgs args = new RowEventArgs(row, RowEventType.SubRowAdded, rowowner);
+                    args.SetRowIndex(index);
+                    this.OnRowAdded(args);
+                }
             }
 		}
 
