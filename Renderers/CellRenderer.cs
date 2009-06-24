@@ -138,6 +138,26 @@ namespace XPTable.Renderers
             return 0;
         }
 
+        /// <summary>
+        /// Draws the given string just like the Graphics.DrawString(). It changes the StringFormat to set the NoWrap flag if required.
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="s"></param>
+        /// <param name="font"></param>
+        /// <param name="brush"></param>
+        /// <param name="layoutRectangle"></param>
+        /// <param name="canWrap"></param>
+        protected void DrawString(Graphics graphics, string s, Font font, Brush brush, RectangleF layoutRectangle, bool canWrap)
+        {
+            StringFormatFlags orig = this.StringFormat.FormatFlags;
+            if (!canWrap)
+                StringFormat.FormatFlags = StringFormat.FormatFlags | StringFormatFlags.NoWrap;
+
+            graphics.DrawString(s, font, brush, layoutRectangle, this.StringFormat);
+
+            if (!canWrap)
+                StringFormat.FormatFlags = orig;
+        }
         #endregion
 
 

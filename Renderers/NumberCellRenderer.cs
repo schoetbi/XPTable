@@ -671,13 +671,9 @@ namespace XPTable.Renderers
                 }
 
 				if (e.Enabled)
-				{
-					e.Graphics.DrawString(text, this.Font, this.ForeBrush, textRect, this.StringFormat);
-				}
+                    DrawString(e.Graphics, text, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
 				else
-				{
-                    e.Graphics.DrawString(text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
-				}
+                    DrawString(e.Graphics, text, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
 			}
 			
 			if( (e.Focused && e.Enabled)

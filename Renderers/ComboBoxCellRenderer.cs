@@ -71,30 +71,21 @@ namespace XPTable.Renderers
 
 			// don't bother going any further if the Cell is null 
 			if (e.Cell == null)
-			{
 				return;
-			}
 
 			Rectangle buttonRect = this.CalcDropDownButtonBounds();
-
-			Rectangle textRect = this.ClientRectangle;
+            Rectangle textRect = this.ClientRectangle;
 
 			if (this.ShowDropDownButton)
-			{
 				textRect.Width -= buttonRect.Width - 1;
-			}
 
 			// draw the text
             if (e.Cell.Text != null && e.Cell.Text.Length != 0)
             {
                 if (e.Enabled)
-                {
-                    e.Graphics.DrawString(e.Cell.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
-                }
+                    DrawString(e.Graphics, e.Cell.Text, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
                 else
-                {
-                    e.Graphics.DrawString(e.Cell.Text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
-                }
+                    DrawString(e.Graphics, e.Cell.Text, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
 
                 if (e.Cell.WidthNotSet)
                 {
@@ -105,9 +96,7 @@ namespace XPTable.Renderers
             else
             {
                 if (e.Cell.WidthNotSet)
-                {
                     e.Cell.ContentWidth = this.ShowDropDownButton ? buttonRect.Width : 0;
-                }
             }
 			
 			if( (e.Focused && e.Enabled)
@@ -117,14 +106,11 @@ namespace XPTable.Renderers
 				Rectangle focusRect = this.ClientRectangle;
 
 				if (this.ShowDropDownButton)
-				{
 					focusRect.Width -= buttonRect.Width;
-				}
 				
 				ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
 			}
 		}
-
 		#endregion
 
 		#endregion

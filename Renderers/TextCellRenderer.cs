@@ -70,14 +70,12 @@ namespace XPTable.Renderers
             {
                 this.Font = cell.Font;
                 // Need to set this.Bounds before we access Client rectangle
-                SizeF size = graphics.MeasureString(cell.Text, this.Font, this.ClientRectangle.Width, this.StringFormat);
+                SizeF size = graphics.MeasureString(cell.Text, this.Font, this.ClientRectangle.Width, StringFormat);
                 return (int)Math.Ceiling(size.Height);
             }
             else
                 return 0;
         }
-
-        
 
         /// <summary>
         /// Returns the width required to fully display this text.
@@ -94,8 +92,7 @@ namespace XPTable.Renderers
 		#region Events
 
 		#region Paint
-
-		/// <summary>
+        /// <summary>
 		/// Raises the Paint event
 		/// </summary>
 		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
@@ -122,15 +119,13 @@ namespace XPTable.Renderers
 			if (text != null && text.Length != 0)
 			{
 				if (e.Enabled)
-					e.Graphics.DrawString(text, this.Font, this.ForeBrush, this.ClientRectangle, this.StringFormat);
+                    DrawString(e.Graphics, text, this.Font, this.ForeBrush, this.ClientRectangle, c.WordWrap);
 				else
-					e.Graphics.DrawString(text, this.Font, this.GrayTextBrush, this.ClientRectangle, this.StringFormat);
-            
+                    DrawString(e.Graphics, text, this.Font, this.GrayTextBrush, this.ClientRectangle, c.WordWrap);
+
                 // Also, determine whether we need a tooltip, if the text was truncated.
                 if (e.Table.EnableToolTips)
-                {
                     c.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, c.Text);
-                }
 			}
 			
 			if( (e.Focused && e.Enabled)
@@ -140,7 +135,6 @@ namespace XPTable.Renderers
 				ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
 			}
 		}
-
 		#endregion
 
 		#endregion

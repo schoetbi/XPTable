@@ -119,7 +119,6 @@ namespace XPTable.Renderers
 			base.OnPaintCell(e);
 		}
 
-
 		/// <summary>
 		/// Raises the Paint event
 		/// </summary>
@@ -131,30 +130,21 @@ namespace XPTable.Renderers
 			// don't bother going any further if the Cell is null 
 			// or doesn't contain any data
 			if (e.Cell == null || e.Cell.Data == null || !(e.Cell.Data is DateTime))
-			{
 				return;
-			}
 
 			Rectangle buttonRect = this.CalcDropDownButtonBounds();
-
 			Rectangle textRect = this.ClientRectangle;
 			
 			if (this.ShowDropDownButton)
-			{
 				textRect.Width -= buttonRect.Width - 1;
-			}
 
             string dateText = FormatDate((DateTime) e.Cell.Data);
 
 			// draw the text
 			if (e.Enabled)
-			{
-                e.Graphics.DrawString(dateText, this.Font, this.ForeBrush, textRect, this.StringFormat);
-			}
+                DrawString(e.Graphics, dateText, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
 			else
-			{
-                e.Graphics.DrawString(dateText, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
-			}
+                DrawString(e.Graphics, dateText, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
 
             if (e.Cell.WidthNotSet)
             {
@@ -169,9 +159,7 @@ namespace XPTable.Renderers
 				Rectangle focusRect = this.ClientRectangle;
 
 				if (this.ShowDropDownButton)
-				{
 					focusRect.Width -= buttonRect.Width;
-				}
 				
 				ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
 			}
@@ -209,7 +197,6 @@ namespace XPTable.Renderers
 
             return dateTime.ToString(format, this.FormatProvider);
         }
-
 		#endregion
 
 		#endregion
