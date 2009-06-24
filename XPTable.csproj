@@ -290,6 +290,7 @@
     <Compile Include="Models\Design\RowConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\DragDropHelper.cs" />
     <Compile Include="Models\DropDownColumn.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -377,6 +378,7 @@
     <Compile Include="Renderers\DateTimeCellRenderer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Renderers\DragDropRenderer.cs" />
     <Compile Include="Renderers\DropDownCellRenderer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -401,6 +403,7 @@
     <Compile Include="Renderers\ICellRenderer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Renderers\IDragDropRenderer.cs" />
     <Compile Include="Renderers\IHeaderRenderer.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -369,7 +369,6 @@ namespace XPTable.Models
         /// </summary>
         bool painted = false;
 
-
 		#region Border
 
 		/// <summary>
@@ -723,6 +722,11 @@ namespace XPTable.Models
 		private bool enableWordWrap;
 		#endregion
 
+        /// <summary>
+        /// Helper class that provides all drag drop functionality.
+        /// </summary>
+        DragDropHelper _dragDropHelper;
+
 		#endregion
 
 		#region Constructor
@@ -838,6 +842,10 @@ namespace XPTable.Models
 
 			// showSelectionRectangle defaults to true
 			this.showSelectionRectangle = true;
+
+            // drang and drop
+            _dragDropHelper = new DragDropHelper(this);
+            _dragDropHelper.DragDropRenderer = new DragDropRenderer();
 
 			// for data binding
 			listChangedHandler = new ListChangedEventHandler(dataManager_ListChanged);
@@ -5100,13 +5108,24 @@ namespace XPTable.Models
 
 		#endregion
 
-		#endregion
+        #region Drag drop
+        /// <summary>
+        /// Gets or sets the renderer that draws the drag drop hover indicator.
+        /// </summary>
+        public IDragDropRenderer DragDropRenderer
+        {
+            get { return _dragDropHelper.DragDropRenderer; }
+            set { _dragDropHelper.DragDropRenderer = value; }
+        }
+        #endregion
 
-		#region Events
+        #endregion
 
-		#region Cells
+        #region Events
 
-		/// <summary>
+        #region Cells
+
+        /// <summary>
 		/// Raises the CellPropertyChanged event
 		/// </summary>
 		/// <param name="e">A CellEventArgs that contains the event data</param>
@@ -6702,7 +6721,6 @@ namespace XPTable.Models
 		#region Mouse
 
 		#region MouseUp
-
 		/// <summary>
 		/// Raises the MouseUp event
 		/// </summary>
@@ -6712,9 +6730,7 @@ namespace XPTable.Models
 			base.OnMouseUp(e);
 
 			if (!this.CanRaiseEvents)
-			{
 				return;
-			}
 
 			// work out the current state of  play
 			this.CalcTableState(e.X, e.Y);
@@ -6728,17 +6744,16 @@ namespace XPTable.Models
 				if (!this.LastMouseDownCell.IsEmpty)
 				{
 					if (this.IsValidCell(this.LastMouseDownCell))
-					{
 						this.RaiseCellMouseUp(this.LastMouseDownCell, e);
-					}
 
 					// reset the lastMouseDownCell
 					this.lastMouseDownCell = CellPos.Empty;
 				}
 
-				// if we have just finished resizing, it might
-				// be a good idea to relayout the table
-				if (this.resizingColumnIndex != -1)
+                #region Finish column resizing
+                // if we have just finished resizing, it might
+                // be a good idea to relayout the table
+                if (this.resizingColumnIndex != -1)
 				{
 					if (this.resizingColumnWidth != -1)
 					{
@@ -6751,12 +6766,14 @@ namespace XPTable.Models
 
 					this.UpdateScrollBars();
 					this.Invalidate(this.PseudoClientRect, true);
-				}
+                }
+                #endregion
 
-				// check if the mouse was released in a column header
+                // check if the mouse was released in a column header
 				if (region == TableRegion.ColumnHeader)
 				{
-					int column = this.ColumnIndexAt(e.X, e.Y);
+                    #region In column header
+                    int column = this.ColumnIndexAt(e.X, e.Y);
 
 					// if we are in the header, check if we are in the pressed column
 					if (this.pressedColumn != -1)
@@ -6764,12 +6781,9 @@ namespace XPTable.Models
 						if (this.pressedColumn == column)
 						{
 							if (this.hotColumn != -1 && this.hotColumn != column)
-							{
 								this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Normal;
-							}
 
 							this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Hot;
-
 							this.RaiseHeaderMouseUp(column, e);
 						}
 
@@ -6779,32 +6793,32 @@ namespace XPTable.Models
 						if ((this.IsValidColumn(column)) && (this.ColumnModel.Columns[column].Sortable))
 						{
 							if (this.TableModel != null && this.TableModel.Rows.Count > 0)
-							{
 								this.Sort(column);
-							}
 						}
 
 						this.Invalidate(this.HeaderRectangle, false);
 					}
 
 					return;
-				}
+                    #endregion
+                }
 
-				// the mouse wasn't released in a column header, so if we 
+                // the mouse wasn't released in a column header, so if we 
 				// have a pressed column then we need to make it unpressed
 				if (this.pressedColumn != -1)
 				{
 					this.pressedColumn = -1;
-
 					this.Invalidate(this.HeaderRectangle, false);
 				}
-			}
+
+                _dragDropHelper.MouseUp();
+
+            } // e.Button == MouseButtons.Left
 		}
 
 		#endregion
 
 		#region MouseDown
-
 		/// <summary>
 		/// Raises the MouseDown event
 		/// </summary>
@@ -6814,9 +6828,7 @@ namespace XPTable.Models
 			base.OnMouseDown(e);
 
 			if (!this.CanRaiseEvents)
-			{
 				return;
-			}
 
 			this.CalcTableState(e.X, e.Y);
 			TableRegion region = this.HitTest(e.X, e.Y);
@@ -6831,9 +6843,7 @@ namespace XPTable.Models
 					this.Focus();
 
 					if (region == TableRegion.ColumnHeader && e.Button != MouseButtons.Right)
-					{
 						return;
-					}
 				}
 			}
 
@@ -6913,10 +6923,10 @@ namespace XPTable.Models
 			#endregion
 
 			#region Cells
-
 			if (region == TableRegion.Cells)
-			{
-				if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right)
+            {
+                #region Checks
+                if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right)
 					return;
 
 				if ((!this.AllowRMBSelection) && (e.Button == MouseButtons.Right))
@@ -6927,9 +6937,10 @@ namespace XPTable.Models
 					// clear selections
 					this.TableModel.Selections.Clear();
 					return;
-				}
+                }
+                #endregion
 
-				Row r = this.tableModel.Rows[row];
+                Row r = this.tableModel.Rows[row];
 				int realCol = r.GetRenderedCellIndex(column);
 				column = realCol;
 
@@ -7015,6 +7026,7 @@ namespace XPTable.Models
                 }
                 #endregion
 
+                #region Change the selection
                 if (this.familyRowSelect && this.fullRowSelect)
                 {
                     // family select is where we select all the rows either:
@@ -7045,15 +7057,21 @@ namespace XPTable.Models
                     // 'normal' secletion mode - just select what was clicked
                     this.TableModel.Selections.SelectCell(row, column);
                 }
-			}
+                #endregion
 
+                // Drag & Drop Code Added - by tankun
+                if ((this.AllowDrop) && (e.Button == MouseButtons.Left))
+                {
+                    if (row < 0) 
+                        return;
+                    _dragDropHelper.MouseDown(row);
+                }
+            } //region == TableRegion.Cells
 			#endregion
 		}
-
 		#endregion
 
 		#region MouseMove
-
 		/// <summary>
 		/// Raises the MouseMove event
 		/// </summary>
@@ -7064,9 +7082,7 @@ namespace XPTable.Models
 
 			// don't go any further if the table is editing
 			if (this.TableState == TableState.Editing)
-			{
 				return;
-			}
 
             #region Left mouse button
 			// if the left mouse button is down, check if the LastMouseDownCell 
@@ -7077,12 +7093,13 @@ namespace XPTable.Models
 			// other controls)
 			if (e.Button == MouseButtons.Left)
 			{
+                _dragDropHelper.MouseMove(e);
+
 				if (!this.LastMouseDownCell.IsEmpty)
 				{
 					if (this.IsValidCell(this.LastMouseDownCell))
 					{
 						this.RaiseCellMouseMove(this.LastMouseDownCell, e);
-
 						return;
 					}
 				}
@@ -7285,7 +7302,6 @@ namespace XPTable.Models
 			}
 
 			#region Cells
-
 			if (hitTest == TableRegion.Cells)
 			{
 				// find the cell the mouse is over
@@ -7301,9 +7317,7 @@ namespace XPTable.Models
 							CellPos oldLastMouseCell = this.lastMouseCell;
 
 							if (!oldLastMouseCell.IsEmpty)
-							{
 								this.ResetLastMouseCell();
-							}
 
 							this.lastMouseCell = cellPos;
 
@@ -7330,9 +7344,7 @@ namespace XPTable.Models
 					this.ResetLastMouseCell();
 
 					if (this.TableModel == null)
-					{
 						this.ResetToolTip();
-					}
 				}
 
 				// netus - fix by Kosmokrat Hismoom on 2006-01-29
@@ -7346,14 +7358,10 @@ namespace XPTable.Models
 				this.ResetLastMouseCell();
 
 				if (!this.lastMouseDownCell.IsEmpty)
-				{
 					this.RaiseCellMouseLeave(this.lastMouseDownCell);
-				}
 
 				if (this.TableModel == null)
-				{
 					this.ResetToolTip();
-				}
 
 				// make sure the cursor is the default cursor 
 				// (we may have just come from a resizing area in the header)
@@ -7362,7 +7370,6 @@ namespace XPTable.Models
 
 			#endregion
 		}
-
 		#endregion
 
 		#region MouseLeave
@@ -8655,9 +8662,9 @@ namespace XPTable.Models
 
         #endregion
 
-		#region Data binding
+        #region Data binding
 
-		// Taken directly from http://www.codeproject.com/cs/database/DataBindCustomControls.asp
+        // Taken directly from http://www.codeproject.com/cs/database/DataBindCustomControls.asp
 
 		#region Class data
 
