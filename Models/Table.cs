@@ -7519,7 +7519,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Paint
-
 		/// <summary>
 		/// Raises the PaintBackground event
 		/// </summary>
@@ -7528,7 +7527,6 @@ namespace XPTable.Models
 		{
 			base.OnPaintBackground(e);
 		}
-
 
 		/// <summary>
 		/// Raises the Paint event
@@ -7541,9 +7539,7 @@ namespace XPTable.Models
 
 			// check if we actually need to paint
 			if (this.Width == 0 || this.Height == 0)
-			{
 				return;
-			}
 
 			if (this.ColumnModel != null)
 			{
@@ -7559,16 +7555,12 @@ namespace XPTable.Models
 				}
 
 				if (this.GridLines != GridLines.None)
-				{
 					this.OnPaintGrid(e);
-				}
 
 				if (this.HeaderStyle != ColumnHeaderStyle.None && this.ColumnModel.Columns.Count > 0)
 				{
 					if (this.HeaderRectangle.IntersectsWith(e.ClipRectangle))
-					{
 						this.OnPaintHeader(e);
-					}
 				}
 
 				// reset the clipping region
@@ -7585,7 +7577,6 @@ namespace XPTable.Models
                 painted = true;
             }
 		}
-
 
 		/// <summary>
 		/// Draws a reversible line at the specified screen x-coordinate 
@@ -7840,100 +7831,115 @@ namespace XPTable.Models
 		#endregion
 
 		#region Grid
-
 		/// <summary>
 		/// Paints the Table's grid
 		/// </summary>
 		/// <param name="e">A PaintEventArgs that contains the event data</param>
-		protected void OnPaintGrid(PaintEventArgs e)
-		{
-			if (this.GridLines == GridLines.None)
-			{
-				return;
-			}
+        protected void OnPaintGrid(PaintEventArgs e)
+        {
+            if (this.GridLines == GridLines.None)
+                return;
 
-			//
-			//e.Graphics.SetClip(e.ClipRectangle);
+            if (this.ColumnModel == null || this.ColumnModel.Columns.Count == 0)
+                return;
 
-			if (this.ColumnModel == null || this.ColumnModel.Columns.Count == 0)
-			{
-				return;
-			}
+            if (this.ColumnModel != null)
+            {
+                using (Pen gridPen = new Pen(this.GridColor))
+                {
+                    gridPen.DashStyle = (DashStyle)this.GridLineStyle;
 
-			//e.Graphics.SetClip(e.ClipRectangle);
+                    // check if we can draw column lines
+                    if ((this.GridLines & GridLines.Columns) == GridLines.Columns)
+                    {
+                        PaintGridColumns(e, gridPen);
+                    }
 
-			if (this.ColumnModel != null)
-			{
-				using (Pen gridPen = new Pen(this.GridColor))
-				{
-					//
-					gridPen.DashStyle = (DashStyle) this.GridLineStyle;
+                    if (this.TableModel != null)
+                    {
+                        switch (this.GridLines)
+                        {
+                            case GridLines.RowsOnlyParent:
+                                PaintGridParentRows(e, gridPen);
+                                break;
+                            case GridLines.Both:
+                            case GridLines.Rows:
+                                PaintGridAllRows(e, gridPen);
+                                break;
+                            case GridLines.None:
+                            case GridLines.Columns:
+                                break;
+                        }
+                    }
+                }
+            }
+        }
 
-					// check if we can draw column lines
-					if ((this.GridLines & GridLines.Columns) == GridLines.Columns)
-					{
-						int right = this.DisplayRectangle.X;
+        void PaintGridParentRows(PaintEventArgs e, Pen gridPen)
+        {
+            if (this.TopIndex > -1)
+            {
+                int yline = this.CellDataRect.Y - 1;
+                // Need to draw each row grid at its correct height
+                for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+                {
+                    //if row is not a subrow:drawline and increment yline
+                    {
+                        if (!(this.tableModel.Rows[irow].Parent != null))
+                        {
+                            if (yline > e.ClipRectangle.Bottom)
+                                break;
+                            if (yline >= this.CellDataRect.Top)
+                                e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
 
-						for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
-						{
-							if (this.ColumnModel.Columns[i].Visible)
-							{
-								right += this.ColumnModel.Columns[i].Width;
+                            yline += this.TableModel.Rows[irow].Height;
+                        }
 
-								if (right >= e.ClipRectangle.Left && right <= e.ClipRectangle.Right)
-								{
-									e.Graphics.DrawLine(gridPen, right - 1, e.ClipRectangle.Top, right - 1, e.ClipRectangle.Bottom);
-								}
-							}
-						}
-					}
+                        else
+                        // if row is a subrow,if is visible then increment yline	
+                        {
+                            if (this.tableModel.Rows[irow].Parent.ExpandSubRows)
+                                yline += this.TableModel.Rows[irow].Height;
+                        }
+                    }
 
-					if (this.TableModel != null)
-					{
-						// check if we can draw row lines
-						if ((this.GridLines & GridLines.Rows) == GridLines.Rows)
-						{
-							// Loop over all visible rows and draw lines for each
-							if (this.EnableWordWrap)
-							{
+                    //	e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);	
+                }
+            }
+        }
 
-								int yline = this.CellDataRect.Y - 1;
+        void PaintGridAllRows(PaintEventArgs e, Pen gridPen)
+        {
+            if (this.TopIndex > -1)
+            {
+                int yline = this.CellDataRect.Y - 1;
+                // Need to draw each row grid at its correct height
+                for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+                {
+                    if (yline > e.ClipRectangle.Bottom)
+                        break;
+                    if (yline >= this.CellDataRect.Top)
+                        e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
+                    yline += this.TableModel.Rows[irow].Height;
+                }
+            }
+        }
 
-								if (this.TopIndex > -1)
-								{
-									// Need to draw each row grid at its correct height
-									for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
-									{
-										if (yline > e.ClipRectangle.Bottom)
-											break;
+        void PaintGridColumns(PaintEventArgs e, Pen gridPen)
+        {
+            int right = this.DisplayRectangle.X;
 
-										if (yline >= this.CellDataRect.Top)
-										{
-											e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
-										}
+            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            {
+                if (this.ColumnModel.Columns[i].Visible)
+                {
+                    right += this.ColumnModel.Columns[i].Width;
 
-										yline += this.TableModel.Rows[irow].Height;
-									}
-								}
-							}
-							else
-							{
-								int y = this.CellDataRect.Y + this.RowHeight - 1;
-								// It is quicker ito do this for a regular grid
-								for (int i = y; i <= e.ClipRectangle.Bottom; i += this.RowHeight)
-								{
-									if (i >= this.CellDataRect.Top)
-									{
-										e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, i, e.ClipRectangle.Right, i);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
+                    if (right >= e.ClipRectangle.Left && right <= e.ClipRectangle.Right)
+                        e.Graphics.DrawLine(gridPen, right - 1, e.ClipRectangle.Top, right - 1, e.ClipRectangle.Bottom);
+                }
+            }
+        }
 		#endregion
 
 		#region Header

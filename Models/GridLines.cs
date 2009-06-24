@@ -53,6 +53,11 @@ namespace XPTable.Models
 		/// <summary>
 		/// Grid lines are drawn between rows and columns
 		/// </summary>
-		Both = 3
+		Both = 3,
+
+        /// <summary>
+        /// Grid lines are only drawn between families of rows (i.e. main row plus sub row)
+        /// </summary>
+        RowsOnlyParent = 4
 	}
 }
