@@ -24,7 +24,6 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -35,7 +34,6 @@ using XPTable.Models;
 using XPTable.Renderers;
 using XPTable.Win32;
 
-
 namespace XPTable.Editors
 {
 	/// <summary>
@@ -44,7 +42,6 @@ namespace XPTable.Editors
 	public class NumberCellEditor : CellEditor, IEditorUsesRendererButtons
 	{
 		#region Class Data
-
 		/// <summary>
 		/// ID number for the up button
 		/// </summary>
@@ -125,9 +122,7 @@ namespace XPTable.Editors
 		/// a button is pressed
 		/// </summary>
 		private Timer timer;
-
 		#endregion
-		
 
 		#region Events
 		/// <summary>
@@ -147,7 +142,6 @@ namespace XPTable.Editors
 		#endregion
 
 		#region Constructor
-		
 		/// <summary>
 		/// Initializes a new instance of the NumberCellEditor class with default settings
 		/// </summary>
@@ -172,9 +166,7 @@ namespace XPTable.Editors
 			this.buttonID = 0;
 			this.interval = TimerInterval;
 		}
-
 		#endregion
-
 
 		#region Methods
 
@@ -477,7 +469,6 @@ namespace XPTable.Editors
 
 		#endregion
 
-
 		#region Properties
 
 		/// <summary>
@@ -665,9 +656,7 @@ namespace XPTable.Editors
 
 		#endregion
 
-
 		#region Events
-
 		/// <summary>
 		/// Handler for the editors TextBox.MouseWheel event
 		/// </summary>
@@ -682,23 +671,16 @@ namespace XPTable.Editors
 			if (Math.Abs(this.wheelDelta) >= 120)
 			{
 				if (this.wheelDelta < 0)
-				{
 					up = false;
-				}
 
 				if (up)
-				{
 					this.UpButton();
-				}
 				else
-				{
 					this.DownButton();
-				}
 
 				this.wheelDelta = 0;
 			}
 		}
-
 
 		/// <summary>
 		/// Handler for the editors TextBox.KeyDown event
@@ -724,11 +706,8 @@ namespace XPTable.Editors
 			}
 
 			if (e.KeyCode == Keys.Return)
-			{
 				this.ValidateEditText();
-			}
 		}
-
 
 		/// <summary>
 		/// Handler for the editors TextBox.KeyPress event
@@ -761,16 +740,12 @@ namespace XPTable.Editors
                     if (e.KeyChar == enter)
                     {
                         if (this.EditingTable != null)
-                        {
                             this.EditingTable.StopEditing();
-                        }
                     }
                     else if (e.KeyChar == escape)
                     {
                         if (this.EditingTable != null)
-                        {
                             this.EditingTable.CancelEditing();
-                        }
                     }
                     else
                     {
@@ -784,7 +759,6 @@ namespace XPTable.Editors
             }
 		}
 
-
 		/// <summary>
 		/// Handler for the editors TextBox.LostFocus event
 		/// </summary>
@@ -793,16 +767,11 @@ namespace XPTable.Editors
 		protected virtual void OnTextBoxLostFocus(object sender, EventArgs e)
 		{
 			if (this.UserEdit)
-			{
 				this.ValidateEditText();
-			}
 
 			if (this.EditingTable != null)
-			{
 				this.EditingTable.StopEditing();
-			}
 		}
-
 
 		/// <summary>
 		/// Handler for the editors buttons MouseDown event
@@ -829,7 +798,6 @@ namespace XPTable.Editors
 			this.StartTimer();
 		}
 
-
 		/// <summary>
 		/// Handler for the editors buttons MouseUp event
 		/// </summary>
@@ -841,7 +809,6 @@ namespace XPTable.Editors
 
 			this.buttonID = 0;
 		}
-
 
 		/// <summary>
 		/// Handler for the editors Timer event
@@ -858,26 +825,18 @@ namespace XPTable.Editors
 			}
 
 			if (buttonID == UpButtonID)
-			{
 				this.UpButton();
-			}
 			else
-			{
 				this.DownButton();
-			}
 				
 			this.interval *= 7;
 			this.interval /= 10;
 			
 			if (this.interval < 1)
-			{
 				this.interval = 1;
-			}
 			
 			this.timer.Interval = this.interval;
 		}
-
-
 		#endregion
 	}
 }

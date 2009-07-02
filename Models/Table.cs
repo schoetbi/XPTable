@@ -5736,7 +5736,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Click
-
 		/// <summary>
 		/// Raises the CellClick event
 		/// </summary>
@@ -5744,26 +5743,19 @@ namespace XPTable.Models
 		protected virtual void OnCellClick(CellMouseEventArgs e)
 		{
 			if (!this.IsCellEnabled(e.CellPos))
-			{
 				return;
-			}
 
 			if (this.CanRaiseEvents)
 			{
 				ICellRenderer renderer = this.ColumnModel.GetCellRenderer(this.LastMouseCell.Column);
 
 				if (renderer != null)
-				{
 					renderer.OnClick(e);
-				}
 
 				if (CellClick != null)
-				{
 					CellClick(e.Cell, e);
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Raises the CellDoubleClick event
@@ -5772,26 +5764,19 @@ namespace XPTable.Models
 		protected virtual void OnCellDoubleClick(CellMouseEventArgs e)
 		{
 			if (!this.IsCellEnabled(e.CellPos))
-			{
 				return;
-			}
 
 			if (this.CanRaiseEvents)
 			{
 				ICellRenderer renderer = this.ColumnModel.GetCellRenderer(this.LastMouseCell.Column);
 
 				if (renderer != null)
-				{
 					renderer.OnDoubleClick(e);
-				}
 
 				if (CellDoubleClick != null)
-				{
 					CellDoubleClick(e.Cell, e);
-				}
 			}
 		}
-
 		#endregion
 
 		#endregion
@@ -6815,7 +6800,6 @@ namespace XPTable.Models
 
             } // e.Button == MouseButtons.Left
 		}
-
 		#endregion
 
 		#region MouseDown
@@ -7307,6 +7291,8 @@ namespace XPTable.Models
 				// find the cell the mouse is over
 				CellPos cellPos = new CellPos(this.RowIndexAt(e.X, e.Y), this.ColumnIndexAt(e.X, e.Y));
 
+                cellPos = ResolveColspan(cellPos);
+
 				if (!cellPos.IsEmpty)
 				{
 					if (cellPos != this.lastMouseCell)
@@ -7459,7 +7445,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Click
-
 		/// <summary>
 		/// Raises the Click event
 		/// </summary>
@@ -7482,7 +7467,6 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		/// Raises the DoubleClick event
 		/// </summary>
@@ -7493,7 +7477,6 @@ namespace XPTable.Models
 
 			if (this.IsValidCell(this.LastMouseCell))
 			{
-
 				// Adjust this to take colspan into account
 				// LastMouseCell may be a cell that is 'under' a colspan cell
 				CellPos realCell = this.ResolveColspan(this.LastMouseCell);
