@@ -1091,8 +1091,10 @@ namespace XPTable.Models
 		protected internal CellPos ResolveColspan(CellPos cellPos)
 		{
 			Row r = this.TableModel.Rows[cellPos.Row];
-			CellPos n = new CellPos(cellPos.Row, r.GetRenderedCellIndex(cellPos.Column));
-			return n;
+            if (r == null)
+                return cellPos;
+            else
+			    return new CellPos(cellPos.Row, r.GetRenderedCellIndex(cellPos.Column));
 		}
 
 		/// <summary>
