@@ -8872,22 +8872,13 @@ namespace XPTable.Models
 		/// </summary>
 		private void CalculateColumns()
 		{
-			ColumnModel columns = new ColumnModel();
-
 			if (dataManager == null)
 				return;
 
-			int index = 0;
-			foreach (PropertyDescriptor prop in dataManager.GetItemProperties())
-			{
-				Column column = this.DataSourceColumnBinder.GetColumn(prop, index);
-				columns.Columns.Add(column);
-				index++;
-			}
+            ColumnModel columns = this.DataSourceColumnBinder.GetColumnModel(dataManager.GetItemProperties());
 
 			this.ColumnModel = columns;
 		}
-
 
 		/// <summary>
 		/// Clears and re-adds all data from the data source.
@@ -8920,14 +8911,13 @@ namespace XPTable.Models
 			int i = 0;
 			foreach (Column column in this.ColumnModel.Columns)
 			{
-				PropertyDescriptor prop = null;
-				prop = propColl.Find(column.Text, false);
-				if (prop != null)
-				{
-					object val = prop.GetValue(row);
-					Cell cell = this.DataSourceColumnBinder.GetCell(column, val);
-					cells.SetValue(cell, i);
-				}
+                PropertyDescriptor prop = propColl.Find(column.Text, false);
+                if (prop == null)
+                    throw new ApplicationException(string.Format("Cannot find property '{0}' in datasource.", column.Text));
+
+				object val = prop.GetValue(row);
+				Cell cell = this.DataSourceColumnBinder.GetCell(column, val);
+				cells.SetValue(cell, i);
 				i++;
 			}
 

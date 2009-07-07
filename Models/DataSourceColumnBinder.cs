@@ -17,6 +17,24 @@ namespace XPTable.Models
         }
 
         /// <summary>
+        /// Returns the ColumnModel to use for the given fields from the datasource.
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        public virtual ColumnModel GetColumnModel(PropertyDescriptorCollection properties)
+        {
+            ColumnModel columns = new ColumnModel();
+            int index = 0;
+            foreach (PropertyDescriptor prop in properties)
+            {
+                Column column = GetColumn(prop, index);
+                columns.Columns.Add(column);
+                index++;
+            }
+            return columns;
+        }
+
+        /// <summary>
         /// Returns the type of column that is appropriate for the given property of the data source.
         /// Numbers, DateTime, Color and Boolean columns are mapped to NumberColumn, DateTimeColumn, ColorColumn and CheckBoxColumn respectively. The default
         /// is just a TextColumn.
