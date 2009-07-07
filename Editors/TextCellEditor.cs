@@ -24,7 +24,6 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -32,7 +31,6 @@ using System.Windows.Forms;
 using XPTable.Events;
 using XPTable.Models;
 using XPTable.Win32;
-
 
 namespace XPTable.Editors
 {
@@ -42,7 +40,6 @@ namespace XPTable.Editors
 	public class TextCellEditor : CellEditor
 	{
 		#region Constructor
-		
 		/// <summary>
 		/// Initializes a new instance of the TextCellEditor class with default settings
 		/// </summary>
@@ -54,12 +51,9 @@ namespace XPTable.Editors
 
 			this.Control = textbox;
 		}
-
 		#endregion
 
-
 		#region Methods
-
 		/// <summary>
 		/// Sets the location and size of the CellEditor
 		/// </summary>
@@ -68,9 +62,8 @@ namespace XPTable.Editors
 		protected override void SetEditLocation(Rectangle cellRect)
 		{
 			this.TextBox.Location = cellRect.Location;
-			this.TextBox.Size = new Size(cellRect.Width-1, cellRect.Height-1);
+            this.TextBox.Size = new Size(cellRect.Width - 1, cellRect.Height - 1);
 		}
-
 
 		/// <summary>
 		/// Sets the initial value of the editor based on the contents of 
@@ -81,7 +74,6 @@ namespace XPTable.Editors
 			this.TextBox.Text = this.EditingCell.Text;
 		}
 
-
 		/// <summary>
 		/// Sets the contents of the Cell being edited based on the value 
 		/// in the editor
@@ -90,7 +82,6 @@ namespace XPTable.Editors
 		{
 			this.EditingCell.Text = this.TextBox.Text;
 		}
-
 
 		/// <summary>
 		/// Starts editing the Cell
@@ -107,7 +98,6 @@ namespace XPTable.Editors
 			this.TextBox.Focus();
 		}
 
-
 		/// <summary>
 		/// Stops editing the Cell and commits any changes
 		/// </summary>
@@ -119,7 +109,6 @@ namespace XPTable.Editors
 			base.StopEditing();
 		}
 
-
 		/// <summary>
 		/// Stops editing the Cell and ignores any changes
 		/// </summary>
@@ -130,29 +119,19 @@ namespace XPTable.Editors
 			
 			base.CancelEditing();
 		}
-
-
 		#endregion
 
-
 		#region Properties
-
 		/// <summary>
 		/// Gets the TextBox used to edit the Cells contents
 		/// </summary>
 		public TextBox TextBox
 		{
-			get
-			{
-				return this.Control as TextBox;
-			}
+			get { return this.Control as TextBox; }
 		}
-
 		#endregion
 
-
 		#region Events
-
 		/// <summary>
 		/// Handler for the editors TextBox.KeyPress event
 		/// </summary>
@@ -163,19 +142,14 @@ namespace XPTable.Editors
 			if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
 			{
 				if (this.EditingTable != null)
-				{
 					this.EditingTable.StopEditing();
-				}
 			}
 			else if (e.KeyChar == AsciiChars.Escape)
 			{
 				if (this.EditingTable != null)
-				{
 					this.EditingTable.CancelEditing();
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Handler for the editors TextBox.LostFocus event
@@ -185,11 +159,8 @@ namespace XPTable.Editors
 		protected virtual void OnLostFocus(object sender, EventArgs e)
 		{
 			if (this.EditingTable != null)
-			{
 				this.EditingTable.StopEditing();
-			}
 		}
-
 		#endregion
 	}
 }

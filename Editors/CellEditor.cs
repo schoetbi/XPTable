@@ -138,7 +138,6 @@ namespace XPTable.Editors
 		/// <returns>true if the ICellEditor can continue editing the Cell, false otherwise</returns>
 		public virtual bool PrepareForEditing(Cell cell, Table table, CellPos cellPos, Rectangle cellRect, bool userSetEditorValues)
 		{
-			//
 			this.cell = cell;
 			this.table = table;
 			this.cellPos = cellPos;
@@ -146,9 +145,7 @@ namespace XPTable.Editors
 
 			// check if the user has already set the editors value for us
 			if (!userSetEditorValues)
-			{
 				this.SetEditValue();
-			}
 
 			this.SetEditLocation(cellRect);
 
@@ -159,16 +156,16 @@ namespace XPTable.Editors
 			this.OnBeginEdit(e);
 			
 			// if the edit has been canceled, remove the editor and return false
-			if (e.Cancel)
-			{
-				this.RemoveEditControl();
-
-				return false;
-			}
-
-			return true;
+            if (e.Cancel)
+            {
+                this.RemoveEditControl();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
 		}
-
 
 		/// <summary>
 		/// Sets the location and size of the CellEditor

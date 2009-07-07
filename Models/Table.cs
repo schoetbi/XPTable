@@ -984,7 +984,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Cells
-
 		/// <summary>
 		/// Returns the Cell at the specified client coordinates
 		/// </summary>
@@ -999,13 +998,10 @@ namespace XPTable.Models
 
 			// return null if the row or column don't exist
 			if (row == -1 || row >= this.TableModel.Rows.Count || column == -1 || column >= this.TableModel.Rows[row].Cells.Count)
-			{
 				return null;
-			}
 
 			return this.TableModel[row, column];
 		}
-
 
 		/// <summary>
 		/// Returns the Cell at the specified client Point
@@ -1017,7 +1013,6 @@ namespace XPTable.Models
 		{
 			return this.CellAt(p.X, p.Y);
 		}
-
 
 		/// <summary>
 		/// Returns a Rectangle that specifies the size and location the cell at 
@@ -1031,27 +1026,27 @@ namespace XPTable.Models
 		{
 			// return null if the row or column don't exist
 			if (row == -1 || row >= this.TableModel.Rows.Count || column == -1 || column >= this.TableModel.Rows[row].Cells.Count)
-			{
 				return Rectangle.Empty;
-			}
 
 			Rectangle columnRect = this.ColumnRect(column);
 
 			if (columnRect == Rectangle.Empty)
-			{
 				return columnRect;
-			}
 
 			Rectangle rowRect = this.RowRect(row);
 
 			if (rowRect == Rectangle.Empty)
-			{
 				return rowRect;
-			}
 
-			return new Rectangle(columnRect.X, rowRect.Y, columnRect.Width, rowRect.Height);
+            int width = columnRect.Width;
+            Cell thisCell = this.TableModel[row, column];
+            if (thisCell != null && thisCell.ColSpan > 1)
+            {
+                width = this.GetColumnWidth(column, thisCell);
+            }
+
+			return new Rectangle(columnRect.X, rowRect.Y, width, rowRect.Height);
 		}
-
 
 		/// <summary>
 		/// Returns a Rectangle that specifies the size and location the cell at 
@@ -1076,14 +1071,10 @@ namespace XPTable.Models
 		public Rectangle CellRect(Cell cell)
 		{
 			if (cell == null || cell.Row == null || cell.InternalIndex == -1)
-			{
 				return Rectangle.Empty;
-			}
 
 			if (this.TableModel == null || this.ColumnModel == null)
-			{
 				return Rectangle.Empty;
-			}
 
 			int row = this.TableModel.Rows.IndexOf(cell.Row);
 			int col = cell.InternalIndex;
@@ -1100,12 +1091,9 @@ namespace XPTable.Models
 		protected internal CellPos ResolveColspan(CellPos cellPos)
 		{
 			Row r = this.TableModel.Rows[cellPos.Row];
-
 			CellPos n = new CellPos(cellPos.Row, r.GetRenderedCellIndex(cellPos.Column));
-
 			return n;
 		}
-
 
 		/// <summary>
 		/// Returns whether Cell at the specified row and column indexes 
@@ -1954,7 +1942,6 @@ namespace XPTable.Models
 			this.EditCell(new CellPos(row, column));
 		}
 
-
 		/// <summary>
 		/// Starts editing the Cell at the specified CellPos
 		/// </summary>
@@ -1964,9 +1951,7 @@ namespace XPTable.Models
 			// don't bother if the cell doesn't exists or the cell's
 			// column is not visible or the cell is not editable
 			if (!this.IsValidCell(cellPos) || !this.ColumnModel.Columns[cellPos.Column].Visible || !this.IsCellEditable(cellPos))
-			{
 				return;
-			}
 
 			// check if we're currently editing a cell
 			if (this.EditingCell != CellPos.Empty)
@@ -1974,13 +1959,9 @@ namespace XPTable.Models
 				// don't bother if we're already editing the cell.  
 				// if we're editing a different cell stop editing
 				if (this.EditingCell == cellPos)
-				{
 					return;
-				}
 				else
-				{
 					this.EditingCellEditor.StopEditing();
-				}
 			}
 
 			Cell cell = this.TableModel[cellPos];
@@ -1989,14 +1970,10 @@ namespace XPTable.Models
 			// make sure we have an editor and that the cell 
 			// and the cell's column are editable
 			if (editor == null || !cell.Editable || !this.ColumnModel.Columns[cellPos.Column].Editable)
-			{
 				return;
-			}
 
 			if (this.EnsureVisible(cellPos))
-			{
 				this.Refresh();
-			}
 
 			Rectangle cellRect = this.CellRect(cellPos);
 
@@ -2013,9 +1990,7 @@ namespace XPTable.Models
 				// returns false, someone who subscribed to the editors 
 				// BeginEdit event has cancelled editing
 				if (!editor.PrepareForEditing(cell, this, cellPos, cellRect, e.Handled))
-				{
 					return;
-				}
 
 				// keep track of the editing cell and editor 
 				// and start editing
@@ -2025,7 +2000,6 @@ namespace XPTable.Models
 				editor.StartEditing();
 			}
 		}
-
 
 		/*/// <summary>
 		/// Stops editing the current Cell and starts editing the next editable Cell
@@ -6938,8 +6912,12 @@ namespace XPTable.Models
 
 				// don't bother going any further if the user 
 				// double clicked or we're not allowed to select
-				if (e.Clicks > 1 || !this.AllowSelection)
-					return;
+                if (e.Clicks > 1 || !this.AllowSelection)
+                {
+                    // We need to allow 'double clicks' through to the editors so the number change buttons can be used rapidly
+                    if (!this.IsEditing)
+                        return;
+                }
 
 				this.lastMouseDownCell.Row = row;
 				this.lastMouseDownCell.Column = column;
