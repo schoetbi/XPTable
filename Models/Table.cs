@@ -1750,6 +1750,9 @@ namespace XPTable.Models
 			if (row1 == row2)
 				return 0;
 
+            if (this.TableModel == null || this.TableModel.Rows == null)
+                return 0;
+
 			int r1 = Math.Min(row1, row2);
 			int r2 = Math.Max(row1, row2);
 
@@ -1762,8 +1765,11 @@ namespace XPTable.Models
 			{
 				// Don't count this row if it is currently a hidden subrow
 				Row row = rows[i];
-				if (row.Parent == null || row.Parent.ExpandSubRows)
-					ydiff += row.Height;
+                if (row != null)
+                {
+                    if (row.Parent == null || row.Parent.ExpandSubRows)
+                        ydiff += row.Height;
+                }
 			}
 
 			if (r1 == row1)
