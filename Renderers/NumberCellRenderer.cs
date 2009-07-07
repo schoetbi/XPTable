@@ -359,12 +359,15 @@ namespace XPTable.Renderers
 
 						if (!e.Table.IsEditing)
 						{
-							e.Table.EditCell(e.CellPos);
+                            e.Table.EditCell(e.CellPos);        // Editing may be cancelled by an event handler
 						}
-						
-						((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
 
-						e.Table.Invalidate(e.CellRect);
+                        if (e.Table.IsEditing)
+                        {
+                            ((IEditorUsesRendererButtons)e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
+
+                            e.Table.Invalidate(e.CellRect);
+                        }
 					}
 					else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
 					{
@@ -375,9 +378,12 @@ namespace XPTable.Renderers
 							e.Table.EditCell(e.CellPos);
 						}
 
-						((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
+                        if (e.Table.IsEditing)
+                        {
+                            ((IEditorUsesRendererButtons)e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
 
-						e.Table.Invalidate(e.CellRect);
+                            e.Table.Invalidate(e.CellRect);
+                        }
 					}
 				}
 			}
@@ -414,25 +420,28 @@ namespace XPTable.Renderers
 						
 						if (!e.Table.IsEditing)
 						{
-							e.Table.EditCell(e.CellPos);
-						}						
-						
-						if (this.GetUpButtonBounds().Contains(e.X, e.Y))
-						{
-							rendererData.UpButtonState = UpDownState.Pressed;
-
-							((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
-
-							e.Table.Invalidate(e.CellRect);
+							e.Table.EditCell(e.CellPos);    // Editing may be cancelled by an event handler
 						}
-						else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
-						{
-							rendererData.DownButtonState = UpDownState.Pressed;
 
-							((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+                        if (e.Table.IsEditing)
+                        {
+                            if (this.GetUpButtonBounds().Contains(e.X, e.Y))
+                            {
+                                rendererData.UpButtonState = UpDownState.Pressed;
 
-							e.Table.Invalidate(e.CellRect);
-						}
+                                ((IEditorUsesRendererButtons)e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+
+                                e.Table.Invalidate(e.CellRect);
+                            }
+                            else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
+                            {
+                                rendererData.DownButtonState = UpDownState.Pressed;
+
+                                ((IEditorUsesRendererButtons)e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+
+                                e.Table.Invalidate(e.CellRect);
+                            }
+                        }
 					}
 				}
 			}
