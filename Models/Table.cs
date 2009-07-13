@@ -730,7 +730,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Constructor
-
 		/// <summary>
 		/// Initializes a new instance of the Table class with default settings
 		/// </summary>
@@ -857,7 +856,6 @@ namespace XPTable.Models
 			this.init = false;
 			this.preview = false;
 		}
-
 		#endregion
 
 		#region Methods
@@ -1615,7 +1613,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Rows
-
 		/// <summary>
 		/// Returns the index of the Row at the specified client coordinates
 		/// </summary>
@@ -1626,28 +1623,21 @@ namespace XPTable.Models
 		public int RowIndexAt(int x, int y)
 		{
 			if (this.TableModel == null)
-			{
 				return -1;
-			}
 
 			if (this.HeaderStyle != ColumnHeaderStyle.None)
-			{
 				y -= this.HeaderHeight;
-			}
 
 			y -= this.BorderWidth;
 
 			if (y < 0)
-			{
 				return -1;
-			}
 
 			if (this.VScroll)
                 y += this.VScrollOffset();
 
 			return this.TableModel.RowIndexAt(y);
 		}
-
 
 		/// <summary>
 		/// Returns the index of the Row at the specified client point
@@ -1671,9 +1661,7 @@ namespace XPTable.Models
 		public Rectangle RowRect(int row)
 		{
 			if (this.TableModel == null || this.ColumnModel == null || row == -1 || row > this.TableModel.Rows.Count)
-			{
 				return Rectangle.Empty;
-			}
 
 			Rectangle rect = new Rectangle();
 
@@ -1693,13 +1681,10 @@ namespace XPTable.Models
 			rect.Width = this.ColumnModel.VisibleColumnsWidth;
 
 			if (this.HeaderStyle != ColumnHeaderStyle.None)
-			{
 				rect.Y += this.HeaderHeight;
-			}
 
 			return rect;
 		}
-
 
 		/// <summary>
 		/// Returns the bounding rectangle of the specified row 
@@ -1711,9 +1696,7 @@ namespace XPTable.Models
 		public Rectangle RowRect(Row row)
 		{
 			if (this.TableModel == null)
-			{
 				return Rectangle.Empty;
-			}
 
 			return this.RowRect(this.TableModel.Rows.IndexOf(row));
 		}
@@ -2295,7 +2278,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Layout
-
 		/// <summary>
 		/// Prevents the Table from drawing until the EndUpdate method is called
 		/// </summary>
@@ -2304,14 +2286,11 @@ namespace XPTable.Models
 			if (this.IsHandleCreated)
 			{
 				if (this.beginUpdateCount == 0)
-				{
 					NativeMethods.SendMessage(this.Handle, 11, 0, 0);
-				}
 
 				this.beginUpdateCount++;
 			}
 		}
-
 
 		/// <summary>
 		/// Resumes drawing of the Table after drawing is suspended by the 
@@ -2320,9 +2299,7 @@ namespace XPTable.Models
 		public void EndUpdate()
 		{
 			if (this.beginUpdateCount <= 0)
-			{
 				return;
-			}
 
 			this.beginUpdateCount--;
 
@@ -2350,17 +2327,14 @@ namespace XPTable.Models
 			this.init = true;
 		}
 
-
 		/// <summary>
 		/// Signals the object that initialization is complete
 		/// </summary>
 		public void EndInit()
 		{
 			this.init = false;
-
 			this.PerformLayout();
 		}
-
 
 		/// <summary>
 		/// Gets whether the Table is currently initializing
@@ -2368,12 +2342,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public bool Initializing
 		{
-			get
-			{
-				return this.init;
-			}
+			get { return this.init; }
 		}
-
 		#endregion
 
 		#region Mouse
@@ -3368,7 +3338,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region ColumnModel
-
 		/// <summary>
 		/// Gets or sets the ColumnModel that contains all the Columns
 		/// displayed in the Table
@@ -3378,34 +3347,25 @@ namespace XPTable.Models
 		Description("Specifies the ColumnModel that contains all the Columns displayed in the Table")]
 		public ColumnModel ColumnModel
 		{
-			get
-			{
-				return this.columnModel;
-			}
-
+			get { return this.columnModel; }
 			set
 			{
 				if (this.columnModel != value)
 				{
 					if (this.columnModel != null && this.columnModel.Table == this)
-					{
 						this.columnModel.InternalTable = null;
-					}
 
 					ColumnModel oldValue = this.columnModel;
 
 					this.columnModel = value;
 
 					if (value != null)
-					{
 						value.InternalTable = this;
-					}
 
 					this.OnColumnModelChanged(new TableEventArgs(this, TableEventType.ColumnModelChanged, oldValue)); // PJD TEA change
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets whether the Table allows users to resize Column widths
@@ -3415,20 +3375,13 @@ namespace XPTable.Models
 		Description("Specifies whether the Table allows users to resize Column widths")]
 		public bool ColumnResizing
 		{
-			get
-			{
-				return this.columnResizing;
-			}
-
+			get { return this.columnResizing; }
 			set
 			{
 				if (this.columnResizing != value)
-				{
 					this.columnResizing = value;
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Returns the number of Columns in the Table
@@ -3440,14 +3393,10 @@ namespace XPTable.Models
 			get
 			{
 				if (this.ColumnModel == null)
-				{
 					return -1;
-				}
-
 				return this.ColumnModel.Columns.Count;
 			}
 		}
-
 
 		/// <summary>
 		/// Returns the index of the currently sorted Column
@@ -3456,12 +3405,8 @@ namespace XPTable.Models
 		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public int SortingColumn
 		{
-			get
-			{
-				return this.lastSortedColumn;
-			}
+			get { return this.lastSortedColumn; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the background Color for the currently sorted column
@@ -3470,10 +3415,7 @@ namespace XPTable.Models
 		Description("The background Color for a sorted Column")]
 		public Color SortedColumnBackColor
 		{
-			get
-			{
-				return this.sortedColumnBackColor;
-			}
+			get { return this.sortedColumnBackColor; }
 
 			set
 			{
@@ -3486,14 +3428,11 @@ namespace XPTable.Models
 						Rectangle columnRect = this.ColumnRect(this.lastSortedColumn);
 
 						if (this.PseudoClientRect.IntersectsWith(columnRect))
-						{
 							this.Invalidate(Rectangle.Intersect(this.PseudoClientRect, columnRect));
-						}
 					}
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Specifies whether the Table's SortedColumnBackColor property 
@@ -3505,11 +3444,9 @@ namespace XPTable.Models
 		{
 			return this.sortedColumnBackColor != Color.WhiteSmoke;
 		}
-
 		#endregion
 
 		#region DisplayRectangle
-
 		/// <summary>
 		/// Gets the rectangle that represents the display area of the Table
 		/// </summary>
@@ -3528,49 +3465,33 @@ namespace XPTable.Models
 				}
 
 				if (this.ColumnModel == null)
-				{
 					return displayRect;
-				}
 
 				//by netus 2006-02-07
 				if (this.ColumnModel.VisibleColumnsWidth <= this.CellDataRect.Width)
-				{
 					displayRect.Width = this.CellDataRect.Width;
-				}
 				else
-				{
 					displayRect.Width = this.ColumnModel.VisibleColumnsWidth;
-				}
 
 				if (this.TotalRowHeight <= this.CellDataRect.Height)
-				{
 					displayRect.Height = this.CellDataRect.Height;
-				}
 				else
-				{
 					displayRect.Height = this.TotalRowHeight;
-				}
 
 				return displayRect;
 			}
 		}
-
 		#endregion
 
 		#region Editing
-
 		/// <summary>
 		/// Gets whether the Table is currently editing a Cell
 		/// </summary>
 		[Browsable(false)]
 		public bool IsEditing
 		{
-			get
-			{
-				return !this.EditingCell.IsEmpty;
-			}
+			get { return !this.EditingCell.IsEmpty; }
 		}
-
 
 		/// <summary>
 		/// Gets a CellPos that specifies the position of the Cell that 
@@ -3579,12 +3500,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public CellPos EditingCell
 		{
-			get
-			{
-				return this.editingCell;
-			}
+			get { return this.editingCell; }
 		}
-
 
 		/// <summary>
 		/// Gets the ICellEditor that is currently being used to edit a Cell
@@ -3592,12 +3509,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public ICellEditor EditingCellEditor
 		{
-			get
-			{
-				return this.curentCellEditor;
-			}
+			get { return this.curentCellEditor; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the action that causes editing to be initiated
@@ -3607,25 +3520,16 @@ namespace XPTable.Models
 		Description("The action that causes editing to be initiated")]
 		public EditStartAction EditStartAction
 		{
-			get
-			{
-				return this.editStartAction;
-			}
-
+			get { return this.editStartAction; }
 			set
 			{
 				if (!Enum.IsDefined(typeof(EditStartAction), value))
-				{
 					throw new InvalidEnumArgumentException("value", (int) value, typeof(EditStartAction));
-				}
 
 				if (this.editStartAction != value)
-				{
 					this.editStartAction = value;
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the custom key used to initiate Cell editing
@@ -3635,11 +3539,7 @@ namespace XPTable.Models
 		Description("The custom key used to initiate Cell editing")]
 		public Keys CustomEditKey
 		{
-			get
-			{
-				return this.customEditKey;
-			}
-
+			get { return this.customEditKey; }
 			set
 			{
 				if (this.IsReservedKey(value))
@@ -3650,37 +3550,12 @@ namespace XPTable.Models
 				}
 
 				if (this.customEditKey != value)
-				{
 					this.customEditKey = value;
-				}
 			}
 		}
-
-
-		/*/// <summary>
-		/// Gets or sets whether pressing the Tab key during editing moves
-		/// the editor to the next editable Cell
-		/// </summary>
-		[Category("Editing"),
-		DefaultValue(true),
-		Description("")]
-		public bool TabMovesEditor
-		{
-			get
-			{	
-				return this.tabMovesEditor;
-			}
-
-			set
-			{
-				this.tabMovesEditor = value;
-			}
-		}*/
-
 		#endregion
 
 		#region Grid
-
 		/// <summary>
 		/// Gets or sets how grid lines are displayed around rows and columns
 		/// </summary>
@@ -3689,27 +3564,19 @@ namespace XPTable.Models
 		Description("Determines how grid lines are displayed around rows and columns")]
 		public GridLines GridLines
 		{
-			get
-			{
-				return this.gridLines;
-			}
-
+			get { return this.gridLines; }
 			set
 			{
 				if (!Enum.IsDefined(typeof(GridLines), value))
-				{
 					throw new InvalidEnumArgumentException("value", (int) value, typeof(GridLines));
-				}
 
 				if (this.gridLines != value)
 				{
 					this.gridLines = value;
-
 					this.Invalidate(this.PseudoClientRect, false);
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the style of the lines used to draw the grid
@@ -3719,30 +3586,21 @@ namespace XPTable.Models
 		Description("The style of the lines used to draw the grid")]
 		public GridLineStyle GridLineStyle
 		{
-			get
-			{
-				return this.gridLineStyle;
-			}
-
+			get { return this.gridLineStyle; }
 			set
 			{
 				if (!Enum.IsDefined(typeof(GridLineStyle), value))
-				{
 					throw new InvalidEnumArgumentException("value", (int) value, typeof(GridLineStyle));
-				}
 
 				if (this.gridLineStyle != value)
 				{
 					this.gridLineStyle = value;
 
 					if (this.GridLines != GridLines.None)
-					{
 						this.Invalidate(this.PseudoClientRect, false);
-					}
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the Color of the grid lines
@@ -3751,11 +3609,7 @@ namespace XPTable.Models
 		Description("The color of the grid lines")]
 		public Color GridColor
 		{
-			get
-			{
-				return this.gridColor;
-			}
-
+			get { return this.gridColor; }
 			set
 			{
 				if (this.gridColor != value)
@@ -3763,13 +3617,10 @@ namespace XPTable.Models
 					this.gridColor = value;
 
 					if (this.GridLines != GridLines.None)
-					{
 						this.Invalidate(this.PseudoClientRect, false);
-					}
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Specifies whether the Table's GridColor property 
@@ -3782,23 +3633,14 @@ namespace XPTable.Models
 			return (this.GridColor != SystemColors.Control);
 		}
 
-
 		/// <summary>
 		/// 
 		/// </summary>
 		public override Color BackColor
 		{
-			get
-			{
-				return base.BackColor;
-			}
-
-			set
-			{
-				base.BackColor = value;
-			}
+			get { return base.BackColor; }
+			set { base.BackColor = value; }
 		}
-
 
 		/// <summary>
 		/// Specifies whether the Table's BackColor property 
@@ -3810,7 +3652,6 @@ namespace XPTable.Models
 		{
 			return (this.BackColor != Color.White);
 		}
-
 		#endregion
 
 		#region Header
@@ -4027,22 +3868,14 @@ namespace XPTable.Models
 		#endregion
 
 		#region Rows
-
 		/// <summary>
 		/// Gets or sets the height of each row
 		/// </summary>
 		[Browsable(false)]
 		public int RowHeight
 		{
-			get
-			{
-				if (this.TableModel == null)
-					return 0;
-
-				return this.TableModel.RowHeight;
-			}
+			get { return this.TableModel == null ? 0 : this.TableModel.RowHeight; }
 		}
-
 
 		/// <summary>
 		/// Gets the combined height of all the rows in the Table
@@ -4055,14 +3888,12 @@ namespace XPTable.Models
 				// v1.1.1 fix (jover) - used to error if no rows were added
 				if (this.TableModel == null || this.TableModel.Rows.Count == 0)
 					return 0;
-
-				if (this.EnableWordWrap)
-					return this.RowYDifference(0, this.TableModel.Rows.Count) + this.TableModel.Rows[this.TableModel.Rows.Count - 1].Height;
+				else if (this.EnableWordWrap)
+                    return this.RowYDifference(0, this.TableModel.Rows.Count);
 				else
 					return this.TableModel.Rows.Count * this.RowHeight;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the combined height of all the rows in the Table 
@@ -4081,15 +3912,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public int RowCount
 		{
-			get
-			{
-				if (this.TableModel == null)
-					return 0;
-
-				return this.TableModel.Rows.Count;
-			}
+			get { return this.TableModel == null ? 0 : this.TableModel.Rows.Count; }
 		}
-
 
 		/// <summary>
 		/// Gets the number of whole rows that are visible in the Table
@@ -4102,10 +3926,8 @@ namespace XPTable.Models
 				count = this.VisibleRowCountExact();
 			else
 				count = this.CellDataRect.Height / this.RowHeight;
-
             return count;
         }
-
 
 		/// <summary>
 		/// Gets the index of the first visible row in the Table
@@ -4125,7 +3947,6 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the first visible row in the Table
 		/// </summary>
@@ -4135,14 +3956,11 @@ namespace XPTable.Models
 			get
 			{
 				if (this.TableModel == null || this.TableModel.Rows.Count == 0)
-				{
 					return null;
-				}
-
-				return this.TableModel.Rows[this.TopIndex];
+                else
+				    return this.TableModel.Rows[this.TopIndex];
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the background color of odd-numbered rows in the Table
@@ -4152,22 +3970,16 @@ namespace XPTable.Models
 		Description("The background color of odd-numbered rows in the Table")]
 		public Color AlternatingRowColor
 		{
-			get
-			{
-				return this.alternatingRowColor;
-			}
-
+			get { return this.alternatingRowColor; }
 			set
 			{
 				if (this.alternatingRowColor != value)
 				{
 					this.alternatingRowColor = value;
-
 					this.Invalidate(this.CellDataRect, false);
 				}
 			}
 		}
-
 
 		// Mateusz [PEYN] Adamus (peyn@tlen.pl)
 		// Span of alternate rows
@@ -4175,21 +3987,16 @@ namespace XPTable.Models
 		/// Gets or sets the span of alternate colored rows in the Table
 		/// </summary>
 		[Category("Appearance"),
-	   DefaultValue(1),
-	   Description("The span of alternate rows in the Table")]
+	    DefaultValue(1),
+	    Description("The span of alternate rows in the Table")]
 		public int AlternatingRowSpan
 		{
-			get
-			{
-				return this.alternatingRowSpan;
-			}
-
+			get { return this.alternatingRowSpan; }
 			set
 			{
 				if (this.alternatingRowSpan != value)
 				{
 					this.alternatingRowSpan = value >= 1 ? value : 1;
-
 					this.Invalidate(this.CellDataRect, false);
 				}
 			}
@@ -4209,22 +4016,16 @@ namespace XPTable.Models
 		Description("Indicates whether the Table will display scroll bars if it contains more items than can fit in the client area")]
 		public bool Scrollable
 		{
-			get
-			{
-				return this.scrollable;
-			}
-
+			get { return this.scrollable; }
 			set
 			{
 				if (this.scrollable != value)
 				{
 					this.scrollable = value;
-
 					this.PerformLayout();
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets a value indicating whether the horizontal 
@@ -4234,17 +4035,8 @@ namespace XPTable.Models
 		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public bool HScroll
 		{
-			get
-			{
-				if (this.hScrollBar == null)
-				{
-					return false;
-				}
-
-				return this.hScrollBar.Visible;
-			}
+            get { return this.hScrollBar == null ? false : this.hScrollBar.Visible; }
 		}
-
 
 		/// <summary>
 		/// Gets a value indicating whether the vertical 
@@ -4254,17 +4046,8 @@ namespace XPTable.Models
 		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public bool VScroll
 		{
-			get
-			{
-				if (this.vScrollBar == null)
-				{
-					return false;
-				}
-
-				return this.vScrollBar.Visible;
-			}
+			get { return this.vScrollBar == null ? false : this.vScrollBar.Visible; }
 		}
-
 		#endregion
 
 		#region Selection
@@ -4690,27 +4473,33 @@ namespace XPTable.Models
 		#endregion
 
 		#region Sorting
+		/// <summary>
+		/// 
+		/// </summary>
+        [Browsable(true)]
+        [Category("Behavior")]
+        [DefaultValue(SortType.AutoSort)]
+        //      [DisplayName("Sort Type")]                  // .Net 2.0 only
+        [Description("Select the type of sort to be used - use AutoSort to have system determine based on number of rows and whether or not a stable sort is required")]
+        public SortType SortType
+        {
+            get { return this.theSortType; }
+            set { this.theSortType = value; }
+        }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[Browsable(true)]
-		[Category("Behavior")]
-		[DefaultValue(SortType.AutoSort)]
-//      [DisplayName("Sort Type")]                  // .Net 2.0 only
-		[Description("Select the type of sort to be used - use AutoSort to have system determine based on number of rows and whether or not a stable sort is required")]
-		public SortType SortType { get { return this.theSortType; } set { this.theSortType = value; } }
-		/// <summary>
-		/// 
-		/// </summary>
-		[Browsable(true)]
-		[Category("Behavior")]
-		[DefaultValue(true)]
-//		[DisplayName("Stable Sort Required ?")]     // .Net 2.0 only
-		[Description("Only relevant if AutoSort is specified, determines whether or not the system uses a stable sorting alogorithm")]
-		public bool StableSort { get { return this.theStableSort; } set { this.theStableSort = value; } }
-
-
+        [Browsable(true)]
+        [Category("Behavior")]
+        [DefaultValue(true)]
+        //		[DisplayName("Stable Sort Required ?")]     // .Net 2.0 only
+        [Description("Only relevant if AutoSort is specified, determines whether or not the system uses a stable sorting alogorithm")]
+        public bool StableSort
+        {
+            get { return this.theStableSort; }
+            set { this.theStableSort = value; }
+        }
 		#endregion
 
 		#region TableModel
@@ -4927,31 +4716,20 @@ namespace XPTable.Models
 		Description("Specifies whether any cells are allowed to word-wrap.")]
 		public bool EnableWordWrap
 		{
-			get
-			{
-				return enableWordWrap;
-			}
-			set
-			{
-				enableWordWrap = value;
-			}
+			get { return enableWordWrap; }
+			set { enableWordWrap = value; }
 		}
 		#endregion
 
 		#region ToolTips
-
-		/// <summary>
+        /// <summary>
 		/// Gets the internal tooltip component
 		/// </summary>
 		internal ToolTip ToolTip
 		{
-			get
-			{
-				return this.toolTip;
-			}
+			get { return this.toolTip; }
 		}
-
-
+        
 		/// <summary>
 		/// Gets or sets whether ToolTips are currently enabled for the Table
 		/// </summary>
@@ -4960,17 +4738,9 @@ namespace XPTable.Models
 		Description("Specifies whether ToolTips are enabled for the Table.")]
 		public bool EnableToolTips
 		{
-			get
-			{
-				return this.toolTip.Active;
-			}
-
-			set
-			{
-				this.toolTip.Active = value;
-			}
+			get { return this.toolTip.Active; }
+			set { this.toolTip.Active = value; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the automatic delay for the Table's ToolTip
@@ -4980,20 +4750,13 @@ namespace XPTable.Models
 		Description("Specifies the automatic delay for the Table's ToolTip.")]
 		public int ToolTipAutomaticDelay
 		{
-			get
-			{
-				return this.toolTip.AutomaticDelay;
-			}
-
+			get { return this.toolTip.AutomaticDelay; }
 			set
 			{
 				if (value > 0 && this.toolTip.AutomaticDelay != value)
-				{
 					this.toolTip.AutomaticDelay = value;
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the period of time the Table's ToolTip remains visible if 
@@ -5004,20 +4767,13 @@ namespace XPTable.Models
 		Description("Specifies the period of time the Table's ToolTip remains visible if the mouse pointer is stationary within a cell with specified ToolTip text.")]
 		public int ToolTipAutoPopDelay
 		{
-			get
-			{
-				return this.toolTip.AutoPopDelay;
-			}
-
+			get { return this.toolTip.AutoPopDelay; }
 			set
 			{
 				if (value > 0 && this.toolTip.AutoPopDelay != value)
-				{
 					this.toolTip.AutoPopDelay = value;
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the time that passes before the Table's ToolTip appears
@@ -5027,20 +4783,13 @@ namespace XPTable.Models
 		Description("Specifies the time that passes before the Table's ToolTip appears.")]
 		public int ToolTipInitialDelay
 		{
-			get
-			{
-				return this.toolTip.InitialDelay;
-			}
-
+			get { return this.toolTip.InitialDelay; }
 			set
 			{
 				if (value > 0 && this.toolTip.InitialDelay != value)
-				{
 					this.toolTip.InitialDelay = value;
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets whether the Table's ToolTip window is 
@@ -5051,20 +4800,13 @@ namespace XPTable.Models
 		Description("Specifies whether the Table's ToolTip window is displayed even when its parent control is not active.")]
 		public bool ToolTipShowAlways
 		{
-			get
-			{
-				return this.toolTip.ShowAlways;
-			}
-
+			get { return this.toolTip.ShowAlways; }
 			set
 			{
 				if (this.toolTip.ShowAlways != value)
-				{
 					this.toolTip.ShowAlways = value;
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// 
@@ -5074,20 +4816,15 @@ namespace XPTable.Models
 			bool tooltipActive = this.ToolTip.Active;
 
 			if (tooltipActive)
-			{
 				this.ToolTip.Active = false;
-			}
 
 			this.ResetMouseEventArgs();
 
 			this.ToolTip.SetToolTip(this, null);
 
 			if (tooltipActive)
-			{
 				this.ToolTip.Active = true;
-			}
 		}
-
 		#endregion
 
         #region Drag drop

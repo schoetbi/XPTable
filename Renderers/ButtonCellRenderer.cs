@@ -36,7 +36,6 @@ using XPTable.Events;
 using XPTable.Models;
 using XPTable.Themes;
 
-
 namespace XPTable.Renderers
 {
 	/// <summary>
@@ -45,14 +44,12 @@ namespace XPTable.Renderers
 	public class ButtonCellRenderer : CellRenderer
 	{
 		#region Class Data
-
 		/// <summary>
 		/// Specifies the alignment of the Image displayed on the button
 		/// </summary>
 		private System.Drawing.ContentAlignment imageAlignment;
 
 		#endregion
-		
 		
 		#region Constructor
 		
@@ -66,7 +63,6 @@ namespace XPTable.Renderers
 		}
 
 		#endregion
-
 
 		#region Methods
 
@@ -90,7 +86,6 @@ namespace XPTable.Renderers
 			return (ButtonRendererData) rendererData;
 		}
 
-
 		/// <summary>
 		/// Returns a Rectangle that specifies the size and location of the button
 		/// </summary>
@@ -99,7 +94,6 @@ namespace XPTable.Renderers
 		{
 			return this.ClientRectangle;
 		}
-
 
 		/// <summary>
 		/// Returns a Rectangle that specifies the size and location of the buttons Image
@@ -164,30 +158,18 @@ namespace XPTable.Renderers
 
 			return imageRect;
 		}
-
 		#endregion
 
-
 		#region Properties
-
 		/// <summary>
 		/// Gets or sets the alignment of the Image displayed on the buttons
 		/// </summary>
 		public System.Drawing.ContentAlignment ImageAlignment
 		{
-			get
-			{
-				return this.imageAlignment;
-			}
-
-			set
-			{
-				this.imageAlignment = value;
-			}
+			get { return this.imageAlignment; }
+			set { this.imageAlignment = value; }
 		}
-
 		#endregion
-
 
 		#region Events
 
@@ -487,7 +469,6 @@ namespace XPTable.Renderers
 		#endregion
 
 		#region Paint
-
 		/// <summary>
 		/// Raises the PaintCell event
 		/// </summary>
@@ -505,7 +486,6 @@ namespace XPTable.Renderers
 			
 			base.OnPaintCell(e);
 		}
-
 
 		/// <summary>
 		/// Raises the PaintBackground event

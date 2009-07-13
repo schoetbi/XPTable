@@ -24,7 +24,6 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -34,7 +33,6 @@ using XPTable.Events;
 using XPTable.Models.Design;
 using XPTable.Renderers;
 using XPTable.Sorting;
-
 
 namespace XPTable.Models
 {
@@ -46,7 +44,6 @@ namespace XPTable.Models
 	public class ButtonColumn : Column
 	{
 		#region Class Data
-
 		/// <summary>
 		/// Specifies the alignment of the Image displayed on the button
 		/// </summary>
@@ -54,9 +51,7 @@ namespace XPTable.Models
 
 		#endregion
 		
-		
 		#region Constructor
-		
 		/// <summary>
 		/// Creates a new ButtonColumn with default values
 		/// </summary>
@@ -64,7 +59,6 @@ namespace XPTable.Models
 		{
 			this.Init();
 		}
-
 
 		/// <summary>
 		/// Creates a new ButtonColumn with the specified header text
@@ -75,7 +69,6 @@ namespace XPTable.Models
 			this.Init();
 		}
 
-
 		/// <summary>
 		/// Creates a new ButtonColumn with the specified header text and width
 		/// </summary>
@@ -85,7 +78,6 @@ namespace XPTable.Models
 		{
 			this.Init();
 		}
-
 
 		/// <summary>
 		/// Creates a new ButtonColumn with the specified header text, width and visibility
@@ -98,7 +90,6 @@ namespace XPTable.Models
 			this.Init();
 		}
 
-
 		/// <summary>
 		/// Creates a new ButtonColumn with the specified header text and image
 		/// </summary>
@@ -108,7 +99,6 @@ namespace XPTable.Models
 		{
 			this.Init();
 		}
-
 
 		/// <summary>
 		/// Creates a new ButtonColumn with the specified header text, image and width
@@ -120,7 +110,6 @@ namespace XPTable.Models
 		{
 			this.Init();
 		}
-
 
 		/// <summary>
 		/// Creates a new ButtonColumn with the specified header text, image, width and visibility
@@ -134,7 +123,6 @@ namespace XPTable.Models
 			this.Init();
 		}
 
-
 		/// <summary>
 		/// Initializes the ButtonColumn with default values
 		/// </summary>
@@ -145,12 +133,9 @@ namespace XPTable.Models
 			this.Editable = false;
 			this.Selectable = false;
 		}
-
 		#endregion
 
-
 		#region Methods
-
 		/// <summary>
 		/// Gets a string that specifies the name of the Column's default CellRenderer
 		/// </summary>
@@ -161,7 +146,6 @@ namespace XPTable.Models
 			return "BUTTON";
 		}
 
-
 		/// <summary>
 		/// Gets the Column's default CellRenderer
 		/// </summary>
@@ -170,7 +154,6 @@ namespace XPTable.Models
 		{
 			return new ButtonCellRenderer();
 		}
-
 
 		/// <summary>
 		/// Gets a string that specifies the name of the Column's default CellEditor
@@ -182,7 +165,6 @@ namespace XPTable.Models
 			return null;
 		}
 
-
 		/// <summary>
 		/// Gets the Column's default CellEditor
 		/// </summary>
@@ -191,31 +173,20 @@ namespace XPTable.Models
 		{
 			return null;
 		}
-
 		#endregion
 
-
 		#region Properties
-
-		/// <summary>
-		/// Gets or sets the horizontal alignment of the Column's Cell contents
+        /// <summary>
+        /// Gets or sets the horizontal alignment of the Column's Cell contents
 		/// </summary>
 		[Category("Appearance"),
 		DefaultValue(ColumnAlignment.Center),
 		Description("The horizontal alignment of the column's cell contents.")]
 		public override ColumnAlignment Alignment
-		{
-			get
-			{
-				return base.Alignment;
-			}
-
-			set
-			{
-				base.Alignment = value;
-			}
-		}
-
+        {
+            get { return base.Alignment; }
+            set { base.Alignment = value; }
+        }
 
 		/// <summary>
 		/// Gets or sets the alignment of the Image displayed on the buttons
@@ -225,27 +196,19 @@ namespace XPTable.Models
 		Description("The alignment of the Image displayed on the buttons")]
 		public ContentAlignment ImageAlignment
 		{
-			get
-			{
-				return this.imageAlignment;
-			}
-
+			get { return this.imageAlignment; }
 			set
 			{
 				if (!Enum.IsDefined(typeof(ContentAlignment), value)) 
-				{
 					throw new InvalidEnumArgumentException("value", (int) value, typeof(ContentAlignment));
-				}
 					
 				if (this.imageAlignment != value)
 				{
 					this.imageAlignment = value;
-
 					this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.RendererChanged, null));
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the Column's Cells contents 
@@ -256,17 +219,9 @@ namespace XPTable.Models
 		Description("Controls whether the column's cell contents are able to be changed by the user")]
 		public override bool Editable
 		{
-			get
-			{
-				return base.Editable;
-			}
-
-			set
-			{
-				base.Editable = value;
-			}
+			get { return base.Editable; }
+			set { base.Editable = value; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the Column's Cells can be selected
@@ -276,17 +231,9 @@ namespace XPTable.Models
 		Description("Indicates whether the column's cells can be selected")]
 		public override bool Selectable
 		{
-			get
-			{
-				return base.Selectable;
-			}
-
-			set
-			{
-				base.Selectable = value;
-			}
+			get { return base.Selectable; }
+			set { base.Selectable = value; }
 		}
-
 
 		/// <summary>
 		/// Gets the Type of the Comparer used to compare the Column's Cells when 
@@ -294,12 +241,8 @@ namespace XPTable.Models
 		/// </summary>
 		public override Type DefaultComparerType
 		{
-			get
-			{
-				return typeof(TextComparer);
-			}
+			get { return typeof(TextComparer); }
 		}
-
 		#endregion
 	}
 }

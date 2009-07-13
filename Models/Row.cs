@@ -940,7 +940,8 @@ namespace XPTable.Models
             {
                 if (this.height < 0)
                     return this.TableModel.RowHeight;
-                return this.height;
+                else
+                    return this.height;
             }
             set { this.height = value; }
         }

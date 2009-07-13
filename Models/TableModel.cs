@@ -222,7 +222,6 @@ namespace XPTable.Models
 
 
 		#region Properties
-
 		/// <summary>
 		/// Gets the Cell located at the specified row index and column index
 		/// </summary>
@@ -234,19 +233,14 @@ namespace XPTable.Models
 			get
 			{
 				if (row < 0 || row >= this.Rows.Count)
-				{
 					return null;
-				}
 
 				if (column < 0 || column >= this.Rows[row].Cells.Count)
-				{
 					return null;
-				}
 
 				return this.Rows[row].Cells[column];
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the Cell located at the specified cell position
@@ -255,12 +249,8 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public Cell this[CellPos cellPos]
 		{
-			get
-			{
-				return this[cellPos.Row, cellPos.Column];
-			}
+			get { return this[cellPos.Row, cellPos.Column]; }
 		}
-		
 		
 		/// <summary>
 		/// A TableModel.RowCollection representing the collection of 
