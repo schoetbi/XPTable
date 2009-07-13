@@ -424,7 +424,6 @@ namespace XPTable.Models
 		#endregion
 
 		#region Renderers
-
 		/// <summary>
 		/// Returns the ICellRenderer that is associated with the specified name
 		/// </summary>
@@ -434,25 +433,20 @@ namespace XPTable.Models
 		public ICellRenderer GetCellRenderer(string name)
 		{
 			if (name == null)
-			{
 				name = "TEXT";
-			}
 			
 			name = name.ToUpper();
 			
 			if (!this.cellRenderers.ContainsKey(name))
 			{
 				if (this.cellRenderers.Count == 0)
-				{
 					this.SetCellRenderer("TEXT", new TextCellRenderer());
-				}
 				
 				return (ICellRenderer) this.cellRenderers["TEXT"];
 			}
 
 			return (ICellRenderer) this.cellRenderers[name];
 		}
-
 
 		/// <summary>
 		/// Gets the ICellRenderer for the Column at the specified index in the 
@@ -464,22 +458,14 @@ namespace XPTable.Models
 		/// null if the renderer does not exist</returns>
 		public ICellRenderer GetCellRenderer(int column)
 		{
-			//
 			if (column < 0 || column >= this.Columns.Count)
-			{
 				return null;
-			}
 
-			//
 			if (this.Columns[column].Renderer != null)
-			{
 				return this.Columns[column].Renderer;
-			}
 
-			//
 			return this.GetCellRenderer(this.Columns[column].GetDefaultRendererName());
 		}
-
 
 		/// <summary>
 		/// Associates the specified ICellRenderer with the specified name
@@ -489,16 +475,13 @@ namespace XPTable.Models
 		public void SetCellRenderer(string name, ICellRenderer renderer)
 		{
 			if (name == null || renderer == null)
-			{
 				return;
-			}
 			
 			name = name.ToUpper();
 			
 			if (this.cellRenderers.ContainsKey(name))
 			{	
 				this.cellRenderers.Remove(name);
-				
 				this.cellRenderers[name] = renderer;
 			}
 			else
@@ -506,7 +489,6 @@ namespace XPTable.Models
 				this.cellRenderers.Add(name, renderer);
 			}
 		}
-
 
 		/// <summary>
 		/// Gets whether the ColumnModel contains an ICellRenderer with the 
