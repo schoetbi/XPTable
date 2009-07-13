@@ -24,7 +24,6 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -35,7 +34,6 @@ using XPTable.Events;
 using XPTable.Models.Design;
 using XPTable.Renderers;
 using XPTable.Sorting;
-
 
 namespace XPTable.Models
 {
@@ -66,7 +64,6 @@ namespace XPTable.Models
 		public event EventHandler HeaderHeightChanged;
 
 		#endregion
-		
 		
 		#region Class Data
 
@@ -116,7 +113,6 @@ namespace XPTable.Models
         private SortColumnCollection secondarySortOrder;
 
 		#endregion
-
 
 		#region Constructor
 
@@ -199,7 +195,6 @@ namespace XPTable.Models
 		}
 
 		#endregion
-
 
 		#region Methods
 
