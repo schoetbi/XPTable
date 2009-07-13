@@ -467,7 +467,8 @@ namespace XPTable.Renderers
 				this.Padding = e.Cell.Padding;
 			}
 
-			if (e.Table.EditStartAction == EditStartAction.SingleClick && e.Table.IsCellEditable(e.CellPos))
+			if ((((e.Table.EditStartAction & EditStartAction.SingleClick) == EditStartAction.SingleClick)) 
+                && e.Table.IsCellEditable(e.CellPos))
 			{
 				e.Table.EditCell(e.CellPos);
 			}
@@ -491,7 +492,8 @@ namespace XPTable.Renderers
 				this.Padding = e.Cell.Padding;
 			}
 
-			if (e.Table.EditStartAction == EditStartAction.DoubleClick && e.Table.IsCellEditable(e.CellPos))
+            if ((((e.Table.EditStartAction & EditStartAction.DoubleClick) == EditStartAction.DoubleClick))
+                && e.Table.IsCellEditable(e.CellPos))
 			{
 				e.Table.EditCell(e.CellPos);
 			}

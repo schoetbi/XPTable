@@ -6268,7 +6268,8 @@ namespace XPTable.Models
 				else
 				{
 					// check if we can start editing with the custom edit key
-					if (e.KeyData == this.CustomEditKey && this.EditStartAction == EditStartAction.CustomKey)
+					if (e.KeyData == this.CustomEditKey &&
+                        ((this.EditStartAction & EditStartAction.CustomKey) == EditStartAction.CustomKey))
 					{
 						this.EditCell(this.FocusedCell);
 
@@ -6387,7 +6388,8 @@ namespace XPTable.Models
 			if (!this.IsReservedKey(e.KeyData))
 			{
 				// 
-				if (e.KeyData == this.CustomEditKey && this.EditStartAction == EditStartAction.CustomKey)
+				if (e.KeyData == this.CustomEditKey &&
+                    ((this.EditStartAction & EditStartAction.CustomKey) == EditStartAction.CustomKey))
 				{
 					return;
 				}
