@@ -691,6 +691,11 @@ namespace XPTable.Models
 		/// </summary>
 		private int alternatingRowSpan;
 
+        /// <summary>
+        /// A value indicating whether all row heights are recalculated after an EndUpdate (only used if WordWrapping is on).
+        /// </summary>
+        private bool autoCalculateRowHeights;
+
 		/// <summary>
 		/// The text displayed in the Table when it has no data to display
 		/// </summary>
@@ -1786,7 +1791,65 @@ namespace XPTable.Models
 
             return count;
 		}
-		#endregion
+
+        /// <summary>
+        /// For all rows that have a wordwrap cell, calculate the rendered height.
+        /// </summary>
+        public void CalculateAllRowHeights()
+        {
+            using (Graphics g = this.CreateGraphics())
+            {
+                for (int i = 0; i < this.TableModel.Rows.Count; i++)
+                {
+                    Row row = this.TableModel.Rows[i];
+                    if (row != null)
+                    {
+                        int h = GetRenderedRowHeight(g, row);
+                        row.InternalHeight = h;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the actual height for this row when rendered. If there is no word wrapped cell here then
+        /// just return the default row height.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        int GetRenderedRowHeight(Graphics g, Row row)
+        {
+            int height = row.Height;
+            if (row.HasWordWrapCell)
+            {
+                int column = row.WordWrapCellIndex;
+                Cell varCell = this.TableModel[row.Index, column];
+                if (varCell.WordWrap)
+                {
+                    // get the renderer for the cells column
+                    ICellRenderer renderer = this.ColumnModel.Columns[column].Renderer;
+                    if (renderer == null)
+                    {
+                        // get the default renderer for the column
+                        renderer = this.ColumnModel.GetCellRenderer(this.ColumnModel.Columns[column].GetDefaultRendererName());
+                    }
+
+                    // When calling renderer.GetCellHeight(), only the width of the bounds is used.
+                    int w = this.GetColumnWidth(column, varCell);
+                    renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, this.GetColumnWidth(column, varCell), 0);
+
+                    // If this comes back zero then we have to go with the default
+                    int newheight = renderer.GetCellHeight(g, varCell);
+                    //Console.WriteLine("    GetRenderedRowHeight colwidth={0} rowheight={1}", w, newheight);
+                    if (newheight == 0)
+                        newheight = row.Height;
+                    height = newheight;
+                }
+            }
+            return height;
+        }
+        #endregion
 
 		#region Hit Tests
 
@@ -2311,13 +2374,16 @@ namespace XPTable.Models
 
                 this.ColumnModel.Columns.RecalcWidthCache();
 
-				this.Invalidate(true);
-
                 if (this.EnableWordWrap)
+                {
+                    if (autoCalculateRowHeights)
+                        this.CalculateAllRowHeights();
                     this.UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
-			}
-		}
+                }
 
+                this.Invalidate(true);
+            }
+		}
 
 		/// <summary>
 		/// Signals the object that initialization is starting
@@ -3905,6 +3971,15 @@ namespace XPTable.Models
 			get	{ return this.TotalRowHeight + this.HeaderHeight; }
 		}
 
+        /// <summary>
+        /// Gets the combined height of all the rows in the Table 
+        /// plus the height of the column headers and the borders (if there are any).
+        /// </summary>
+        [Browsable(false)]
+        public int TotalHeight
+        {
+            get { return this.TotalRowHeight + this.HeaderHeight + (2 * this.BorderWidth);  }
+        }
 
 		/// <summary>
 		/// Returns the number of Rows in the Table
@@ -4002,10 +4077,21 @@ namespace XPTable.Models
 			}
 		}
 
-		#endregion
+        /// <summary>
+        /// Gets or sets a value indicating whether all row heights are recalculated after an EndUpdate (only used if Word Wrapping is on).
+        /// </summary>
+        [Browsable(true)]
+        [Category("Behavior")]
+        [DefaultValue(false)]
+        [Description("Indicates whether all row heights are recalculated after an EndUpdate (only used if Word Wrapping is on).")]
+        public bool AutoCalculateRowHeights
+        {
+            get { return this.autoCalculateRowHeights; }
+            set { this.autoCalculateRowHeights = value; }
+        }
+        #endregion
 
 		#region Scrolling
-
 		/// <summary>
 		/// Gets or sets a value indicating whether the Table will 
 		/// allow the user to scroll to any columns or rows placed 
@@ -4250,8 +4336,8 @@ namespace XPTable.Models
 		/// Gets or sets whether highlighting rectangle is shown in grid
 		/// </summary>
 		[Category("Selection"),
-	   DefaultValue(true),
-	   Description("Specifies whether highlighting rectangle is shown in grid")]
+	    DefaultValue(true),
+	    Description("Specifies whether highlighting rectangle is shown in grid")]
 		public bool ShowSelectionRectangle
 		{
 			get
@@ -7802,7 +7888,7 @@ namespace XPTable.Models
 				yPos += this.HeaderHeight;
 			}
 
-			bool variable = this.EnableWordWrap;
+			bool wordWrapOn = this.EnableWordWrap;
 
 			Rectangle rowRect = new Rectangle(xPos, yPos, this.ColumnModel.TotalColumnWidth, this.RowHeight);
 
@@ -7813,34 +7899,10 @@ namespace XPTable.Models
 				{
 					rowRect.Height = row.Height;
 
-					if (variable)
+                    if (wordWrapOn)
 					{
-						// We may need to adjust the row height is we allow word wrapping
-						if (row.HasWordWrapCell)
-						{
-							int column = row.WordWrapCellIndex;
-							Cell varCell = this.TableModel[i, column];
-							if (varCell.WordWrap)
-							{
-								// get the renderer for the cells column
-								ICellRenderer renderer = this.ColumnModel.Columns[column].Renderer;
-								if (renderer == null)
-								{
-									// get the default renderer for the column
-									renderer = this.ColumnModel.GetCellRenderer(this.ColumnModel.Columns[column].GetDefaultRendererName());
-								}
-
-								renderer.Bounds = new Rectangle(this.GetColumnLeft(column), rowRect.Y, this.GetColumnWidth(column, varCell), rowRect.Height);
-
-                                // If this comes back zero then we have to go with the default
-								int newheight = renderer.GetCellHeight(e.Graphics, varCell);
-                                if (newheight == 0)
-                                    newheight = row.Height;
-                                this.TableModel.Rows[i].InternalHeight = newheight;
-                                if (newheight != rowRect.Height)
-                                    rowRect.Height = newheight;
-							}
-						}
+                        rowRect.Height = GetRenderedRowHeight(e.Graphics, row);
+                        row.InternalHeight = rowRect.Height;
 					}
 
 					if (rowRect.IntersectsWith(e.ClipRectangle))
