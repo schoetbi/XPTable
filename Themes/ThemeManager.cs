@@ -70,6 +70,7 @@ namespace XPTable.Themes
 		/// of the button</param>
 		/// <param name="state">A PushButtonState value that specifies the 
 		/// state to draw the button in</param>
+        /// <param name="flatStyle">If true, then the button is drawn in flat style, but only if VisualStyles are not being used.</param>
 		public static void DrawButton(Graphics g, Rectangle buttonRect, PushButtonState state, bool flatStyle)
 		{
 			ThemeManager.DrawButton(g, buttonRect, buttonRect, state, flatStyle);
@@ -86,6 +87,7 @@ namespace XPTable.Themes
 		/// <param name="clipRect">The Rectangle that represents the clipping area</param>
 		/// <param name="state">A PushButtonState value that specifies the 
 		/// state to draw the button in</param>
+        /// <param name="flatStyle">If true, then the button is drawn in flat style, but only if VisualStyles are not being used.</param>
         public static void DrawButton(Graphics g, Rectangle buttonRect, Rectangle clipRect, PushButtonState state, bool flatStyle)
 		{
 			if (g == null || buttonRect.Width <= 0 || buttonRect.Height <= 0 || clipRect.Width <= 0 || clipRect.Height <= 0)
