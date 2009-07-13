@@ -531,7 +531,7 @@ namespace XPTable.Models
 		/// <summary>
 		/// The Renderer used to paint the column headers
 		/// </summary>
-		private HeaderRenderer headerRenderer;
+		private IHeaderRenderer headerRenderer;
 
 		/// <summary>
 		/// The font used to draw the text in the column header
@@ -3857,7 +3857,7 @@ namespace XPTable.Models
 		/// </summary>
 		[Browsable(false),
 		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public HeaderRenderer HeaderRenderer
+		public IHeaderRenderer HeaderRenderer
 		{
 			get
 			{
