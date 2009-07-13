@@ -48,7 +48,10 @@ namespace XPTable.Renderers
 		/// Specifies the alignment of the Image displayed on the button
 		/// </summary>
 		private System.Drawing.ContentAlignment imageAlignment;
-
+        /// <summary>
+        /// Specifies whether the button is shown in flat style or not.
+        /// </summary>
+        bool flatStyle = false;
 		#endregion
 		
 		#region Constructor
@@ -169,6 +172,15 @@ namespace XPTable.Renderers
 			get { return this.imageAlignment; }
 			set { this.imageAlignment = value; }
 		}
+
+        /// <summary>
+        /// Gets or sets the flag that determines whether buttons are shown flat or normal.
+        /// </summary>
+        public bool FlatStyle
+        {
+            get { return this.flatStyle; }
+            set { this.flatStyle = value; }
+        }
 		#endregion
 
 		#region Events
@@ -477,7 +489,9 @@ namespace XPTable.Renderers
 		{
 			if (e.Table.ColumnModel.Columns[e.Column] is ButtonColumn)
 			{
-				this.ImageAlignment = ((ButtonColumn) e.Table.ColumnModel.Columns[e.Column]).ImageAlignment;
+                ButtonColumn buttonCol = ((ButtonColumn)e.Table.ColumnModel.Columns[e.Column]);
+                this.ImageAlignment = buttonCol.ImageAlignment;
+                this.FlatStyle = buttonCol.FlatStyle;
 			}
 			else
 			{
@@ -519,7 +533,7 @@ namespace XPTable.Renderers
 			}
 
 			// draw the button
-			ThemeManager.DrawButton(e.Graphics, this.CalcButtonBounds(), state);
+			ThemeManager.DrawButton(e.Graphics, this.CalcButtonBounds(), state, flatStyle);
 		}
 
 

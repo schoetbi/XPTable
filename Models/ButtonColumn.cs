@@ -48,7 +48,10 @@ namespace XPTable.Models
 		/// Specifies the alignment of the Image displayed on the button
 		/// </summary>
 		private ContentAlignment imageAlignment;
-
+        /// <summary>
+        /// Specifies whether the button is shown in flat style or not.
+        /// </summary>
+        bool flatStyle = false;
 		#endregion
 		
 		#region Constructor
@@ -178,15 +181,27 @@ namespace XPTable.Models
 		#region Properties
         /// <summary>
         /// Gets or sets the horizontal alignment of the Column's Cell contents
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(ColumnAlignment.Center),
-		Description("The horizontal alignment of the column's cell contents.")]
-		public override ColumnAlignment Alignment
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(ColumnAlignment.Center),
+        Description("The horizontal alignment of the column's cell contents.")]
+        public override ColumnAlignment Alignment
         {
             get { return base.Alignment; }
             set { base.Alignment = value; }
         }
+
+		/// <summary>
+        /// Gets or sets the flag that determines whether buttons are shown flat or normal.
+		/// </summary>
+		[Category("Appearance"),
+        DefaultValue(false),
+		Description("The display style for the buttons.")]
+		public bool FlatStyle
+		{
+			get { return this.flatStyle; }
+            set { this.flatStyle = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the alignment of the Image displayed on the buttons
