@@ -75,7 +75,12 @@ namespace XPTable.Renderers
 		protected CellRenderer() : base()
 		{
 			this.format = "";
-            this.formatProvider = System.Globalization.CultureInfo.CurrentUICulture;
+			
+			// this.formatProvider was initialised using System.Globalization.CultureInfo.CurrentUICulture,
+			// but this means formatProvider can be set to a Neutral Culture which does not cantain Numberic 
+			// and DateTime formatting information.  System.Globalization.CultureInfo.CurrentCulture is 
+			// guaranteed to include this formatting information and thus avoids crashes during formatting.
+            this.formatProvider = System.Globalization.CultureInfo.CurrentCulture;
 
 			this.grayTextBrush = new SolidBrush(SystemColors.GrayText);
 			this.padding = CellPadding.Empty;
