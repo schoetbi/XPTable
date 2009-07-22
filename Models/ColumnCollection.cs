@@ -213,13 +213,27 @@ namespace XPTable.Models
 			for (int i=0; i<this.Count; i++)
 			{
 				if (this[i] == column)
-				{
 					return i;
-				}
 			}
 
 			return -1;
 		}
+
+        /// <summary>
+        /// Returns the index of the named Column in the model
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public int IndexOf(string name)
+        {
+            for (int i = 0; i < this.Count; i++)
+            {
+                if (this[i].Text == name)
+                    return i;
+            }
+
+            return -1;
+        }
 
 		/// <summary>
 		/// Recalculates the total combined width of all columns
@@ -264,6 +278,20 @@ namespace XPTable.Models
 				return this.List[index] as Column;
 			}
 		}
+
+        /// <summary>
+        /// Gets the Column with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Column this[string name]
+        {
+            get
+            {
+                int index = IndexOf(name);
+                return this[index];
+            }
+        }
 
 		/// <summary>
 		/// Gets the ColumnModel that owns this ColumnCollection
