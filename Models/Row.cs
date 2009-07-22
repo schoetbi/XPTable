@@ -386,7 +386,7 @@ namespace XPTable.Models
                 {
                     Cell cell = this.cells[i];
 
-                    if (cell.ColSpan > 1 && (i + cell.ColSpan >= columnIndex))
+                    if ((cell != null) && (cell.ColSpan > 1) && (i + cell.ColSpan >= columnIndex))
                     {
                         // Then this cell (i) covers the cell at columnIndex for this row
                         return i;
