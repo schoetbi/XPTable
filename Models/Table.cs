@@ -355,11 +355,44 @@ namespace XPTable.Models
         public event HeaderToolTipEventHandler HeaderToolTipPopup;
         #endregion
 
+        #region DragDrop
+
+        /// <summary>
+        /// Occurs when a DragDrop operation contains an unhandled data type.
+        /// This should return the required DragDropEffects for the external
+        /// type, it is called from the internally handled DragEnter and DragOver
+        /// functions.
+        /// </summary>
+        public event DragDropExternalTypeEffectsHandler DragDropExternalTypeEffect;
+
+        /// <summary>
+        /// Occurs when a DragDrop operation contains an unhandled data type.
+        /// This should be used to handle the DragDrop functionality for the
+        /// external type.
+        /// </summary>
+        public event DragDropExternalTypeEventHandler DragDropExternalTypeEvent;
+
+        /// <summary>
+        /// Occurs following an internally handled row insertion during DragDrop.
+        /// It supplies the index of the inserted row.
+        /// NOTE this is not trigger if DragDropExternalTypeEvent is triggered.
+        /// </summary>
+        public event DragDropRowInsertedAtEventHandler DragDropRowInsertedAtEvent;
+
+        /// <summary>
+        /// Occurs following an internally handled row move operation during DragDrop.
+        /// It supplies the source and destination indexes of the moved row.
+        /// NOTE this is not trigger if DragDropExternalTypeEvent is triggered.
+        /// </summary>
+        public event DragDropRowMovedEventHandler DragDropRowMovedEvent;
+
         #endregion
 
-		#region Class Data
+        #endregion
 
-		/// <summary>
+        #region Class Data
+
+        /// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
@@ -731,8 +764,9 @@ namespace XPTable.Models
         /// Helper class that provides all drag drop functionality.
         /// </summary>
         DragDropHelper _dragDropHelper;
-
-		#endregion
+        private bool useBuiltInDragDrop = true;
+        private bool externalDropRemovesRows = true;
+        #endregion
 
 		#region Constructor
 		/// <summary>
@@ -3135,6 +3169,35 @@ namespace XPTable.Models
 		}
 		#endregion
 
+
+        #region DragDrop
+        internal DragDropEffects DragDropExternalTypeEffectSelector(object sender, DragEventArgs drgevent)
+        {
+            if (DragDropExternalTypeEffect != null)
+                return DragDropExternalTypeEffect(sender, drgevent);
+            else
+                return DragDropEffects.None;
+        }
+
+        internal void DragDropExternalType(object sender, DragEventArgs drgevent)
+        {
+            if (DragDropExternalTypeEvent != null)
+                DragDropExternalTypeEvent(sender, drgevent);
+        }
+
+        internal void DragDropRowInsertedAt(int destIndex)
+        {
+            if (DragDropRowInsertedAtEvent != null)
+                DragDropRowInsertedAtEvent(destIndex);
+        }
+
+        internal void DragDropRowMoved(int srcIndex, int destIndex)
+        {
+            if (DragDropRowMovedEvent != null)
+                DragDropRowMovedEvent(srcIndex, destIndex);
+        }
+        #endregion
+
 		#endregion
 
 		#region Properties
@@ -4921,6 +4984,35 @@ namespace XPTable.Models
         {
             get { return _dragDropHelper.DragDropRenderer; }
             set { _dragDropHelper.DragDropRenderer = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use built in drag drop.
+        /// NOTE this disables the drag drop rendering functionality, but still 
+        /// requires DragDropExternalTypeEffect and DragDropExternalTypeEvent 
+        /// to be used.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [use built in drag drop]; otherwise, <c>false</c>.
+        /// </value>
+        public bool UseBuiltInDragDrop
+        {
+            get { return useBuiltInDragDrop; }
+            set { useBuiltInDragDrop = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether an external drop removes the dragged rows.
+        /// This effectively changes the DragDrop between 2 tables from a Move (the 
+        /// default) to a Copy operation.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [external drop removes rows]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ExternalDropRemovesRows
+        {
+            get { return externalDropRemovesRows; }
+            set { externalDropRemovesRows = value; }
         }
         #endregion
 
@@ -6855,7 +6947,7 @@ namespace XPTable.Models
                 #endregion
 
                 // Drag & Drop Code Added - by tankun
-                if ((this.AllowDrop) && (e.Button == MouseButtons.Left))
+                if ((this.AllowDrop) && useBuiltInDragDrop && (e.Button == MouseButtons.Left))
                 {
                     if (row < 0) 
                         return;
@@ -7310,10 +7402,10 @@ namespace XPTable.Models
 
 		#endregion
 
-		#endregion
+        #endregion
 
-		#region Paint
-		/// <summary>
+        #region Paint
+        /// <summary>
 		/// Raises the PaintBackground event
 		/// </summary>
 		/// <param name="e">A PaintEventArgs that contains the event data</param>
