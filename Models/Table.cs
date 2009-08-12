@@ -7797,6 +7797,12 @@ namespace XPTable.Models
 
                     //	e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);	
                 }
+                // Now draw the final gridline under the last row (if visible)
+                // TODO Make this option selectable via a parameter?
+                if (yline < e.ClipRectangle.Bottom)
+                {
+                    e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
+                }
             }
         }
 
@@ -7813,6 +7819,12 @@ namespace XPTable.Models
                     if (yline >= this.CellDataRect.Top)
                         e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
                     yline += this.TableModel.Rows[irow].Height;
+                }
+                // Now draw the final gridline under the last row (if visible)
+                // TODO Make this option selectable via a parameter?
+                if (yline < e.ClipRectangle.Bottom)
+                {
+                    e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
                 }
             }
         }
