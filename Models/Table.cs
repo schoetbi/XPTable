@@ -1127,7 +1127,9 @@ namespace XPTable.Models
 		/// <returns></returns>
 		protected internal CellPos ResolveColspan(CellPos cellPos)
 		{
-			Row r = this.TableModel.Rows[cellPos.Row];
+            Row r = null;
+            if (cellPos.Row > -1)
+                r = this.TableModel.Rows[cellPos.Row];
             if (r == null)
                 return cellPos;
             else
@@ -6706,256 +6708,260 @@ namespace XPTable.Models
 		/// Raises the MouseDown event
 		/// </summary>
 		/// <param name="e">A MouseEventArgs that contains the event data</param>
-		protected override void OnMouseDown(MouseEventArgs e)
-		{
-			base.OnMouseDown(e);
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
 
-			if (!this.CanRaiseEvents)
-				return;
+            if (!this.CanRaiseEvents)
+                return;
 
-			this.CalcTableState(e.X, e.Y);
-			TableRegion region = this.HitTest(e.X, e.Y);
+            this.CalcTableState(e.X, e.Y);
+            TableRegion region = this.HitTest(e.X, e.Y);
 
-			int row = this.RowIndexAt(e.X, e.Y);
-			int column = this.ColumnIndexAt(e.X, e.Y);
+            int row = this.RowIndexAt(e.X, e.Y);
+            int column = this.ColumnIndexAt(e.X, e.Y);
 
-			if (this.IsEditing)
-			{
-				if (this.EditingCell.Row != row || this.EditingCell.Column != column)
-				{
-					this.Focus();
-
-					if (region == TableRegion.ColumnHeader && e.Button != MouseButtons.Right)
-						return;
-				}
-			}
-
-			#region ColumnHeader
-
-			if (region == TableRegion.ColumnHeader)
-			{
-				if (e.Button == MouseButtons.Right && this.HeaderContextMenu.Enabled)
-				{
-					this.HeaderContextMenu.Show(this, new Point(e.X, e.Y));
-
-					return;
-				}
-
-				if (column == -1 || !this.ColumnModel.Columns[column].Enabled)
-				{
-					return;
-				}
-
-				if (e.Button == MouseButtons.Left)
-				{
-					this.FocusedCell = new CellPos(-1, -1);
-
-					// don't bother going any further if the user 
-					// double clicked
-					if (e.Clicks > 1)
-					{
-						return;
-					}
-
-					this.RaiseHeaderMouseDown(column, e);
-
-					if (this.TableState == TableState.ColumnResizing)
-					{
-						Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-						int x = this.ClientToDisplayRect(e.X, e.Y).X;
-
-						if (x <= columnRect.Left + Column.ResizePadding)
-						{
-							//column--;
-							column = this.ColumnModel.PreviousVisibleColumn(column);
-						}
-
-						this.resizingColumnIndex = column;
-
-						if (this.resizingColumnIndex != -1)
-						{
-							this.resizingColumnAnchor = this.ColumnModel.ColumnHeaderRect(column).Left;
-							this.resizingColumnOffset = x - (this.resizingColumnAnchor + this.ColumnModel.Columns[column].Width);
-						}
-					}
-					else
-					{
-						if (this.HeaderStyle != ColumnHeaderStyle.Clickable || !this.ColumnModel.Columns[column].Sortable)
-						{
-							return;
-						}
-
-						if (column == -1)
-						{
-							return;
-						}
-
-						if (this.pressedColumn != -1)
-						{
-							this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Normal;
-						}
-
-						this.pressedColumn = column;
-						this.ColumnModel.Columns[column].InternalColumnState = ColumnState.Pressed;
-					}
-
-					return;
-				}
-			}
-
-			#endregion
-
-			#region Cells
-			if (region == TableRegion.Cells)
+            if (this.IsEditing)
             {
-                #region Checks
-                if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right)
-					return;
-
-				if ((!this.AllowRMBSelection) && (e.Button == MouseButtons.Right))
-					return;
-
-				if (!this.IsValidCell(row, column) || !this.IsCellEnabled(row, column))
-				{
-					// clear selections
-					this.TableModel.Selections.Clear();
-					return;
-                }
-                #endregion
-
-                Row r = this.tableModel.Rows[row];
-				int realCol = r.GetRenderedCellIndex(column);
-				column = realCol;
-
-				this.FocusedCell = new CellPos(row, column);
-
-				// don't bother going any further if the user 
-				// double clicked or we're not allowed to select
-                if (e.Clicks > 1 || !this.AllowSelection)
+                if (this.EditingCell.Row != row || this.EditingCell.Column != column)
                 {
-                    // We need to allow 'double clicks' through to the editors so the number change buttons can be used rapidly
-                    if (!this.IsEditing)
+                    this.Focus();
+
+                    if (region == TableRegion.ColumnHeader && e.Button != MouseButtons.Right)
                         return;
                 }
+            }
 
-				this.lastMouseDownCell.Row = row;
-				this.lastMouseDownCell.Column = column;
+            #region ColumnHeader
 
-				//
-				this.RaiseCellMouseDown(new CellPos(row, column), e);
-
-				if (!this.ColumnModel.Columns[column].Selectable)
-					return;
-
-				//
-
-                #region Multiselect - shift
-                if ((ModifierKeys & Keys.Shift) == Keys.Shift && this.MultiSelect)
-				{
-					if ((e.Button == MouseButtons.Right)
-						// Mateusz [PEYN] Adamus (peyn@tlen.pl)
-						// and RMB is not allowed to select cells
-						&& (!this.AllowRMBSelection))
-					{
-						return;
-					}
-
-					this.TableModel.Selections.AddShiftSelectedCell(row, column);
-
-					return;
-                }
-                #endregion
-
-                #region Multiselect - control
-                if ((ModifierKeys & Keys.Control) == Keys.Control && this.MultiSelect)
-				{
-					if ((e.Button == MouseButtons.Right)
-						// Mateusz [PEYN] Adamus (peyn@tlen.pl)
-						// and RMB is not allowed to select cells
-						&& (!this.AllowRMBSelection))
-					{
-						return;
-					}
-
-					// Mateusz [PEYN] Adamus (peyn@tlen.pl)
-					// If selection selects full rows
-					// we have to find exactly which cell is selected in a row
-					// to deselect it
-					if (this.FullRowSelect)
-					{
-						if (this.TableModel.Selections.IsRowSelected(row))
-						{
-							this.TableModel.Selections.RemoveRow(row);
-							return;
-						}
-					}
-
-					// Mateusz [PEYN] Adamus (peyn@tlen.pl)
-					// if Table is in ListView style and FullRowSelect = false
-					// clicking on any cell should deselect Row
-					if (this.SelectionStyle == SelectionStyle.ListView)
-					{
-						// if Row we clicked on is selected
-						if (this.TableModel.Selections.IsRowSelected(row))
-						{
-							// we deselect it
-							this.TableModel.Selections.RemoveRow(row);
-							return;
-						}
-					}
-
-					if (this.TableModel.Selections.IsCellSelected(row, column))
-						this.TableModel.Selections.RemoveCell(row, column);
-					else
-						this.TableModel.Selections.AddCell(row, column);
-
-					return;
-                }
-                #endregion
-
-                #region Change the selection
-                if (this.familyRowSelect && this.fullRowSelect)
+            if (region == TableRegion.ColumnHeader)
+            {
+                if (e.Button == MouseButtons.Right && this.HeaderContextMenu.Enabled)
                 {
-                    // family select is where we select all the rows either:
-                    // under the clicked (parent) row, or
-                    // that are siblings of the clicked (chlid) row
-                    if (r.Parent != null)
+                    this.HeaderContextMenu.Show(this, new Point(e.X, e.Y));
+
+                    return;
+                }
+
+                if (column == -1 || !this.ColumnModel.Columns[column].Enabled)
+                {
+                    return;
+                }
+
+                if (e.Button == MouseButtons.Left)
+                {
+                    this.FocusedCell = new CellPos(-1, -1);
+
+                    // don't bother going any further if the user 
+                    // double clicked
+                    if (e.Clicks > 1)
                     {
-                        // this is a child so select all the siblings
-                        this.TableModel.Selections.SelectCell(r.Parent.Index, column);
-                        this.tableModel.Selections.AddShiftSelectedCell(r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column); // last child row
+                        return;
+                    }
+
+                    this.RaiseHeaderMouseDown(column, e);
+
+                    if (this.TableState == TableState.ColumnResizing)
+                    {
+                        Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
+                        int x = this.ClientToDisplayRect(e.X, e.Y).X;
+
+                        if (x <= columnRect.Left + Column.ResizePadding)
+                        {
+                            //column--;
+                            column = this.ColumnModel.PreviousVisibleColumn(column);
+                        }
+
+                        this.resizingColumnIndex = column;
+
+                        if (this.resizingColumnIndex != -1)
+                        {
+                            this.resizingColumnAnchor = this.ColumnModel.ColumnHeaderRect(column).Left;
+                            this.resizingColumnOffset = x - (this.resizingColumnAnchor + this.ColumnModel.Columns[column].Width);
+                        }
                     }
                     else
                     {
-                        // this is not a child, so if it is a parent, select all children
-                        if (r.SubRows.Count == 0)
+                        if (this.HeaderStyle != ColumnHeaderStyle.Clickable || !this.ColumnModel.Columns[column].Sortable)
                         {
-                            this.TableModel.Selections.SelectCell(row, column);
+                            return;
+                        }
+
+                        if (column == -1)
+                        {
+                            return;
+                        }
+
+                        if (this.pressedColumn != -1)
+                        {
+                            this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Normal;
+                        }
+
+                        this.pressedColumn = column;
+                        this.ColumnModel.Columns[column].InternalColumnState = ColumnState.Pressed;
+                    }
+
+                    return;
+                }
+            }
+
+            #endregion
+
+            #region Cells
+            if (region == TableRegion.Cells)
+            {
+                #region Checks
+                if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right)
+                    return;
+
+                if ((!this.AllowRMBSelection) && (e.Button == MouseButtons.Right))
+                    return;
+
+                if ((!this.IsValidCell(row, column) || !this.IsCellEnabled(row, column)) && (this.tableModel != null))
+                {
+                    // clear selections
+                    this.TableModel.Selections.Clear();
+                    return;
+                }
+                #endregion
+
+                if (this.tableModel != null)
+                {
+                    Row r = this.tableModel.Rows[row];
+                    int realCol = r.GetRenderedCellIndex(column);
+                    column = realCol;
+
+                    this.FocusedCell = new CellPos(row, column);
+
+                    // don't bother going any further if the user 
+                    // double clicked or we're not allowed to select
+                    if (e.Clicks > 1 || !this.AllowSelection)
+                    {
+                        // We need to allow 'double clicks' through to the editors so the number change buttons can be used rapidly
+                        if (!this.IsEditing)
+                            return;
+                    }
+
+                    this.lastMouseDownCell.Row = row;
+                    this.lastMouseDownCell.Column = column;
+
+                    //
+                    this.RaiseCellMouseDown(new CellPos(row, column), e);
+
+                    if (!this.ColumnModel.Columns[column].Selectable)
+                        return;
+
+                    //
+
+                    #region Multiselect - shift
+                    if ((ModifierKeys & Keys.Shift) == Keys.Shift && this.MultiSelect)
+                    {
+                        if ((e.Button == MouseButtons.Right)
+                            // Mateusz [PEYN] Adamus (peyn@tlen.pl)
+                            // and RMB is not allowed to select cells
+                            && (!this.AllowRMBSelection))
+                        {
+                            return;
+                        }
+
+                        this.TableModel.Selections.AddShiftSelectedCell(row, column);
+
+                        return;
+                    }
+                    #endregion
+
+                    #region Multiselect - control
+                    if ((ModifierKeys & Keys.Control) == Keys.Control && this.MultiSelect)
+                    {
+                        if ((e.Button == MouseButtons.Right)
+                            // Mateusz [PEYN] Adamus (peyn@tlen.pl)
+                            // and RMB is not allowed to select cells
+                            && (!this.AllowRMBSelection))
+                        {
+                            return;
+                        }
+
+                        // Mateusz [PEYN] Adamus (peyn@tlen.pl)
+                        // If selection selects full rows
+                        // we have to find exactly which cell is selected in a row
+                        // to deselect it
+                        if (this.FullRowSelect)
+                        {
+                            if (this.TableModel.Selections.IsRowSelected(row))
+                            {
+                                this.TableModel.Selections.RemoveRow(row);
+                                return;
+                            }
+                        }
+
+                        // Mateusz [PEYN] Adamus (peyn@tlen.pl)
+                        // if Table is in ListView style and FullRowSelect = false
+                        // clicking on any cell should deselect Row
+                        if (this.SelectionStyle == SelectionStyle.ListView)
+                        {
+                            // if Row we clicked on is selected
+                            if (this.TableModel.Selections.IsRowSelected(row))
+                            {
+                                // we deselect it
+                                this.TableModel.Selections.RemoveRow(row);
+                                return;
+                            }
+                        }
+
+                        if (this.TableModel.Selections.IsCellSelected(row, column))
+                            this.TableModel.Selections.RemoveCell(row, column);
+                        else
+                            this.TableModel.Selections.AddCell(row, column);
+
+                        return;
+                    }
+                    #endregion
+
+                    #region Change the selection
+                    if (this.familyRowSelect && this.fullRowSelect)
+                    {
+                        // family select is where we select all the rows either:
+                        // under the clicked (parent) row, or
+                        // that are siblings of the clicked (chlid) row
+                        if (r.Parent != null)
+                        {
+                            // this is a child so select all the siblings
+                            this.TableModel.Selections.SelectCell(r.Parent.Index, column);
+                            this.tableModel.Selections.AddShiftSelectedCell(r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column); // last child row
                         }
                         else
                         {
-                            this.TableModel.Selections.SelectCell(row, column);
-                            this.tableModel.Selections.AddShiftSelectedCell(r.SubRows[r.SubRows.Count - 1].Index, column); // last child row
+                            // this is not a child, so if it is a parent, select all children
+                            if (r.SubRows.Count == 0)
+                            {
+                                this.TableModel.Selections.SelectCell(row, column);
+                            }
+                            else
+                            {
+                                this.TableModel.Selections.SelectCell(row, column);
+                                this.tableModel.Selections.AddShiftSelectedCell(r.SubRows[r.SubRows.Count - 1].Index, column); // last child row
+                            }
                         }
                     }
+                    else
+                    {
+                        // 'normal' secletion mode - just select what was clicked
+                        this.TableModel.Selections.SelectCell(row, column);
+                    }
+                    #endregion
                 }
-                else
-                {
-                    // 'normal' secletion mode - just select what was clicked
-                    this.TableModel.Selections.SelectCell(row, column);
-                }
-                #endregion
+
 
                 // Drag & Drop Code Added - by tankun
                 if ((this.AllowDrop) && useBuiltInDragDrop && (e.Button == MouseButtons.Left))
                 {
-                    if (row < 0) 
+                    if (row < 0)
                         return;
                     _dragDropHelper.MouseDown(row);
                 }
             } //region == TableRegion.Cells
-			#endregion
-		}
+            #endregion
+        }
 		#endregion
 
 		#region MouseMove
