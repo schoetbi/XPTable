@@ -6926,8 +6926,7 @@ namespace XPTable.Models
                         if (r.Parent != null)
                         {
                             // this is a child so select all the siblings
-                            this.TableModel.Selections.SelectCell(r.Parent.Index, column);
-                            this.tableModel.Selections.AddShiftSelectedCell(r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column); // last child row
+                            this.TableModel.Selections.SelectCells(r.Parent.Index, column, r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column);
                         }
                         else
                         {
@@ -6938,8 +6937,7 @@ namespace XPTable.Models
                             }
                             else
                             {
-                                this.TableModel.Selections.SelectCell(row, column);
-                                this.tableModel.Selections.AddShiftSelectedCell(r.SubRows[r.SubRows.Count - 1].Index, column); // last child row
+                                this.TableModel.Selections.SelectCells(row, column, r.SubRows[r.SubRows.Count - 1].Index, column);
                             }
                         }
                     }
