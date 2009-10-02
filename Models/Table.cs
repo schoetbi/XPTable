@@ -2551,14 +2551,14 @@ namespace XPTable.Models
 				// as otherwise resizing could lead to a crash - 12/01/06
 				vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
                 // as otherwise minimising could lead to a crash
-                vScrollBar.LargeChange = visibleRowCount < 0 ? 0 : visibleRowCount + 1;
+                vScrollBar.LargeChange = (visibleRowCount < 0) ? 0 : visibleRowCount + 1;
 			}
 			else
 			{
 				this.vScrollBar.Visible = false;
 				this.vScrollBar.Value = 0;
 			}
-		}
+        }
 
 		/// <summary>
 		/// Returns the correct new value for the scrollbar.Value property.
@@ -2723,11 +2723,13 @@ namespace XPTable.Models
 				}
 				else
 				{
+                    int hidden = tableModel.Rows.HiddenRowCountBefore(row);
+
 					if (row < vscrollVal)
 					{
 						vscrollVal = row;
 					}
-					else if (row > vscrollVal + this.vScrollBar.LargeChange)
+                    else if (row - hidden > vscrollVal + this.vScrollBar.LargeChange)
 					{
 						vscrollVal += row - (vscrollVal + this.vScrollBar.LargeChange);
 					}
