@@ -133,7 +133,7 @@ namespace XPTable.Models
         {
             get { return _totalHiddenSubRows; }
         }
-
+        
         /// <summary>
         /// Count the number of hidden rows before the supplied row.
         /// </summary>
@@ -168,6 +168,36 @@ namespace XPTable.Models
         internal int HiddenRowCountBefore(Row row)
         {
             return HiddenRowCountBefore(IndexOf(row));
+        }
+
+        /// <summary>
+        /// Collapses all sub rows.
+        /// </summary>
+        public void CollapseAllSubRows()
+        {
+            int i = 0;
+            while (i < this.Count)
+            {
+                if (this[i].SubRows.Count > 0)
+                    this[i].ExpandSubRows = false;
+                i++;
+            }
+        }
+
+        /// <summary>
+        /// Expands all sub rows.
+        /// </summary>
+        public void ExpandAllSubRows()
+        {
+            int i = 0;
+            while (i < this.Count)
+            {
+                if (this[i].Parent == null)
+                {
+                    this[i].ExpandSubRows = true;
+                    i += this[i].SubRows.Count;
+                }
+            }
         }
 
         private void row_PropertyChanged(object sender, RowEventArgs e)
