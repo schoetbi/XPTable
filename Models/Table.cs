@@ -766,6 +766,7 @@ namespace XPTable.Models
         DragDropHelper _dragDropHelper;
         private bool useBuiltInDragDrop = true;
         private bool externalDropRemovesRows = true;
+
         #endregion
 
 		#region Constructor
@@ -1173,24 +1174,27 @@ namespace XPTable.Models
 		}
 
 
-		/// <summary>
-		/// Returns a CellPos that specifies the next Cell that is visible 
-		/// and enabled from the specified Cell
-		/// </summary>
-		/// <param name="start">A CellPos that specifies the Cell to start 
-		/// searching from</param>
-		/// <param name="wrap">Specifies whether to move to the start of the 
-		/// next Row when the end of the current Row is reached</param>
-		/// <param name="forward">Specifies whether the search should travel 
-		/// in a forward direction (top to bottom, left to right) through the Cells</param>
-		/// <param name="includeStart">Indicates whether the specified starting 
-		/// Cell is included in the search</param>
-		/// <param name="checkOtherCellsInRow">Specifies whether all Cells in 
-		/// the Row should be included in the search</param>
-		/// <returns>A CellPos that specifies the next Cell that is visible 
-		/// and enabled, or CellPos.Empty if there are no Cells that are visible 
-		/// and enabled</returns>
-		protected CellPos FindNextVisibleEnabledCell(CellPos start, bool wrap, bool forward, bool includeStart, bool checkOtherCellsInRow)
+        /// <summary>
+        /// Returns a CellPos that specifies the next Cell that is visible
+        /// and enabled from the specified Cell
+        /// </summary>
+        /// <param name="start">A CellPos that specifies the Cell to start
+        /// searching from</param>
+        /// <param name="wrap">Specifies whether to move to the start of the
+        /// next Row when the end of the current Row is reached</param>
+        /// <param name="forward">Specifies whether the search should travel
+        /// in a forward direction (top to bottom, left to right) through the Cells</param>
+        /// <param name="includeStart">Indicates whether the specified starting
+        /// Cell is included in the search</param>
+        /// <param name="checkOtherCellsInRow">Specifies whether all Cells in
+        /// the Row should be included in the search</param>
+        /// <param name="includeDisabledCells">Indicates whether disabled cells should be included in the search.</param>
+        /// <returns>
+        /// A CellPos that specifies the next Cell that is visible
+        /// and enabled, or CellPos.Empty if there are no Cells that are visible
+        /// and enabled
+        /// </returns>
+		protected CellPos FindNextVisibleCell(CellPos start, bool wrap, bool forward, bool includeStart, bool checkOtherCellsInRow, bool includeDisabledCells)
 		{
 			if (this.ColumnCount == 0 || this.RowCount == 0)
 			{
@@ -1230,7 +1234,7 @@ namespace XPTable.Models
 							}
 						}
 
-						if (IsCellVisibleAndEnabled(i, j))
+                        if (IsCellVisible(i, j, includeDisabledCells))
 						{
 							return new CellPos(i, j);
 						}
@@ -1282,10 +1286,10 @@ namespace XPTable.Models
 							}
 						}
 
-						if (IsCellVisibleAndEnabled(i, j))
-						{
-							return new CellPos(i, j);
-						}
+                        if (IsCellVisible(i, j, includeDisabledCells))
+                        {
+                            return new CellPos(i, j);
+                        }
 
 						if (!checkOtherCellsInRow)
 						{
@@ -1311,26 +1315,26 @@ namespace XPTable.Models
 		}
 
 
-		private bool IsCellVisibleAndEnabled(int row, int column)
-		{
-			bool ok = (this.IsValidCell(row, column) && 
-				this.IsValidColumn(column) && 
-				this.TableModel[row, column].Enabled && 
-				this.ColumnModel.Columns[column].Enabled && 
-				this.ColumnModel.Columns[column].Visible);
+        private bool IsCellVisible(int row, int column, bool includeDisabledCells)
+        {
+            bool ok = (this.IsValidCell(row, column) &&
+                this.IsValidColumn(column) &&
+                (this.TableModel[row, column].Enabled || includeDisabledCells) &&
+                this.ColumnModel.Columns[column].Enabled &&
+                this.ColumnModel.Columns[column].Visible);
 
-			if (ok)
-			{
-				// If this cell belongs to a row that is in fact a sub row, and this subrow is hidden, then return false.
-				Cell cell = this.TableModel[row, column];
-				if (cell.Row.Parent != null)
-				{
-					ok = cell.Row.Parent.ExpandSubRows;
-				}
-			}
+            if (ok)
+            {
+                // If this cell belongs to a row that is in fact a sub row, and this subrow is hidden, then return false.
+                Cell cell = this.TableModel[row, column];
+                if (cell.Row.Parent != null)
+                {
+                    ok = cell.Row.Parent.ExpandSubRows;
+                }
+            }
 
-			return ok;
-		}
+            return ok;
+        }
 
 		/// <summary>
 		/// Returns a CellPos that specifies the next Cell that able to be 
@@ -2582,7 +2586,8 @@ namespace XPTable.Models
 			for (int i = 0; i < max; i++)
             {
                 // The first cell on the row we are going to (if all is well)
-                newCell = this.FindNextVisibleEnabledCell(newCell, true, down, false, false);
+                // Changed to fix scrolling bug (ID - 2848790) reported by Tom Nolan ( lordicarus )
+                newCell = this.FindNextVisibleCell(newCell, true, down, false, false, true);
             }
 
             return newCell.Row;
@@ -4999,6 +5004,9 @@ namespace XPTable.Models
         /// <value>
         /// 	<c>true</c> if [use built in drag drop]; otherwise, <c>false</c>.
         /// </value>
+        [Category("Behavior"),
+        DefaultValue(true),
+        Description("Use the built in drag/drop functionality")]
         public bool UseBuiltInDragDrop
         {
             get { return useBuiltInDragDrop; }
@@ -5013,6 +5021,9 @@ namespace XPTable.Models
         /// <value>
         /// 	<c>true</c> if [external drop removes rows]; otherwise, <c>false</c>.
         /// </value>
+        [Category("Behavior"),
+        DefaultValue(true),
+        Description("If true drag/drop between 2 tables is a move operation")]
         public bool ExternalDropRemovesRows
         {
             get { return externalDropRemovesRows; }
@@ -6284,7 +6295,7 @@ namespace XPTable.Models
 		{
 			if (this.FocusedCell.IsEmpty)
 			{
-				CellPos p = this.FindNextVisibleEnabledCell(this.FocusedCell, true, true, true, true);
+				CellPos p = this.FindNextVisibleCell(this.FocusedCell, true, true, true, true, true);
 
 				if (this.IsValidCell(p))
 				{
@@ -6357,19 +6368,19 @@ namespace XPTable.Models
 
 						if (key == Keys.Up)
 						{
-							nextCell = this.FindNextVisibleEnabledCell(this.FocusedCell, this.FocusedCell.Row > 0, false, false, false);
+							nextCell = this.FindNextVisibleCell(this.FocusedCell, this.FocusedCell.Row > 0, false, false, false, true);
 						}
 						else if (key == Keys.Down)
 						{
-							nextCell = this.FindNextVisibleEnabledCell(this.FocusedCell, this.FocusedCell.Row < this.RowCount - 1, true, false, false);
+                            nextCell = this.FindNextVisibleCell(this.FocusedCell, this.FocusedCell.Row < this.RowCount - 1, true, false, false, true);
 						}
 						else if (key == Keys.Left)
 						{
-							nextCell = this.FindNextVisibleEnabledCell(this.FocusedCell, false, false, false, true);
+                            nextCell = this.FindNextVisibleCell(this.FocusedCell, false, false, false, true, true);
 						}
 						else
 						{
-							nextCell = this.FindNextVisibleEnabledCell(this.FocusedCell, false, true, false, true);
+                            nextCell = this.FindNextVisibleCell(this.FocusedCell, false, true, false, true, true);
 						}
 
 						if (nextCell != CellPos.Empty)
@@ -6394,7 +6405,7 @@ namespace XPTable.Models
 						{
 							int i = GetNewIndexFromPageUp();;
 							CellPos temp = new CellPos(i, this.FocusedCell.Column);;
-							CellPos nextCell = this.FindNextVisibleEnabledCell(temp, true, false, true, false);
+                            CellPos nextCell = this.FindNextVisibleCell(temp, true, false, true, false, true);
 
 							if (nextCell != CellPos.Empty)
 							{
@@ -6411,7 +6422,7 @@ namespace XPTable.Models
                         {
 							int i = GetNewIndexFromPageDown();;
 							CellPos temp = new CellPos(i, this.FocusedCell.Column);
-							CellPos nextCell = this.FindNextVisibleEnabledCell(temp, true, false, true, false);
+                            CellPos nextCell = this.FindNextVisibleCell(temp, true, false, true, false, true);
 
                             if (nextCell != CellPos.Empty)
 							{
@@ -6430,11 +6441,11 @@ namespace XPTable.Models
 
 							if (e.KeyData == Keys.Home)
 							{
-								nextCell = this.FindNextVisibleEnabledCell(CellPos.Empty, true, true, true, true);
+                                nextCell = this.FindNextVisibleCell(CellPos.Empty, true, true, true, true, true);
 							}
 							else
 							{
-								nextCell = this.FindNextVisibleEnabledCell(new CellPos(this.RowCount - 1, this.TableModel.Rows[this.RowCount - 1].Cells.Count), true, false, true, true);
+                                nextCell = this.FindNextVisibleCell(new CellPos(this.RowCount - 1, this.TableModel.Rows[this.RowCount - 1].Cells.Count), true, false, true, true, true);
 							}
 
 							if (nextCell != CellPos.Empty)
@@ -6478,11 +6489,11 @@ namespace XPTable.Models
 
 							if (key == Keys.Down)
 							{
-								nextCell = this.FindNextVisibleEnabledCell(this.FocusedCell, true, true, true, false);
+                                nextCell = this.FindNextVisibleCell(this.FocusedCell, true, true, true, false, true);
 							}
 							else
 							{
-								nextCell = this.FindNextVisibleEnabledCell(this.FocusedCell, false, true, true, true);
+                                nextCell = this.FindNextVisibleCell(this.FocusedCell, false, true, true, true, true);
 							}
 
 							if (nextCell != CellPos.Empty)
