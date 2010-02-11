@@ -8090,6 +8090,16 @@ namespace XPTable.Models
 
 						cellRect.Width = this.ColumnModel.Columns[i].Width;
 
+                        // If this cell spans other columns, then the width (above) needs to take into account
+                        // the spanned columns too.
+                        if (thisCell.ColSpan > 1)
+                        {
+                            for (int span = 1; span < thisCell.ColSpan; span++)
+                            {
+                                cellRect.Width += this.ColumnModel.Columns[i + span].Width;
+                            }
+                        }
+
 						if (cellRect.IntersectsWith(e.ClipRectangle))
 						{
 							this.OnPaintCell(e, row, i, cellRect);
