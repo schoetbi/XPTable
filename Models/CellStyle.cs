@@ -32,153 +32,186 @@ using System.Drawing;
 
 namespace XPTable.Models
 {
-	/// <summary>
-	/// Stores visual appearance related properties for a Cell
-	/// </summary>
-	public class CellStyle
-	{
-		#region Class Data
+    /// <summary>
+    /// Stores visual appearance related properties for a Cell
+    /// </summary>
+    public class CellStyle
+    {
+        #region Class Data
+        /// <summary>
+        /// The background color of the Cell
+        /// </summary>
+        private Color backColor;
 
-		/// <summary>
-		/// The background color of the Cell
-		/// </summary>
-		private Color backColor;
+        /// <summary>
+        /// The foreground color of the Cell
+        /// </summary>
+        private Color foreColor;
 
-		/// <summary>
-		/// The foreground color of the Cell
-		/// </summary>
-		private Color foreColor;
+        /// <summary>
+        /// The font used to draw the text in the Cell
+        /// </summary>
+        private Font font;
 
-		/// <summary>
-		/// The font used to draw the text in the Cell
-		/// </summary>
-		private Font font;
-
-		/// <summary>
-		/// The amount of space between the Cells border and its contents
-		/// </summary>
-		private CellPadding padding;
+        /// <summary>
+        /// The amount of space between the Cells border and its contents
+        /// </summary>
+        private CellPadding padding;
 
         /// <summary>
         /// Whether the text can wrap (and force the cell's height to increase)
         /// </summary>
         private bool wordWrap;
 
-		#endregion
+        private bool alignmentSet;
+        private bool lineAlignmentSet;
+        private RowAlignment lineAlignment;
+        private ColumnAlignment alignment;
+        #endregion
 
-
-		#region Constructor
-
-		/// <summary>
-		/// Initializes a new instance of the CellStyle class with default settings
-		/// </summary>
-		public CellStyle()
-		{
-			this.backColor = Color.Empty;
-			this.foreColor = Color.Empty;
-			this.font = null;
-			this.padding = CellPadding.Empty;
+        #region Constructor
+        /// <summary>
+        /// Initializes a new instance of the CellStyle class with default settings
+        /// </summary>
+        public CellStyle()
+        {
+            this.backColor = Color.Empty;
+            this.foreColor = Color.Empty;
+            this.font = null;
+            this.padding = CellPadding.Empty;
             this.wordWrap = false;
-		}
+            this.lineAlignmentSet = false;
+            this.alignmentSet = false;
+        }
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the CellStyle class with default settings and a specific LineAlignment
+        /// </summary>
+        /// <param name="lineAlignment"></param>
+        public CellStyle(RowAlignment lineAlignment)
+            : base()
+        {
+            this.LineAlignment = lineAlignment;
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the CellStyle class with default settings and a specific Alignment
+        /// </summary>
+        /// <param name="alignment"></param>
+        public CellStyle(ColumnAlignment alignment)
+            : base()
+        {
+            this.Alignment = alignment;
+        }
+        #endregion
 
-		#region Properties
+        #region Properties
+        /// <summary>
+        /// Gets or sets the Font used by the Cell
+        /// </summary>
+        [Category("Appearance"),
+        Description("The font used to display text in the cell")]
+        public Font Font
+        {
+            get { return this.font; }
+            set { this.font = value; }
+        }
 
-		/// <summary>
-		/// Gets or sets the Font used by the Cell
-		/// </summary>
-		[Category("Appearance"),
-		Description("The font used to display text in the cell")]
-		public Font Font
-		{
-			get
-			{
-				return this.font;
-			}
+        /// <summary>
+        /// Gets or sets the background color for the Cell
+        /// </summary>
+        [Category("Appearance"),
+        Description("The background color used to display text and graphics in the cell")]
+        public Color BackColor
+        {
+            get { return this.backColor; }
+            set { this.backColor = value; }
+        }
 
-			set
-			{
-				this.font = value;
-			}
-		}
+        /// <summary>
+        /// Gets or sets the foreground color for the Cell
+        /// </summary>
+        [Category("Appearance"),
+        Description("The foreground color used to display text and graphics in the cell")]
+        public Color ForeColor
+        {
+            get { return this.foreColor; }
+            set { this.foreColor = value; }
+        }
 
+        /// <summary>
+        /// Gets or sets the amount of space between the Cells Border and its contents
+        /// </summary>
+        [Category("Appearance"),
+        Description("The amount of space between the cells border and its contents")]
+        public CellPadding Padding
+        {
+            get { return this.padding; }
+            set { this.padding = value; }
+        }
 
-		/// <summary>
-		/// Gets or sets the background color for the Cell
-		/// </summary>
-		[Category("Appearance"),
-		Description("The background color used to display text and graphics in the cell")]
-		public Color BackColor
-		{
-			get
-			{
-				return this.backColor;
-			}
-
-			set
-			{
-				this.backColor = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the foreground color for the Cell
-		/// </summary>
-		[Category("Appearance"),
-		Description("The foreground color used to display text and graphics in the cell")]
-		public Color ForeColor
-		{
-			get
-			{
-				return this.foreColor;
-			}
-
-			set
-			{
-				this.foreColor = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the amount of space between the Cells Border and its contents
-		/// </summary>
-		[Category("Appearance"),
-		Description("The amount of space between the cells border and its contents")]
-		public CellPadding Padding
-		{
-			get
-			{
-				return this.padding;
-			}
-
-			set
-			{
-				this.padding = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets of sets whether text can wrap in this cell (and force the cell's height to increase)
-		/// </summary>
+        /// <summary>
+        /// Gets of sets whether text can wrap in this cell (and force the cell's height to increase)
+        /// </summary>
         [Category("Appearance"),
         Description("Whether the text can wrap (and force the cell's height to increase)")]
         public bool WordWrap
         {
-            get
-            {
-                return this.wordWrap;
-            }
+            get { return this.wordWrap; }
+            set { this.wordWrap = value; }
+        }
 
+        /// <summary>
+        /// Gets whether the Alignment property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Category("Appearance"),
+        Description("Whether the Alignment property of the cell has been set")]
+        public bool IsAlignmentSet
+        {
+            get { return alignmentSet; }
+        }
+
+        /// <summary>
+        /// Gets whether the LineAlignment property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Category("Appearance"),
+        Description("Whether the LineAlignment property of the cell has been set")]
+        public bool IsLineAlignmentSet
+        {
+            get { return lineAlignmentSet; }
+        }
+
+        /// <summary>
+        /// Gets or sets the vertical alignment for this cell.
+        /// </summary>
+        [Category("Appearance"),
+        Description("Value of the vertical alignment for this cell")]
+        public RowAlignment LineAlignment
+        {
+            get { return lineAlignment; }
             set
             {
-                this.wordWrap = value;
+                lineAlignment = value;
+                lineAlignmentSet = true;
             }
         }
 
-		#endregion
-	}
+        /// <summary>
+        /// Gets or sets the horizontal alignment for this cell.
+        /// </summary>
+        [Category("Appearance"),
+        Description("Value of the horizontal alignment for this cell")]
+        public ColumnAlignment Alignment
+        {
+            get { return alignment; }
+            set
+            {
+                alignment = value;
+                alignmentSet = true;
+            }
+        }
+        #endregion
+    }
 }

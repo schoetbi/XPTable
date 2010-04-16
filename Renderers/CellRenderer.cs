@@ -522,8 +522,29 @@ namespace XPTable.Renderers
 			{
 				this.Padding = e.Cell.Padding;
 
-				this.Alignment = e.Table.ColumnModel.Columns[e.Column].Alignment;
-				this.LineAlignment = e.Table.TableModel.Rows[e.Row].Alignment;
+                // Cell settings supercede Column/Row settings
+
+                bool alignmentSet = false;
+                bool lineAlignmentSet = false;
+                if (e.Cell.CellStyle != null)
+                {
+                    CellStyle style = e.Cell.CellStyle;
+                    if (style.IsAlignmentSet)
+                    {
+                        alignmentSet = true; 
+                        this.Alignment = style.Alignment;
+                    }
+                    if (style.IsLineAlignmentSet)
+                    {
+                        lineAlignmentSet = true;
+                        this.LineAlignment = style.LineAlignment;
+                    }
+                }
+
+                if (!alignmentSet)
+    				this.Alignment = e.Table.ColumnModel.Columns[e.Column].Alignment;
+                if (!lineAlignmentSet)
+    				this.LineAlignment = e.Table.TableModel.Rows[e.Row].Alignment;
 
 				this.Format = e.Table.ColumnModel.Columns[e.Column].Format;
 
