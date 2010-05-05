@@ -151,7 +151,8 @@ namespace XPTable.Renderers
 
             graphics.MeasureString(text, this.Font, this.ClientRectangle.Size, this.StringFormat, out chars, out lines);
 
-            return chars < text.Length;
+            // kbomb987 - Fix for ToolTips not displaying on cut-off cell text 
+            return (chars < text.Length) || (lines > 1);
         }
 		#endregion
 
