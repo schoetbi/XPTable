@@ -24,9 +24,7 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
-
 
 namespace XPTable.Models
 {
@@ -58,6 +56,11 @@ namespace XPTable.Models
         /// <summary>
         /// Grid lines are only drawn between families of rows (i.e. main row plus sub row)
         /// </summary>
-        RowsOnlyParent = 4
+        RowsOnlyParent = 4,
+
+        /// <summary>
+        /// Grid lines are only drawn between families of rows (i.e. main row plus sub row) and parent columns
+        /// </summary>
+        RowsColumnsOnlyParent = 5
 	}
 }

@@ -7765,6 +7765,10 @@ namespace XPTable.Models
                             case GridLines.RowsOnlyParent:
                                 PaintGridParentRows(e, gridPen);
                                 break;
+                            case GridLines.RowsColumnsOnlyParent:
+                                // kbomb987 - Fix for painting grid lines on parent rows and columns
+                                PaintGridAllRowsParentColumns(e, gridPen);
+                                break;
                             case GridLines.Both:
                             case GridLines.Rows:
                                 PaintGridAllRows(e, gridPen);
@@ -7774,6 +7778,42 @@ namespace XPTable.Models
                                 break;
                         }
                     }
+                }
+            }
+        }
+
+        void PaintGridAllRowsParentColumns(PaintEventArgs e, Pen gridPen)
+        {
+            if (this.TopIndex > -1)
+            {
+                int yline = this.CellDataRect.Y - 1;
+                // Need to draw each row grid at its correct height
+                for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+                {
+                    if (yline > e.ClipRectangle.Bottom)
+                        break;
+                    if (yline >= this.CellDataRect.Top)
+                        e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);
+
+                    // Only draw columns on parent.
+                    if (this.tableModel.Rows[irow].Parent == null)
+                    {
+                        int right = this.DisplayRectangle.X;
+
+                        // Draw columns.
+                        for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+                        {
+                            if (this.ColumnModel.Columns[i].Visible)
+                            {
+                                right += this.ColumnModel.Columns[i].Width;
+
+                                if (right >= e.ClipRectangle.Left && right <= e.ClipRectangle.Right)
+                                    e.Graphics.DrawLine(gridPen, right - 1, yline, right - 1, yline + this.tableModel.Rows[irow].Height);
+                            }
+                        }
+                    }
+
+                    yline += this.TableModel.Rows[irow].Height;
                 }
             }
         }
