@@ -7753,7 +7753,8 @@ namespace XPTable.Models
                     gridPen.DashStyle = (DashStyle)this.GridLineStyle;
 
                     // check if we can draw column lines
-                    if ((this.GridLines & GridLines.Columns) == GridLines.Columns)
+                    // kbomb987 - Fix for painting grid lines on parent rows and columns
+                    if (this.GridLines == GridLines.Columns || this.GridLines == GridLines.Both)
                     {
                         PaintGridColumns(e, gridPen);
                     }
