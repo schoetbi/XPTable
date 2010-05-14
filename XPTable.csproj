@@ -245,6 +245,7 @@
     <Compile Include="Models\ColumnAlignment.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\ColumnAutoResizeMode.cs" />
     <Compile Include="Models\ColumnCollection.cs">
       <SubType>Code</SubType>
     </Compile>

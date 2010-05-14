@@ -103,6 +103,11 @@ namespace XPTable.Models
         private ColumnAlignment alignment;
 
         /// <summary>
+        /// Specifies how the column behaves when it is auto-resized.
+        /// </summary>
+        private ColumnAutoResizeMode resizeMode;
+
+        /// <summary>
         /// The width of the Column
         /// </summary>
         private int width;
@@ -395,6 +400,30 @@ namespace XPTable.Models
                     ColumnAlignment oldAlignment = this.alignment;
                     this.alignment = value;
                     this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.AlignmentChanged, oldAlignment));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets how the column behaves when it is auto-resized.
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(ColumnAutoResizeMode.Any),
+        Description("Specifies how the column behaves when it is auto-resized."),
+        Localizable(true)]
+        public virtual ColumnAutoResizeMode AutoResizeMode
+        {
+            get { return this.resizeMode; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(ColumnAutoResizeMode), value))
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(ColumnAutoResizeMode));
+
+                if (this.resizeMode != value)
+                {
+                    ColumnAutoResizeMode oldValue = this.resizeMode;
+                    this.resizeMode = value;
+                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.AutoResizeModeChanged, oldValue));
                 }
             }
         }

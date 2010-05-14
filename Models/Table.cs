@@ -1626,18 +1626,19 @@ namespace XPTable.Models
         }
 
         /// <summary>
-        /// Returns the minimum column width that will show all the columns contents.
+        /// Returns the minimum column width that will show all the columns contents. Returns 0
+        /// if the column width should not be changed, due to the resize mode.
         /// </summary>
         /// <param name="column"></param>
         /// <returns></returns>
-        private int GetAutoColumnwidth(int column)
+        private int GetAutoColumnWidth(int column)
         {
             RowCollection rows = this.TableModel.Rows;
             int maxwidth = 0;
+            Column c = this.ColumnModel.Columns[column];
 
             if (this.includeHeaderInAutoWidth)
             {
-                Column c = this.ColumnModel.Columns[column];
                 maxwidth = c.ContentWidth;
             }
 
@@ -1653,7 +1654,41 @@ namespace XPTable.Models
                 }
             }
 
-            return maxwidth;
+            int changedMax = GetAutoColumnWidthWithMode(c, maxwidth);
+            return changedMax;
+        }
+
+        /// <summary>
+        /// Returns the new column width if the columns resize mode allows it to be changed.
+        /// Returns 0 if it should not be changed.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="maxwidth"></param>
+        /// <returns></returns>
+        int GetAutoColumnWidthWithMode(Column column, int maxwidth)
+        {
+            int changedWidth = 0;
+            int oldwidth = column.Width;
+
+            switch (column.AutoResizeMode)
+            {
+                case ColumnAutoResizeMode.Any:
+                    // Always allow the change
+                    changedWidth = maxwidth;
+                    break;
+                case ColumnAutoResizeMode.Shrink:
+                    // Only allowed if the new width is smaller
+                    if (maxwidth < oldwidth)
+                        changedWidth = maxwidth;
+                    break;
+                case ColumnAutoResizeMode.Grow:
+                    // Only allowed if the new width is greater
+                    if (maxwidth > oldwidth)
+                        changedWidth = maxwidth;
+                    break;
+            }
+
+            return changedWidth;
         }
 		#endregion
 
@@ -5817,7 +5852,7 @@ namespace XPTable.Models
         {
             if (this.CanRaiseEvents)
             {
-                int w = GetAutoColumnwidth(e.Index);
+                int w = GetAutoColumnWidth(e.Index);
                 if (w > 0)
                 {
                     if (e.Column.Width != w + 5)

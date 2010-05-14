@@ -204,9 +204,9 @@ namespace XPTable.Models
         {
             if (e.EventType == RowEventType.ExpandSubRowsChanged)
             {
-                    if (!e.Row.ExpandSubRows)
+                if (!e.Row.ExpandSubRows)
                     _totalHiddenSubRows += e.Row.SubRows.Count;
-                    else
+                else
                     _totalHiddenSubRows -= e.Row.SubRows.Count;
 
             }
