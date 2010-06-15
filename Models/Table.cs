@@ -6630,11 +6630,60 @@ namespace XPTable.Models
 
 		#endregion
 
-		#endregion
+        #region KeyPress
+        /// <summary>
+        /// Adds Auto-Edit support for key press events on texteditors.
+        /// </summary>
+        /// <param name="e">KeyPressEventArgs that contains the event data</param>
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
 
-		#region Layout
+            // Auto-Edit Mode upon ascii key press.
+            if (this.IsValidCell(this.FocusedCell))
+            {
+                // Verify a valid ascii character was pressed.
+                if ((this.EditStartAction & EditStartAction.KeyPress) == EditStartAction.KeyPress && e.KeyChar >= 32 && e.KeyChar <= 126)
+                {
+                    // Get the cell editor type and verify it's valid for auto-editing.
+                    ICellEditor cellEditor = this.ColumnModel.GetCellEditor(this.FocusedCell.Column);
+                    if (cellEditor != null && (cellEditor.GetType() == typeof(TextCellEditor) || cellEditor.GetType() == typeof(ComboBoxCellEditor)))
+                    {
+                        // Get the active cell.
+                        Cell cell = this.TableModel.Rows[this.FocusedCell.Row].Cells[this.FocusedCell.Column];
 
-		/// <summary>
+                        // If the cell is in a sub-row, determine its starting column including ColSpan.
+                        if (cell.Row.SubRows.Count == 0)
+                        {
+                            // This is a sub-row. Get the actual cell start index (in case it spans multiple columns).
+                            int originatingColumn = cell.Row.GetRenderedCellIndex(this.FocusedCell.Column);
+                            if (originatingColumn != this.FocusedCell.Column)
+                            {
+                                // Focus is on a non-visible cell within the ColSpan of a cell (do not allow editing).
+                                // If you prefer to allow editing of the originating cell, use: cell = this.TableModel.Rows[this.FocusedCell.Row].Cells[originatingColumn];
+                                cell = null;
+                            }
+                        }
+
+                        if (cell != null && cell.Editable)
+                        {
+                            // Start editing upon key press.
+                            this.EditCell(this.FocusedCell);
+
+                            // Re-send the key code press so it appears in the editor.
+                            NativeMethods.PressKey(e.KeyChar);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #endregion
+
+        #region Layout
+
+        /// <summary>
 		/// Raises the Layout event
 		/// </summary>
 		/// <param name="levent">A LayoutEventArgs that contains the event data</param>

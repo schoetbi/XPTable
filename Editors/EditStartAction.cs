@@ -24,9 +24,7 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
-
 
 namespace XPTable.Editors
 {
@@ -48,6 +46,16 @@ namespace XPTable.Editors
 		/// <summary>
 		/// A user defined key press will start cell editing
 		/// </summary>
-		CustomKey = 3
+		CustomKey = 3,
+
+        /// <summary>
+        /// A key press event will start cell editing
+        /// </summary>
+        KeyPress = 4,
+
+        /// <summary>
+        /// A key press event or double-click will start cell editing
+        /// </summary>
+        KeyPressDoubleClick = 5
 	}
 }

@@ -194,5 +194,32 @@ namespace XPTable.Win32
 		/// its meaning depends on the message being dispatched, the return value generally is ignored</returns>
 		[DllImport("User32.dll", CharSet=CharSet.Auto, SetLastError=true)]
 		internal static extern int DispatchMessage(ref MSG msg);
+
+
+        [DllImport("user32.dll")]
+        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo); // used for PressKey() method
+
+        [DllImport("user32.dll")]
+        static extern int MapVirtualKey(uint uCode, uint uMapType);
+        
+        [DllImport("user32.dll")]
+        static extern short VkKeyScan(char ch);
+
+        /// <summary>
+        /// Simulates a keystroke.
+        /// </summary>
+        /// <param name="keyCode">char KeyPressEventArgs.KeyChar</param>
+        internal static void PressKey(char keyCode)
+        {
+            const int KEYEVENTF_KEYUP = 0x2;
+
+            short scan = VkKeyScan(keyCode);  // the scan code for keyCode
+            short vk = (short)(scan & 0xff);   // == LOBYTE(scan)
+            short sac = (short)(scan >> 8);      // == HIBYTE(scan), sac & 1 = SHIFT, sac & 2 = CTRL, sac & 4 = ALT
+            short mvk = (short)MapVirtualKey(keyCode, 0);
+
+            keybd_event((byte)vk, (byte)mvk, 0, (UIntPtr)0);
+            keybd_event((byte)vk, (byte)mvk, KEYEVENTF_KEYUP, (UIntPtr)0);
+        }
 	}
 }
