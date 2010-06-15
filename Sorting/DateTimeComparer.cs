@@ -24,13 +24,11 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
 using System.Collections;
 using System.Windows.Forms;
 
 using XPTable.Models;
-
 
 namespace XPTable.Sorting
 {
@@ -40,7 +38,6 @@ namespace XPTable.Sorting
 	public class DateTimeComparer : ComparerBase
 	{
 		#region Constructor
-		
 		/// <summary>
 		/// Initializes a new instance of the DateTimeComparer class with the specified 
 		/// TableModel, Column index and SortOrder
@@ -48,16 +45,13 @@ namespace XPTable.Sorting
 		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
 		/// <param name="column">The index of the Column to be sorted</param>
 		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public DateTimeComparer(TableModel tableModel, int column, SortOrder sortOrder) : base(tableModel, column, sortOrder)
+		public DateTimeComparer(TableModel tableModel, int column, SortOrder sortOrder) 
+            : base(tableModel, column, sortOrder)
 		{
-			
 		}
-
 		#endregion
 
-
 		#region Methods
-    
         /// <summary>
         /// Compares two cells and returns a value indicating whether one is less 
         /// than, equal to or greater than the other.
@@ -67,23 +61,44 @@ namespace XPTable.Sorting
         /// <returns></returns>
         protected override int CompareCells(Cell cell1, Cell cell2)
         {
-            // check for null data
-			if (cell1.Data == null && cell2.Data == null)
-			{
-				return 0;
-			}
-			else if (cell1.Data == null)
-			{
-				return -1;
-			}
-			else if (cell2.Data == null)
-			{
-				return 1;
-			}
+            string cell1Text = "";
+            string cell2Text = "";
 
-			return Convert.ToDateTime(cell1.Data).CompareTo(Convert.ToDateTime(cell2.Data));
-		}
+            if (cell1.Text != null)
+            {
+                cell1Text = cell1.Text;
+            }
 
+            if (cell2.Text != null)
+            {
+                cell2Text = cell2.Text;
+            }
+
+            // check for null data and empty text.
+            if (cell1.Data == null && cell2.Data == null && cell1Text.Length == 0 && cell2Text.Length == 0)
+            {
+                return 0;
+            }
+            else if (cell1.Data == null && cell1Text.Length == 0)
+            {
+                return -1;
+            }
+            else if (cell2.Data == null && cell2Text.Length == 0)
+            {
+                return 1;
+            }
+
+            if (cell1.Data != null && cell2.Data != null)
+            {
+                // Compare using cell data.
+                return Convert.ToDateTime(cell1.Data).CompareTo(Convert.ToDateTime(cell2.Data));
+            }
+            else
+            {
+                // Compare using cell text.
+                return Convert.ToDateTime(cell1Text).CompareTo(Convert.ToDateTime(cell2Text));
+            }
+        }
 		#endregion
 	}
 }
