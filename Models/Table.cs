@@ -1984,14 +1984,20 @@ namespace XPTable.Models
 			if (disposing)
 			{
 				if (components != null)
-				{
 					components.Dispose();
-				}
 			}
 
 			base.Dispose(disposing);
 		}
 
+        /// <summary>
+        /// Removes the TableModel from the Table but leaves the ColumnModel unaltered.
+        /// </summary>
+        public void ClearAllData()
+        {
+            if (this.TableModel != null)
+                this.TableModel = null;
+        }
 
 		/// <summary>
 		/// Removes the ColumnModel and TableModel from the Table
@@ -1999,14 +2005,10 @@ namespace XPTable.Models
 		public void Clear()
 		{
 			if (this.ColumnModel != null)
-			{
 				this.ColumnModel = null;
-			}
 
 			if (this.TableModel != null)
-			{
 				this.TableModel = null;
-			}
 
 			ClearAllRowControls();
 		}
