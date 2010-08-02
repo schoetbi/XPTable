@@ -1996,7 +1996,7 @@ namespace XPTable.Models
         public void ClearAllData()
         {
             if (this.TableModel != null)
-                this.TableModel = null;
+                this.TableModel.Rows.Clear();
         }
 
 		/// <summary>
