@@ -72,7 +72,6 @@ namespace XPTable.Models
 
 		#endregion
 
-
 		#region Class Data
 
 		// Row state flags
@@ -150,9 +149,7 @@ namespace XPTable.Models
 
 		#endregion
 
-
 		#region Constructor
-
 		/// <summary>
 		/// Initializes a new instance of the Row class with default settings
 		/// </summary>
@@ -305,9 +302,7 @@ namespace XPTable.Models
 
 		#endregion
 
-
 		#region Methods
-
 		/// <summary>
 		/// Releases all resources used by the Row
 		/// </summary>
@@ -347,7 +342,6 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		/// Returns the state represented by the specified state flag
 		/// </summary>
@@ -357,7 +351,6 @@ namespace XPTable.Models
 		{
 			return ((this.state & flag) != 0);
 		}
-
 
 		/// <summary>
 		/// Sets the state represented by the specified state flag to the specified value
@@ -396,13 +389,58 @@ namespace XPTable.Models
 
             // If no cells have colspan > 0 then the answer is the column we were given:
             return columnIndex;
-
         }
-		#endregion
 
+        /// <summary>
+        /// Returns whether the Cell at the specified index is selected
+        /// </summary>
+        /// <param name="index">The index of the Cell in the Row's Row.CellCollection</param>
+        /// <returns>True if the Cell at the specified index is selected, 
+        /// otherwise false</returns>
+        public bool IsCellSelected(int index)
+        {
+            if (this.Cells.Count == 0)
+                return false;
+
+            if (index < 0 || index >= this.Cells.Count)
+                return false;
+
+            return this.Cells[index].Selected;
+        }
+
+        /// <summary>
+        /// Removes the selected state from all the Cells within the Row
+        /// </summary>
+        internal void ClearSelection()
+        {
+            this.selectedCellCount = 0;
+
+            for (int i = 0; i < this.Cells.Count; i++)
+            {
+                this.Cells[i].SetSelected(false);
+            }
+        }
+
+        /// <summary>
+        /// Updates the Cell's Index property so that it matches the Cells 
+        /// position in the CellCollection
+        /// </summary>
+        /// <param name="start">The index to start updating from</param>
+        internal void UpdateCellIndicies(int start)
+        {
+            if (start == -1)
+            {
+                start = 0;
+            }
+
+            for (int i = start; i < this.Cells.Count; i++)
+            {
+                this.Cells[i].InternalIndex = i;
+            }
+        }
+        #endregion
 
 		#region Properties
-
 		/// <summary>
 		/// A CellCollection representing the collection of 
 		/// Cells contained within the Row
@@ -416,9 +454,7 @@ namespace XPTable.Models
 			get
 			{
 				if (this.cells == null)
-				{
 					this.cells = new CellCollection(this);
-				}
 				
 				return this.cells;
 			}
@@ -437,9 +473,7 @@ namespace XPTable.Models
             get
             {
                 if (this.subrows == null)
-                {
                     this.subrows = new RowCollection(this);
-                }
 
                 return this.subrows;
             }
@@ -453,14 +487,8 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Row Parent
         {
-            get
-            {
-                return this.parentrow;
-            }
-            set
-            {
-                this.parentrow = value;
-            }
+            get { return this.parentrow; }
+            set { this.parentrow = value; }
         }
 
 		/// <summary>
@@ -489,14 +517,8 @@ namespace XPTable.Models
         [Browsable(false)]
         public int ChildIndex
         {
-            get
-            {
-                return this.childindex;
-            }
-            set
-            {
-                this.childindex = value;
-            }
+            get { return this.childindex; }
+            set { this.childindex = value; }
         }
 
 		/// <summary>
@@ -508,17 +530,9 @@ namespace XPTable.Models
 		TypeConverter(typeof(StringConverter))]
 		public object Tag
 		{
-			get
-			{
-				return this.tag;
-			}
-
-			set
-			{
-				this.tag = value;
-			}
+			get { return this.tag; }
+			set { this.tag = value; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the RowStyle used by the Row
@@ -527,11 +541,7 @@ namespace XPTable.Models
 		DefaultValue(null)]
 		public RowStyle RowStyle
 		{
-			get
-			{
-				return this.rowStyle;
-			}
-
+			get { return this.rowStyle; }
 			set
 			{
 				if (this.rowStyle != value)
@@ -542,7 +552,6 @@ namespace XPTable.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the background color for the Row
@@ -576,7 +585,6 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		/// Specifies whether the BackColor property should be serialized at 
 		/// design time
@@ -587,7 +595,6 @@ namespace XPTable.Models
 		{
 			return (this.rowStyle != null && this.rowStyle.IsBackColorSet);
 		}
-
 
 		/// <summary>
 		/// Gets or sets the foreground Color for the Row
@@ -634,7 +641,6 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		/// Specifies whether the ForeColor property should be serialized at 
 		/// design time
@@ -645,7 +651,6 @@ namespace XPTable.Models
 		{
 			return (this.rowStyle != null && this.rowStyle.IsForeColorSet);
 		}
-
 
 		/// <summary>
 		/// Gets or sets the vertical alignment of the objects displayed in the Row
@@ -667,14 +672,10 @@ namespace XPTable.Models
 			set
 			{
 				if (!Enum.IsDefined(typeof(RowAlignment), value)) 
-				{
 					throw new InvalidEnumArgumentException("value", (int) value, typeof(RowAlignment));
-				}
 					
 				if (this.RowStyle == null)
-				{
 					this.RowStyle = new RowStyle();
-				}
 				
 				if (this.RowStyle.Alignment != value)
 				{
@@ -684,7 +685,6 @@ namespace XPTable.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets the Font used by the Row
@@ -699,9 +699,7 @@ namespace XPTable.Models
 				if (this.RowStyle == null || !this.RowStyle.IsFontSet)
 				{
 					if (this.TableModel != null && this.TableModel.Table != null)
-					{
 						return this.TableModel.Table.Font;
-					}
 
 					return null;
 				}
@@ -710,9 +708,7 @@ namespace XPTable.Models
 					if (this.RowStyle.Font == null)
 					{
 						if (this.TableModel != null && this.TableModel.Table != null)
-						{
 							return this.TableModel.Table.Font;
-						}
 					}
 
 					return this.RowStyle.Font;
@@ -722,19 +718,15 @@ namespace XPTable.Models
 			set
 			{
 				if (this.RowStyle == null)
-				{
 					this.RowStyle = new RowStyle();
-				}
 				
 				if (this.RowStyle.Font != value)
 				{
 					this.RowStyle.Font = value;
-
 					this.OnPropertyChanged(new RowEventArgs(this, RowEventType.FontChanged));
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Specifies whether the Font property should be serialized at 
@@ -746,7 +738,6 @@ namespace XPTable.Models
 		{
 			return (this.rowStyle != null && this.rowStyle.IsFontSet);
 		}
-
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the Row's Cells are able 
@@ -760,9 +751,7 @@ namespace XPTable.Models
 			get
 			{
 				if (!this.GetState(STATE_EDITABLE))
-				{
 					return false;
-				}
 
 				return this.Enabled;
 			}
@@ -770,7 +759,6 @@ namespace XPTable.Models
 			set
 			{
 				bool editable = this.Editable;
-				
 				this.SetState(STATE_EDITABLE, value);
 				
 				if (editable != value)
@@ -779,7 +767,6 @@ namespace XPTable.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Specifies whether the Editable property should be serialized at 
@@ -791,7 +778,6 @@ namespace XPTable.Models
 		{
 			return !this.GetState(STATE_EDITABLE);
 		}
-
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the Row's Cells can respond to 
@@ -806,14 +792,10 @@ namespace XPTable.Models
 			get
 			{
 				if (!this.GetState(STATE_ENABLED))
-				{
 					return false;
-				}
 
 				if (this.TableModel == null)
-				{
 					return true;
-				}
 
 				return this.TableModel.Enabled;
 			}
@@ -825,12 +807,9 @@ namespace XPTable.Models
 				this.SetState(STATE_ENABLED, value);
 				
 				if (enabled != value)
-				{
 					this.OnPropertyChanged(new RowEventArgs(this, RowEventType.EnabledChanged));
-				}
 			}
 		}
-
 
 		/// <summary>
 		/// Specifies whether the Enabled property should be serialized at 
@@ -843,36 +822,23 @@ namespace XPTable.Models
 			return !this.GetState(STATE_ENABLED);
 		}
 
-
 		/// <summary>
 		/// Gets the TableModel the Row belongs to
 		/// </summary>
 		[Browsable(false)]
 		public TableModel TableModel
 		{
-			get
-			{
-				return this.tableModel;
-			}
+			get { return this.tableModel; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the TableModel the Row belongs to
 		/// </summary>
 		internal TableModel InternalTableModel
 		{
-			get
-			{
-				return this.tableModel;
-			}
-
-			set
-			{
-				this.tableModel = value;
-			}
+			get { return this.tableModel; }
+			set { this.tableModel = value; }
 		}
-
 
 		/// <summary>
 		/// Gets the index of the Row within its TableModel
@@ -880,27 +846,16 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public int Index
 		{
-			get
-			{
-				return this.index;
-			}
+			get { return this.index; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the index of the Row within its TableModel
 		/// </summary>
 		internal int InternalIndex
 		{
-			get
-			{
-				return this.index;
-			}
-
-			set
-			{
-				this.index = value;
-			}
+			get { return this.index; }
+			set { this.index = value; }
 		}
 
 		/// <summary>
@@ -909,15 +864,8 @@ namespace XPTable.Models
 		/// </summary>
 		internal int InternalHeight
 		{
-			get
-			{
-				return this.height;
-			}
-
-			set
-			{
-                this.height = value;
-			}
+			get { return this.height; }
+			set { this.height = value; }
 		}
 
         /// <summary>
@@ -939,25 +887,6 @@ namespace XPTable.Models
         }
 
 		/// <summary>
-		/// Updates the Cell's Index property so that it matches the Cells 
-		/// position in the CellCollection
-		/// </summary>
-		/// <param name="start">The index to start updating from</param>
-		internal void UpdateCellIndicies(int start)
-		{
-			if (start == -1)
-			{
-				start = 0;
-			}
-			
-			for (int i=start; i<this.Cells.Count; i++)
-			{
-				this.Cells[i].InternalIndex = i;
-			}
-		}
-
-
-		/// <summary>
 		/// Gets whether the Row is able to raise events
 		/// </summary>
 		protected internal bool CanRaiseEvents
@@ -973,34 +902,22 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the number of Cells that are selected within the Row
 		/// </summary>
 		[Browsable(false)]
 		public int SelectedCellCount
 		{
-			get
-			{
-				return this.selectedCellCount;
-			}
+			get { return this.selectedCellCount; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the number of Cells that are selected within the Row
 		/// </summary>
 		internal int InternalSelectedCellCount
 		{
-			get
-			{
-				return this.selectedCellCount;
-			}
-
-			set
-			{
-				this.selectedCellCount = value;
-			}
+			get { return this.selectedCellCount; }
+			set { this.selectedCellCount = value; }
 		}
 
         /// <summary>
@@ -1008,26 +925,14 @@ namespace XPTable.Models
         /// </summary>
         internal int WordWrapCellIndex
         {
-            get
-            {
-                return wordWrapIndex;
-            }
-            set
-            {
-                wordWrapIndex = value;
-            }
+            get { return wordWrapIndex; }
+            set { wordWrapIndex = value; }
         }
 
         internal bool HasWordWrapCell
         {
-            get
-            {
-                return hasWordWrapCell;
-            }
-            set
-            {
-                hasWordWrapCell = value;
-            }
+            get { return hasWordWrapCell; }
+            set { hasWordWrapCell = value; }
         }
 
 		/// <summary>
@@ -1036,46 +941,7 @@ namespace XPTable.Models
 		[Browsable(false)]
 		public bool AnyCellsSelected
 		{
-			get
-			{
-				return (this.selectedCellCount > 0);
-			}
-		}
-
-
-		/// <summary>
-		/// Returns whether the Cell at the specified index is selected
-		/// </summary>
-		/// <param name="index">The index of the Cell in the Row's Row.CellCollection</param>
-		/// <returns>True if the Cell at the specified index is selected, 
-		/// otherwise false</returns>
-		public bool IsCellSelected(int index)
-		{
-			if (this.Cells.Count == 0)
-			{
-				return false;
-			}
-
-			if (index < 0 || index >= this.Cells.Count)
-			{
-				return false;
-			}
-
-			return this.Cells[index].Selected;
-		}
-
-
-		/// <summary>
-		/// Removes the selected state from all the Cells within the Row
-		/// </summary>
-		internal void ClearSelection()
-		{
-			this.selectedCellCount = 0;
-
-			for (int i=0; i<this.Cells.Count; i++)
-			{
-				this.Cells[i].SetSelected(false);
-			}
+			get { return (this.selectedCellCount > 0); }
 		}
 
 		/// <summary>
@@ -1088,9 +954,7 @@ namespace XPTable.Models
 			get
 			{
 				if (this.SelectedCellCount == 0 || this.Cells.Count == 0)
-				{
 					return new Cell[0];
-				}
 
 				Cell[] items = new Cell[this.SelectedCellCount];
 				int count = 0;
@@ -1108,7 +972,6 @@ namespace XPTable.Models
 			}
 		}
 
-
 		/// <summary>
 		/// Returns an array that contains the indexes of all the selected Cells 
 		/// within the Row
@@ -1119,9 +982,7 @@ namespace XPTable.Models
 			get
 			{
 				if (this.Cells.Count == 0)
-				{
 					return new int[0];
-				}
 
 				int[] indicies = new int[this.SelectedCellCount];
 				int count = 0;
@@ -1138,9 +999,7 @@ namespace XPTable.Models
 				return indicies;
 			}
 		}
-
 		#endregion
-
 
 		#region Events
 
