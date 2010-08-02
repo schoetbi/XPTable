@@ -553,12 +553,9 @@ namespace XPTable.Renderers
 			else
 			{
 				this.Padding = CellPadding.Empty;
-
 				this.Alignment = ColumnAlignment.Left;
 				this.LineAlignment = RowAlignment.Center;
-
 				this.Format = "";
-
 				this.Font = null;
 			}
 

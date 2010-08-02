@@ -104,6 +104,11 @@ namespace XPTable.Events
 		/// <summary>
 		/// Occurs when the value of a Cell's ImageSizeMode property changes
 		/// </summary>
-		ImageSizeModeChanged = 13
+		ImageSizeModeChanged = 13,
+
+        /// <summary>
+        /// Occurs when the value of a Cell's WordWrap property changes
+        /// </summary>
+        WordWrapChanged = 14
 	}
 }

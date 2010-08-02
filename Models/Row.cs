@@ -554,12 +554,10 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.RowStyle == null)
-				{
+				if (this.RowStyle == null || !this.RowStyle.IsBackColorSet)
 					return Color.Transparent;
-				}
-				
-				return this.RowStyle.BackColor;
+				else
+    				return this.RowStyle.BackColor;
 			}
 
 			set
@@ -587,7 +585,7 @@ namespace XPTable.Models
 		/// false otherwise</returns>
 		private bool ShouldSerializeBackColor()
 		{
-			return (this.rowStyle != null && this.rowStyle.BackColor != Color.Empty);
+			return (this.rowStyle != null && this.rowStyle.IsBackColorSet);
 		}
 
 
@@ -601,23 +599,19 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.RowStyle == null)
+				if (this.RowStyle == null || !this.RowStyle.IsForeColorSet)
 				{
 					if (this.TableModel != null && this.TableModel.Table != null)
-					{
 						return this.TableModel.Table.ForeColor;
-					}
-
-					return Color.Black;
+                    else
+    					return Color.Black;
 				}
 				else
 				{
-					if (this.RowStyle.ForeColor == Color.Empty || this.RowStyle.ForeColor == Color.Transparent)
+                    if (!this.RowStyle.IsForeColorSet || this.RowStyle.ForeColor == Color.Empty || this.RowStyle.ForeColor == Color.Transparent)
 					{
 						if (this.TableModel != null && this.TableModel.Table != null)
-						{
 							return this.TableModel.Table.ForeColor;
-						}
 					}
 
 					return this.RowStyle.ForeColor;
@@ -649,7 +643,7 @@ namespace XPTable.Models
 		/// false otherwise</returns>
 		private bool ShouldSerializeForeColor()
 		{
-			return (this.rowStyle != null && this.rowStyle.ForeColor != Color.Empty);
+			return (this.rowStyle != null && this.rowStyle.IsForeColorSet);
 		}
 
 
@@ -664,12 +658,10 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.RowStyle == null)
-				{
+				if (this.RowStyle == null || !this.RowStyle.IsAlignmentSet)
 					return RowAlignment.Center;
-				}
-				
-				return this.RowStyle.Alignment;
+				else
+    				return this.RowStyle.Alignment;
 			}
 
 			set
@@ -704,7 +696,7 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.RowStyle == null)
+				if (this.RowStyle == null || !this.RowStyle.IsFontSet)
 				{
 					if (this.TableModel != null && this.TableModel.Table != null)
 					{
@@ -752,7 +744,7 @@ namespace XPTable.Models
 		/// false otherwise</returns>
 		private bool ShouldSerializeFont()
 		{
-			return (this.rowStyle != null && this.rowStyle.Font != null);
+			return (this.rowStyle != null && this.rowStyle.IsFontSet);
 		}
 
 

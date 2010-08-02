@@ -617,14 +617,10 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.CellStyle == null)
-                {
+                if (this.CellStyle == null || !this.CellStyle.IsWordWrapSet)
                     return false;
-                }
                 else
-                {
                     return this.CellStyle.WordWrap;
-                }
             }
 
             set
@@ -636,7 +632,9 @@ namespace XPTable.Models
 
                 if (this.CellStyle.WordWrap != value)
                 {
+                    bool oldValue = this.CellStyle.WordWrap;
                     this.CellStyle.WordWrap = value;
+                    this.OnPropertyChanged(new CellEventArgs(this, CellEventType.WordWrapChanged, oldValue));
                 }
             }
         }
@@ -650,14 +648,12 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.CellStyle == null)
+				if (this.CellStyle == null || ! this.CellStyle.IsBackColorSet)
 				{
 					if (this.Row != null)
-					{
 						return this.Row.BackColor;
-					}
-
-					return Color.Transparent;
+                    else
+    					return Color.Transparent;
 				}
 				
 				return this.CellStyle.BackColor;
@@ -703,14 +699,12 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.CellStyle == null)
+				if (this.CellStyle == null || !this.CellStyle.IsForeColorSet)
 				{
 					if (this.Row != null)
-					{
 						return this.Row.ForeColor;
-					}
-
-					return Color.Transparent;
+                    else
+    					return Color.Transparent;
 				}
 				else
 				{
@@ -766,14 +760,12 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.CellStyle == null)
+				if (this.CellStyle == null || !this.CellStyle.IsFontSet)
 				{
 					if (this.Row != null)
-					{
 						return this.Row.Font;
-					}
-
-					return null;
+                    else
+    					return null;
 				}
 				else
 				{
@@ -829,12 +821,10 @@ namespace XPTable.Models
 		{
 			get
 			{
-				if (this.CellStyle == null)
-				{
+				if (this.CellStyle == null || !this.CellStyle.IsPaddingSet)
 					return CellPadding.Empty;
-				}
-				
-				return this.CellStyle.Padding;
+				else
+    				return this.CellStyle.Padding;
 			}
 
 			set

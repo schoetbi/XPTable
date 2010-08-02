@@ -27,6 +27,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace XPTable.Models
 {
@@ -56,14 +57,24 @@ namespace XPTable.Models
         /// </summary>
         private RowAlignment alignment;
 
+        Dictionary<AllProperties, bool> isPropertySet;
+
+        enum AllProperties 
+        {
+            BackColor,
+            ForeColor,
+            Font,
+            RowAlignment
+        }
         #endregion
 
         #region Constructor
         /// <summary>
-        /// Initializes a new instance of the RowStyle class with default settings
+        /// Initializes a new instance of the RowStyle class with default settings.
         /// </summary>
         public RowStyle()
         {
+            this.isPropertySet = new Dictionary<AllProperties, bool>();
             this.backColor = Color.Empty;
             this.foreColor = Color.Empty;
             this.font = null;
@@ -80,7 +91,11 @@ namespace XPTable.Models
         public Font Font
         {
             get { return this.font; }
-            set { this.font = value; }
+            set
+            {
+                this.font = value;
+                PropertyIsSet(AllProperties.Font);
+            }
         }
 
         /// <summary>
@@ -91,7 +106,11 @@ namespace XPTable.Models
         public Color BackColor
         {
             get { return this.backColor; }
-            set { this.backColor = value; }
+            set
+            {
+                this.backColor = value;
+                PropertyIsSet(AllProperties.BackColor);
+            }
         }
 
         /// <summary>
@@ -102,8 +121,12 @@ namespace XPTable.Models
         public Color ForeColor
         {
             get { return this.foreColor; }
-            set { this.foreColor = value; }
-        }
+            set
+            {
+                this.foreColor = value;
+                PropertyIsSet(AllProperties.ForeColor);
+            }
+    }
 
         /// <summary>
         /// Gets or sets the vertical alignment of the text displayed in the Row
@@ -114,8 +137,69 @@ namespace XPTable.Models
         public RowAlignment Alignment
         {
             get { return this.alignment; }
-            set { this.alignment = value; }
+            set
+            {
+                this.alignment = value;
+                PropertyIsSet(AllProperties.RowAlignment);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the BackColor property has been set.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsBackColorSet
+        {
+            get { return IsPropertySet(AllProperties.BackColor); }
+        }
+
+        /// <summary>
+        /// Returns true if the Font property has been set.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsFontSet
+        {
+            get { return IsPropertySet(AllProperties.Font); }
+        }
+
+        /// <summary>
+        /// Returns true if the ForeColor property has been set.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsForeColorSet
+        {
+            get { return IsPropertySet(AllProperties.ForeColor); }
+        }
+
+        /// <summary>
+        /// Returns true if the Alignment property has been set.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsAlignmentSet
+        {
+            get { return IsPropertySet(AllProperties.RowAlignment); }
         }
         #endregion
+
+        /// <summary>
+        /// Returns true if this property has been specified.
+        /// </summary>
+        /// <param name="propertyToCheck"></param>
+        /// <returns></returns>
+        bool IsPropertySet(AllProperties propertyToCheck)
+        {
+            if (isPropertySet.ContainsKey(propertyToCheck))
+                return isPropertySet[propertyToCheck];
+            else
+                return false;
+        }
+
+        void PropertyIsSet(AllProperties propertyToCheck)
+        {
+            if (isPropertySet.ContainsKey(propertyToCheck))
+                isPropertySet[propertyToCheck] = true;
+            else
+                isPropertySet.Add(propertyToCheck, true);
+        }
     }
 }

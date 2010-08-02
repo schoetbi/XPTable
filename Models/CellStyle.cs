@@ -26,6 +26,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 
@@ -63,10 +64,21 @@ namespace XPTable.Models
         /// </summary>
         private bool wordWrap;
 
-        private bool alignmentSet;
-        private bool lineAlignmentSet;
         private RowAlignment lineAlignment;
         private ColumnAlignment alignment;
+
+        Dictionary<AllProperties, bool> isPropertySet;
+
+        enum AllProperties
+        {
+            BackColor,
+            ForeColor,
+            Font,
+            Padding,
+            Alignment,
+            LineAlignment,
+            WordWrap
+        }
         #endregion
 
         #region Constructor
@@ -75,13 +87,12 @@ namespace XPTable.Models
         /// </summary>
         public CellStyle()
         {
+            this.isPropertySet = new Dictionary<AllProperties, bool>();
             this.backColor = Color.Empty;
             this.foreColor = Color.Empty;
             this.font = null;
             this.padding = CellPadding.Empty;
             this.wordWrap = false;
-            this.lineAlignmentSet = false;
-            this.alignmentSet = false;
         }
 
         /// <summary>
@@ -89,7 +100,7 @@ namespace XPTable.Models
         /// </summary>
         /// <param name="lineAlignment"></param>
         public CellStyle(RowAlignment lineAlignment)
-            : base()
+            : this()
         {
             this.LineAlignment = lineAlignment;
         }
@@ -99,7 +110,7 @@ namespace XPTable.Models
         /// </summary>
         /// <param name="alignment"></param>
         public CellStyle(ColumnAlignment alignment)
-            : base()
+            : this()
         {
             this.Alignment = alignment;
         }
@@ -114,7 +125,11 @@ namespace XPTable.Models
         public Font Font
         {
             get { return this.font; }
-            set { this.font = value; }
+            set
+            {
+                this.font = value;
+                PropertyIsSet(AllProperties.Font);
+            }
         }
 
         /// <summary>
@@ -125,7 +140,11 @@ namespace XPTable.Models
         public Color BackColor
         {
             get { return this.backColor; }
-            set { this.backColor = value; }
+            set
+            {
+                this.backColor = value;
+                PropertyIsSet(AllProperties.BackColor);
+            }
         }
 
         /// <summary>
@@ -136,7 +155,11 @@ namespace XPTable.Models
         public Color ForeColor
         {
             get { return this.foreColor; }
-            set { this.foreColor = value; }
+            set
+            {
+                this.foreColor = value;
+                PropertyIsSet(AllProperties.ForeColor);
+            }
         }
 
         /// <summary>
@@ -147,7 +170,11 @@ namespace XPTable.Models
         public CellPadding Padding
         {
             get { return this.padding; }
-            set { this.padding = value; }
+            set
+            {
+                this.padding = value;
+                PropertyIsSet(AllProperties.Padding);
+            }
         }
 
         /// <summary>
@@ -158,29 +185,11 @@ namespace XPTable.Models
         public bool WordWrap
         {
             get { return this.wordWrap; }
-            set { this.wordWrap = value; }
-        }
-
-        /// <summary>
-        /// Gets whether the Alignment property of the cell has been set.
-        /// If false then this value should not be used.
-        /// </summary>
-        [Category("Appearance"),
-        Description("Whether the Alignment property of the cell has been set")]
-        public bool IsAlignmentSet
-        {
-            get { return alignmentSet; }
-        }
-
-        /// <summary>
-        /// Gets whether the LineAlignment property of the cell has been set.
-        /// If false then this value should not be used.
-        /// </summary>
-        [Category("Appearance"),
-        Description("Whether the LineAlignment property of the cell has been set")]
-        public bool IsLineAlignmentSet
-        {
-            get { return lineAlignmentSet; }
+            set
+            {
+                this.wordWrap = value;
+                PropertyIsSet(AllProperties.WordWrap);
+            }
         }
 
         /// <summary>
@@ -194,7 +203,7 @@ namespace XPTable.Models
             set
             {
                 lineAlignment = value;
-                lineAlignmentSet = true;
+                PropertyIsSet(AllProperties.LineAlignment);
             }
         }
 
@@ -209,9 +218,100 @@ namespace XPTable.Models
             set
             {
                 alignment = value;
-                alignmentSet = true;
+                PropertyIsSet(AllProperties.Alignment);
             }
         }
+
+        /// <summary>
+        /// Gets whether the Alignment property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsAlignmentSet
+        {
+            get { return IsPropertySet(AllProperties.Alignment); }
+        }
+
+        /// <summary>
+        /// Gets whether the BackColor property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsBackColorSet
+        {
+            get { return IsPropertySet(AllProperties.BackColor); }
+        }
+
+        /// <summary>
+        /// Gets whether the Font property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsFontSet
+        {
+            get { return IsPropertySet(AllProperties.Font); }
+        }
+
+        /// <summary>
+        /// Gets whether the ForeColor property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsForeColorSet
+        {
+            get { return IsPropertySet(AllProperties.ForeColor); }
+        }
+
+        /// <summary>
+        /// Gets whether the LineAlignment property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsLineAlignmentSet
+        {
+            get { return IsPropertySet(AllProperties.LineAlignment); }
+        }
+
+        /// <summary>
+        /// Gets whether the Padding property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsPaddingSet
+        {
+            get { return IsPropertySet(AllProperties.Padding); }
+        }
+
+        /// <summary>
+        /// Gets whether the WordWrap property of the cell has been set.
+        /// If false then this value should not be used.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsWordWrapSet
+        {
+            get { return IsPropertySet(AllProperties.WordWrap); }
+        }
         #endregion
+
+        /// <summary>
+        /// Returns true if this property has been specified.
+        /// </summary>
+        /// <param name="propertyToCheck"></param>
+        /// <returns></returns>
+        bool IsPropertySet(AllProperties propertyToCheck)
+        {
+            if (isPropertySet.ContainsKey(propertyToCheck))
+                return isPropertySet[propertyToCheck];
+            else
+                return false;
+        }
+
+        void PropertyIsSet(AllProperties propertyToCheck)
+        {
+            if (isPropertySet.ContainsKey(propertyToCheck))
+                isPropertySet[propertyToCheck] = true;
+            else
+                isPropertySet.Add(propertyToCheck, true);
+        }
     }
 }
