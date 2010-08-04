@@ -6422,6 +6422,7 @@ namespace XPTable.Models
 
 						if (nextCell != CellPos.Empty)
 						{
+                            nextCell = ResolveColspan(nextCell);
 							this.FocusedCell = nextCell;
 
 							if ((e.KeyData & Keys.Modifiers) == Keys.Shift && this.MultiSelect)
