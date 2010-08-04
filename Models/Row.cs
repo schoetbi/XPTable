@@ -24,8 +24,8 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
@@ -146,6 +146,12 @@ namespace XPTable.Models
 		/// Indicates whether this row's sub-rows are shown or hidden.
 		/// </summary>
 		private bool expandSubRows = true;
+
+        /// <summary>
+        /// Holds flags indicating whether the RHS vertical grid line should be drawn for the cell at the position
+        /// given by the index.
+        /// </summary>
+        List<bool> _internalGridLineFlags;
 
 		#endregion
 
@@ -296,6 +302,7 @@ namespace XPTable.Models
             this.hasWordWrapCell = false;
             this.wordWrapIndex = 0;
             this.height = -1;
+            this._internalGridLineFlags = null;
 
 			this.state = (byte) (STATE_EDITABLE | STATE_ENABLED);
 		}
@@ -999,6 +1006,16 @@ namespace XPTable.Models
 				return indicies;
 			}
 		}
+
+        /// <summary>
+        /// Holds flags indicating whether the RHS vertical grid line should be drawn for the cell at the position
+        /// given by the index.
+        /// </summary>
+        internal List<bool> InternalGridLineFlags
+        {
+            get { return _internalGridLineFlags; }
+            set { _internalGridLineFlags = value; }
+        }
 		#endregion
 
 		#region Events

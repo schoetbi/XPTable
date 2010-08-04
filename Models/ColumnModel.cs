@@ -247,9 +247,8 @@ namespace XPTable.Models
 			return null;
 		}
 
-
 		/// <summary>
-		/// Returns a rectangle that countains the header of the column 
+		/// Returns a rectangle that contains the header of the column 
 		/// at the specified index in the ColumnModel
 		/// </summary>
 		/// <param name="index">The index of the column</param>
@@ -258,16 +257,13 @@ namespace XPTable.Models
 		{
 			// make sure the index is valid and the column is not hidden
 			if (index < 0 || index >= this.Columns.Count || !this.Columns[index].Visible)
-			{
 				return Rectangle.Empty;
-			}
 
 			return new Rectangle(this.Columns[index].Left, 0, this.Columns[index].Width, this.HeaderHeight);
 		}
 
-
 		/// <summary>
-		/// Returns a rectangle that countains the header of the specified column
+		/// Returns a rectangle that contains the header of the specified column
 		/// </summary>
 		/// <param name="column">The column</param>
 		/// <returns>A rectangle that countains the header of the specified column</returns>
@@ -277,13 +273,10 @@ namespace XPTable.Models
 			int index = this.Columns.IndexOf(column);
 			
 			if (index == -1)
-			{
 				return Rectangle.Empty;
-			}
 
 			return this.ColumnHeaderRect(index);
 		}
-
 		#endregion
 
 		#region Dispose
