@@ -1054,10 +1054,7 @@ namespace XPTable.Models
 			this.UpdateCellIndicies(e.CellFromIndex);
 
             if (e.Cell.WordWrap)
-            {
-                this.WordWrapCellIndex = e.CellFromIndex;
-                this.HasWordWrapCell = true;
-            }
+                UpdateWordWrapProperties(e.Cell);
 
 			if (this.CanRaiseEvents)
 			{
@@ -1073,6 +1070,29 @@ namespace XPTable.Models
 			}
 		}
 
+        void UpdateWordWrapProperties(Cell cell)
+        {
+            if (cell.WordWrap)
+            {
+                this.WordWrapCellIndex = cell.InternalIndex; 
+                this.HasWordWrapCell = true;
+            }
+            else
+            {
+                this.WordWrapCellIndex = -1;
+                this.HasWordWrapCell = false;
+
+                // Even if cell no longer is word wrapped, there may be others in this row
+                foreach (Cell c in this.Cells)
+                {
+                    if (c.WordWrap)
+                    {
+                        this.WordWrapCellIndex = c.InternalIndex;
+                        this.HasWordWrapCell = true;
+                    }
+                }
+            }
+        }
 
 		/// <summary>
 		/// Raises the CellRemoved event
@@ -1172,6 +1192,11 @@ namespace XPTable.Models
 			if (this.TableModel != null)
 			{
 				this.TableModel.OnCellPropertyChanged(e);
+
+                if (e.EventType == CellEventType.WordWrapChanged)
+                {
+                    UpdateWordWrapProperties(e.Cell);
+                }
 			}
 		}
 
