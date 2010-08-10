@@ -7041,45 +7041,48 @@ namespace XPTable.Models
                     }
                     #endregion
 
-                    #region Change the selection
-                    if (this.familyRowSelect && this.fullRowSelect)
-                    {
-                        // family select is where we select all the rows either:
-                        // under the clicked (parent) row, or
-                        // that are siblings of the clicked (chlid) row
-                        if (r.Parent != null)
+                        if (!this.TableModel.Selections.IsCellSelected(row, column))
                         {
-                            // this is a child so select all the siblings
-                            this.TableModel.Selections.SelectCells(r.Parent.Index, column, r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column);
-                        }
-                        else
-                        {
-                            // this is not a child, so if it is a parent, select all children
-                            if (r.SubRows.Count == 0)
+                            #region Change the selection
+                            if (this.familyRowSelect && this.fullRowSelect)
                             {
-                                this.TableModel.Selections.SelectCell(row, column);
+                                // family select is where we select all the rows either:
+                                // under the clicked (parent) row, or
+                                // that are siblings of the clicked (chlid) row
+                                if (r.Parent != null)
+                                {
+                                    // this is a child so select all the siblings
+                                    this.TableModel.Selections.SelectCells(r.Parent.Index, column, r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column);
+                                }
+                                else
+                                {
+                                    // this is not a child, so if it is a parent, select all children
+                                    if (r.SubRows.Count == 0)
+                                    {
+                                        this.TableModel.Selections.SelectCell(row, column);
+                                    }
+                                    else
+                                    {
+                                        this.TableModel.Selections.SelectCells(row, column, r.SubRows[r.SubRows.Count - 1].Index, column);
+                                    }
+                                }
                             }
                             else
                             {
-                                this.TableModel.Selections.SelectCells(row, column, r.SubRows[r.SubRows.Count - 1].Index, column);
+                                // 'normal' secletion mode - just select what was clicked
+                                this.TableModel.Selections.SelectCell(row, column);
                             }
+                            #endregion
                         }
                     }
-                    else
-                    {
-                        // 'normal' secletion mode - just select what was clicked
-                        this.TableModel.Selections.SelectCell(row, column);
-                    }
-                    #endregion
                 }
 
 
                 // Drag & Drop Code Added - by tankun
                 if ((this.AllowDrop) && useBuiltInDragDrop && (e.Button == MouseButtons.Left))
                 {
-                    if (row < 0)
-                        return;
-                    _dragDropHelper.MouseDown(row);
+                    if (row > -1)
+                        _dragDropHelper.MouseDown(row);
                 }
             } //region == TableRegion.Cells
             #endregion
