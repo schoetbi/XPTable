@@ -7732,7 +7732,7 @@ namespace XPTable.Models
             // For the last column, extend the width of the cell to fill the grid, including the vertical scrollbar (to avoid a blank space where the scrollbar would be).
             if (column == this.ColumnModel.Columns.Count - 1)
             {
-                realRect.Width += SystemInformation.VerticalScrollBarWidth;
+                //realRect.Width += SystemInformation.VerticalScrollBarWidth;
             }
 
 			PaintCellEventArgs pcea = new PaintCellEventArgs(e.Graphics, realRect);
