@@ -472,6 +472,10 @@ namespace XPTable.Models
 		/// </summary>
 		private TRACKMOUSEEVENT trackMouseEvent;
 
+        /// <summary>
+        /// Stop the beep when Enter or Escape keys are pressed when editing
+        /// </summary>
+        private bool suppressEditorTerminatorBeep;
 		#endregion
 
 		#region Columns
@@ -3444,7 +3448,29 @@ namespace XPTable.Models
 			}
 		}
 
-		#endregion
+        /// <summary>
+        /// Gets or sets the column header alignemnt
+        /// </summary>
+        [Category("Behavior"),
+        DefaultValue(false),
+        Description("Stop the beep when Enter or Escape keys are pressed when editing")]
+        public bool SuppressEditorTerminatorBeep
+        {
+            get
+            {
+                return this.suppressEditorTerminatorBeep;
+            }
+
+            set
+            {
+                if (this.suppressEditorTerminatorBeep != value)
+                {
+                    this.suppressEditorTerminatorBeep = value;
+                }
+            }
+        }
+        
+#endregion
 
 		#region ClientRectangle
 

@@ -141,14 +141,22 @@ namespace XPTable.Editors
 		{
 			if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
 			{
-				if (this.EditingTable != null)
-					this.EditingTable.StopEditing();
+                if (this.EditingTable != null)
+                {
+                    if (this.EditingTable.SuppressEditorTerminatorBeep)
+                        e.Handled = true;
+                    this.EditingTable.StopEditing();
+                }
 			}
 			else if (e.KeyChar == AsciiChars.Escape)
 			{
-				if (this.EditingTable != null)
-					this.EditingTable.CancelEditing();
-			}
+                if (this.EditingTable != null)
+                {
+                    if (this.EditingTable.SuppressEditorTerminatorBeep)
+                        e.Handled = true;
+                    this.EditingTable.CancelEditing();
+                }
+            }
 		}
 
 		/// <summary>
