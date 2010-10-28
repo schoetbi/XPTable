@@ -8408,6 +8408,10 @@ namespace XPTable.Models
 
 						cellRect.Width = this.ColumnModel.Columns[i].Width;
 
+                        // Cope with missing cells in a row
+                        if (thisCell == null)
+                            thisCell = new Cell();
+
                         // If this cell spans other columns, then the width (above) needs to take into account
                         // the spanned columns too.
                         if (thisCell.ColSpan > 1)
