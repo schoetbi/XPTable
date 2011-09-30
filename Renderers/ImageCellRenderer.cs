@@ -118,6 +118,11 @@ namespace XPTable.Renderers
 					imageRect.Height = image.Height;
 				}
 			}
+            else if (sizeMode == ImageSizeMode.NoClip)
+            {
+                imageRect.Width = image.Width;
+                imageRect.Height = image.Height;
+            }
 
 			if (rowAlignment == RowAlignment.Center)
 			{
@@ -142,9 +147,7 @@ namespace XPTable.Renderers
 
 			return imageRect;
 		}
-
 		#endregion
-
 
 		#region Properties
 
@@ -160,12 +163,10 @@ namespace XPTable.Renderers
 		}
 
 		#endregion
-		
 
 		#region Events
 
 		#region Paint
-		
 		/// <summary>
 		/// Raises the PaintCell event
 		/// </summary>
@@ -183,7 +184,6 @@ namespace XPTable.Renderers
 			
 			base.OnPaintCell(e);
 		}
-
 
 		/// <summary>
 		/// Raises the Paint event
@@ -256,7 +256,6 @@ namespace XPTable.Renderers
 				ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
 			}
 		}
-
 
 		/// <summary>
 		/// Draws the Image contained in the Cell

@@ -24,9 +24,7 @@
  * OF SUCH DAMAGE.
  */
 
-
 using System;
-
 
 namespace XPTable.Models
 {
@@ -41,13 +39,19 @@ namespace XPTable.Models
 		Normal = 0,
 
 		/// <summary>
-		/// The Image will be stretched/shrunken to fit the Cell
+		/// The Image will be stretched/shrunken to fit the Cell. NOT IMPLEMENTED.
 		/// </summary>
+        [Obsolete("This is not implemented.", false)]
 		SizedToFit = 1,
 
 		/// <summary>
 		/// The Image will be scaled to fit the Cell
 		/// </summary>
-		ScaledToFit = 2
+		ScaledToFit = 2,
+
+        /// <summary>
+        /// The image is not scaled and is not clipped to the cell.
+        /// </summary>
+        NoClip = 3
 	}
 }

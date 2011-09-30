@@ -7760,7 +7760,15 @@ namespace XPTable.Models
             }
 
 			PaintCellEventArgs pcea = new PaintCellEventArgs(e.Graphics, realRect);
-			pcea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, realRect));
+
+            if (thisCell.ImageSizeMode == ImageSizeMode.NoClip)
+            {
+                pcea.Graphics.SetClip(e.ClipRectangle);
+            }
+            else
+            {
+                pcea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, realRect));
+            }
 
 			if (column < this.TableModel.Rows[row].Cells.Count)
 			{
