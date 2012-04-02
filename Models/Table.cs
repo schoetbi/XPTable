@@ -8159,6 +8159,10 @@ namespace XPTable.Models
             {
                 Row row = this.TableModel.Rows[irow];
                 List<bool> flags = row.InternalGridLineFlags;
+                if (flags == null)
+                {
+                    continue;
+                }
 
                 // Fix by schoetbi: [PATCH 4/6] Fixed Exception: (SARA-1789)
                 if (flags == null)
