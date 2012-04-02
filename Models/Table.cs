@@ -8120,9 +8120,9 @@ namespace XPTable.Models
                     Row row = this.TableModel.Rows[irow];
 
                     // Fix by schoetbi: [PATCH 2/6] avoid nullref exception
-                    if (row == null)
-                        continue;
-
+					if (row == null)
+						continue;
+					
                     List<bool> flags = row.InternalGridLineFlags;
 
                     Rectangle rect = RowRect(irow);
@@ -8169,7 +8169,9 @@ namespace XPTable.Models
                 for (int col = 0; col < loopTo; col++)
                 {
                     if (!flags[col])
+                    {
                         wholeLineFlags[col] = false;
+                    }
                 }
             }
             return wholeLineFlags;
