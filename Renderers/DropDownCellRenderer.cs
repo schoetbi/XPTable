@@ -230,37 +230,47 @@ namespace XPTable.Renderers
 		{
 			base.OnMouseDown(e);
 
-			if (this.ShowDropDownButton || (e.Table.IsEditing && e.CellPos == e.Table.EditingCell))
-			{
-				if (e.Table.IsCellEditable(e.CellPos))
-				{
-					// get the button renderer data
-					DropDownRendererData rendererData = this.GetDropDownRendererData(e.Cell);
+		    if (!this.ShowDropDownButton && (!e.Table.IsEditing || e.CellPos != e.Table.EditingCell))
+		    {
+		        return;
+		    }
 
-					if (this.CalcDropDownButtonBounds().Contains(e.X, e.Y))
-					{
-						if (!(e.Table.ColumnModel.GetCellEditor(e.CellPos.Column) is DropDownCellEditor))
-						{
-							throw new InvalidOperationException("Cannot edit Cell as DropDownCellRenderer requires a DropDownColumn that uses a DropDownCellEditor");
-						}
-						
-						rendererData.ButtonState = ComboBoxState.Pressed;
-						
-						if (!e.Table.IsEditing)
-						{
-							e.Table.EditCell(e.CellPos);
-						}
+		    if (!e.Table.IsCellEditable(e.CellPos))
+		    {
+		        return;
+		    }
 
-						//netus - fix from John Boyce on 2006-02-08
-						if (e.Table.IsEditing)
-						{
-							((IEditorUsesRendererButtons)e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+		    // get the button renderer data
+		    DropDownRendererData rendererData = this.GetDropDownRendererData(e.Cell);
 
-							e.Table.Invalidate(e.CellRect);
-						}
-					}
-				}
-			}
+		    if (!this.CalcDropDownButtonBounds().Contains(e.X, e.Y))
+		    {
+		        return;
+		    }
+
+            var isDropDownCellEditor = e.Table.ColumnModel.GetCellEditor(e.CellPos.Column) is DropDownCellEditor;
+            if (!isDropDownCellEditor)
+		    {
+		        // var msg = "Cannot edit Cell as DropDownCellRenderer requires a DropDownColumn " +
+		        //    "that uses a DropDownCellEditor";
+		        // throw new InvalidOperationException(msg);
+                return;
+            }
+
+		    rendererData.ButtonState = ComboBoxState.Pressed;
+
+		    if (!e.Table.IsEditing)
+		    {
+		        e.Table.EditCell(e.CellPos);
+		    }
+
+		    //netus - fix from John Boyce on 2006-02-08
+		    if (e.Table.IsEditing)
+		    {
+		        ((IEditorUsesRendererButtons)e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+
+		        e.Table.Invalidate(e.CellRect);
+		    }
 		}
 
 		#endregion
