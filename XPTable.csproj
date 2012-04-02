@@ -549,10 +549,12 @@
   <ItemGroup>
     <None Include="XPTable.snk" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="gitStatus.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)createGitStatus.bat</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
