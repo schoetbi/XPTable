@@ -8118,6 +8118,11 @@ namespace XPTable.Models
                 for (int irow = topRow; irow < bottomRow; irow++)
                 {
                     Row row = this.TableModel.Rows[irow];
+
+                    // Fix by schoetbi: [PATCH 2/6] avoid nullref exception
+                    if (row == null)
+                        continue;
+
                     List<bool> flags = row.InternalGridLineFlags;
 
                     Rectangle rect = RowRect(irow);
