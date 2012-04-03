@@ -7731,17 +7731,21 @@ namespace XPTable.Models
         /// <param name="cellRect">The bounding Rectangle of the Cell</param>
         protected void OnPaintCell(PaintEventArgs e, int row, int column, Rectangle cellRect)
         {
-            if (row == 0 && column == 1)
+            if (this.TableModel == null || this.ColumnModel == null)
             {
-                column = 1;
+                return;
             }
 
+            var currentCell = this.TableModel[row, column];
+            var currentRow = this.TableModel.Rows[row];
+            var currentColumn = this.ColumnModel.Columns[column];
+            
             // get the renderer for the cells column
-            ICellRenderer renderer = this.ColumnModel.Columns[column].Renderer;
+            ICellRenderer renderer = currentColumn.Renderer;
             if (renderer == null)
             {
                 // get the default renderer for the column
-                renderer = this.ColumnModel.GetCellRenderer(this.ColumnModel.Columns[column].GetDefaultRendererName());
+                renderer = this.ColumnModel.GetCellRenderer(currentColumn.GetDefaultRendererName());
             }
 
             // if the renderer is still null (which it shouldn't)
@@ -7754,39 +7758,39 @@ namespace XPTable.Models
             ////////////
             // Adjust the rectangle for this cell to include any cells that it colspans over
             Rectangle realRect = cellRect;
-            Cell thisCell = this.TableModel[row, column];
-            if (thisCell != null && thisCell.ColSpan > 1)
-            {
-                int width = this.GetColumnWidth(column, thisCell);
-                realRect = new Rectangle(cellRect.X, cellRect.Y, width, cellRect.Height);
-            }
-            ////////////
+            var pcea = new PaintCellEventArgs(e.Graphics, realRect);
 
-            // For the last column, extend the width of the cell to fill the grid, including the vertical scrollbar (to avoid a blank space where the scrollbar would be).
-            if (column == this.ColumnModel.Columns.Count - 1)
+            bool isEnabled = false;
+            bool isEditable = false;
+            if (currentCell != null)
             {
-                //realRect.Width += SystemInformation.VerticalScrollBarWidth;
+                isEditable = currentCell.Editable && currentRow.Editable && currentColumn.Editable;
+                isEnabled = currentCell.Enabled && currentRow.Enabled && currentColumn.Enabled;
+
+                if (currentCell.ColSpan > 1)
+                {
+                    int width = this.GetColumnWidth(column, currentCell);
+                    realRect = new Rectangle(cellRect.X, cellRect.Y, width, cellRect.Height);
+                }
+                
+                if (currentCell.ImageSizeMode == ImageSizeMode.NoClip)
+                {
+                    pcea.Graphics.SetClip(e.ClipRectangle);
+                }
+                else
+                {
+                    pcea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, realRect));
+                }
             }
 
-            PaintCellEventArgs pcea = new PaintCellEventArgs(e.Graphics, realRect);
-
-            if (thisCell.ImageSizeMode == ImageSizeMode.NoClip)
-            {
-                pcea.Graphics.SetClip(e.ClipRectangle);
-            }
-            else
-            {
-                pcea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, realRect));
-            }
-
-            if (column < this.TableModel.Rows[row].Cells.Count)
+            if (column < currentRow.Cells.Count)
             {
                 // is the cell selected
-                bool selected = false;
+                bool isSelected = false;
 
                 if (this.FullRowSelect)
                 {
-                    selected = this.TableModel.Selections.IsRowSelected(row);
+                    isSelected = this.TableModel.Selections.IsRowSelected(row);
                 }
                 else
                 {
@@ -7794,32 +7798,28 @@ namespace XPTable.Models
                     {
                         if (this.TableModel.Selections.IsRowSelected(row) && this.ColumnModel.PreviousVisibleColumn(column) == -1)
                         {
-                            selected = true;
+                            isSelected = true;
                         }
                     }
                     else if (this.SelectionStyle == SelectionStyle.Grid)
                     {
                         if (this.TableModel.Selections.IsCellSelected(row, column))
                         {
-                            selected = true;
+                            isSelected = true;
                         }
                     }
                 }
-
-                //
-                bool editable = this.TableModel[row, column].Editable && this.TableModel.Rows[row].Editable && this.ColumnModel.Columns[column].Editable;
-                bool enabled = this.TableModel[row, column].Enabled && this.TableModel.Rows[row].Enabled && this.ColumnModel.Columns[column].Enabled;
-
+                
                 // draw the cell
-                pcea.SetCell(this.TableModel[row, column]);
+                pcea.SetCell(currentCell);
                 pcea.SetRow(row);
                 pcea.SetColumn(column);
                 pcea.SetTable(this);
-                pcea.SetSelected(selected);
+                pcea.SetSelected(isSelected);
                 pcea.SetFocused(this.Focused && this.FocusedCell.Row == row && this.FocusedCell.Column == column);
                 pcea.SetSorted(column == this.lastSortedColumn);
-                pcea.SetEditable(editable);
-                pcea.SetEnabled(enabled);
+                pcea.SetEditable(isEditable);
+                pcea.SetEnabled(isEnabled);
                 pcea.SetCellRect(realRect);
             }
             else
@@ -7827,7 +7827,6 @@ namespace XPTable.Models
                 // there isn't a cell for this column, so send a 
                 // null value for the cell and the renderer will 
                 // take care of the rest (it should draw an empty cell)
-
                 pcea.SetCell(null);
                 pcea.SetRow(row);
                 pcea.SetColumn(column);
