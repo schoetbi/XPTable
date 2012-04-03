@@ -1,2 +1,2 @@
-call git log --pretty=oneline -n1 > gitStatus.txt
-call git status >> gitStatus.txt
+call git log --pretty=oneline -n1 > %1
+call git status >> %1

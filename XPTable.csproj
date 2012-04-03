@@ -554,7 +554,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)createGitStatus.bat</PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)createGitStatus.bat $(ProjectDir)\gitStatus.txt</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
