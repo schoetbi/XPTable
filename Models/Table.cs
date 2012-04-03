@@ -8160,7 +8160,9 @@ namespace XPTable.Models
                 Row row = this.TableModel.Rows[irow];
                 List<bool> flags = row.InternalGridLineFlags;
 
-                for (int col = 0; col < columns; col++)
+                // Fix by schoetbi: [PATCH 3/6] Fixed index out of range exception
+                int loopTo = Math.Min(flags.Count, columns);
+                for (int col = 0; col < loopTo; col++)
                 {
                     if (!flags[col])
                         wholeLineFlags[col] = false;
