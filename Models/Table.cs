@@ -8160,6 +8160,10 @@ namespace XPTable.Models
                 Row row = this.TableModel.Rows[irow];
                 List<bool> flags = row.InternalGridLineFlags;
 
+                // Fix by schoetbi: [PATCH 4/6] Fixed Exception: (SARA-1789)
+                if (flags == null)
+                    continue;
+
                 // Fix by schoetbi: [PATCH 3/6] Fixed index out of range exception
                 int loopTo = Math.Min(flags.Count, columns);
                 for (int col = 0; col < loopTo; col++)
