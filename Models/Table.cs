@@ -8179,13 +8179,29 @@ namespace XPTable.Models
             List<bool> wholeLineFlags = CreateNewBoolList(columns);
 
             int topRow = TopIndex;
-            int bottomRow = RowIndexAt(0, this.CellDataRect.Bottom);
+            if (topRow < 0)
+            {
+                topRow = 0;
+            }
+
+            int bottomRow = this.RowIndexAt(0, this.CellDataRect.Bottom);
+
+            var maxRowIndex = this.TableModel.Rows.Count - 1;
+            if (bottomRow > maxRowIndex)
+            {
+                bottomRow = maxRowIndex;
+            }
 
             // Go through each row, and see if it has any colspans that mean we can't draw 
             // the vertical gridline as one long line
             for (int irow = topRow; irow < bottomRow; irow++)
             {
                 Row row = this.TableModel.Rows[irow];
+                if (row == null)
+                {
+                    continue;
+                }
+
                 List<bool> flags = row.InternalGridLineFlags;
                 if (flags == null)
                 {
