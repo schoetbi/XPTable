@@ -505,9 +505,12 @@ namespace XPTable.Editors
 		/// <param name="e">An EventArgs that contains the event data</param>
 		private void listbox_Click(object sender, EventArgs e)
 		{
-			this.DroppedDown = false;
+            this.DroppedDown = false;
 
-			this.EditingTable.StopEditing();
+            if (this.EditingTable != null)
+            {
+                this.EditingTable.StopEditing();
+            }
 		}
 
 
@@ -518,7 +521,7 @@ namespace XPTable.Editors
 		/// <param name="e">An EventArgs that contains the event data</param>
 		private void listbox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			this.OnSelectedIndexChanged(e);
+            this.OnSelectedIndexChanged(e);
 		}
 
 
@@ -529,7 +532,10 @@ namespace XPTable.Editors
 		/// <param name="e">An EventArgs that contains the event data</param>
 		private void listbox_MouseEnter(object sender, EventArgs e)
 		{
-			this.EditingTable.RaiseCellMouseLeave(this.EditingCellPos);
+            if (this.EditingTable != null)
+            {
+                this.EditingTable.RaiseCellMouseLeave(this.EditingCellPos);
+            }
 		}
 
 
