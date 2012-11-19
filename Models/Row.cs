@@ -151,7 +151,7 @@ namespace XPTable.Models
         /// Holds flags indicating whether the RHS vertical grid line should be drawn for the cell at the position
         /// given by the index.
         /// </summary>
-        List<bool> _internalGridLineFlags;
+        bool[] _internalGridLineFlags;
 
 		#endregion
 
@@ -1011,7 +1011,7 @@ namespace XPTable.Models
         /// Holds flags indicating whether the RHS vertical grid line should be drawn for the cell at the position
         /// given by the index.
         /// </summary>
-        internal List<bool> InternalGridLineFlags
+        internal bool[] InternalGridLineFlags
         {
             get { return _internalGridLineFlags; }
             set { _internalGridLineFlags = value; }

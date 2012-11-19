@@ -7945,62 +7945,82 @@ namespace XPTable.Models
 
         void PaintGridRowsColumnsOnlyParent(PaintEventArgs e, Pen gridPen)
         {
-            if (this.TopIndex > -1)
+            if (this.TopIndex <= -1)
             {
-                int yline = this.CellDataRect.Y - 1;
+                return;
+            }
 
-                int rowright = GetGridlineYMax(e);
+            int yline = this.CellDataRect.Y - 1;
+            int rowright = this.GetGridlineYMax(e);
 
-                // Need to draw each row grid at its correct height
-                for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+            // Need to draw each row grid at its correct height
+            for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+            {
+                if (yline > e.ClipRectangle.Bottom)
                 {
-                    if (yline > e.ClipRectangle.Bottom)
-                        break;
-                    if (yline >= this.CellDataRect.Top)
-                        e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
-
-                    // Only draw columns on parent.
-                    if (this.tableModel.Rows[irow].Parent == null)
-                    {
-                        int right = this.DisplayRectangle.X;
-
-                        // Draw columns
-                        int columns = this.ColumnModel.Columns.Count;
-                        for (int i = 0; i < columns; i++)
-                        {
-                            if (this.ColumnModel.Columns[i].Visible)
-                            {
-                                List<bool> flags = this.TableModel.Rows[irow].InternalGridLineFlags;
-
-                                right += this.ColumnModel.Columns[i].Width;
-
-                                if (flags[i] || i == columns - 1)
-                                {
-                                    if (right >= e.ClipRectangle.Left && right <= e.ClipRectangle.Right)
-                                        e.Graphics.DrawLine(gridPen, right - 1, yline, right - 1, yline + this.tableModel.Rows[irow].Height);
-                                }
-                            }
-                        }
-                    }
-
-                    yline += this.TableModel.Rows[irow].Height;
+                    break;
                 }
 
-                // Now draw the final gridline under the last row (if visible)
-                // TODO Make this option selectable via a parameter?
-                if (yline < e.ClipRectangle.Bottom)
+                if (yline >= this.CellDataRect.Top)
+                {
                     e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
+                }
+
+                yline += this.TableModel.Rows[irow].Height;
+
+                // Only draw columns on parent.
+                if (this.tableModel.Rows[irow].Parent != null)
+                {
+                    continue;
+                }
+
+                int right = this.DisplayRectangle.X;
+
+                // Draw columns
+                int columns = this.ColumnModel.Columns.Count;
+                for (int i = 0; i < columns; i++)
+                {
+                    if (!this.ColumnModel.Columns[i].Visible)
+                    {
+                        continue;
+                    }
+                            
+                    right += this.ColumnModel.Columns[i].Width;
+
+                    var flags = this.TableModel.Rows[irow].InternalGridLineFlags;
+                    if (i != columns - 1 && !flags[i])
+                    {
+                        continue;
+                    }
+
+                    if (right >= e.ClipRectangle.Left && right <= e.ClipRectangle.Right)
+                    {
+                        e.Graphics.DrawLine(gridPen, right - 1, yline, right - 1, yline + this.tableModel.Rows[irow].Height);
+                    }
+                }
+            }
+
+            // Now draw the final gridline under the last row (if visible)
+            // TODO Make this option selectable via a parameter?
+            if (yline < e.ClipRectangle.Bottom)
+            {
+                e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
             }
         }
 
         int GetGridlineYMax(PaintEventArgs e)
         {
             int rightOfLastCol = this.ColumnModel.ColumnHeaderRect(this.ColumnCount - 1).Right;
-            int right = 0;
+            int right;
             if (this.GridLinesContrainedToData && (e.ClipRectangle.Right > rightOfLastCol))
+            {
                 right = rightOfLastCol;
+            }
             else
+            {
                 right = e.ClipRectangle.Right;
+            }
+
             return right;
         }
 
@@ -8139,15 +8159,14 @@ namespace XPTable.Models
             for (int irow = topRow; irow < bottomRow; irow++)
             {
                 Row row = this.TableModel.Rows[irow];
-
-                    // Fix by schoetbi: [PATCH 2/6] avoid nullref exception
                 if (row == null)
+                {
                     continue;
-
-                List<bool> flags = row.InternalGridLineFlags;
+                }
 
                 Rectangle rect = this.RowRect(irow);
-                if (flags[column])
+                var flags = row.InternalGridLineFlags;
+                if (column >= 0 && column < flags.Length && flags[column])
                 {
                     e.Graphics.DrawLine(gridPen, x - 1, rect.Top, x - 1, rect.Bottom - 1);
                 }
@@ -8158,12 +8177,7 @@ namespace XPTable.Models
             // The column line underneath the data cells
             if (!this.GridLinesContrainedToData && (e.ClipRectangle.Bottom > lastRowBottom))
             {
-                e.Graphics.DrawLine(
-                    gridPen,
-                    x - 1,
-                    lastRowBottom,
-                    x - 1,
-                    e.ClipRectangle.Bottom - 1);
+                e.Graphics.DrawLine(gridPen, x - 1, lastRowBottom, x - 1, e.ClipRectangle.Bottom - 1);
             }
         }
 
@@ -8202,18 +8216,14 @@ namespace XPTable.Models
                     continue;
                 }
 
-                List<bool> flags = row.InternalGridLineFlags;
+                var flags = row.InternalGridLineFlags;
                 if (flags == null)
                 {
                     continue;
                 }
 
-                // Fix by schoetbi: [PATCH 4/6] Fixed Exception: (SARA-1789)
-                if (flags == null)
-                    continue;
-
                 // Fix by schoetbi: [PATCH 3/6] Fixed index out of range exception
-                int loopTo = Math.Min(flags.Count, columns);
+                int loopTo = Math.Min(flags.Length, columns);
                 for (int col = 0; col < loopTo; col++)
                 {
                     if (!flags[col])
@@ -8462,60 +8472,67 @@ namespace XPTable.Models
 
             int colsToIgnore = 0;       // Used to skip cells that are ignored because of a colspan
 
-            List<bool> gridLineFlags = new List<bool>();
+            var nColumns = this.ColumnModel.Columns.Count;
+            var gridLineFlags = new bool[nColumns];
 
-            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            for (int i = 0; i < nColumns; i++)
             {
-                gridLineFlags.Add(false);
-
-                if (this.ColumnModel.Columns[i].Visible)
+                if (!this.ColumnModel.Columns[i].Visible)
                 {
-                    //////////
-                    Cell thisCell = TableModel[row, i];
-                    if (colsToIgnore == 0)
-                    {
-                        //////////
-
-                        cellRect.Width = this.ColumnModel.Columns[i].Width;
-
-                        // Cope with missing cells in a row
-                        if (thisCell == null)
-                            thisCell = new Cell();
-
-                        // If this cell spans other columns, then the width (above) needs to take into account
-                        // the spanned columns too.
-                        if (thisCell.ColSpan > 1)
-                        {
-                            for (int span = 1; span < thisCell.ColSpan; span++)
-                            {
-                                cellRect.Width += this.ColumnModel.Columns[i + span].Width;
-                            }
-                        }
-
-                        if (cellRect.IntersectsWith(e.ClipRectangle))
-                            this.OnPaintCell(e, row, i, cellRect);
-                        else if (cellRect.Left > e.ClipRectangle.Right)
-                            break;
-
-                        //////////
-                        if (thisCell != null && thisCell.ColSpan > 1)
-                            colsToIgnore = thisCell.ColSpan - 1;        // Ignore the cells that this cell span over
-                        /////////
-                    }
-                    else
-                    {
-                        colsToIgnore--;     // Skip over this cell and count down
-                    }
-
-                    gridLineFlags[i] = (colsToIgnore < 1);
-
-                    cellRect.X += this.ColumnModel.Columns[i].Width;
+                    continue;
                 }
+
+                Cell cell = this.TableModel[row, i];
+                if (colsToIgnore == 0)
+                {
+                    cellRect.Width = this.ColumnModel.Columns[i].Width;
+
+                    // Cope with missing cells in a row
+                    if (cell == null)
+                    {
+                        cell = new Cell();
+                    }
+
+                    // If this cell spans other columns, then the width (above) needs to take into account
+                    // the spanned columns too.
+                    if (cell.ColSpan > 1)
+                    {
+                        for (int span = 1; span < cell.ColSpan; span++)
+                        {
+                            cellRect.Width += this.ColumnModel.Columns[i + span].Width;
+                        }
+                    }
+
+                    if (cellRect.IntersectsWith(e.ClipRectangle))
+                    {
+                        this.OnPaintCell(e, row, i, cellRect);
+                    }
+                    else if (cellRect.Left > e.ClipRectangle.Right)
+                    {
+                        break;
+                    }
+
+                    // Ignore the cells that this cell span over
+                    if (cell.ColSpan > 1)
+                    {
+                        colsToIgnore = cell.ColSpan - 1;        
+                    }
+                }
+                else
+                {
+                    colsToIgnore--;     // Skip over this cell and count down
+                }
+
+                gridLineFlags[i] = colsToIgnore < 1;
+
+                cellRect.X += this.ColumnModel.Columns[i].Width;
             }
 
             Row r = this.TableModel.Rows[row];
             if (r.InternalGridLineFlags == null)
+            {
                 r.InternalGridLineFlags = gridLineFlags;
+            }
         }
 
         #endregion
