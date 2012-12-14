@@ -38,23 +38,24 @@ using XPTable.Models;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// A CellRenderer that draws Cell contents as strings
-	/// </summary>
-	public class TextCellRenderer : CellRenderer
-	{
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the TextCellRenderer class with 
-		/// default settings
-		/// </summary>
-		public TextCellRenderer() : base()
-		{
-			
-		}
+    /// <summary>
+    /// A CellRenderer that draws Cell contents as strings
+    /// </summary>
+    public class TextCellRenderer : CellRenderer
+    {
+        #region Constructor
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the TextCellRenderer class with 
+        /// default settings
+        /// </summary>
+        public TextCellRenderer()
+            : base()
+        {
+
+        }
+
+        #endregion
 
         /// <summary>
         /// Returns the height that is required to render this cell. If zero is returned then the default row height is used.
@@ -89,20 +90,20 @@ namespace XPTable.Renderers
             return (int)Math.Ceiling(size.Width);
         }
 
-		#region Events
+        #region Events
 
-		#region Paint
+        #region Paint
         /// <summary>
-		/// Raises the Paint event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		protected override void OnPaint(PaintCellEventArgs e)
-		{
-			base.OnPaint(e);
-			
-			// don't bother going any further if the Cell is null 
-			if (e.Cell == null)
-				return;
+        /// Raises the Paint event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        protected override void OnPaint(PaintCellEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // don't bother going any further if the Cell is null 
+            if (e.Cell == null)
+                return;
 
             Cell c = e.Cell;
 
@@ -116,11 +117,11 @@ namespace XPTable.Renderers
 
             string text = c.Text;
 
-			if (text != null && text.Length != 0)
-			{
-				if (e.Enabled)
+            if (text != null && text.Length != 0)
+            {
+                if (e.Enabled)
                     DrawString(e.Graphics, text, this.Font, this.ForeBrush, this.ClientRectangle, c.WordWrap);
-				else
+                else
                     DrawString(e.Graphics, text, this.Font, this.GrayTextBrush, this.ClientRectangle, c.WordWrap);
 
                 // Also, determine whether we need a tooltip, if the text was truncated.
@@ -128,17 +129,17 @@ namespace XPTable.Renderers
                     c.InternalIsTextTrimmed = false;
                 else if (e.Table.EnableToolTips)
                     c.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, c.Text);
-			}
-			
-			if( (e.Focused && e.Enabled)
-				// only if we want to show selection rectangle
-				&& ( e.Table.ShowSelectionRectangle ) )
-			{
-				ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
-			}
-		}
-		#endregion
+            }
 
-		#endregion
-	}
+            if ((e.Focused && e.Enabled)
+                // only if we want to show selection rectangle
+                && (e.Table.ShowSelectionRectangle))
+            {
+                ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
+            }
+        }
+        #endregion
+
+        #endregion
+    }
 }

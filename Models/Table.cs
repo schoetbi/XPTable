@@ -7739,7 +7739,7 @@ namespace XPTable.Models
             var currentCell = this.TableModel[row, column];
             var currentRow = this.TableModel.Rows[row];
             var currentColumn = this.ColumnModel.Columns[column];
-            
+
             // get the renderer for the cells column
             ICellRenderer renderer = currentColumn.Renderer;
             if (renderer == null)
@@ -7772,7 +7772,7 @@ namespace XPTable.Models
                     int width = this.GetColumnWidth(column, currentCell);
                     realRect = new Rectangle(cellRect.X, cellRect.Y, width, cellRect.Height);
                 }
-                
+
                 if (currentCell.ImageSizeMode == ImageSizeMode.NoClip)
                 {
                     pcea.Graphics.SetClip(e.ClipRectangle);
@@ -7809,7 +7809,7 @@ namespace XPTable.Models
                         }
                     }
                 }
-                
+
                 // draw the cell
                 pcea.SetCell(currentCell);
                 pcea.SetRow(row);
@@ -7984,7 +7984,7 @@ namespace XPTable.Models
                     {
                         continue;
                     }
-                            
+
                     right += this.ColumnModel.Columns[i].Width;
 
                     var flags = this.TableModel.Rows[irow].InternalGridLineFlags;
@@ -8515,7 +8515,7 @@ namespace XPTable.Models
                     // Ignore the cells that this cell span over
                     if (cell.ColSpan > 1)
                     {
-                        colsToIgnore = cell.ColSpan - 1;        
+                        colsToIgnore = cell.ColSpan - 1;
                     }
                 }
                 else

@@ -37,98 +37,99 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// Base class for Renderers that draw Cells
-	/// </summary>
-	public abstract class CellRenderer : Renderer, ICellRenderer
-	{
-		#region Class Data
-		
-		/// <summary>
-		/// A string that specifies how a Cells contents are formatted
-		/// </summary>
-		private string format;
+    /// <summary>
+    /// Base class for Renderers that draw Cells
+    /// </summary>
+    public abstract class CellRenderer : Renderer, ICellRenderer
+    {
+        #region Class Data
+
+        /// <summary>
+        /// A string that specifies how a Cells contents are formatted
+        /// </summary>
+        private string format;
 
         /// <summary>
         /// An object that controls how cell contents are formatted.
         /// </summary>
         private IFormatProvider formatProvider;
 
-		/// <summary>
-		/// The Brush used to draw disabled text
-		/// </summary>
-		private SolidBrush grayTextBrush;
+        /// <summary>
+        /// The Brush used to draw disabled text
+        /// </summary>
+        private SolidBrush grayTextBrush;
 
-		/// <summary>
-		/// The amount of padding for the cell being rendered
-		/// </summary>
-		private CellPadding padding;
-		
-		#endregion
+        /// <summary>
+        /// The amount of padding for the cell being rendered
+        /// </summary>
+        private CellPadding padding;
+
+        #endregion
 
 
-		#region Constructor
+        #region Constructor
 
-		/// <summary>
-		/// Initializes a new instance of the CellRenderer class with default settings
-		/// </summary>
-		protected CellRenderer() : base()
-		{
-			this.format = "";
-			
-			// this.formatProvider was initialised using System.Globalization.CultureInfo.CurrentUICulture,
-			// but this means formatProvider can be set to a Neutral Culture which does not cantain Numberic 
-			// and DateTime formatting information.  System.Globalization.CultureInfo.CurrentCulture is 
-			// guaranteed to include this formatting information and thus avoids crashes during formatting.
+        /// <summary>
+        /// Initializes a new instance of the CellRenderer class with default settings
+        /// </summary>
+        protected CellRenderer()
+            : base()
+        {
+            this.format = "";
+
+            // this.formatProvider was initialised using System.Globalization.CultureInfo.CurrentUICulture,
+            // but this means formatProvider can be set to a Neutral Culture which does not cantain Numberic 
+            // and DateTime formatting information.  System.Globalization.CultureInfo.CurrentCulture is 
+            // guaranteed to include this formatting information and thus avoids crashes during formatting.
             this.formatProvider = System.Globalization.CultureInfo.CurrentCulture;
 
-			this.grayTextBrush = new SolidBrush(SystemColors.GrayText);
-			this.padding = CellPadding.Empty;
-		}
+            this.grayTextBrush = new SolidBrush(SystemColors.GrayText);
+            this.padding = CellPadding.Empty;
+        }
 
-		#endregion
-
-
-		#region Methods
-
-		/// <summary>
-		/// Releases the unmanaged resources used by the Renderer and 
-		/// optionally releases the managed resources
-		/// </summary>
-		public override void Dispose()
-		{
-			base.Dispose();
-
-			if (this.grayTextBrush != null)
-			{
-				this.grayTextBrush.Dispose();
-				this.grayTextBrush = null;
-			}
-		}
+        #endregion
 
 
-		/// <summary>
-		/// Gets the renderer specific data used by the Renderer from 
-		/// the specified Cell
-		/// </summary>
-		/// <param name="cell">The Cell to get the renderer data for</param>
-		/// <returns>The renderer data for the specified Cell</returns>
-		protected object GetRendererData(Cell cell)
-		{
-			return cell.RendererData;
-		}
+        #region Methods
+
+        /// <summary>
+        /// Releases the unmanaged resources used by the Renderer and 
+        /// optionally releases the managed resources
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            if (this.grayTextBrush != null)
+            {
+                this.grayTextBrush.Dispose();
+                this.grayTextBrush = null;
+            }
+        }
 
 
-		/// <summary>
-		/// Sets the specified renderer specific data used by the Renderer for 
-		/// the specified Cell
-		/// </summary>
-		/// <param name="cell">The Cell for which the data is to be stored</param>
-		/// <param name="value">The renderer specific data to be stored</param>
-		protected void SetRendererData(Cell cell, object value)
-		{
-			cell.RendererData = value;
-		}
+        /// <summary>
+        /// Gets the renderer specific data used by the Renderer from 
+        /// the specified Cell
+        /// </summary>
+        /// <param name="cell">The Cell to get the renderer data for</param>
+        /// <returns>The renderer data for the specified Cell</returns>
+        protected object GetRendererData(Cell cell)
+        {
+            return cell.RendererData;
+        }
+
+
+        /// <summary>
+        /// Sets the specified renderer specific data used by the Renderer for 
+        /// the specified Cell
+        /// </summary>
+        /// <param name="cell">The Cell for which the data is to be stored</param>
+        /// <param name="value">The renderer specific data to be stored</param>
+        protected void SetRendererData(Cell cell, object value)
+        {
+            cell.RendererData = value;
+        }
 
         /// <summary>
         /// Returns the height that is required to render this cell. If zero is returned then the default row height is used.
@@ -166,40 +167,40 @@ namespace XPTable.Renderers
         #endregion
 
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// Overrides Renderer.ClientRectangle
-		/// </summary>
-		public override Rectangle ClientRectangle
-		{
-			get
-			{
-				Rectangle client = new Rectangle(this.Bounds.Location, this.Bounds.Size);
-				
-				// take borders into account
-				client.Width -= Renderer.BorderWidth;
-				client.Height -= Renderer.BorderWidth;
+        /// <summary>
+        /// Overrides Renderer.ClientRectangle
+        /// </summary>
+        public override Rectangle ClientRectangle
+        {
+            get
+            {
+                Rectangle client = new Rectangle(this.Bounds.Location, this.Bounds.Size);
 
-				// take cell padding into account
-				client.X += this.Padding.Left + 1;
-				client.Y += this.Padding.Top;
-				client.Width -= this.Padding.Left + this.Padding.Right + 1;
-				client.Height -= this.Padding.Top + this.Padding.Bottom;
+                // take borders into account
+                client.Width -= Renderer.BorderWidth;
+                client.Height -= Renderer.BorderWidth;
 
-				return client;
-			}
-		}
+                // take cell padding into account
+                client.X += this.Padding.Left + 1;
+                client.Y += this.Padding.Top;
+                client.Width -= this.Padding.Left + this.Padding.Right + 1;
+                client.Height -= this.Padding.Top + this.Padding.Bottom;
+
+                return client;
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets the string that specifies how a Cells contents are formatted
-		/// </summary>
-		protected string Format
-		{
-			get { return this.format; }
-			set { this.format = value; }
-		}
+        /// <summary>
+        /// Gets or sets the string that specifies how a Cells contents are formatted
+        /// </summary>
+        protected string Format
+        {
+            get { return this.format; }
+            set { this.format = value; }
+        }
 
         /// <summary>
         /// Gets or sets the object that controls how cell contents are formatted
@@ -210,127 +211,127 @@ namespace XPTable.Renderers
             set { this.formatProvider = value; }
         }
 
-		/// <summary>
-		/// Gets the Brush used to draw disabled text
-		/// </summary>
-		protected Brush GrayTextBrush
-		{
-			get { return this.grayTextBrush; }
-		}
+        /// <summary>
+        /// Gets the Brush used to draw disabled text
+        /// </summary>
+        protected Brush GrayTextBrush
+        {
+            get { return this.grayTextBrush; }
+        }
 
 
-		/// <summary>
-		/// Gets or sets the amount of padding around the Cell being rendered
-		/// </summary>
-		protected CellPadding Padding
-		{
-			get
-			{
-				return this.padding;
-			}
+        /// <summary>
+        /// Gets or sets the amount of padding around the Cell being rendered
+        /// </summary>
+        protected CellPadding Padding
+        {
+            get
+            {
+                return this.padding;
+            }
 
-			set
-			{
-				this.padding = value;
-			}
-		}
+            set
+            {
+                this.padding = value;
+            }
+        }
 
-		#endregion
-
-
-		#region Events
-
-		#region Focus
-
-		/// <summary>
-		/// Raises the GotFocus event
-		/// </summary>
-		/// <param name="e">A CellFocusEventArgs that contains the event data</param>
-		public virtual void OnGotFocus(CellFocusEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
-			
-			e.Table.Invalidate(e.CellRect);
-		}
+        #endregion
 
 
-		/// <summary>
-		/// Raises the LostFocus event
-		/// </summary>
-		/// <param name="e">A CellFocusEventArgs that contains the event data</param>
-		public virtual void OnLostFocus(CellFocusEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
-			
-			e.Table.Invalidate(e.CellRect);
-		}
+        #region Events
 
-		#endregion
+        #region Focus
 
-		#region Keys
+        /// <summary>
+        /// Raises the GotFocus event
+        /// </summary>
+        /// <param name="e">A CellFocusEventArgs that contains the event data</param>
+        public virtual void OnGotFocus(CellFocusEventArgs e)
+        {
+            this.Bounds = e.CellRect;
 
-		/// <summary>
-		/// Raises the KeyDown event
-		/// </summary>
-		/// <param name="e">A CellKeyEventArgs that contains the event data</param>
-		public virtual void OnKeyDown(CellKeyEventArgs e)
-		{
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
 
-		}
+            e.Table.Invalidate(e.CellRect);
+        }
 
 
-		/// <summary>
-		/// Raises the KeyUp event
-		/// </summary>
-		/// <param name="e">A CellKeyEventArgs that contains the event data</param>
-		public virtual void OnKeyUp(CellKeyEventArgs e)
-		{
+        /// <summary>
+        /// Raises the LostFocus event
+        /// </summary>
+        /// <param name="e">A CellFocusEventArgs that contains the event data</param>
+        public virtual void OnLostFocus(CellFocusEventArgs e)
+        {
+            this.Bounds = e.CellRect;
 
-		}
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
 
-		#endregion
+            e.Table.Invalidate(e.CellRect);
+        }
 
-		#region Mouse
+        #endregion
 
-		#region MouseEnter
+        #region Keys
 
-		/// <summary>
-		/// Raises the MouseEnter event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public virtual void OnMouseEnter(CellMouseEventArgs e)
-		{
-			this.Bounds = e.CellRect;
+        /// <summary>
+        /// Raises the KeyDown event
+        /// </summary>
+        /// <param name="e">A CellKeyEventArgs that contains the event data</param>
+        public virtual void OnKeyDown(CellKeyEventArgs e)
+        {
+
+        }
+
+
+        /// <summary>
+        /// Raises the KeyUp event
+        /// </summary>
+        /// <param name="e">A CellKeyEventArgs that contains the event data</param>
+        public virtual void OnKeyUp(CellKeyEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region Mouse
+
+        #region MouseEnter
+
+        /// <summary>
+        /// Raises the MouseEnter event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public virtual void OnMouseEnter(CellMouseEventArgs e)
+        {
+            this.Bounds = e.CellRect;
 
             this.Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
 
-			bool tooltipActive = e.Table.ToolTip.Active;
+            bool tooltipActive = e.Table.ToolTip.Active;
 
-			if (tooltipActive)
-				e.Table.ToolTip.Active = false;
+            if (tooltipActive)
+                e.Table.ToolTip.Active = false;
 
-			e.Table.ResetMouseEventArgs();
+            e.Table.ResetMouseEventArgs();
 
-			if (tooltipActive)
-			{
+            if (tooltipActive)
+            {
                 if (e.Cell != null)
                 {
                     CellToolTipEventArgs args = new CellToolTipEventArgs(e.Cell, new Point(e.X, e.Y));
@@ -352,175 +353,175 @@ namespace XPTable.Renderers
                 {
                     e.Table.ToolTip.SetToolTip(e.Table, string.Empty);
                 }
-				e.Table.ToolTip.Active = true;
-			}
-		}
-		#endregion
+                e.Table.ToolTip.Active = true;
+            }
+        }
+        #endregion
 
-		#region MouseLeave
+        #region MouseLeave
 
-		/// <summary>
-		/// Raises the MouseLeave event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public virtual void OnMouseLeave(CellMouseEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
-		}
+        /// <summary>
+        /// Raises the MouseLeave event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public virtual void OnMouseLeave(CellMouseEventArgs e)
+        {
+            this.Bounds = e.CellRect;
 
-		#endregion
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
+        }
 
-		#region MouseUp
+        #endregion
 
-		/// <summary>
-		/// Raises the MouseUp event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public virtual void OnMouseUp(CellMouseEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
-		}
+        #region MouseUp
 
-		#endregion
+        /// <summary>
+        /// Raises the MouseUp event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public virtual void OnMouseUp(CellMouseEventArgs e)
+        {
+            this.Bounds = e.CellRect;
 
-		#region MouseDown
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
+        }
 
-		/// <summary>
-		/// Raises the MouseDown event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public virtual void OnMouseDown(CellMouseEventArgs e)
-		{
-			if (!e.Table.Focused)
-			{
-				if (!(e.Table.IsEditing && e.Table.EditingCell == e.CellPos && e.Table.EditingCellEditor is IEditorUsesRendererButtons))
-				{
-					e.Table.Focus();
-				}
-			}
-			
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
-		}
+        #endregion
 
-		#endregion
+        #region MouseDown
 
-		#region MouseMove
+        /// <summary>
+        /// Raises the MouseDown event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public virtual void OnMouseDown(CellMouseEventArgs e)
+        {
+            if (!e.Table.Focused)
+            {
+                if (!(e.Table.IsEditing && e.Table.EditingCell == e.CellPos && e.Table.EditingCellEditor is IEditorUsesRendererButtons))
+                {
+                    e.Table.Focus();
+                }
+            }
 
-		/// <summary>
-		/// Raises the MouseMove event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public virtual void OnMouseMove(CellMouseEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
-		}
+            this.Bounds = e.CellRect;
 
-		#endregion
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
+        }
 
-		#region Click
+        #endregion
 
-		/// <summary>
-		/// Raises the Click event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public virtual void OnClick(CellMouseEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
+        #region MouseMove
 
-			if ((((e.Table.EditStartAction & EditStartAction.SingleClick) == EditStartAction.SingleClick)) 
+        /// <summary>
+        /// Raises the MouseMove event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public virtual void OnMouseMove(CellMouseEventArgs e)
+        {
+            this.Bounds = e.CellRect;
+
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
+        }
+
+        #endregion
+
+        #region Click
+
+        /// <summary>
+        /// Raises the Click event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public virtual void OnClick(CellMouseEventArgs e)
+        {
+            this.Bounds = e.CellRect;
+
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
+
+            if ((((e.Table.EditStartAction & EditStartAction.SingleClick) == EditStartAction.SingleClick))
                 && e.Table.IsCellEditable(e.CellPos))
-			{
-				e.Table.EditCell(e.CellPos);
-			}
-		}
+            {
+                e.Table.EditCell(e.CellPos);
+            }
+        }
 
 
-		/// <summary>
-		/// Raises the DoubleClick event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public virtual void OnDoubleClick(CellMouseEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell == null)
-			{
-				this.Padding = CellPadding.Empty;
-			}
-			else
-			{
-				this.Padding = e.Cell.Padding;
-			}
+        /// <summary>
+        /// Raises the DoubleClick event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public virtual void OnDoubleClick(CellMouseEventArgs e)
+        {
+            this.Bounds = e.CellRect;
+
+            if (e.Cell == null)
+            {
+                this.Padding = CellPadding.Empty;
+            }
+            else
+            {
+                this.Padding = e.Cell.Padding;
+            }
 
             if ((((e.Table.EditStartAction & EditStartAction.DoubleClick) == EditStartAction.DoubleClick))
                 && e.Table.IsCellEditable(e.CellPos))
-			{
-				e.Table.EditCell(e.CellPos);
-			}
-		}
+            {
+                e.Table.EditCell(e.CellPos);
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#endregion
-			
-		#region Paint
+        #endregion
 
-		/// <summary>
-		/// Raises the PaintCell event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		public virtual void OnPaintCell(PaintCellEventArgs e)
-		{
-			this.Bounds = e.CellRect;
-			
-			if (e.Cell != null)
-			{
-				this.Padding = e.Cell.Padding;
+        #region Paint
+
+        /// <summary>
+        /// Raises the PaintCell event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        public virtual void OnPaintCell(PaintCellEventArgs e)
+        {
+            this.Bounds = e.CellRect;
+
+            if (e.Cell != null)
+            {
+                this.Padding = e.Cell.Padding;
 
                 // Cell settings supercede Column/Row settings
 
@@ -531,7 +532,7 @@ namespace XPTable.Renderers
                     CellStyle style = e.Cell.CellStyle;
                     if (style.IsAlignmentSet)
                     {
-                        alignmentSet = true; 
+                        alignmentSet = true;
                         this.Alignment = style.Alignment;
                     }
                     if (style.IsLineAlignmentSet)
@@ -542,161 +543,161 @@ namespace XPTable.Renderers
                 }
 
                 if (!alignmentSet)
-    				this.Alignment = e.Table.ColumnModel.Columns[e.Column].Alignment;
+                    this.Alignment = e.Table.ColumnModel.Columns[e.Column].Alignment;
                 if (!lineAlignmentSet)
-    				this.LineAlignment = e.Table.TableModel.Rows[e.Row].Alignment;
+                    this.LineAlignment = e.Table.TableModel.Rows[e.Row].Alignment;
 
-				this.Format = e.Table.ColumnModel.Columns[e.Column].Format;
+                this.Format = e.Table.ColumnModel.Columns[e.Column].Format;
 
-				this.Font = e.Cell.Font;
-			}
-			else
-			{
-				this.Padding = CellPadding.Empty;
-				this.Alignment = ColumnAlignment.Left;
-				this.LineAlignment = RowAlignment.Center;
-				this.Format = "";
-				this.Font = null;
-			}
+                this.Font = e.Cell.Font;
+            }
+            else
+            {
+                this.Padding = CellPadding.Empty;
+                this.Alignment = ColumnAlignment.Left;
+                this.LineAlignment = RowAlignment.Center;
+                this.Format = "";
+                this.Font = null;
+            }
 
-			// if the font is null, use the default font
-			if (this.Font == null)
-			{
-				this.Font = Control.DefaultFont;
-			}
+            // if the font is null, use the default font
+            if (this.Font == null)
+            {
+                this.Font = Control.DefaultFont;
+            }
 
-			// paint the Cells background
-			this.OnPaintBackground(e);
+            // paint the Cells background
+            this.OnPaintBackground(e);
 
-			// paint the Cells foreground
-			this.OnPaint(e);
-		}
+            // paint the Cells foreground
+            this.OnPaint(e);
+        }
 
 
-		/// <summary>
-		/// Raises the PaintBackground event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		protected virtual void OnPaintBackground(PaintCellEventArgs e)
-		{
-			// Mateusz [PEYN] Adamus (peyn@tlen.pl)
-			// we have to figure it out if row is in the alternate span or not
-			// if position is odd it's alternate, even it's not (it's normal)
+        /// <summary>
+        /// Raises the PaintBackground event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        protected virtual void OnPaintBackground(PaintCellEventArgs e)
+        {
+            // Mateusz [PEYN] Adamus (peyn@tlen.pl)
+            // we have to figure it out if row is in the alternate span or not
+            // if position is odd it's alternate, even it's not (it's normal)
             // netus 2006-03-13 - new formula for calculating alternating background color
-            bool isAlternateRow = ( Math.Ceiling( (double)( e.Row  ) / e.Table.AlternatingRowSpan ) % 2 ) == 0;
+            bool isAlternateRow = (Math.Ceiling((double)(e.Row) / e.Table.AlternatingRowSpan) % 2) == 0;
 
             //Debug.WriteLine("row: " + e.Row.ToString() + ", isAlternateRow: " + isAlternateRow.ToString());
 
-			if (e.Selected && (!e.Table.HideSelection || (e.Table.HideSelection && (e.Table.Focused || e.Table.IsEditing))))
-			{
-				if (e.Table.Focused || e.Table.IsEditing)
-				{
-					this.ForeColor = e.Table.SelectionForeColor;
-					this.BackColor = e.Table.SelectionBackColor;
-				}
-				else
-				{
-					this.BackColor = e.Table.UnfocusedSelectionBackColor;
-					this.ForeColor = e.Table.UnfocusedSelectionForeColor;
-				}
+            if (e.Selected && (!e.Table.HideSelection || (e.Table.HideSelection && (e.Table.Focused || e.Table.IsEditing))))
+            {
+                if (e.Table.Focused || e.Table.IsEditing)
+                {
+                    this.ForeColor = e.Table.SelectionForeColor;
+                    this.BackColor = e.Table.SelectionBackColor;
+                }
+                else
+                {
+                    this.BackColor = e.Table.UnfocusedSelectionBackColor;
+                    this.ForeColor = e.Table.UnfocusedSelectionForeColor;
+                }
 
-				if (this.BackColor.A != 0)
-				{
-					e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
-				}
-			}
-			else
-			{
-				this.ForeColor = e.Cell != null ? e.Cell.ForeColor : Color.Black;
+                if (this.BackColor.A != 0)
+                {
+                    e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                }
+            }
+            else
+            {
+                this.ForeColor = e.Cell != null ? e.Cell.ForeColor : Color.Black;
 
-				if (!e.Sorted || (e.Sorted && e.Table.SortedColumnBackColor.A < 255))
-				{
-					if (e.Cell != null)
-					{
-						if (e.Cell.BackColor.A < 255)
-						{
+                if (!e.Sorted || (e.Sorted && e.Table.SortedColumnBackColor.A < 255))
+                {
+                    if (e.Cell != null)
+                    {
+                        if (e.Cell.BackColor.A < 255)
+                        {
                             //netus 2006-03-13 - when there is alternate background color row
                             if (isAlternateRow)
-							{
-								if (e.Table.AlternatingRowColor.A != 0)
-								{
-									this.BackColor = e.Table.AlternatingRowColor;
-									e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
-								}
-							}
-						
-							this.BackColor = e.Cell.BackColor;
-							if (e.Cell.BackColor.A != 0)
-							{
-								e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
-							}
-						}
-						else
-						{
-							this.BackColor = e.Cell.BackColor;
-							if (e.Cell.BackColor.A != 0)
-							{
-								e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
-							}
-						}
-					}
-					else
-					{
+                            {
+                                if (e.Table.AlternatingRowColor.A != 0)
+                                {
+                                    this.BackColor = e.Table.AlternatingRowColor;
+                                    e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                                }
+                            }
+
+                            this.BackColor = e.Cell.BackColor;
+                            if (e.Cell.BackColor.A != 0)
+                            {
+                                e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                            }
+                        }
+                        else
+                        {
+                            this.BackColor = e.Cell.BackColor;
+                            if (e.Cell.BackColor.A != 0)
+                            {
+                                e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                            }
+                        }
+                    }
+                    else
+                    {
                         //netus 2006-03-13 - when there is alternate background color row
-						if (isAlternateRow)
-						{
-							if (e.Table.AlternatingRowColor.A != 0)
-							{
-								this.BackColor = e.Table.AlternatingRowColor;
-								e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
-							}
-						}
-					}
-					
-					if (e.Sorted)
-					{
-						this.BackColor = e.Table.SortedColumnBackColor;
-						if (e.Table.SortedColumnBackColor.A != 0)
-						{
-							e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
-						}
-					}
-				}
-				else
-				{
-					this.BackColor = e.Table.SortedColumnBackColor;
-					e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
-				}
-			}
-		}
+                        if (isAlternateRow)
+                        {
+                            if (e.Table.AlternatingRowColor.A != 0)
+                            {
+                                this.BackColor = e.Table.AlternatingRowColor;
+                                e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                            }
+                        }
+                    }
+
+                    if (e.Sorted)
+                    {
+                        this.BackColor = e.Table.SortedColumnBackColor;
+                        if (e.Table.SortedColumnBackColor.A != 0)
+                        {
+                            e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                        }
+                    }
+                }
+                else
+                {
+                    this.BackColor = e.Table.SortedColumnBackColor;
+                    e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Raises the Paint event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		protected virtual void OnPaint(PaintCellEventArgs e)
-		{
-			
-		}
+        /// <summary>
+        /// Raises the Paint event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        protected virtual void OnPaint(PaintCellEventArgs e)
+        {
+
+        }
 
 
-		/// <summary>
-		/// Raises the PaintBorder event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		/// <param name="pen">The pen used to draw the border</param>
-		protected virtual void OnPaintBorder(PaintCellEventArgs e, Pen pen)
-		{
-			// bottom
-			e.Graphics.DrawLine(pen, e.CellRect.Left, e.CellRect.Bottom, e.CellRect.Right, e.CellRect.Bottom);
-			
-			// right
-			e.Graphics.DrawLine(pen, e.CellRect.Right, e.CellRect.Top, e.CellRect.Right, e.CellRect.Bottom);
-		}
+        /// <summary>
+        /// Raises the PaintBorder event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        /// <param name="pen">The pen used to draw the border</param>
+        protected virtual void OnPaintBorder(PaintCellEventArgs e, Pen pen)
+        {
+            // bottom
+            e.Graphics.DrawLine(pen, e.CellRect.Left, e.CellRect.Bottom, e.CellRect.Right, e.CellRect.Bottom);
 
-		#endregion
+            // right
+            e.Graphics.DrawLine(pen, e.CellRect.Right, e.CellRect.Top, e.CellRect.Right, e.CellRect.Bottom);
+        }
 
-		#endregion
-	}
+        #endregion
+
+        #endregion
+    }
 }
