@@ -116,6 +116,18 @@ namespace XPTable.Renderers
                 this.foreBrush.Dispose();
                 this.foreBrush = null;
             }
+
+            if (this.stringFormat != null)
+            {
+                this.stringFormat.Dispose();
+                this.stringFormat = null;
+            }
+
+            if (this.font != null)
+            {
+                this.font.Dispose();
+                this.font = null;
+            }
         }
 
         /// <summary>
@@ -195,23 +207,19 @@ namespace XPTable.Renderers
         {
             get
             {
+                if (this.font == null)
+                {
+                    return Control.DefaultFont;
+                }
+
                 return this.font;
             }
 
             set
             {
-                if (value == null)
-                {
-                    value = Control.DefaultFont;
-                }
-
-                if (this.font != value)
-                {
-                    this.font = value;
-                }
+                this.font = value;
             }
         }
-
 
         /// <summary>
         /// Gets the brush used to draw the Renderers background

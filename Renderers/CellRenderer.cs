@@ -75,7 +75,7 @@ namespace XPTable.Renderers
         protected CellRenderer()
             : base()
         {
-            this.format = "";
+            this.format = string.Empty;
 
             // this.formatProvider was initialised using System.Globalization.CultureInfo.CurrentUICulture,
             // but this means formatProvider can be set to a Neutral Culture which does not cantain Numberic 
@@ -157,12 +157,28 @@ namespace XPTable.Renderers
         {
             StringFormatFlags orig = this.StringFormat.FormatFlags;
             if (!canWrap)
+            {
                 StringFormat.FormatFlags = StringFormat.FormatFlags | StringFormatFlags.NoWrap;
+            }
 
-            graphics.DrawString(s, font, brush, layoutRectangle, this.StringFormat);
+            try
+            {
+                graphics.DrawString(s, font, brush, layoutRectangle, this.StringFormat);
+            }
+            catch (Exception e)
+            {
+                e.Data.Add("s", s);
+                e.Data.Add("Font", font.ToString());
+                e.Data.Add("Brush", brush.ToString());
+                e.Data.Add("Rectangle", layoutRectangle.ToString());
+                e.Data.Add("canWrap", canWrap);
+                throw;
+            }
 
             if (!canWrap)
+            {
                 StringFormat.FormatFlags = orig;
+            }
         }
         #endregion
 
@@ -556,14 +572,8 @@ namespace XPTable.Renderers
                 this.Padding = CellPadding.Empty;
                 this.Alignment = ColumnAlignment.Left;
                 this.LineAlignment = RowAlignment.Center;
-                this.Format = "";
+                this.Format = string.Empty;
                 this.Font = null;
-            }
-
-            // if the font is null, use the default font
-            if (this.Font == null)
-            {
-                this.Font = Control.DefaultFont;
             }
 
             // paint the Cells background

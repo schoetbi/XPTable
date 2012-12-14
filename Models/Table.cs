@@ -7584,8 +7584,8 @@ namespace XPTable.Models
         /// <param name="e">A PaintEventArgs that contains the event data</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            // we'll do our own painting thanks
-            //base.OnPaint(e);
+            // call baseclass
+            base.OnPaint(e);
 
             // check if we actually need to paint
             if (this.Width == 0 || this.Height == 0)
@@ -8417,7 +8417,7 @@ namespace XPTable.Models
 
                     if (wordWrapOn)
                     {
-                        rowRect.Height = GetRenderedRowHeight(e.Graphics, row);
+                        rowRect.Height = this.GetRenderedRowHeight(e.Graphics, row);
                         row.InternalHeight = rowRect.Height;
                     }
 
@@ -8505,7 +8505,17 @@ namespace XPTable.Models
 
                     if (cellRect.IntersectsWith(e.ClipRectangle))
                     {
-                        this.OnPaintCell(e, row, i, cellRect);
+                        try
+                        {
+                            this.OnPaintCell(e, row, i, cellRect);
+                        }
+                        catch (Exception exception)
+                        {
+                            exception.Data.Add("row", row);
+                            exception.Data.Add("column", i);
+                            exception.Data.Add("cellRect", cellRect.ToString());
+                            throw;
+                        }
                     }
                     else if (cellRect.Left > e.ClipRectangle.Right)
                     {

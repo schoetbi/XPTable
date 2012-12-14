@@ -117,18 +117,26 @@ namespace XPTable.Renderers
 
             string text = c.Text;
 
-            if (text != null && text.Length != 0)
+            if (!string.IsNullOrEmpty(text))
             {
                 if (e.Enabled)
-                    DrawString(e.Graphics, text, this.Font, this.ForeBrush, this.ClientRectangle, c.WordWrap);
+                {
+                    this.DrawString(e.Graphics, text, this.Font, this.ForeBrush, this.ClientRectangle, c.WordWrap);
+                }
                 else
-                    DrawString(e.Graphics, text, this.Font, this.GrayTextBrush, this.ClientRectangle, c.WordWrap);
+                {
+                    this.DrawString(e.Graphics, text, this.Font, this.GrayTextBrush, this.ClientRectangle, c.WordWrap);
+                }
 
                 // Also, determine whether we need a tooltip, if the text was truncated.
                 if (c.WordWrap)
+                {
                     c.InternalIsTextTrimmed = false;
+                }
                 else if (e.Table.EnableToolTips)
+                {
                     c.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, c.Text);
+                }
             }
 
             if ((e.Focused && e.Enabled)

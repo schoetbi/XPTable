@@ -38,54 +38,62 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// A CellRenderer that draws Cell contents as a ComboBox
-	/// </summary>
-	public class ComboBoxCellRenderer : DropDownCellRenderer
-	{
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ComboBoxCellRenderer class with 
-		/// default settings
-		/// </summary>
-		public ComboBoxCellRenderer() : base()
-		{
-			
-		}
+    /// <summary>
+    /// A CellRenderer that draws Cell contents as a ComboBox
+    /// </summary>
+    public class ComboBoxCellRenderer : DropDownCellRenderer
+    {
+        #region Constructor
+        
+        /// <summary>
+        /// Initializes a new instance of the ComboBoxCellRenderer class with 
+        /// default settings
+        /// </summary>
+        public ComboBoxCellRenderer() : base()
+        {
+            
+        }
 
-		#endregion
+        #endregion
 
 
-		#region Events
+        #region Events
 
-		#region Paint
+        #region Paint
 
-		/// <summary>
-		/// Raises the Paint event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		protected override void OnPaint(PaintCellEventArgs e)
-		{
-			base.OnPaint(e);
+        /// <summary>
+        /// Raises the Paint event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        protected override void OnPaint(PaintCellEventArgs e)
+        {
+            base.OnPaint(e);
 
-			// don't bother going any further if the Cell is null 
-			if (e.Cell == null)
-				return;
+            // don't bother going any further if the Cell is null 
+            if (e.Cell == null)
+            {
+                return;
+            }
 
-			Rectangle buttonRect = this.CalcDropDownButtonBounds();
+            Rectangle buttonRect = this.CalcDropDownButtonBounds();
             Rectangle textRect = this.ClientRectangle;
 
-			if (this.ShowDropDownButton)
-				textRect.Width -= buttonRect.Width - 1;
+            if (this.ShowDropDownButton)
+            {
+                textRect.Width -= buttonRect.Width - 1;
+            }
 
-			// draw the text
-            if (e.Cell.Text != null && e.Cell.Text.Length != 0)
+            // draw the text
+            if (!string.IsNullOrEmpty(e.Cell.Text))
             {
                 if (e.Enabled)
-                    DrawString(e.Graphics, e.Cell.Text, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
+                {
+                    this.DrawString(e.Graphics, e.Cell.Text, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
+                }
                 else
-                    DrawString(e.Graphics, e.Cell.Text, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
+                {
+                    this.DrawString(e.Graphics, e.Cell.Text, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
+                }
 
                 if (e.Cell.WidthNotSet)
                 {
@@ -96,23 +104,26 @@ namespace XPTable.Renderers
             else
             {
                 if (e.Cell.WidthNotSet)
+                {
                     e.Cell.ContentWidth = this.ShowDropDownButton ? buttonRect.Width : 0;
+                }
             }
-			
-			if( (e.Focused && e.Enabled)
-				// only if we want to show selection rectangle
-				&& ( e.Table.ShowSelectionRectangle ) )
-			{
-				Rectangle focusRect = this.ClientRectangle;
 
-				if (this.ShowDropDownButton)
-					focusRect.Width -= buttonRect.Width;
-				
-				ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
-			}
-		}
-		#endregion
+            // only if we want to show selection rectangle
+            if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle)
+            {
+                Rectangle focusRect = this.ClientRectangle;
 
-		#endregion
-	}
+                if (this.ShowDropDownButton)
+                {
+                    focusRect.Width -= buttonRect.Width;
+                }
+                
+                ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
+            }
+        }
+        #endregion
+
+        #endregion
+    }
 }

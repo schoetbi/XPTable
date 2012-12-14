@@ -37,7 +37,7 @@ namespace XPTable.Renderers
     /// <summary>
     /// Exposes common methods provided by Cell renderers
     /// </summary>
-    public interface ICellRenderer : IRenderer
+    public interface ICellRenderer : IRenderer, IDisposable
     {
         /// <summary>
         /// Raises the PaintCell event
