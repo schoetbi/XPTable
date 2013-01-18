@@ -916,9 +916,19 @@ namespace XPTable.Models
             int yOffset;
             // This adds on the total height we can't see
             if (this.EnableWordWrap)
+            {
                 yOffset = this.RowY(this.TopIndex);
-            else
+            }
+            else if (this.TopIndex >= 0)
+            {
                 yOffset = this.TopIndex * this.RowHeight;
+            }
+            else
+            {
+                // this might happen if this.TopIndex is -1
+                yOffset = 0;
+            }
+
             return yOffset;
         }
 
@@ -2579,9 +2589,10 @@ namespace XPTable.Models
                 this.hScrollBar.Value = 0;
             }
 
-            if (vscroll)
+            if (this.vscroll)
             {
-                Rectangle vscrollBounds = new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
+                Rectangle vscrollBounds = new Rectangle(
+                    this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
                     this.BorderWidth,
                     SystemInformation.VerticalScrollBarWidth,
                     this.Height - (this.BorderWidth * 2));
@@ -4289,7 +4300,7 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool HScroll
         {
-            get { return this.hScrollBar == null ? false : this.hScrollBar.Visible; }
+            get { return this.hscroll; }
         }
 
         /// <summary>
@@ -4300,7 +4311,7 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool VScroll
         {
-            get { return this.vScrollBar == null ? false : this.vScrollBar.Visible; }
+            get { return this.vscroll; }
         }
         #endregion
 
@@ -9023,6 +9034,10 @@ namespace XPTable.Models
         /// The member to use in the data source.
         /// </summary>
         private string dataMember;
+
+        private bool hscroll;
+
+        private bool vscroll;
 
         #endregion
 
