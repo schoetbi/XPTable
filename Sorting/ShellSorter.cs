@@ -29,87 +29,85 @@
  * OF SUCH DAMAGE.
  */
 
-
-using System;
-using System.Collections;
-using System.Windows.Forms;
-
-using XPTable.Models;
-
-
 namespace XPTable.Sorting
 {
-	/// <summary>
-	/// A ShellSort implementation for sorting the Cells contained in a TableModel
-	/// </summary>
-	public class ShellSorter : SorterBase
-	{
-		/// <summary>
-		/// Initializes a new instance of the ShellSorter class with the specified 
-		/// TableModel, Column index, IComparer and SortOrder
-		/// </summary>
-		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="comparer">The IComparer used to sort the Column's Cells</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public ShellSorter(TableModel tableModel, int column, IComparer comparer, SortOrder sortOrder) : base(tableModel, column, comparer, sortOrder)
-		{
-			
-		}
+    using System.Collections;
+    using System.Windows.Forms;
 
-		
-		/// <summary>
-		/// Starts sorting the Cells in the TableModel
-		/// </summary>
-		public override void Sort()
-		{
-			int h;
-			int i;
-			int j;
-			Row b;
-			bool loop = true;
+    using XPTable.Models;
 
-			h = 1;
+    /// <summary>
+    /// A ShellSort implementation for sorting the Cells contained in a TableModel
+    /// </summary>
+    public class ShellSorter : SorterBase
+    {
+        /// <summary>
+        /// Initializes a new instance of the ShellSorter class with the specified 
+        /// TableModel, Column index, IComparer and SortOrder
+        /// </summary>
+        /// <param name="tableModel">The TableModel that contains the data to be sorted</param>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="comparer">The IComparer used to sort the Column's Cells</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public ShellSorter(TableModel tableModel, int column, IComparer comparer, SortOrder sortOrder)
+            : base(tableModel, column, comparer, sortOrder)
+        {
 
-			while (h * 3 + 1 <= this.TableModel.Rows.Count) 
-			{
-				h = 3 * h + 1;
-			}
+        }
 
-			while (h > 0) 
-			{
-				for (i=h-1; i<this.TableModel.Rows.Count; i++) 
-				{
-					b = this.TableModel.Rows[i];
-					j = i;
-					loop = true;
 
-					while (loop) 
-					{
-						if (j >= h) 
-						{
+        /// <summary>
+        /// Starts sorting the Cells in the TableModel
+        /// </summary>
+        public override void Sort()
+        {
+            if (this.TableModel == null)
+            {
+                return;
+            }
+
+            int h = 1;
+
+            while (h * 3 + 1 <= this.TableModel.Rows.Count)
+            {
+                h = 3 * h + 1;
+            }
+
+            while (h > 0)
+            {
+                int i;
+                for (i = h - 1; i < this.TableModel.Rows.Count; i++)
+                {
+                    Row b = this.TableModel.Rows[i];
+                    int j = i;
+                    bool loop = true;
+
+                    while (loop)
+                    {
+                        if (j >= h)
+                        {
                             if (this.Compare(this.TableModel.Rows[j - h], b) > 0)
-							{
-								this.Set(j, j-h);
-								
-								j = j - h;
-							} 
-							else 
-							{
-								loop = false;
-							}
-						} 
-						else 
-						{
-							loop = false;
-						}
-					}
+                            {
+                                this.Set(j, j - h);
 
-					this.Set(j, b);
-				}
+                                j = j - h;
+                            }
+                            else
+                            {
+                                loop = false;
+                            }
+                        }
+                        else
+                        {
+                            loop = false;
+                        }
+                    }
 
-				h = h / 3;
-			}
-		}
-	}
+                    this.Set(j, b);
+                }
+
+                h = h / 3;
+            }
+        }
+    }
 }

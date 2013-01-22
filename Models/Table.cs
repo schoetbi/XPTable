@@ -3075,8 +3075,12 @@ namespace XPTable.Models
         /// should be used to sort the column</param>
         private void Sort(int index, Column column, SortOrder sortOrder, bool stable)
         {
-            // make sure a null comparer type doesn't sneak past
+            if (this.TableModel == null)
+            {
+                return;
+            }
 
+            // make sure a null comparer type doesn't sneak past
             ComparerBase comparer = null;
 
             if (column.Comparer != null)
@@ -3110,27 +3114,44 @@ namespace XPTable.Models
                 if (this.TableModel.Rows.Count < 1000)
                 {
                     if (this.StableSort)
+                    {
                         sorter = new InsertionSorter(this.TableModel, index, comparer, sortOrder);
+                    }
                     else
+                    {
                         sorter = new ShellSorter(this.TableModel, index, comparer, sortOrder);
+                    }
                 }
                 else
                 {
                     if (this.StableSort)
+                    {
                         sorter = new MergeSorter(this.TableModel, index, comparer, sortOrder);
+                    }
                     else
+                    {
                         sorter = new HeapSorter(this.TableModel, index, comparer, sortOrder);
+                    }
                 }
             }
             else
             {
                 switch (this.SortType)
                 {
-                    case SortType.HeapSort: { sorter = new HeapSorter(this.TableModel, index, comparer, sortOrder); break; }
-                    case SortType.InsertionSort: { sorter = new InsertionSorter(this.TableModel, index, comparer, sortOrder); break; }
-                    case SortType.MergeSort: { sorter = new MergeSorter(this.TableModel, index, comparer, sortOrder); break; }
-                    case SortType.ShellSort: { sorter = new ShellSorter(this.TableModel, index, comparer, sortOrder); break; }
-                    default: { throw new ApplicationException("Invalid Sort Type - " + this.SortType.ToString()); }
+                    case SortType.HeapSort:
+                        sorter = new HeapSorter(this.TableModel, index, comparer, sortOrder);
+                        break;
+                    case SortType.InsertionSort:
+                        sorter = new InsertionSorter(this.TableModel, index, comparer, sortOrder);
+                        break;
+                    case SortType.MergeSort:
+                        sorter = new MergeSorter(this.TableModel, index, comparer, sortOrder);
+                        break;
+                    case SortType.ShellSort:
+                        sorter = new ShellSorter(this.TableModel, index, comparer, sortOrder);
+                        break;
+                    default:
+                        throw new ApplicationException("Invalid Sort Type - " + this.SortType.ToString());
                 }
             }
 

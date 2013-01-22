@@ -39,32 +39,32 @@ using XPTable.Models;
 
 namespace XPTable.Sorting
 {
-	/// <summary>
-	/// Base class for the sorters used to sort the Cells contained in a TableModel
-	/// </summary>
-	public abstract class SorterBase
-	{
-		#region Class Data
+    /// <summary>
+    /// Base class for the sorters used to sort the Cells contained in a TableModel
+    /// </summary>
+    public abstract class SorterBase
+    {
+        #region Class Data
 
-		/// <summary>
-		/// The TableModel that contains the Cells to be sorted
-		/// </summary>
-		private TableModel tableModel;
+        /// <summary>
+        /// The TableModel that contains the Cells to be sorted
+        /// </summary>
+        private TableModel tableModel;
 
-		/// <summary>
-		/// The index of the Column to be sorted
-		/// </summary>
-		private int column;
+        /// <summary>
+        /// The index of the Column to be sorted
+        /// </summary>
+        private int column;
 
-		/// <summary>
-		/// The IComparer used to sort the Column's Cells
-		/// </summary>
-		private IComparer comparer;
+        /// <summary>
+        /// The IComparer used to sort the Column's Cells
+        /// </summary>
+        private IComparer comparer;
 
-		/// <summary>
-		/// Specifies how the Column is to be sorted
-		/// </summary>
-		private SortOrder sortOrder;
+        /// <summary>
+        /// Specifies how the Column is to be sorted
+        /// </summary>
+        private SortOrder sortOrder;
 
         /// <summary>
         /// Specifies a collection of underlying sort order(s)
@@ -76,41 +76,41 @@ namespace XPTable.Sorting
         /// </summary>
         private IComparerCollection secondaryComparers;
 
-		#endregion
-		
+        #endregion
 
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the SorterBase class with the specified 
-		/// TableModel, Column index, IComparer and SortOrder
-		/// </summary>
-		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="comparer">The IComparer used to sort the Column's Cells</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public SorterBase(TableModel tableModel, int column, IComparer comparer, SortOrder sortOrder)
-		{
-			this.tableModel = tableModel;
-			this.column = column;
-			this.comparer = comparer;
-			this.sortOrder = sortOrder;
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the SorterBase class with the specified 
+        /// TableModel, Column index, IComparer and SortOrder
+        /// </summary>
+        /// <param name="tableModel">The TableModel that contains the data to be sorted</param>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="comparer">The IComparer used to sort the Column's Cells</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public SorterBase(TableModel tableModel, int column, IComparer comparer, SortOrder sortOrder)
+        {
+            this.tableModel = tableModel;
+            this.column = column;
+            this.comparer = comparer;
+            this.sortOrder = sortOrder;
             this.secondarySortOrder = new SortColumnCollection();
             this.secondaryComparers = new IComparerCollection();
-		}
+        }
 
-		#endregion
+        #endregion
 
 
-		#region Methods
+        #region Methods
 
-		/// <summary>
-		/// Compares two rows and returns a value indicating whether one is less 
-		/// than, equal to or greater than the other. Takes into account the sort order.
-		/// </summary>
-		/// <param name="row1">First row to compare</param>
+        /// <summary>
+        /// Compares two rows and returns a value indicating whether one is less 
+        /// than, equal to or greater than the other. Takes into account the sort order.
+        /// </summary>
+        /// <param name="row1">First row to compare</param>
         /// <param name="row2">Second row to compare</param>
-		/// <returns>-1 if a is less than b, 1 if a is greater than b, or 0 if a equals b</returns>
+        /// <returns>-1 if a is less than b, 1 if a is greater than b, or 0 if a equals b</returns>
         protected int Compare(Row row1, Row row2)
         {
             int result = 0;
@@ -274,99 +274,99 @@ namespace XPTable.Sorting
             return result;
         }
 
-		/// <summary>
-		/// Starts sorting the Cells in the TableModel
-		/// </summary>
-		public abstract void Sort();
+        /// <summary>
+        /// Starts sorting the Cells in the TableModel
+        /// </summary>
+        public abstract void Sort();
 
 
-		/// <summary>
-		/// Swaps the Rows in the TableModel at the specified indexes
-		/// </summary>
-		/// <param name="a">The index of the first Row to be swapped</param>
-		/// <param name="b">The index of the second Row to be swapped</param>
-		protected void Swap(int a, int b)
-		{
-			Row swap = this.TableModel.Rows[a];
-			
-			this.TableModel.Rows.SetRow(a, this.TableModel.Rows[b]);
-			this.TableModel.Rows.SetRow(b, swap);
-		}
-		
+        /// <summary>
+        /// Swaps the Rows in the TableModel at the specified indexes
+        /// </summary>
+        /// <param name="a">The index of the first Row to be swapped</param>
+        /// <param name="b">The index of the second Row to be swapped</param>
+        protected void Swap(int a, int b)
+        {
+            Row swap = this.TableModel.Rows[a];
 
-		/// <summary>
-		/// Replaces the Row in the TableModel located at index a with the Row 
-		/// located at index b
-		/// </summary>
-		/// <param name="a">The index of the Row that will be replaced</param>
-		/// <param name="b">The index of the Row that will be moved to index a</param>
-		protected void Set(int a, int b)
-		{
-			this.TableModel.Rows.SetRow(a, this.TableModel.Rows[b]);
-		}
+            this.TableModel.Rows.SetRow(a, this.TableModel.Rows[b]);
+            this.TableModel.Rows.SetRow(b, swap);
+        }
 
 
-		/// <summary>
-		/// Replaces the Row in the TableModel located at index a with the specified Row
-		/// </summary>
-		/// <param name="a">The index of the Row that will be replaced</param>
-		/// <param name="row">The Row that will be moved to index a</param>
-		protected void Set(int a, Row row)
-		{
-			this.TableModel.Rows.SetRow(a, row);
-		}
-
-		#endregion
-
-
-		#region Properties
-
-		/// <summary>
-		/// Gets the TableModel that contains the Cells to be sorted
-		/// </summary>
-		public TableModel TableModel
-		{
-			get
-			{
-				return this.tableModel;
-			}
-		}
+        /// <summary>
+        /// Replaces the Row in the TableModel located at index a with the Row 
+        /// located at index b
+        /// </summary>
+        /// <param name="a">The index of the Row that will be replaced</param>
+        /// <param name="b">The index of the Row that will be moved to index a</param>
+        protected void Set(int a, int b)
+        {
+            this.TableModel.Rows.SetRow(a, this.TableModel.Rows[b]);
+        }
 
 
-		/// <summary>
-		/// Gets the index of the Column to be sorted
-		/// </summary>
-		public int SortColumn
-		{
-			get
-			{
-				return this.column;
-			}
-		}
+        /// <summary>
+        /// Replaces the Row in the TableModel located at index a with the specified Row
+        /// </summary>
+        /// <param name="a">The index of the Row that will be replaced</param>
+        /// <param name="row">The Row that will be moved to index a</param>
+        protected void Set(int a, Row row)
+        {
+            this.TableModel.Rows.SetRow(a, row);
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// Gets the IComparer used to sort the Column's Cells
-		/// </summary>
-		public IComparer Comparer
-		{
-			get
-			{
-				return this.comparer;
-			}
-		}
+        #region Properties
+
+        /// <summary>
+        /// Gets the TableModel that contains the Cells to be sorted
+        /// </summary>
+        public TableModel TableModel
+        {
+            get
+            {
+                return this.tableModel;
+            }
+        }
 
 
-		/// <summary>
-		/// Gets how the Column is to be sorted
-		/// </summary>
-		public SortOrder SortOrder
-		{
-			get
-			{
-				return this.sortOrder;
-			}
-		}
+        /// <summary>
+        /// Gets the index of the Column to be sorted
+        /// </summary>
+        public int SortColumn
+        {
+            get
+            {
+                return this.column;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the IComparer used to sort the Column's Cells
+        /// </summary>
+        public IComparer Comparer
+        {
+            get
+            {
+                return this.comparer;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets how the Column is to be sorted
+        /// </summary>
+        public SortOrder SortOrder
+        {
+            get
+            {
+                return this.sortOrder;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a collection of underlying sort order(s)
@@ -398,6 +398,6 @@ namespace XPTable.Sorting
             }
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

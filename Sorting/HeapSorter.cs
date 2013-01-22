@@ -29,8 +29,6 @@
  * OF SUCH DAMAGE.
  */
 
-
-using System;
 using System.Collections;
 using System.Windows.Forms;
 
@@ -39,83 +37,85 @@ using XPTable.Models;
 
 namespace XPTable.Sorting
 {
-	/// <summary>
-	/// A HeapSort implementation for sorting the Cells contained in a TableModel
-	/// </summary>
-	public class HeapSorter : SorterBase
-	{
-		/// <summary>
-		/// Initializes a new instance of the HeapSorter class with the specified 
-		/// TableModel, Column index, IComparer and SortOrder
-		/// </summary>
-		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="comparer">The IComparer used to sort the Column's Cells</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public HeapSorter(TableModel tableModel, int column, IComparer comparer, SortOrder sortOrder) : base(tableModel, column, comparer, sortOrder)
-		{
-			
-		}
+    /// <summary>
+    /// A HeapSort implementation for sorting the Cells contained in a TableModel
+    /// </summary>
+    public class HeapSorter : SorterBase
+    {
+        /// <summary>
+        /// Initializes a new instance of the HeapSorter class with the specified 
+        /// TableModel, Column index, IComparer and SortOrder
+        /// </summary>
+        /// <param name="tableModel">The TableModel that contains the data to be sorted</param>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="comparer">The IComparer used to sort the Column's Cells</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public HeapSorter(TableModel tableModel, int column, IComparer comparer, SortOrder sortOrder)
+            : base(tableModel, column, comparer, sortOrder)
+        {
 
-		
-		/// <summary>
-		/// Starts sorting the Cells in the TableModel
-		/// </summary>
-		public override void Sort()
-		{
-			int n;
-			int i;
-
-			n = this.TableModel.Rows.Count;
-
-			for (i=n/2; i>0; i--) 
-			{
-				this.DownHeap(i, n);
-			}
-			do 
-			{
-				this.Swap(0, n-1);
-
-				n = n - 1;
-
-				this.DownHeap(1, n);
-			} while (n>1);
-		}
+        }
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="k"></param>
-		/// <param name="n"></param>
-		private void DownHeap(int k, int n)
-		{
-			int j;
-			bool loop = true;
+        /// <summary>
+        /// Starts sorting the Cells in the TableModel
+        /// </summary>
+        public override void Sort()
+        {
+            if (this.TableModel == null)
+            {
+                return;
+            }
 
-			while ((k <= n / 2) && loop) 
-			{
-				j = k + k;
+            int n = this.TableModel.Rows.Count;
 
-				if (j < n) 
-				{
-					if (this.Compare(this.TableModel.Rows[j-1], this.TableModel.Rows[j]) < 0) 
-					{					
-						j++;
-					}
-				}	
+            for (int i = n / 2; i > 0; i--)
+            {
+                this.DownHeap(i, n);
+            }
 
-				if (this.Compare(this.TableModel.Rows[k-1], this.TableModel.Rows[j-1]) >= 0) 
-				{
-					loop = false;
-				} 
-				else 
-				{
-					this.Swap(k-1, j-1);
-					
-					k = j;
-				}
-			}
-		}
-	}
+            do
+            {
+                this.Swap(0, n - 1);
+                n = n - 1;
+                this.DownHeap(1, n);
+            }
+            while (n > 1);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="k"></param>
+        /// <param name="n"></param>
+        private void DownHeap(int k, int n)
+        {
+            int j;
+            bool loop = true;
+
+            while ((k <= n / 2) && loop)
+            {
+                j = k + k;
+
+                if (j < n)
+                {
+                    if (this.Compare(this.TableModel.Rows[j - 1], this.TableModel.Rows[j]) < 0)
+                    {
+                        j++;
+                    }
+                }
+
+                if (this.Compare(this.TableModel.Rows[k - 1], this.TableModel.Rows[j - 1]) >= 0)
+                {
+                    loop = false;
+                }
+                else
+                {
+                    this.Swap(k - 1, j - 1);
+
+                    k = j;
+                }
+            }
+        }
+    }
 }
