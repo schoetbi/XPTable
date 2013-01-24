@@ -2589,10 +2589,9 @@ namespace XPTable.Models
                 this.hScrollBar.Value = 0;
             }
 
-            if (this.vscroll)
+            if (vscroll)
             {
-                Rectangle vscrollBounds = new Rectangle(
-                    this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
+                Rectangle vscrollBounds = new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
                     this.BorderWidth,
                     SystemInformation.VerticalScrollBarWidth,
                     this.Height - (this.BorderWidth * 2));
@@ -4321,7 +4320,7 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool HScroll
         {
-            get { return this.hscroll; }
+            get { return this.hScrollBar == null ? false : this.hScrollBar.Visible; }
         }
 
         /// <summary>
@@ -4332,7 +4331,7 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool VScroll
         {
-            get { return this.vscroll; }
+            get { return this.vScrollBar == null ? false : this.vScrollBar.Visible; }
         }
         #endregion
 
@@ -9055,10 +9054,6 @@ namespace XPTable.Models
         /// The member to use in the data source.
         /// </summary>
         private string dataMember;
-
-        private bool hscroll;
-
-        private bool vscroll;
 
         #endregion
 
