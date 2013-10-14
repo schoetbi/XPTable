@@ -8197,9 +8197,12 @@ namespace XPTable.Models
 
                 Rectangle rect = this.RowRect(irow);
                 var flags = row.InternalGridLineFlags;
-                if (column >= 0 && column < flags.Length && flags[column])
+                if (flags != null)
                 {
-                    e.Graphics.DrawLine(gridPen, x - 1, rect.Top, x - 1, rect.Bottom - 1);
+                    if (column >= 0 && column < flags.Length && flags[column])
+                    {
+                        e.Graphics.DrawLine(gridPen, x - 1, rect.Top, x - 1, rect.Bottom - 1);
+                    }
                 }
 
                 lastRowBottom = rect.Bottom;
