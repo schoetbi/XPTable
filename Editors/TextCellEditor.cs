@@ -81,7 +81,10 @@ namespace XPTable.Editors
         /// </summary>
         protected override void SetCellValue()
         {
-            this.EditingCell.Text = this.TextBox.Text;
+            if (this.cell != null)
+            {
+                this.cell.Text = this.TextBox.Text;
+            }
         }
 
         /// <summary>
@@ -89,10 +92,10 @@ namespace XPTable.Editors
         /// </summary>
         public override void StartEditing()
         {
-            this.TextBox.KeyPress += new KeyPressEventHandler(OnKeyPress);
-            this.TextBox.LostFocus += new EventHandler(OnLostFocus);
+            this.TextBox.KeyPress += this.OnKeyPress;
+            this.TextBox.LostFocus += this.OnLostFocus;
 
-            this.TextBox.Multiline = (this.EditingTable.EnableWordWrap && this.EditingCell.WordWrap);
+            this.TextBox.Multiline = this.EditingTable.EnableWordWrap && this.EditingCell.WordWrap;
 
             base.StartEditing();
 
@@ -104,8 +107,8 @@ namespace XPTable.Editors
         /// </summary>
         public override void StopEditing()
         {
-            this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
-            this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
+            this.TextBox.KeyPress -= this.OnKeyPress;
+            this.TextBox.LostFocus -= this.OnLostFocus;
 
             base.StopEditing();
         }
@@ -115,8 +118,8 @@ namespace XPTable.Editors
         /// </summary>
         public override void CancelEditing()
         {
-            this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
-            this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
+            this.TextBox.KeyPress -= this.OnKeyPress;
+            this.TextBox.LostFocus -= this.OnLostFocus;
 
             base.CancelEditing();
         }
@@ -140,21 +143,24 @@ namespace XPTable.Editors
         /// <param name="e">A KeyPressEventArgs that contains the event data</param>
         protected virtual void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
+            if (this.EditingTable != null && this.IsEditing)
             {
-                if (this.EditingTable != null)
+                if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
                 {
                     if (this.EditingTable.SuppressEditorTerminatorBeep)
+                    {
                         e.Handled = true;
+                    }
+
                     this.EditingTable.StopEditing();
                 }
-            }
-            else if (e.KeyChar == AsciiChars.Escape)
-            {
-                if (this.EditingTable != null)
+                else if (e.KeyChar == AsciiChars.Escape)
                 {
                     if (this.EditingTable.SuppressEditorTerminatorBeep)
+                    {
                         e.Handled = true;
+                    }
+
                     this.EditingTable.CancelEditing();
                 }
             }

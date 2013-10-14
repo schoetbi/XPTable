@@ -381,7 +381,6 @@ namespace XPTable.Editors
             }
         }
 
-
         /// <summary>
         /// Gets whether the CellEditor is currently editing a Cell
         /// </summary>
