@@ -34,122 +34,123 @@ using XPTable.Win32;
 
 namespace XPTable.Editors
 {
-	/// <summary>
-	/// A class for editing Cells that contain strings
-	/// </summary>
-	public class TextCellEditor : CellEditor
-	{
-		#region Constructor
-		/// <summary>
-		/// Initializes a new instance of the TextCellEditor class with default settings
-		/// </summary>
-		public TextCellEditor() : base()
-		{
-			TextBox textbox = new TextBox();
-			textbox.AutoSize = false;
-			textbox.BorderStyle = BorderStyle.None;
+    /// <summary>
+    /// A class for editing Cells that contain strings
+    /// </summary>
+    public class TextCellEditor : CellEditor
+    {
+        #region Constructor
+        /// <summary>
+        /// Initializes a new instance of the TextCellEditor class with default settings
+        /// </summary>
+        public TextCellEditor()
+            : base()
+        {
+            TextBox textbox = new TextBox();
+            textbox.AutoSize = false;
+            textbox.BorderStyle = BorderStyle.None;
 
-			this.Control = textbox;
-		}
-		#endregion
+            this.Control = textbox;
+        }
+        #endregion
 
-		#region Methods
-		/// <summary>
-		/// Sets the location and size of the CellEditor
-		/// </summary>
-		/// <param name="cellRect">A Rectangle that represents the size and location 
-		/// of the Cell being edited</param>
-		protected override void SetEditLocation(Rectangle cellRect)
-		{
-			this.TextBox.Location = cellRect.Location;
+        #region Methods
+        /// <summary>
+        /// Sets the location and size of the CellEditor
+        /// </summary>
+        /// <param name="cellRect">A Rectangle that represents the size and location 
+        /// of the Cell being edited</param>
+        protected override void SetEditLocation(Rectangle cellRect)
+        {
+            this.TextBox.Location = cellRect.Location;
             this.TextBox.Size = new Size(cellRect.Width - 1, cellRect.Height - 1);
-		}
+        }
 
-		/// <summary>
-		/// Sets the initial value of the editor based on the contents of 
-		/// the Cell being edited
-		/// </summary>
-		protected override void SetEditValue()
-		{
-			this.TextBox.Text = this.EditingCell.Text;
-		}
+        /// <summary>
+        /// Sets the initial value of the editor based on the contents of 
+        /// the Cell being edited
+        /// </summary>
+        protected override void SetEditValue()
+        {
+            this.TextBox.Text = this.EditingCell.Text;
+        }
 
-		/// <summary>
-		/// Sets the contents of the Cell being edited based on the value 
-		/// in the editor
-		/// </summary>
-		protected override void SetCellValue()
-		{
-			this.EditingCell.Text = this.TextBox.Text;
-		}
+        /// <summary>
+        /// Sets the contents of the Cell being edited based on the value 
+        /// in the editor
+        /// </summary>
+        protected override void SetCellValue()
+        {
+            this.EditingCell.Text = this.TextBox.Text;
+        }
 
-		/// <summary>
-		/// Starts editing the Cell
-		/// </summary>
-		public override void StartEditing()
-		{
-			this.TextBox.KeyPress += new KeyPressEventHandler(OnKeyPress);
-			this.TextBox.LostFocus += new EventHandler(OnLostFocus);
+        /// <summary>
+        /// Starts editing the Cell
+        /// </summary>
+        public override void StartEditing()
+        {
+            this.TextBox.KeyPress += new KeyPressEventHandler(OnKeyPress);
+            this.TextBox.LostFocus += new EventHandler(OnLostFocus);
 
             this.TextBox.Multiline = (this.EditingTable.EnableWordWrap && this.EditingCell.WordWrap);
 
             base.StartEditing();
 
-			this.TextBox.Focus();
-		}
+            this.TextBox.Focus();
+        }
 
-		/// <summary>
-		/// Stops editing the Cell and commits any changes
-		/// </summary>
-		public override void StopEditing()
-		{
-			this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
-			this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
-			
-			base.StopEditing();
-		}
+        /// <summary>
+        /// Stops editing the Cell and commits any changes
+        /// </summary>
+        public override void StopEditing()
+        {
+            this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
+            this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
 
-		/// <summary>
-		/// Stops editing the Cell and ignores any changes
-		/// </summary>
-		public override void CancelEditing()
-		{
-			this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
-			this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
-			
-			base.CancelEditing();
-		}
-		#endregion
+            base.StopEditing();
+        }
 
-		#region Properties
-		/// <summary>
-		/// Gets the TextBox used to edit the Cells contents
-		/// </summary>
-		public TextBox TextBox
-		{
-			get { return this.Control as TextBox; }
-		}
-		#endregion
+        /// <summary>
+        /// Stops editing the Cell and ignores any changes
+        /// </summary>
+        public override void CancelEditing()
+        {
+            this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
+            this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
 
-		#region Events
-		/// <summary>
-		/// Handler for the editors TextBox.KeyPress event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A KeyPressEventArgs that contains the event data</param>
-		protected virtual void OnKeyPress(object sender, KeyPressEventArgs e)
-		{
-			if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
-			{
+            base.CancelEditing();
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets the TextBox used to edit the Cells contents
+        /// </summary>
+        public TextBox TextBox
+        {
+            get { return this.Control as TextBox; }
+        }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Handler for the editors TextBox.KeyPress event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A KeyPressEventArgs that contains the event data</param>
+        protected virtual void OnKeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
+            {
                 if (this.EditingTable != null)
                 {
                     if (this.EditingTable.SuppressEditorTerminatorBeep)
                         e.Handled = true;
                     this.EditingTable.StopEditing();
                 }
-			}
-			else if (e.KeyChar == AsciiChars.Escape)
-			{
+            }
+            else if (e.KeyChar == AsciiChars.Escape)
+            {
                 if (this.EditingTable != null)
                 {
                     if (this.EditingTable.SuppressEditorTerminatorBeep)
@@ -157,18 +158,18 @@ namespace XPTable.Editors
                     this.EditingTable.CancelEditing();
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Handler for the editors TextBox.LostFocus event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		protected virtual void OnLostFocus(object sender, EventArgs e)
-		{
-			if (this.EditingTable != null)
-				this.EditingTable.StopEditing();
-		}
-		#endregion
-	}
+        /// <summary>
+        /// Handler for the editors TextBox.LostFocus event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        protected virtual void OnLostFocus(object sender, EventArgs e)
+        {
+            if (this.EditingTable != null)
+                this.EditingTable.StopEditing();
+        }
+        #endregion
+    }
 }
