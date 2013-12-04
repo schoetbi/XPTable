@@ -92,10 +92,15 @@ namespace XPTable.Editors
         /// </summary>
         public override void StartEditing()
         {
-            this.TextBox.KeyPress += this.OnKeyPress;
-            this.TextBox.LostFocus += this.OnLostFocus;
+            if (this.EditingCell == null || this.EditingCell == null)
+            {
+                return;
+            }
 
             this.TextBox.Multiline = this.EditingTable.EnableWordWrap && this.EditingCell.WordWrap;
+
+            this.TextBox.KeyPress += this.OnKeyPress;
+            this.TextBox.LostFocus += this.OnLostFocus;
 
             base.StartEditing();
 
