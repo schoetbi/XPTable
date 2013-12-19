@@ -145,13 +145,17 @@ namespace XPTable.Editors
 
             // check if the user has already set the editors value for us
             if (!userSetEditorValues)
+            {
                 this.SetEditValue();
+            }
 
             this.SetEditLocation(cellRect);
 
             // raise the BeginEdit event
-            CellEditEventArgs e = new CellEditEventArgs(cell, this, table, cellPos.Row, cellPos.Column, cellRect);
-            e.Handled = userSetEditorValues;
+            var e = new CellEditEventArgs(cell, this, table, cellPos.Row, cellPos.Column, cellRect)
+                        {
+                            Handled = userSetEditorValues
+                        };
 
             this.OnBeginEdit(e);
 
@@ -161,10 +165,8 @@ namespace XPTable.Editors
                 this.RemoveEditControl();
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         /// <summary>
@@ -217,10 +219,16 @@ namespace XPTable.Editors
         /// </summary>
         protected virtual void RemoveEditControl()
         {
-            this.control.Visible = false;
-            this.control.Parent = null;
+            if (this.control != null)
+            {
+                this.control.Visible = false;
+                this.control.Parent = null;
+            }
 
-            this.table.Focus();
+            if (this.table != null)
+            {
+                this.table.Focus();
+            }
 
             this.cell = null;
             this.table = null;
@@ -249,8 +257,7 @@ namespace XPTable.Editors
             Application.RemoveMessageFilter(this.keyMessageFilter);
             Application.RemoveMessageFilter(this.mouseMessageFilter);
 
-            //
-            CellEditEventArgs e = new CellEditEventArgs(this.cell, this, this.table, this.cellPos.Row, this.cellPos.Column, this.cellRect);
+            var e = new CellEditEventArgs(this.cell, this, this.table, this.cellPos.Row, this.cellPos.Column, this.cellRect);
 
             this.table.OnEditingStopped(e);
             this.OnEndEdit(e);
@@ -272,8 +279,7 @@ namespace XPTable.Editors
             Application.RemoveMessageFilter(this.keyMessageFilter);
             Application.RemoveMessageFilter(this.mouseMessageFilter);
 
-            //
-            CellEditEventArgs e = new CellEditEventArgs(this.cell, this, this.table, this.cellPos.Row, this.cellPos.Column, this.cellRect);
+            var e = new CellEditEventArgs(this.cell, this, this.table, this.cellPos.Row, this.cellPos.Column, this.cellRect);
 
             this.table.OnEditingCancelled(e);
             this.OnCancelEdit(e);
