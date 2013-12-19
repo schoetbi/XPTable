@@ -92,7 +92,7 @@ namespace XPTable.Editors
         /// </summary>
         public override void StartEditing()
         {
-            if (this.EditingCell == null || this.EditingCell == null)
+            if (this.EditingCell == null || this.EditingTable == null)
             {
                 return;
             }
