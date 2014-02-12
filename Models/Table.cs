@@ -6782,12 +6782,10 @@ namespace XPTable.Models
         /// <param name="levent">A LayoutEventArgs that contains the event data</param>
         protected override void OnLayout(LayoutEventArgs levent)
         {
-            if (!this.IsHandleCreated || this.init)
+            if (this.IsHandleCreated && !this.init)
             {
-                return;
+                base.OnLayout(levent);
             }
-
-            base.OnLayout(levent);
 
             this.UpdateScrollBars();
         }
