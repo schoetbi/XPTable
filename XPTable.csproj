@@ -434,6 +434,7 @@
     <Compile Include="Renderers\TextCellRenderer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Renderers\TextWithButtonCellRenderer.cs" />
     <Compile Include="Renderers\XPHeaderRenderer.cs">
       <SubType>Code</SubType>
     </Compile>
