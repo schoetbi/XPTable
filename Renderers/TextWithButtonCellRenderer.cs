@@ -236,28 +236,6 @@ namespace XPTable.Renderers
 
             // get the button renderer data
             ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
-
-            // 
-            if (e.KeyData == Keys.Enter || e.KeyData == Keys.Space)
-            {
-                rendererData.ButtonState = PushButtonState.Pressed;
-
-                e.Table.Invalidate(e.CellRect);
-            }
-        }
-
-        /// <summary>
-        /// Raises the KeyUp event
-        /// </summary>
-        /// <param name="e">A CellKeyEventArgs that contains the event data</param>
-        public override void OnKeyUp(CellKeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-
-            // get the button renderer data
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
-
-            // 
             if (e.KeyData == Keys.Enter || e.KeyData == Keys.Space)
             {
                 rendererData.ButtonState = PushButtonState.Normal;
