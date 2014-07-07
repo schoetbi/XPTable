@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -27,9 +27,9 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 using XPTable.Editors;
 using XPTable.Events;
@@ -71,6 +71,11 @@ namespace XPTable.Renderers
 		/// </summary>
 		private decimal minimum;
 
+		/// <summary>
+		/// The strikeouted font, created from original Cell's font
+		/// </summary>
+	    private Font strikeoutFont;
+
 		#endregion
 
 
@@ -89,6 +94,7 @@ namespace XPTable.Renderers
 			this.upDownAlignment = LeftRightAlignment.Right;
 			this.maximum = (decimal) 100;
 			this.minimum = (decimal) 0;
+	        this.strikeoutFont = null;
 		}
 
 		#endregion
@@ -631,82 +637,138 @@ namespace XPTable.Renderers
 		}
 
 
-		/// <summary>
-		/// Raises the Paint event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		protected override void OnPaint(PaintCellEventArgs e)
-		{
-			base.OnPaint(e);
+	    /// <summary>
+	    /// Raises the Paint event
+	    /// </summary>
+	    /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+	    protected override void OnPaint(PaintCellEventArgs e)
+	    {
+	        base.OnPaint(e);
 
-			// don't bother if the Cell is null
-			if (e.Cell == null)
-			{
-				return;
-			}
-			
-			// get the Cells value
-			decimal decimalVal = decimal.MinValue;
+	        // don't bother if the Cell is null
+	        if (e.Cell == null)
+	        {
+	            return;
+	        }
 
-            if (e.Cell.Data != null && 
-				(e.Cell.Data is uint || e.Cell.Data is UInt16 || e.Cell.Data is UInt32 || e.Cell.Data is UInt64 || 
-				e.Cell.Data is int || e.Cell.Data is Int16 || e.Cell.Data is Int32 || e.Cell.Data is Int64 || 
-				e.Cell.Data is double || e.Cell.Data is float || e.Cell.Data is decimal))
-			{
-				decimalVal = Convert.ToDecimal(e.Cell.Data);
-			}
+            // get the Cells value (the e.Cell.Data is an object)
+	        decimal decimalVal = decimal.MinValue;
+	        bool errorOccured = false;
 
-			// draw the value
-			if (decimalVal != decimal.MinValue)
-			{
-				Rectangle textRect = this.ClientRectangle;
+	        try
+	        {
+	            if (e.Cell.Data is float) //±1.5 × 10^−45 to ±3.4 × 10^38
+	            {
+	                float fVal = (float) e.Cell.Data;
 
-				if (this.ShowUpDownButtons)
-				{
-					textRect.Width -= this.CalcButtonBounds().Width - 1;
+	                if (fVal > (float) decimal.MaxValue)
+	                {
+	                    decimalVal = decimal.MaxValue; //cut off the value to valid decimal
+	                    errorOccured = true;
+	                }
+	                else if (fVal < (float) decimal.MinValue || float.IsNaN(fVal) || float.IsInfinity(fVal))
+	                {
+	                    decimalVal = decimal.MinValue; //cut off the value to valid decimal
+	                    errorOccured = true;
+	                }
+	                else
+	                {
+	                    decimalVal = (decimal) fVal;
+	                }
+	            }
+	            else if (e.Cell.Data is double) //±5.0 × 10^−324 to ±1.7 × 10^308
+	            {
+	                double dVal = (double) e.Cell.Data;
 
-					if (this.UpDownAlign == LeftRightAlignment.Left)
-					{
-						textRect.X = this.ClientRectangle.Right - textRect.Width;
-					}
-				}
+	                if (dVal > (double) decimal.MaxValue)
+	                {
+	                    decimalVal = decimal.MaxValue; //cut off the value to valid decimal
+	                    errorOccured = true;
+	                }
+	                else if (dVal < (double) decimal.MinValue || double.IsNaN(dVal) || double.IsInfinity(dVal))
+	                {
+	                    decimalVal = decimal.MinValue; //cut off the value to valid decimal
+	                    errorOccured = true;
+	                }
+	                else
+	                {
+	                    decimalVal = (decimal) dVal;
+	                }
+	            }
+	            else if (e.Cell.Data is uint || e.Cell.Data is UInt16 || e.Cell.Data is UInt32 || e.Cell.Data is UInt64 ||
+	                     e.Cell.Data is int || e.Cell.Data is Int16 || e.Cell.Data is Int32 || e.Cell.Data is Int64 ||
+	                     e.Cell.Data is decimal)
+	            {
+	                //decimal ±1.0 × 10^−28 to ±7.9 × 10^28
+	                decimalVal = Convert.ToDecimal(e.Cell.Data, this.FormatProvider);
+	            }
+	        }
+	        catch (OverflowException ex)
+	        {
+	            Debug.WriteLine("* The conversion from string to decimal overflowed.");
+	            errorOccured = true;
+	        }
+	        catch (FormatException ex)
+	        {
+	            Debug.WriteLine("* The string is not valid formatted.");
+	            errorOccured = true;
+	        }
+	        catch (ArgumentNullException ex)
+	        {
+	            Debug.WriteLine("* The string is null.");
+	            errorOccured = true;
+	        }
 
-                string text = decimalVal.ToString(this.Format, this.FormatProvider);
+	        // draw the value
+	        Rectangle textRect = this.ClientRectangle;
 
-                if (e.Cell.WidthNotSet)
-                {
-                    SizeF size = e.Graphics.MeasureString(text, this.Font);
-                    e.Cell.ContentWidth = (int)Math.Ceiling(size.Width);
-                }
+	        if (this.ShowUpDownButtons)
+	        {
+	            textRect.Width -= this.CalcButtonBounds().Width - 1;
 
-				if (e.Enabled)
-                    DrawString(e.Graphics, text, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
-				else
-                    DrawString(e.Graphics, text, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
-			}
-			
-			if( (e.Focused && e.Enabled)
-				// only if we want to show selection rectangle
-				&& ( e.Table.ShowSelectionRectangle ) )
-			{
-				Rectangle focusRect = this.ClientRectangle;
+	            if (this.UpDownAlign == LeftRightAlignment.Left)
+	            {
+	                textRect.X = this.ClientRectangle.Right - textRect.Width;
+	            }
+	        }
 
-				if (this.ShowUpDownButtons)
-				{
-					focusRect.Width -= this.CalcButtonBounds().Width;
+	        //Decimal to string conversion will not overflow
+	        string text = errorOccured ? e.Cell.Data.ToString() : decimalVal.ToString(this.Format, this.FormatProvider);
 
-					if (this.UpDownAlign == LeftRightAlignment.Left)
-					{
-						focusRect.X = this.ClientRectangle.Right - focusRect.Width;
-					}
-				}
-				
-				ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
-			}
-		}
+	        if (e.Cell.WidthNotSet)
+	        {
+	            SizeF size = e.Graphics.MeasureString(text, this.Font);
+	            e.Cell.ContentWidth = (int) Math.Ceiling(size.Width);
+	        }
 
+	        if (this.strikeoutFont == null)
+	        {
+	            this.strikeoutFont = new Font(this.Font, FontStyle.Strikeout); //create it only once
+	        }
 
-		#endregion
+            //Draw the formatted or raw value (striked out) if an error occured
+	        this.DrawString(e.Graphics, text, errorOccured ? this.strikeoutFont : this.Font,
+	                        e.Enabled ? this.ForeBrush : this.GrayTextBrush, textRect, e.Cell.WordWrap);
+
+	        if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle /*only if we want to show selection rectangle*/)
+	        {
+	            Rectangle focusRect = this.ClientRectangle;
+
+	            if (this.ShowUpDownButtons)
+	            {
+	                focusRect.Width -= this.CalcButtonBounds().Width;
+
+	                if (this.UpDownAlign == LeftRightAlignment.Left)
+	                {
+	                    focusRect.X = this.ClientRectangle.Right - focusRect.Width;
+	                }
+	            }
+
+	            ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
+	        }
+	    }
+
+	    #endregion
 
 		#endregion
 	}
