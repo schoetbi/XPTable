@@ -669,7 +669,7 @@ namespace XPTable.Renderers
                 //It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
                 //We need at the end the float and double without the power to 10 representation (E±XX).
                 //Default coversion double/float to string without applying a specific format has always the power.
-                //NaN and Infinity are parsed Ok.
+                //NaN and Infinity are parsed Ok (not explicit documented by Microsoft).
                 isResultOk = Decimal.TryParse(cellValue, NumberStyles.Number, this.FormatProvider, out decimalVal);
             }
 
@@ -687,7 +687,7 @@ namespace XPTable.Renderers
 	        }
 
 	        //Decimal to string conversion will not overflow
-            string text = isResultOk ? cellValue : decimalVal.ToString(this.Format, this.FormatProvider);
+            string text = isResultOk ? decimalVal.ToString(this.Format, this.FormatProvider) : cellValue;
 
 	        if (e.Cell.WidthNotSet)
 	        {
@@ -701,7 +701,7 @@ namespace XPTable.Renderers
 	        }
 
             //Draw the formatted or raw value (striked out) if an error occured
-	        this.DrawString(e.Graphics, text, isResultOk ? this.strikeoutFont : this.Font,
+            this.DrawString(e.Graphics, text, isResultOk ? this.Font : this.strikeoutFont,
 	                        e.Enabled ? this.ForeBrush : this.GrayTextBrush, textRect, e.Cell.WordWrap);
 
 	        if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle /*only if we want to show selection rectangle*/)
