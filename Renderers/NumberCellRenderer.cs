@@ -29,6 +29,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 using XPTable.Editors;
@@ -652,72 +653,25 @@ namespace XPTable.Renderers
 	        }
 
             // get the Cells value (the e.Cell.Data is an object)
-	        decimal decimalVal = decimal.MinValue;
-	        bool errorOccured = false;
+            decimal decimalVal = decimal.MinValue;
+            bool isResultOk = false;
+	        string cellValue = e.Cell.Data.ToString(); //do not trim it
 
-	        try
-	        {
-	            if (e.Cell.Data is float) //±1.5 × 10^−45 to ±3.4 × 10^38
-	            {
-	                float fVal = (float) e.Cell.Data;
-
-	                if (fVal > (float) decimal.MaxValue)
-	                {
-	                    decimalVal = decimal.MaxValue; //cut off the value to valid decimal
-	                    errorOccured = true;
-	                }
-	                else if (fVal < (float) decimal.MinValue || float.IsNaN(fVal) || float.IsInfinity(fVal))
-	                {
-	                    decimalVal = decimal.MinValue; //cut off the value to valid decimal
-	                    errorOccured = true;
-	                }
-	                else
-	                {
-	                    decimalVal = (decimal) fVal;
-	                }
-	            }
-	            else if (e.Cell.Data is double) //±5.0 × 10^−324 to ±1.7 × 10^308
-	            {
-	                double dVal = (double) e.Cell.Data;
-
-	                if (dVal > (double) decimal.MaxValue)
-	                {
-	                    decimalVal = decimal.MaxValue; //cut off the value to valid decimal
-	                    errorOccured = true;
-	                }
-	                else if (dVal < (double) decimal.MinValue || double.IsNaN(dVal) || double.IsInfinity(dVal))
-	                {
-	                    decimalVal = decimal.MinValue; //cut off the value to valid decimal
-	                    errorOccured = true;
-	                }
-	                else
-	                {
-	                    decimalVal = (decimal) dVal;
-	                }
-	            }
-	            else if (e.Cell.Data is uint || e.Cell.Data is UInt16 || e.Cell.Data is UInt32 || e.Cell.Data is UInt64 ||
-	                     e.Cell.Data is int || e.Cell.Data is Int16 || e.Cell.Data is Int32 || e.Cell.Data is Int64 ||
-	                     e.Cell.Data is decimal)
-	            {
-	                //decimal ±1.0 × 10^−28 to ±7.9 × 10^28
-	                decimalVal = Convert.ToDecimal(e.Cell.Data, this.FormatProvider);
-	            }
-	        }
-	        catch (OverflowException ex)
-	        {
-	            Debug.WriteLine("* The conversion from string to decimal overflowed.");
-	            errorOccured = true;
-	        }
-	        catch (FormatException ex)
-	        {
-	            Debug.WriteLine("* The string is not valid formatted.");
-	            errorOccured = true;
-	        }
-	        catch (ArgumentNullException ex)
-	        {
-	            Debug.WriteLine("* The string is null.");
-	            errorOccured = true;
-	        }
+            if (e.Cell.Data is uint || e.Cell.Data is UInt16 || e.Cell.Data is UInt32 || e.Cell.Data is UInt64 ||
+                     e.Cell.Data is int || e.Cell.Data is Int16 || e.Cell.Data is Int32 || e.Cell.Data is Int64 ||
+                     e.Cell.Data is decimal || e.Cell.Data is float || e.Cell.Data is double)
+            {
+                //decimal ±1.0 × 10^−28 to ±7.9 × 10^28
+                //float ±1.5 × 10^−45 to ±3.4 × 10^38
+                //double ±5.0 × 10^−324 to ±1.7 × 10^308
+                //Returns false if the cellValue has wrong format, null. empty or lies outside of the valid decimal range
+                //(see comments above for more details), otherwise true.
+                //It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
+                //We need at the end the float and double without the power to 10 representation (E±XX).
+                //Default coversion double/float to string without applying a specific format has always the power.
+                //NaN and Infinity are parsed Ok.
+                isResultOk = Decimal.TryParse(cellValue, NumberStyles.Number, this.FormatProvider, out decimalVal);
+            }
 
 	        // draw the value
 	        Rectangle textRect = this.ClientRectangle;
@@ -733,7 +687,7 @@ namespace XPTable.Renderers
 	        }
 
 	        //Decimal to string conversion will not overflow
-	        string text = errorOccured ? e.Cell.Data.ToString() : decimalVal.ToString(this.Format, this.FormatProvider);
+            string text = isResultOk ? cellValue : decimalVal.ToString(this.Format, this.FormatProvider);
 
 	        if (e.Cell.WidthNotSet)
 	        {
@@ -747,7 +701,7 @@ namespace XPTable.Renderers
 	        }
 
             //Draw the formatted or raw value (striked out) if an error occured
-	        this.DrawString(e.Graphics, text, errorOccured ? this.strikeoutFont : this.Font,
+	        this.DrawString(e.Graphics, text, isResultOk ? this.strikeoutFont : this.Font,
 	                        e.Enabled ? this.ForeBrush : this.GrayTextBrush, textRect, e.Cell.WordWrap);
 
 	        if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle /*only if we want to show selection rectangle*/)
