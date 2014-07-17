@@ -665,36 +665,47 @@ namespace XPTable.Renderers
 
             string text;
             Font font;
-            var cellDataAsString = cellData.ToString();
-            if (cellData is ushort || cellData is uint   || cellData is ulong ||
-                cellData is short  || cellData is int    || cellData is long  ||
-                cellData is float  || cellData is double || cellData is decimal)
+            if (cellData is ushort || cellData is uint || cellData is ulong)
             {
-                // decimal ±1.0 × 10^−28 to ±7.9 × 10^28
-                // float ±1.5 × 10^−45 to ±3.4 × 10^38
-                // double ±5.0 × 10^−324 to ±1.7 × 10^308
-                // Returns false if the cellValue has wrong format, null. empty or lies outside of the valid decimal range
-                // (see comments above for more details), otherwise true.
-                // It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
-                // We need at the end the float and double without the power to 10 representation (E±XX).
-                // Default coversion double/float to string without applying a specific format has always the power.
-                // NaN and Infinity are parsed Ok (not explicit documented by Microsoft).
-                decimal decimalVal;
-                if (decimal.TryParse(cellDataAsString, NumberStyles.Number, CultureInfo.CurrentCulture, out decimalVal))
+                ulong value = Convert.ToUInt64(cellData);
+                text = value.ToString(this.Format, this.FormatProvider);
+            }
+            else if (cellData is short || cellData is int || cellData is long)
+            {
+                long value = Convert.ToInt64(cellData);
+                text = value.ToString(this.Format, this.FormatProvider);
+            }
+            else
+            {
+                var cellDataAsString = cellData.ToString();
+                if (cellData is double || cellData is float || cellData is decimal)
                 {
-                    text = decimalVal.ToString(this.Format, this.FormatProvider);
-                    font = this.Font;
+                    // decimal ±1.0 × 10^−28 to ±7.9 × 10^28
+                    // float ±1.5 × 10^−45 to ±3.4 × 10^38
+                    // double ±5.0 × 10^−324 to ±1.7 × 10^308
+                    // Returns false if the cellValue has wrong format, null. empty or lies outside of the valid decimal range
+                    // (see comments above for more details), otherwise true.
+                    // It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
+                    // We need at the end the float and double without the power to 10 representation (E±XX).
+                    // Default coversion double/float to string without applying a specific format has always the power.
+                    // NaN and Infinity are parsed Ok (not explicit documented by Microsoft).
+                    decimal decimalVal;
+                    if (decimal.TryParse(cellDataAsString, NumberStyles.Number, CultureInfo.CurrentCulture, out decimalVal))
+                    {
+                        text = decimalVal.ToString(this.Format, this.FormatProvider);
+                        font = this.Font;
+                    }
+                    else
+                    {
+                        text = cellDataAsString;
+                        font = this.StrikeoutFont;
+                    }
                 }
                 else
                 {
                     text = cellDataAsString;
                     font = this.StrikeoutFont;
                 }
-            }
-            else
-            {
-                text = cellDataAsString;
-                font = this.StrikeoutFont;
             }
 
             // draw the value
