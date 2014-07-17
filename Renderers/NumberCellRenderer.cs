@@ -40,334 +40,334 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// A base class for drawing Cells contents as numbers
-	/// </summary>
-	public class NumberCellRenderer : CellRenderer
-	{
-		#region Class Data
-
-		/// <summary>
-		/// The width of the ComboBox's dropdown button
-		/// </summary>
-		private int buttonWidth;
-
-		/// <summary>
-		/// Specifies whether the up and down buttons should be drawn
-		/// </summary>
-		private bool showUpDownButtons;
-
-		/// <summary>
-		/// The alignment of the up and down buttons in the Cell
-		/// </summary>
-		private LeftRightAlignment upDownAlignment;
-
-		/// <summary>
-		/// The maximum value for the Cell
-		/// </summary>
-		private decimal maximum;
-
-		/// <summary>
-		/// The minimum value for the Cell
-		/// </summary>
-		private decimal minimum;
-
-		/// <summary>
-		/// The strikeouted font, created from original Cell's font
-		/// </summary>
-	    private Font strikeoutFont;
-
-		#endregion
-
-
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the NumberCellRenderer class with 
-		/// default settings
-		/// </summary>
-		public NumberCellRenderer() : base()
-		{
-			this.StringFormat.Trimming = StringTrimming.None;
-			this.Format = "G";
-			this.buttonWidth = 15;
-			this.showUpDownButtons = false;
-			this.upDownAlignment = LeftRightAlignment.Right;
-			this.maximum = (decimal) 100;
-			this.minimum = (decimal) 0;
-	        this.strikeoutFont = null;
-		}
-
-		#endregion
-
-
-		#region Methods
-
-		/// <summary>
-		/// Returns a Rectangle that specifies the size and location of the 
-		/// up and down buttons
-		/// </summary>
-		/// <returns>A Rectangle that specifies the size and location of the 
-		/// up and down buttons</returns>
-		protected Rectangle CalcButtonBounds()
-		{
-			Rectangle buttonRect = this.ClientRectangle;
-
-			buttonRect.Width = this.ButtonWidth;
-
-			if (this.UpDownAlign == LeftRightAlignment.Right)
-			{
-				buttonRect.X = this.ClientRectangle.Right - buttonRect.Width;
-			}
-
-			if (buttonRect.Width > this.ClientRectangle.Width)
-			{
-				buttonRect = this.ClientRectangle;
-			}
-
-			return buttonRect;
-		}
-
-
-		/// <summary>
-		/// Returns a Rectangle that specifies the size and location of the up button
-		/// </summary>
-		/// <returns>A Rectangle that specifies the size and location of the up button</returns>
-		protected Rectangle GetUpButtonBounds()
-		{
-			Rectangle buttonRect = this.CalcButtonBounds();
-
-			buttonRect.Height /= 2;
-
-			return buttonRect;
-		}
-
-
-		/// <summary>
-		/// Returns a Rectangle that specifies the size and location of the down button
-		/// </summary>
-		/// <returns>A Rectangle that specifies the size and location of the down button</returns>
-		protected Rectangle GetDownButtonBounds()
-		{
-			Rectangle buttonRect = this.CalcButtonBounds();
-
-			int height = buttonRect.Height / 2;
-
-			buttonRect.Height -= height;
-			buttonRect.Y += height;
-
-			return buttonRect;
-		}
-
-
-		/// <summary>
-		/// Gets the NumberRendererData specific data used by the Renderer from 
-		/// the specified Cell
-		/// </summary>
-		/// <param name="cell">The Cell to get the NumberRendererData data for</param>
-		/// <returns>The NumberRendererData data for the specified Cell</returns>
-		protected NumberRendererData GetNumberRendererData(Cell cell)
-		{
-			object rendererData = this.GetRendererData(cell);
-
-			if (rendererData == null || !(rendererData is NumberRendererData))
-			{
-				rendererData = new NumberRendererData();
-
-				this.SetRendererData(cell, rendererData);
-			}
-
-			return (NumberRendererData) rendererData;
-		}
-
-
-		/// <summary>
-		/// Gets whether the specified Table is using a NumericCellEditor to edit the 
-		/// Cell at the specified CellPos
-		/// </summary>
-		/// <param name="table">The Table to check</param>
-		/// <param name="cellPos">A CellPos that represents the Cell to check</param>
-		/// <returns>true if the specified Table is using a NumericCellEditor to edit the 
-		/// Cell at the specified CellPos, false otherwise</returns>
-		internal bool TableUsingNumericCellEditor(Table table, CellPos cellPos)
-		{
-			return (table.IsEditing && cellPos == table.EditingCell && table.EditingCellEditor is NumberCellEditor);
-		}
-
-		#endregion
-
-
-		#region Properties
-
-		/// <summary>
-		/// Gets or sets the width of the dropdown button
-		/// </summary>
-		protected internal int ButtonWidth
-		{
-			get
-			{
-				return this.buttonWidth;
-			}
-
-			set
-			{
-				this.buttonWidth = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets whether the up and down buttons should be drawn
-		/// </summary>
-		protected bool ShowUpDownButtons
-		{
-			get
-			{
-				return this.showUpDownButtons;
-			}
-
-			set
-			{
-				this.showUpDownButtons = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the alignment of the up and down buttons in the Cell
-		/// </summary>
-		protected LeftRightAlignment UpDownAlign
-		{
-			get
-			{
-				return this.upDownAlignment;
-			}
-
-			set
-			{
-				if (!Enum.IsDefined(typeof(LeftRightAlignment), value)) 
-				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(LeftRightAlignment));
-				}
-					
-				this.upDownAlignment = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the maximum value for the Cell
-		/// </summary>
-		protected decimal Maximum
-		{
-			get
-			{
-				return this.maximum;
-			}
-
-			set
-			{
-				this.maximum = value;
-				
-				if (this.minimum > this.maximum)
-				{
-					this.minimum = this.maximum;
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the minimum value for the Cell
-		/// </summary>
-		protected decimal Minimum
-		{
-			get
-			{
-				return this.minimum;
-			}
-
-			set
-			{
-				this.minimum = value;
-				
-				if (this.minimum > this.maximum)
-				{
-					this.maximum = value;
-				}
-			}
-		}
-
-		#endregion
-
-
-		#region Events
-
-		#region Mouse
-
-		#region MouseLeave
-
-		/// <summary>
-		/// Raises the MouseLeave event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public override void OnMouseLeave(CellMouseEventArgs e)
-		{
-			base.OnMouseLeave(e);
-
-			if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-			{
-				if (e.Table.IsCellEditable(e.CellPos))
-				{
-					// get the button renderer data
-					NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
-
-					if (rendererData.UpButtonState != UpDownState.Normal)
-					{
-						rendererData.UpButtonState = UpDownState.Normal;
-
-						e.Table.Invalidate(e.CellRect);
-					}
-					else if (rendererData.DownButtonState != UpDownState.Normal)
-					{
-						rendererData.DownButtonState = UpDownState.Normal;
-
-						e.Table.Invalidate(e.CellRect);
-					}
-				}
-			}
-		}
-
-		#endregion
-
-		#region MouseUp
-
-		/// <summary>
-		/// Raises the MouseUp event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public override void OnMouseUp(CellMouseEventArgs e)
-		{
-			base.OnMouseUp(e);
-
-			//
-			if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-			{
-				if (e.Table.IsCellEditable(e.CellPos))
-				{
-					// get the renderer data
-					NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
-
-					rendererData.ClickPoint = new Point(-1, -1);
-
-					if (this.GetUpButtonBounds().Contains(e.X, e.Y))
-					{
-						rendererData.UpButtonState = UpDownState.Hot;
-
-						if (!e.Table.IsEditing)
-						{
+    /// <summary>
+    /// A base class for drawing Cells contents as numbers
+    /// </summary>
+    public class NumberCellRenderer : CellRenderer
+    {
+        #region Class Data
+
+        /// <summary>
+        /// The width of the ComboBox's dropdown button
+        /// </summary>
+        private int buttonWidth;
+
+        /// <summary>
+        /// Specifies whether the up and down buttons should be drawn
+        /// </summary>
+        private bool showUpDownButtons;
+
+        /// <summary>
+        /// The alignment of the up and down buttons in the Cell
+        /// </summary>
+        private LeftRightAlignment upDownAlignment;
+
+        /// <summary>
+        /// The maximum value for the Cell
+        /// </summary>
+        private decimal maximum;
+
+        /// <summary>
+        /// The minimum value for the Cell
+        /// </summary>
+        private decimal minimum;
+
+        /// <summary>
+        /// The strikeouted font, created from original Cell's font
+        /// </summary>
+        private Font strikeoutFont;
+
+        #endregion
+
+
+        #region Constructor
+        
+        /// <summary>
+        /// Initializes a new instance of the NumberCellRenderer class with 
+        /// default settings
+        /// </summary>
+        public NumberCellRenderer()
+        {
+            this.StringFormat.Trimming = StringTrimming.None;
+            this.Format = "G";
+            this.buttonWidth = 15;
+            this.showUpDownButtons = false;
+            this.upDownAlignment = LeftRightAlignment.Right;
+            this.maximum = 100;
+            this.minimum = 0;
+            this.strikeoutFont = null;
+        }
+
+        #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// Returns a Rectangle that specifies the size and location of the 
+        /// up and down buttons
+        /// </summary>
+        /// <returns>A Rectangle that specifies the size and location of the 
+        /// up and down buttons</returns>
+        protected Rectangle CalcButtonBounds()
+        {
+            Rectangle buttonRect = this.ClientRectangle;
+
+            buttonRect.Width = this.ButtonWidth;
+
+            if (this.UpDownAlign == LeftRightAlignment.Right)
+            {
+                buttonRect.X = this.ClientRectangle.Right - buttonRect.Width;
+            }
+
+            if (buttonRect.Width > this.ClientRectangle.Width)
+            {
+                buttonRect = this.ClientRectangle;
+            }
+
+            return buttonRect;
+        }
+
+
+        /// <summary>
+        /// Returns a Rectangle that specifies the size and location of the up button
+        /// </summary>
+        /// <returns>A Rectangle that specifies the size and location of the up button</returns>
+        protected Rectangle GetUpButtonBounds()
+        {
+            Rectangle buttonRect = this.CalcButtonBounds();
+
+            buttonRect.Height /= 2;
+
+            return buttonRect;
+        }
+
+
+        /// <summary>
+        /// Returns a Rectangle that specifies the size and location of the down button
+        /// </summary>
+        /// <returns>A Rectangle that specifies the size and location of the down button</returns>
+        protected Rectangle GetDownButtonBounds()
+        {
+            Rectangle buttonRect = this.CalcButtonBounds();
+
+            int height = buttonRect.Height / 2;
+
+            buttonRect.Height -= height;
+            buttonRect.Y += height;
+
+            return buttonRect;
+        }
+
+
+        /// <summary>
+        /// Gets the NumberRendererData specific data used by the Renderer from 
+        /// the specified Cell
+        /// </summary>
+        /// <param name="cell">The Cell to get the NumberRendererData data for</param>
+        /// <returns>The NumberRendererData data for the specified Cell</returns>
+        protected NumberRendererData GetNumberRendererData(Cell cell)
+        {
+            object rendererData = this.GetRendererData(cell);
+
+            if (rendererData == null || !(rendererData is NumberRendererData))
+            {
+                rendererData = new NumberRendererData();
+
+                this.SetRendererData(cell, rendererData);
+            }
+
+            return (NumberRendererData) rendererData;
+        }
+
+
+        /// <summary>
+        /// Gets whether the specified Table is using a NumericCellEditor to edit the 
+        /// Cell at the specified CellPos
+        /// </summary>
+        /// <param name="table">The Table to check</param>
+        /// <param name="cellPos">A CellPos that represents the Cell to check</param>
+        /// <returns>true if the specified Table is using a NumericCellEditor to edit the 
+        /// Cell at the specified CellPos, false otherwise</returns>
+        internal bool TableUsingNumericCellEditor(Table table, CellPos cellPos)
+        {
+            return (table.IsEditing && cellPos == table.EditingCell && table.EditingCellEditor is NumberCellEditor);
+        }
+
+        #endregion
+
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the width of the dropdown button
+        /// </summary>
+        protected internal int ButtonWidth
+        {
+            get
+            {
+                return this.buttonWidth;
+            }
+
+            set
+            {
+                this.buttonWidth = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets whether the up and down buttons should be drawn
+        /// </summary>
+        protected bool ShowUpDownButtons
+        {
+            get
+            {
+                return this.showUpDownButtons;
+            }
+
+            set
+            {
+                this.showUpDownButtons = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the alignment of the up and down buttons in the Cell
+        /// </summary>
+        protected LeftRightAlignment UpDownAlign
+        {
+            get
+            {
+                return this.upDownAlignment;
+            }
+
+            set
+            {
+                if (!Enum.IsDefined(typeof(LeftRightAlignment), value)) 
+                {
+                    throw new InvalidEnumArgumentException("value", (int) value, typeof(LeftRightAlignment));
+                }
+                    
+                this.upDownAlignment = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the maximum value for the Cell
+        /// </summary>
+        protected decimal Maximum
+        {
+            get
+            {
+                return this.maximum;
+            }
+
+            set
+            {
+                this.maximum = value;
+                
+                if (this.minimum > this.maximum)
+                {
+                    this.minimum = this.maximum;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the minimum value for the Cell
+        /// </summary>
+        protected decimal Minimum
+        {
+            get
+            {
+                return this.minimum;
+            }
+
+            set
+            {
+                this.minimum = value;
+                
+                if (this.minimum > this.maximum)
+                {
+                    this.maximum = value;
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Events
+
+        #region Mouse
+
+        #region MouseLeave
+
+        /// <summary>
+        /// Raises the MouseLeave event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public override void OnMouseLeave(CellMouseEventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+            {
+                if (e.Table.IsCellEditable(e.CellPos))
+                {
+                    // get the button renderer data
+                    NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
+
+                    if (rendererData.UpButtonState != UpDownState.Normal)
+                    {
+                        rendererData.UpButtonState = UpDownState.Normal;
+
+                        e.Table.Invalidate(e.CellRect);
+                    }
+                    else if (rendererData.DownButtonState != UpDownState.Normal)
+                    {
+                        rendererData.DownButtonState = UpDownState.Normal;
+
+                        e.Table.Invalidate(e.CellRect);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region MouseUp
+
+        /// <summary>
+        /// Raises the MouseUp event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public override void OnMouseUp(CellMouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            //
+            if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+            {
+                if (e.Table.IsCellEditable(e.CellPos))
+                {
+                    // get the renderer data
+                    NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
+
+                    rendererData.ClickPoint = new Point(-1, -1);
+
+                    if (this.GetUpButtonBounds().Contains(e.X, e.Y))
+                    {
+                        rendererData.UpButtonState = UpDownState.Hot;
+
+                        if (!e.Table.IsEditing)
+                        {
                             e.Table.EditCell(e.CellPos);        // Editing may be cancelled by an event handler
-						}
+                        }
 
                         if (e.Table.IsEditing)
                         {
@@ -375,15 +375,15 @@ namespace XPTable.Renderers
 
                             e.Table.Invalidate(e.CellRect);
                         }
-					}
-					else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
-					{
-						rendererData.DownButtonState = UpDownState.Hot;
+                    }
+                    else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
+                    {
+                        rendererData.DownButtonState = UpDownState.Hot;
 
-						if (!e.Table.IsEditing)
-						{
-							e.Table.EditCell(e.CellPos);
-						}
+                        if (!e.Table.IsEditing)
+                        {
+                            e.Table.EditCell(e.CellPos);
+                        }
 
                         if (e.Table.IsEditing)
                         {
@@ -391,44 +391,44 @@ namespace XPTable.Renderers
 
                             e.Table.Invalidate(e.CellRect);
                         }
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region MouseDown
+        #region MouseDown
 
-		/// <summary>
-		/// Raises the MouseDown event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public override void OnMouseDown(CellMouseEventArgs e)
-		{
-			base.OnMouseDown(e);
+        /// <summary>
+        /// Raises the MouseDown event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public override void OnMouseDown(CellMouseEventArgs e)
+        {
+            base.OnMouseDown(e);
 
-			//
-			if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-			{
-				if (e.Table.IsCellEditable(e.CellPos))
-				{
-					// get the button renderer data
-					NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
+            //
+            if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+            {
+                if (e.Table.IsCellEditable(e.CellPos))
+                {
+                    // get the button renderer data
+                    NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
 
-					rendererData.ClickPoint = new Point(e.X, e.Y);
-					
-					if (this.CalcButtonBounds().Contains(e.X, e.Y))
-					{
-						if (!(e.Table.ColumnModel.GetCellEditor(e.CellPos.Column) is NumberCellEditor))
-						{
-							throw new InvalidOperationException("Cannot edit Cell as NumberCellRenderer requires a NumberColumn that uses a NumberCellEditor");
-						}
-						
-						if (!e.Table.IsEditing)
-						{
-							e.Table.EditCell(e.CellPos);    // Editing may be cancelled by an event handler
-						}
+                    rendererData.ClickPoint = new Point(e.X, e.Y);
+                    
+                    if (this.CalcButtonBounds().Contains(e.X, e.Y))
+                    {
+                        if (!(e.Table.ColumnModel.GetCellEditor(e.CellPos.Column) is NumberCellEditor))
+                        {
+                            throw new InvalidOperationException("Cannot edit Cell as NumberCellRenderer requires a NumberColumn that uses a NumberCellEditor");
+                        }
+                        
+                        if (!e.Table.IsEditing)
+                        {
+                            e.Table.EditCell(e.CellPos);    // Editing may be cancelled by an event handler
+                        }
 
                         if (e.Table.IsEditing)
                         {
@@ -449,281 +449,299 @@ namespace XPTable.Renderers
                                 e.Table.Invalidate(e.CellRect);
                             }
                         }
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region MouseMove
-	
-		/// <summary>
-		/// Raises the MouseMove event
-		/// </summary>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public override void OnMouseMove(XPTable.Events.CellMouseEventArgs e)
-		{
-			base.OnMouseMove(e);
+        #region MouseMove
+    
+        /// <summary>
+        /// Raises the MouseMove event
+        /// </summary>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public override void OnMouseMove(XPTable.Events.CellMouseEventArgs e)
+        {
+            base.OnMouseMove(e);
 
-			if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-			{
-				if (e.Table.IsCellEditable(e.CellPos))
-				{
-					// get the button renderer data
-					NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
-
-					if (this.GetUpButtonBounds().Contains(e.X, e.Y))
-					{
-						if (rendererData.UpButtonState == UpDownState.Normal)
-						{
-							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
-							{
-								if (this.GetUpButtonBounds().Contains(rendererData.ClickPoint))
-								{
-									rendererData.UpButtonState = UpDownState.Pressed;
-
-									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-									{
-										((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
-									}
-								}
-								else if (this.GetDownButtonBounds().Contains(rendererData.ClickPoint))
-								{
-									rendererData.DownButtonState = UpDownState.Normal;
-
-									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-									{
-										((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
-									}
-								}
-							}
-							else
-							{
-								rendererData.UpButtonState = UpDownState.Hot;
-
-								if (rendererData.DownButtonState == UpDownState.Hot)
-								{
-									rendererData.DownButtonState = UpDownState.Normal;
-								}
-							}
-
-							e.Table.Invalidate(e.CellRect);
-						}
-					}
-					else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
-					{
-						if (rendererData.DownButtonState == UpDownState.Normal)
-						{
-							if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
-							{
-								if (this.GetDownButtonBounds().Contains(rendererData.ClickPoint))
-								{
-									rendererData.DownButtonState = UpDownState.Pressed;
-
-									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-									{
-										((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
-									}
-								}
-								else if (this.GetUpButtonBounds().Contains(rendererData.ClickPoint))
-								{
-									rendererData.UpButtonState = UpDownState.Normal;
-
-									if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-									{
-										((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
-									}
-								}
-							}
-							else
-							{
-								rendererData.DownButtonState = UpDownState.Hot;
-
-								if (rendererData.UpButtonState == UpDownState.Hot)
-								{
-									rendererData.UpButtonState = UpDownState.Normal;
-								}
-							}
-
-							e.Table.Invalidate(e.CellRect);
-						}
-					}
-					else
-					{
-						if (rendererData.UpButtonState != UpDownState.Normal || rendererData.DownButtonState != UpDownState.Normal)
-						{
-							rendererData.UpButtonState = UpDownState.Normal;
-							rendererData.DownButtonState = UpDownState.Normal;
-
-							if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
-							{
-								((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
-							}
-
-							e.Table.Invalidate(e.CellRect);
-						}
-					}
-				}
-			}
-		}
-
-		#endregion
-
-		#endregion
-
-		#region Paint
-
-		/// <summary>
-		/// Raises the PaintCell event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		public override void OnPaintCell(PaintCellEventArgs e)
-		{
-			if (e.Table.ColumnModel.Columns[e.Column] is NumberColumn)
-			{
-				NumberColumn column = (NumberColumn) e.Table.ColumnModel.Columns[e.Column];
-			
-				this.ShowUpDownButtons = column.ShowUpDownButtons;
-				this.UpDownAlign = column.UpDownAlign;
-				this.Maximum = column.Maximum;
-				this.Minimum = column.Minimum;
-
-				// if the table is editing this cell and the editor is a 
-				// NumberCellEditor then we should display the updown buttons
-				if (e.Table.IsEditing && e.Table.EditingCell == e.CellPos && e.Table.EditingCellEditor is NumberCellEditor)
-				{
-					this.ShowUpDownButtons = true;
-				}
-			}
-			else
-			{
-				this.ShowUpDownButtons = false;
-				this.UpDownAlign = LeftRightAlignment.Right;
-				this.Maximum = 100;
-				this.Minimum = 0;
-			}
-			
-			base.OnPaintCell(e);
-		}
-
-
-		/// <summary>
-		/// Raises the PaintBackground event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		protected override void OnPaintBackground(PaintCellEventArgs e)
-		{
-			base.OnPaintBackground(e);
-
-			// don't bother going any further if the Cell is null 
-			if (e.Cell == null)
-			{
-				return;
-			}
-
-			if (this.ShowUpDownButtons)
-			{
-				UpDownState upButtonState = this.GetNumberRendererData(e.Cell).UpButtonState;
-				UpDownState downButtonState = this.GetNumberRendererData(e.Cell).DownButtonState;
-				
-				if (!e.Enabled)
-				{
-					upButtonState = UpDownState.Disabled;
-					downButtonState = UpDownState.Disabled;
-				}
-
-				ThemeManager.DrawUpDownButtons(e.Graphics, this.GetUpButtonBounds(), upButtonState, this.GetDownButtonBounds(), downButtonState);
-			}
-		}
-
-
-	    /// <summary>
-	    /// Raises the Paint event
-	    /// </summary>
-	    /// <param name="e">A PaintCellEventArgs that contains the event data</param>
-	    protected override void OnPaint(PaintCellEventArgs e)
-	    {
-	        base.OnPaint(e);
-
-	        // don't bother if the Cell is null
-	        if (e.Cell == null)
-	        {
-	            return;
-	        }
-
-            // get the Cells value (the e.Cell.Data is an object)
-            decimal decimalVal = decimal.MinValue;
-            bool isResultOk = false;
-	        string cellValue = e.Cell.Data.ToString(); //do not trim it
-
-            if (e.Cell.Data is uint || e.Cell.Data is UInt16 || e.Cell.Data is UInt32 || e.Cell.Data is UInt64 ||
-                     e.Cell.Data is int || e.Cell.Data is Int16 || e.Cell.Data is Int32 || e.Cell.Data is Int64 ||
-                     e.Cell.Data is decimal || e.Cell.Data is float || e.Cell.Data is double)
+            if (this.ShowUpDownButtons || this.TableUsingNumericCellEditor(e.Table, e.CellPos))
             {
-                //decimal ±1.0 × 10^−28 to ±7.9 × 10^28
-                //float ±1.5 × 10^−45 to ±3.4 × 10^38
-                //double ±5.0 × 10^−324 to ±1.7 × 10^308
-                //Returns false if the cellValue has wrong format, null. empty or lies outside of the valid decimal range
-                //(see comments above for more details), otherwise true.
-                //It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
-                //We need at the end the float and double without the power to 10 representation (E±XX).
-                //Default coversion double/float to string without applying a specific format has always the power.
-                //NaN and Infinity are parsed Ok (not explicit documented by Microsoft).
-                isResultOk = Decimal.TryParse(cellValue, NumberStyles.Number, this.FormatProvider, out decimalVal);
+                if (e.Table.IsCellEditable(e.CellPos))
+                {
+                    // get the button renderer data
+                    NumberRendererData rendererData = this.GetNumberRendererData(e.Cell);
+
+                    if (this.GetUpButtonBounds().Contains(e.X, e.Y))
+                    {
+                        if (rendererData.UpButtonState == UpDownState.Normal)
+                        {
+                            if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
+                            {
+                                if (this.GetUpButtonBounds().Contains(rendererData.ClickPoint))
+                                {
+                                    rendererData.UpButtonState = UpDownState.Pressed;
+
+                                    if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+                                    {
+                                        ((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+                                    }
+                                }
+                                else if (this.GetDownButtonBounds().Contains(rendererData.ClickPoint))
+                                {
+                                    rendererData.DownButtonState = UpDownState.Normal;
+
+                                    if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+                                    {
+                                        ((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                rendererData.UpButtonState = UpDownState.Hot;
+
+                                if (rendererData.DownButtonState == UpDownState.Hot)
+                                {
+                                    rendererData.DownButtonState = UpDownState.Normal;
+                                }
+                            }
+
+                            e.Table.Invalidate(e.CellRect);
+                        }
+                    }
+                    else if (this.GetDownButtonBounds().Contains(e.X, e.Y))
+                    {
+                        if (rendererData.DownButtonState == UpDownState.Normal)
+                        {
+                            if (e.Button == MouseButtons.Left && e.Row == e.Table.LastMouseDownCell.Row && e.Column == e.Table.LastMouseDownCell.Column)
+                            {
+                                if (this.GetDownButtonBounds().Contains(rendererData.ClickPoint))
+                                {
+                                    rendererData.DownButtonState = UpDownState.Pressed;
+
+                                    if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+                                    {
+                                        ((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseDown(this, e);
+                                    }
+                                }
+                                else if (this.GetUpButtonBounds().Contains(rendererData.ClickPoint))
+                                {
+                                    rendererData.UpButtonState = UpDownState.Normal;
+
+                                    if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+                                    {
+                                        ((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                rendererData.DownButtonState = UpDownState.Hot;
+
+                                if (rendererData.UpButtonState == UpDownState.Hot)
+                                {
+                                    rendererData.UpButtonState = UpDownState.Normal;
+                                }
+                            }
+
+                            e.Table.Invalidate(e.CellRect);
+                        }
+                    }
+                    else
+                    {
+                        if (rendererData.UpButtonState != UpDownState.Normal || rendererData.DownButtonState != UpDownState.Normal)
+                        {
+                            rendererData.UpButtonState = UpDownState.Normal;
+                            rendererData.DownButtonState = UpDownState.Normal;
+
+                            if (this.TableUsingNumericCellEditor(e.Table, e.CellPos))
+                            {
+                                ((IEditorUsesRendererButtons) e.Table.EditingCellEditor).OnEditorButtonMouseUp(this, e);
+                            }
+
+                            e.Table.Invalidate(e.CellRect);
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Paint
+
+        /// <summary>
+        /// Raises the PaintCell event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        public override void OnPaintCell(PaintCellEventArgs e)
+        {
+            if (e.Table.ColumnModel.Columns[e.Column] is NumberColumn)
+            {
+                NumberColumn column = (NumberColumn)e.Table.ColumnModel.Columns[e.Column];
+            
+                this.ShowUpDownButtons = column.ShowUpDownButtons;
+                this.UpDownAlign = column.UpDownAlign;
+                this.Maximum = column.Maximum;
+                this.Minimum = column.Minimum;
+
+                // if the table is editing this cell and the editor is a 
+                // NumberCellEditor then we should display the updown buttons
+                if (e.Table.IsEditing && e.Table.EditingCell == e.CellPos && e.Table.EditingCellEditor is NumberCellEditor)
+                {
+                    this.ShowUpDownButtons = true;
+                }
+            }
+            else
+            {
+                this.ShowUpDownButtons = false;
+                this.UpDownAlign = LeftRightAlignment.Right;
+                this.Maximum = 100;
+                this.Minimum = 0;
+            }
+            
+            base.OnPaintCell(e);
+        }
+
+
+        /// <summary>
+        /// Raises the PaintBackground event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        protected override void OnPaintBackground(PaintCellEventArgs e)
+        {
+            base.OnPaintBackground(e);
+
+            // don't bother going any further if the Cell is null 
+            if (e.Cell == null)
+            {
+                return;
             }
 
-	        // draw the value
-	        Rectangle textRect = this.ClientRectangle;
+            if (this.ShowUpDownButtons)
+            {
+                UpDownState upButtonState = this.GetNumberRendererData(e.Cell).UpButtonState;
+                UpDownState downButtonState = this.GetNumberRendererData(e.Cell).DownButtonState;
+                
+                if (!e.Enabled)
+                {
+                    upButtonState = UpDownState.Disabled;
+                    downButtonState = UpDownState.Disabled;
+                }
 
-	        if (this.ShowUpDownButtons)
-	        {
-	            textRect.Width -= this.CalcButtonBounds().Width - 1;
+                ThemeManager.DrawUpDownButtons(e.Graphics, this.GetUpButtonBounds(), upButtonState, this.GetDownButtonBounds(), downButtonState);
+            }
+        }
 
-	            if (this.UpDownAlign == LeftRightAlignment.Left)
-	            {
-	                textRect.X = this.ClientRectangle.Right - textRect.Width;
-	            }
-	        }
+        private Font StrikeoutFont
+        {
+            get
+            {
+                return this.strikeoutFont 
+                    ?? (this.strikeoutFont = new Font(this.Font, FontStyle.Strikeout));
+            }
+        }
 
-	        //Decimal to string conversion will not overflow
-            string text = isResultOk ? decimalVal.ToString(this.Format, this.FormatProvider) : cellValue;
+        /// <summary>
+        /// Raises the Paint event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        protected override void OnPaint(PaintCellEventArgs e)
+        {
+            base.OnPaint(e);
 
-	        if (e.Cell.WidthNotSet)
-	        {
-	            SizeF size = e.Graphics.MeasureString(text, this.Font);
-	            e.Cell.ContentWidth = (int) Math.Ceiling(size.Width);
-	        }
+            // don't bother if the Cell is null
+            if (e.Cell == null)
+            {
+                return;
+            }
 
-	        if (this.strikeoutFont == null)
-	        {
-	            this.strikeoutFont = new Font(this.Font, FontStyle.Strikeout); //create it only once
-	        }
+            // get the Cells value (the e.Cell.Data is an object)
+            var cellData = e.Cell.Data;
+
+            string text;
+            Font font;
+            var cellDataAsString = cellData.ToString();
+            if (cellData is ushort || cellData is uint   || cellData is ulong ||
+                cellData is short  || cellData is int    || cellData is long  ||
+                cellData is float  || cellData is double || cellData is decimal)
+            {
+                // decimal ±1.0 × 10^−28 to ±7.9 × 10^28
+                // float ±1.5 × 10^−45 to ±3.4 × 10^38
+                // double ±5.0 × 10^−324 to ±1.7 × 10^308
+                // Returns false if the cellValue has wrong format, null. empty or lies outside of the valid decimal range
+                // (see comments above for more details), otherwise true.
+                // It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
+                // We need at the end the float and double without the power to 10 representation (E±XX).
+                // Default coversion double/float to string without applying a specific format has always the power.
+                // NaN and Infinity are parsed Ok (not explicit documented by Microsoft).
+                decimal decimalVal;
+                if (decimal.TryParse(cellDataAsString, NumberStyles.Number, CultureInfo.CurrentCulture, out decimalVal))
+                {
+                    text = decimalVal.ToString(this.Format, this.FormatProvider);
+                    font = this.Font;
+                }
+                else
+                {
+                    text = cellDataAsString;
+                    font = this.StrikeoutFont;
+                }
+            }
+            else
+            {
+                text = cellDataAsString;
+                font = this.StrikeoutFont;
+            }
+
+            // draw the value
+            Rectangle textRect = this.ClientRectangle;
+
+            if (this.ShowUpDownButtons)
+            {
+                textRect.Width -= this.CalcButtonBounds().Width - 1;
+
+                if (this.UpDownAlign == LeftRightAlignment.Left)
+                {
+                    textRect.X = this.ClientRectangle.Right - textRect.Width;
+                }
+            }
+
+            if (e.Cell.WidthNotSet)
+            {
+                SizeF size = e.Graphics.MeasureString(text, this.Font);
+                e.Cell.ContentWidth = (int) Math.Ceiling(size.Width);
+            }
+
+            
 
             //Draw the formatted or raw value (striked out) if an error occured
-            this.DrawString(e.Graphics, text, isResultOk ? this.Font : this.strikeoutFont,
-	                        e.Enabled ? this.ForeBrush : this.GrayTextBrush, textRect, e.Cell.WordWrap);
+            this.DrawString(e.Graphics, text, font,
+                            e.Enabled ? this.ForeBrush : this.GrayTextBrush, textRect, e.Cell.WordWrap);
 
-	        if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle /*only if we want to show selection rectangle*/)
-	        {
-	            Rectangle focusRect = this.ClientRectangle;
+            if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle /*only if we want to show selection rectangle*/)
+            {
+                Rectangle focusRect = this.ClientRectangle;
 
-	            if (this.ShowUpDownButtons)
-	            {
-	                focusRect.Width -= this.CalcButtonBounds().Width;
+                if (this.ShowUpDownButtons)
+                {
+                    focusRect.Width -= this.CalcButtonBounds().Width;
 
-	                if (this.UpDownAlign == LeftRightAlignment.Left)
-	                {
-	                    focusRect.X = this.ClientRectangle.Right - focusRect.Width;
-	                }
-	            }
+                    if (this.UpDownAlign == LeftRightAlignment.Left)
+                    {
+                        focusRect.X = this.ClientRectangle.Right - focusRect.Width;
+                    }
+                }
 
-	            ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
-	        }
-	    }
+                ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
+            }
+        }
 
-	    #endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+    }
 }
