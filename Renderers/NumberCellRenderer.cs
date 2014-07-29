@@ -654,14 +654,16 @@ namespace XPTable.Renderers
         {
             base.OnPaint(e);
 
-            // don't bother if the Cell is null
             if (e.Cell == null)
             {
                 return;
             }
 
-            // get the Cells value (the e.Cell.Data is an object)
             var cellData = e.Cell.Data;
+            if (cellData == null)
+            {
+                return;
+            }
 
             string text;
             Font font = this.Font;
