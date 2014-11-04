@@ -244,43 +244,41 @@ namespace XPTable.Renderers
                 this.Alignment = ColumnAlignment.Center;
                 this.LineAlignment = RowAlignment.Center;
 
-                Font font = new Font(this.Font.FontFamily, this.Font.SizeInPoints, FontStyle.Bold);
-
-                if (e.Enabled)
+                using (var font = new Font(this.Font.FontFamily, this.Font.SizeInPoints, FontStyle.Bold))
                 {
-                    e.Graphics.DrawString("" + intVal + "%", font, SystemBrushes.ControlText, this.ClientRectangle, this.StringFormat);
-                }
-                else
-                {
-                    e.Graphics.DrawString("" + intVal + "%", font, Brushes.White, this.ClientRectangle, this.StringFormat);
-                }
+                    var progressText = string.Format("{0}%", intVal);
+                    e.Graphics.DrawString(
+                        progressText,
+                        font,
+                        e.Enabled ? SystemBrushes.ControlText : Brushes.White,
+                        this.ClientRectangle,
+                        this.StringFormat);
 
-                if (!ThemeManager.VisualStylesEnabled)
-                {
-                    // remember the old clip area
-                    Region oldClip = e.Graphics.Clip;
-
-                    Rectangle clipRect = this.ClientRectangle;
-                    clipRect.Width = chunkRect.Width + 2;
-                    e.Graphics.SetClip(clipRect);
-
-                    if (e.Table.Enabled)
+                    if (!ThemeManager.VisualStylesEnabled)
                     {
-                        e.Graphics.DrawString("" + intVal + "%", font, SystemBrushes.HighlightText, this.ClientRectangle, this.StringFormat);
-                    }
-                    else
-                    {
-                        e.Graphics.DrawString("" + intVal + "%", font, Brushes.White, this.ClientRectangle, this.StringFormat);
-                    }
+                        // remember the old clip area
+                        Region oldClip = e.Graphics.Clip;
 
-                    // restore the old clip area
-                    e.Graphics.SetClip(oldClip, CombineMode.Replace);
+                        Rectangle clipRect = this.ClientRectangle;
+                        clipRect.Width = chunkRect.Width + 2;
+                        e.Graphics.SetClip(clipRect);
+
+                        e.Graphics.DrawString(
+                            progressText,
+                            font,
+                            e.Table.Enabled ? SystemBrushes.HighlightText : Brushes.White,
+                            this.ClientRectangle,
+                            this.StringFormat);
+
+                        // restore the old clip area
+                        e.Graphics.SetClip(oldClip, CombineMode.Replace);
+                    }
                 }
             }
 
             if ((e.Focused && e.Enabled)
                 // only if we want to show selection rectangle
-                && (e.Table.ShowSelectionRectangle))
+                && e.Table.ShowSelectionRectangle)
             {
                 ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
             }
