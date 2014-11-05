@@ -94,6 +94,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AssemblyInfo.githash.cs" />
     <Compile Include="Editors\CellEditor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -555,7 +556,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)createGitStatus.bat $(ProjectDir)\gitStatus.txt</PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)createGitStatus.bat $(ProjectDir)\gitStatus.txt $(ProjectDir)\AssemblyInfo.githash.cs</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
