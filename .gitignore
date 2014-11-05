@@ -3,3 +3,4 @@ obj
 _ReSharper.XPTable
 *.suo
 /bin
+/AssemblyInfo.githash.cs

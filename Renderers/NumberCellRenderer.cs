@@ -646,6 +646,15 @@ namespace XPTable.Renderers
             }
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            if (this.strikeoutFont != null)
+            {
+                this.strikeoutFont.Dispose();
+            }
+        }
+
         /// <summary>
         /// Raises the Paint event
         /// </summary>
