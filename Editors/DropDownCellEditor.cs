@@ -434,6 +434,22 @@ namespace XPTable.Editors
             }
         }
 
+        /// <summary>
+        /// Gets or sets the height of the of the drop-down portion of the editor
+        /// </summary>
+        public int DropDownHeight
+        {
+            get
+            {
+                return this.dropDownContainer.Height;
+            }
+
+            set
+            {
+                this.dropDownContainer.Height = value;
+            }
+        }
+
 
         /// <summary>
         /// Gets the user defined width of the of the drop-down portion of the editor
