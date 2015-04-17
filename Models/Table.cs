@@ -241,8 +241,13 @@ namespace XPTable.Models
         /// </summary>
         public event CellEditEventHandler BeginEditing;
 
-        /// <summary>
-        /// Occurs when the Table stops editing a Cell
+		/// <summary>
+		/// Occurs when the Table stops editing a Cell, but before the cell value is changed
+		/// </summary>
+		public event CellEditEventHandler EditingStopping;
+		
+		/// <summary>
+        /// Occurs when the Table stops editing a Cell and the cell value is changed
         /// </summary>
         public event CellEditEventHandler EditingStopped;
 
@@ -6380,6 +6385,22 @@ namespace XPTable.Models
 
 
         /// <summary>
+        /// Raises the EditingStopping event
+        /// </summary>
+        /// <param name="e">A CellEditEventArgs that contains the event data</param>
+        protected internal virtual void OnEditingStopping(CellEditEventArgs e)
+        {
+            if (this.CanRaiseEvents)
+            {
+                if (EditingStopping != null)
+                {
+                    EditingStopping(e.Cell, e);
+                }
+            }
+        }
+
+		
+		/// <summary>
         /// Raises the EditingStopped event
         /// </summary>
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
