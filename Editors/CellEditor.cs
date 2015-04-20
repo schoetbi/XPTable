@@ -259,12 +259,13 @@ namespace XPTable.Editors
 
             var e = new CellEditEventArgs(this.cell, this, this.table, this.cellPos.Row, this.cellPos.Column, this.cellRect);
 
-            this.table.OnEditingStopped(e);
+            this.table.OnEditingStopping(e);
             this.OnEndEdit(e);
 
             if (!e.Cancel && !e.Handled)
             {
                 this.SetCellValue();
+				this.table.OnEditingStopped(e);
             }
 
             this.RemoveEditControl();
