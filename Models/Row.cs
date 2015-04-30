@@ -890,7 +890,24 @@ namespace XPTable.Models
                 else
                     return this.height;
             }
-            set { this.height = value; }
+            set
+			{
+				if(value >= 0 && TableModel != null && TableModel.Table != null)
+					this.TableModel.Table.AssumeVariableHeights = false;
+				this.height = value;
+			}
+        }
+
+		/// <summary>
+        /// HACK to use actual row heights when the user overrides them
+        /// </summary>
+        [Browsable(false)]
+        public bool IsUsingFixedHeight
+        {
+            get
+            {
+                return (this.height < 0);
+            }
         }
 
 		/// <summary>
