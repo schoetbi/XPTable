@@ -108,7 +108,10 @@ namespace XPTable.Models
 
             if (owner != null)
             {
-                // this RowCollection is the collection of toplevel rows
+				if(!row.IsUsingFixedHeight)
+					this.owner.Table.AssumeVariableHeights = true;
+
+				// this RowCollection is the collection of toplevel rows
                 this.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
             }
             else if (rowowner != null)

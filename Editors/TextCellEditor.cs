@@ -97,7 +97,7 @@ namespace XPTable.Editors
                 return;
             }
 
-            this.TextBox.Multiline = this.EditingTable.EnableWordWrap && this.EditingCell.WordWrap;
+            this.TextBox.Multiline = (this.EditingTable.EnableWordWrap || EditingTable.AssumeVariableHeights) && this.EditingCell.WordWrap;
 
             this.TextBox.KeyPress += this.OnKeyPress;
             this.TextBox.LostFocus += this.OnLostFocus;

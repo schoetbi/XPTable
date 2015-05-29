@@ -184,7 +184,7 @@ namespace XPTable.Models
         public int RowIndexAt(int yPosition)
         {
             int row;
-            if (this.Table.EnableWordWrap)
+            if (this.Table.EnableWordWrap || this.Table.AssumeVariableHeights)
             {
                 row = this.RowIndexAtExact(yPosition);
             }
@@ -1287,7 +1287,7 @@ namespace XPTable.Models
                 if (this.owner.Table != null && this.owner.Table.ColumnModel != null)
                     bounds.Width = this.owner.Table.ColumnModel.VisibleColumnsWidth;
 
-                if (this.owner.Table.EnableWordWrap)
+                if (this.owner.Table.EnableWordWrap || owner.Table.AssumeVariableHeights)
                 {
                     // v1.1.1 fix - this Y value used to include the border + header height
 
@@ -1322,5 +1322,24 @@ namespace XPTable.Models
             #endregion
         }
         #endregion
+
+		/// <summary>search given column for given text the collection of selected Rows and Cells in a TableModel</summary>
+		public Row FindRow(int column, string text, bool caseSensitive)
+		{
+			Row retval = null;
+			foreach(Row row in rows)
+			{
+				if(row.Cells.Count > column)
+				{
+					if((row.Cells[column].Text != null) && (row.Cells[column].Text.Equals(text, caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase)))
+					{
+						retval = row;
+						break;
+					}
+				}
+			}
+			return retval;
+		}
+
     }
 }

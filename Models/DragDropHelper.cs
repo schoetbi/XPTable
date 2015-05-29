@@ -82,6 +82,10 @@ namespace XPTable.Models
                         return;
                     }
 
+//System.Diagnostics.Debug.WriteLine(string.Format("Dragging row = {0} target drop row = {1}", data.table.SelectedItems[0].Index, nRow));
+					if(data.table.SelectedItems[0].Index == nRow)	//don't move a row that isn't actually moving
+						return;
+
                     if (data.table != null)
                     {
                         if (data.table.SelectedIndicies.GetLength(0) > 0)

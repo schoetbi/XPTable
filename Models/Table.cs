@@ -770,6 +770,8 @@ namespace XPTable.Models
         private bool enableWordWrap;
         #endregion
 
+		private bool assumeFixedHeight = false;
+
         /// <summary>
         /// Helper class that provides all drag drop functionality.
         /// </summary>
@@ -920,7 +922,7 @@ namespace XPTable.Models
         {
             int yOffset;
             // This adds on the total height we can't see
-            if (this.EnableWordWrap)
+            if (this.EnableWordWrap || AssumeVariableHeights)
             {
                 yOffset = this.RowY(this.TopIndex);
             }
@@ -1775,7 +1777,7 @@ namespace XPTable.Models
 
             rect.X = this.DisplayRectangle.X;
 
-            if (this.EnableWordWrap)
+            if (this.EnableWordWrap || AssumeVariableHeights)
             {
                 rect.Y = this.BorderWidth + this.RowYDifference(this.TopIndex, row);
                 rect.Height = this.TableModel.Rows[row].Height;
@@ -2479,7 +2481,7 @@ namespace XPTable.Models
 
                 this.ColumnModel.Columns.RecalcWidthCache();
 
-                if (this.EnableWordWrap)
+                if (this.EnableWordWrap || AssumeVariableHeights)
                 {
                     if (autoCalculateRowHeights)
                         this.CalculateAllRowHeights();
@@ -4158,7 +4160,7 @@ namespace XPTable.Models
                 // v1.1.1 fix (jover) - used to error if no rows were added
                 if (this.TableModel == null || this.TableModel.Rows.Count == 0)
                     return 0;
-                else if (this.EnableWordWrap)
+                else if (this.EnableWordWrap || AssumeVariableHeights)
                     return this.RowYDifference(0, this.TableModel.Rows.Count);
                 else
                     return this.TableModel.Rows.Count * this.RowHeight;
@@ -4201,7 +4203,7 @@ namespace XPTable.Models
         public int GetVisibleRowCount()
         {
             int count;
-            if (this.EnableWordWrap)
+            if (this.EnableWordWrap || AssumeVariableHeights)
                 count = this.VisibleRowCountExact();
             else
                 count = this.CellDataRect.Height / this.RowHeight;
@@ -5010,6 +5012,18 @@ namespace XPTable.Models
             set { enableWordWrap = value; }
         }
         #endregion
+
+        /// <summary>
+        /// Gets of sets whether word wrap is allowed in any cell in the table. If false then the WordWrap property on Cells is ignored.
+        /// </summary>
+        [Category("Behavior"),
+        DefaultValue(false),
+        Description("Hint to GUI rendering and hit detection (optimization) to calculate row heights")]
+        public bool AssumeVariableHeights
+        {
+            get { return assumeFixedHeight; }
+            set { assumeFixedHeight = value; }
+        }
 
         #region ToolTips
         /// <summary>
@@ -8834,7 +8848,7 @@ namespace XPTable.Models
 
             this.Invalidate();
 
-            if (this.EnableWordWrap)
+            if (this.EnableWordWrap || AssumeVariableHeights)
                 UpdateScrollBars();
 
             lastVScrollValue = vScrollBar.Value;
