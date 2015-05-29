@@ -1322,5 +1322,24 @@ namespace XPTable.Models
             #endregion
         }
         #endregion
+
+		/// <summary>search given column for given text the collection of selected Rows and Cells in a TableModel</summary>
+		public Row FindRow(int column, string text, bool caseSensitive)
+		{
+			Row retval = null;
+			foreach(Row row in rows)
+			{
+				if(row.Cells.Count > column)
+				{
+					if((row.Cells[column].Text != null) && (row.Cells[column].Text.Equals(text, caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase)))
+					{
+						retval = row;
+						break;
+					}
+				}
+			}
+			return retval;
+		}
+
     }
 }
