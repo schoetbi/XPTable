@@ -7566,9 +7566,9 @@ namespace XPTable.Models
         /// Raises the Click event
         /// </summary>
         /// <param name="e">An EventArgs that contains the event data</param>
-        protected override void OnClick(EventArgs e)
+        protected override void OnMouseClick(MouseEventArgs e)
         {
-            base.OnClick(e);
+            base.OnMouseClick(e);
 
             if (this.IsValidCell(this.LastMouseCell))
             {
@@ -7576,13 +7576,34 @@ namespace XPTable.Models
                 // LastMouseCell may be a cell that is 'under' a colspan cell
                 CellPos realCell = this.ResolveColspan(this.LastMouseCell);
 
-                this.OnCellClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell)));
+                var cellMouseEventArgs = new CellMouseEventArgs(
+                    this.TableModel[realCell], 
+                    this, 
+                    realCell, 
+                    this.CellRect(realCell), 
+                    e);
+                this.OnCellClick(cellMouseEventArgs);
             }
             else if (this.hotColumn != -1)
             {
-                this.OnHeaderClick(new HeaderMouseEventArgs(this.ColumnModel.Columns[this.hotColumn], this, this.hotColumn, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(this.hotColumn))));
+                var columnHeaderRect = this.ColumnModel.ColumnHeaderRect(this.hotColumn);
+                var headerRect = this.DisplayRectToClient(columnHeaderRect);
+
+                var mouseEventArgs = new HeaderMouseEventArgs(
+                    this.ColumnModel.Columns[this.hotColumn], 
+                    this, 
+                    this.hotColumn, 
+                    headerRect, 
+                    e);
+                this.OnHeaderClick(mouseEventArgs);
             }
         }
+
+        /// <summary>
+        /// Raises the Click event
+        /// </summary>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        
 
         /// <summary>
         /// Raises the DoubleClick event
