@@ -7821,6 +7821,11 @@ namespace XPTable.Models
             var currentRow = this.TableModel.Rows[row];
             var currentColumn = this.ColumnModel.Columns[column];
 
+            if (currentColumn == null)
+            {
+                return;
+            }
+
             // get the renderer for the cells column
             ICellRenderer renderer = currentColumn.Renderer;
             if (renderer == null)
