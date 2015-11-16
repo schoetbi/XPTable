@@ -2744,8 +2744,6 @@ namespace XPTable.Models
 
             int hscrollVal = this.hScrollBar.Value;
             int vscrollVal = this.vScrollBar.Value;
-            bool moved = false;
-
             if (this.HScroll)
             {
                 if (column < 0)
@@ -2774,6 +2772,7 @@ namespace XPTable.Models
                             hscrollVal = this.ColumnModel.Columns[column].Right - this.CellDataRect.Width;
                         }
                     }
+
                     if (hscrollVal > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
                     {
                         hscrollVal = this.hScrollBar.Maximum - this.hScrollBar.LargeChange;
@@ -2816,19 +2815,30 @@ namespace XPTable.Models
                 vscrollVal++;
             }
 
-            moved = (this.hScrollBar.Value != hscrollVal || this.vScrollBar.Value != vscrollVal);
-
+            var moved = 
+                  SetScrollValue(this.hScrollBar, hscrollVal)
+                | SetScrollValue(this.vScrollBar, vscrollVal); 
+            
             if (moved)
             {
-                this.hScrollBar.Value = hscrollVal;
-                this.vScrollBar.Value = vscrollVal;
-
                 this.Invalidate(this.PseudoClientRect);
             }
 
             return moved;
         }
 
+        private static bool SetScrollValue(ScrollBar scrollbar, int value)
+        {
+            if (scrollbar.Value == value 
+                || value > scrollbar.Maximum 
+                || value < scrollbar.Minimum)
+            {
+                return false;
+            }
+
+            scrollbar.Value = value;
+            return true;
+        }
 
         /// <summary>
         /// Ensures that the Cell at the specified CellPos is visible within 
