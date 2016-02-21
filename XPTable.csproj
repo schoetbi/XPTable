@@ -554,6 +554,9 @@
   <ItemGroup>
     <EmbeddedResource Include="gitStatus.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="readme.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>$(ProjectDir)createGitStatus.bat $(ProjectDir)\gitStatus.txt $(ProjectDir)\AssemblyInfo.githash.cs</PreBuildEvent>
