@@ -17,7 +17,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")] 
 [assembly: CLSCompliant(true)]  
 
-[assembly: AssemblyVersion("1.6.0.*")]
+[assembly: AssemblyVersion("1.6.1.*")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
