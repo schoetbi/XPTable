@@ -549,6 +549,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="XPTable.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="XPTable.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -556,6 +559,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
+    <Content Include="Resources\XPTable32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
