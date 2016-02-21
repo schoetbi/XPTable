@@ -123,11 +123,14 @@ namespace XPTable.Renderers
                 this.stringFormat = null;
             }
 
-            if (this.font != null)
-            {
-                this.font.Dispose();
-                this.font = null;
-            }
+			//this one causes the VisualStudio Designer (well, 2015 at least) to blow up when you edit a form with XPTable in it twice
+			//we didn't create this font (see the "set" below around line 222 or so)
+			//so we shouldn't just go deleting it all willy-nilly
+//             if (this.font != null)
+//             {
+//                 this.font.Dispose();
+//                 this.font = null;
+//             }
         }
 
         /// <summary>
