@@ -4,3 +4,4 @@ _ReSharper.XPTable
 *.suo
 /bin
 /AssemblyInfo.githash.cs
+/XPTable.xml
