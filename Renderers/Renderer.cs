@@ -123,11 +123,6 @@ namespace XPTable.Renderers
                 this.stringFormat = null;
             }
 
-            if (this.font != null)
-            {
-                this.font.Dispose();
-                this.font = null;
-            }
         }
 
         /// <summary>
