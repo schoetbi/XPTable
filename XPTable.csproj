@@ -340,6 +340,12 @@
     <Compile Include="Models\SelectionStyle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\ShowColumnsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Models\ShowColumnsDialog.Designer.cs">
+      <DependentUpon>ShowColumnsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Table.cs">
       <SubType>Component</SubType>
     </Compile>
