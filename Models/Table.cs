@@ -2603,24 +2603,18 @@ namespace XPTable.Models
 
                 if (hscroll)
                     vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
-
-                int visibleRowCount = this.GetVisibleRowCount();
-
+                
                 this.vScrollBar.Visible = true;
                 this.vScrollBar.Bounds = vscrollBounds;
                 this.vScrollBar.Minimum = 0;
                 this.vScrollBar.SmallChange = 1;
 
-                // When at the very bottom,     LargeChange + Value = Maximum + 1
-
-                // This is the total number of rows in the table that are not hidden
                 int rowcount = this.RowCount - this.TableModel.Rows.HiddenSubRows;
-
+                rowcount = rowcount < 0 ? 0 : rowcount;
                 vScrollBar.Maximum = rowcount;
-                // as otherwise resizing could lead to a crash - 12/01/06
-                vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
-                // as otherwise minimising could lead to a crash
-                vScrollBar.LargeChange = (visibleRowCount < 0) ? 0 : visibleRowCount + 1;
+
+                int visibleRowCount = this.GetVisibleRowCount(hscroll, true);
+                vScrollBar.LargeChange = visibleRowCount < 0 ? 0 : visibleRowCount + 1;
             }
             else
             {
@@ -2744,8 +2738,6 @@ namespace XPTable.Models
 
             int hscrollVal = this.hScrollBar.Value;
             int vscrollVal = this.vScrollBar.Value;
-            bool moved = false;
-
             if (this.HScroll)
             {
                 if (column < 0)
@@ -2774,6 +2766,7 @@ namespace XPTable.Models
                             hscrollVal = this.ColumnModel.Columns[column].Right - this.CellDataRect.Width;
                         }
                     }
+
                     if (hscrollVal > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
                     {
                         hscrollVal = this.hScrollBar.Maximum - this.hScrollBar.LargeChange;
@@ -2816,19 +2809,30 @@ namespace XPTable.Models
                 vscrollVal++;
             }
 
-            moved = (this.hScrollBar.Value != hscrollVal || this.vScrollBar.Value != vscrollVal);
-
+            var moved = 
+                  SetScrollValue(this.hScrollBar, hscrollVal)
+                | SetScrollValue(this.vScrollBar, vscrollVal); 
+            
             if (moved)
             {
-                this.hScrollBar.Value = hscrollVal;
-                this.vScrollBar.Value = vscrollVal;
-
                 this.Invalidate(this.PseudoClientRect);
             }
 
             return moved;
         }
 
+        private static bool SetScrollValue(ScrollBar scrollbar, int value)
+        {
+            if (scrollbar.Value == value 
+                || value > scrollbar.Maximum 
+                || value < scrollbar.Minimum)
+            {
+                return false;
+            }
+
+            scrollbar.Value = value;
+            return true;
+        }
 
         /// <summary>
         /// Ensures that the Cell at the specified CellPos is visible within 
@@ -4197,14 +4201,35 @@ namespace XPTable.Models
         /// <summary>
         /// Gets the number of whole rows that are visible in the Table
         /// </summary>
+        /// <param name="hScroll"></param>
+        /// <param name="vScroll"></param>
         [Browsable(false)]
-        public int GetVisibleRowCount()
+        public int GetVisibleRowCount(bool hScroll, bool vScroll)
         {
             int count;
             if (this.EnableWordWrap)
                 count = this.VisibleRowCountExact();
             else
-                count = this.CellDataRect.Height / this.RowHeight;
+            {
+                Rectangle clientRect = this.InternalBorderRect;
+
+                if (hScroll)
+                {
+                    clientRect.Height -= SystemInformation.HorizontalScrollBarHeight;
+                }
+
+                if (vScroll)
+                {
+                    clientRect.Width -= SystemInformation.VerticalScrollBarWidth;
+                }
+
+                if (this.HeaderStyle != ColumnHeaderStyle.None && this.ColumnCount > 0)
+                {
+                    clientRect.Y += this.HeaderHeight;
+                    clientRect.Height -= this.HeaderHeight;
+                }
+                count = clientRect.Height / this.RowHeight;
+            }
             return count;
         }
 
@@ -7810,6 +7835,11 @@ namespace XPTable.Models
             var currentCell = this.TableModel[row, column];
             var currentRow = this.TableModel.Rows[row];
             var currentColumn = this.ColumnModel.Columns[column];
+
+            if (currentColumn == null)
+            {
+                return;
+            }
 
             // get the renderer for the cells column
             ICellRenderer renderer = currentColumn.Renderer;
