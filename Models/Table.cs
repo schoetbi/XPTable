@@ -1,6 +1,5 @@
 /*
- * Copyright © 2005, Mathew Hall
- * All rights reserved.
+ * Copyright ï¿½ 2005, Mathew Hall * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
  * are permitted provided that the following conditions are met:
@@ -35,6 +34,7 @@ using System.Windows.Forms.VisualStyles;
 
 using XPTable.Editors;
 using XPTable.Events;
+using XPTable.Filters;
 using XPTable.Models;
 using XPTable.Renderers;
 using XPTable.Sorting;
@@ -202,6 +202,11 @@ namespace XPTable.Models
         /// Occurs when a Column Header is clicked
         /// </summary>
         public event HeaderMouseEventHandler HeaderClick;
+
+        /// <summary>
+        /// Occurs when a Column Header Filter is clicked
+        /// </summary>
+        public event HeaderMouseEventHandler HeaderFilterClick;
 
         /// <summary>
         /// Occurs when a Column Header is double-clicked
@@ -769,6 +774,11 @@ namespace XPTable.Models
         /// </summary>
         private bool enableWordWrap;
         #endregion
+
+        /// <summary>
+        /// Specifies whether any columns can show filters.
+        /// </summary>
+        private bool enableFilters;
 
         /// <summary>
         /// Helper class that provides all drag drop functionality.
@@ -5035,6 +5045,18 @@ namespace XPTable.Models
             set { enableWordWrap = value; }
         }
         #endregion
+
+        /// <summary>
+        /// Gets of sets whether column filtering is enabled. 
+        /// </summary>
+        [Category("Behaviour"),
+        DefaultValue(false),
+        Description("Specifies whether any columns can show filters.")]
+        public bool EnableFilters
+        {
+            get { return enableFilters; }
+            set { enableFilters = value; }
+        }
 
         #region ToolTips
         /// <summary>
