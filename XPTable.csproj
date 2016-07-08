@@ -217,6 +217,9 @@
     <Compile Include="Filters\IRowFilter.cs" />
     <Compile Include="Filters\NullRowFilter.cs" />
     <Compile Include="Filters\TextColumnFilter.cs" />
+    <Compile Include="Filters\TextColumnFilterDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Models\ButtonColumn.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -318,6 +321,7 @@
     <Compile Include="Models\HeaderContextMenu.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Models\ColumnHeaderRegion.cs" />
     <Compile Include="Models\ImageColumn.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -548,6 +552,9 @@
     </Compile>
     <EmbeddedResource Include="Editors\DropDownContainer.resx">
       <DependentUpon>DropDownContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Filters\TextColumnFilterDialog.resx">
+      <DependentUpon>TextColumnFilterDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Models\ColumnModel.bmp" />
     <EmbeddedResource Include="Models\Table.bmp" />

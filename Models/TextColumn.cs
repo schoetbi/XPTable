@@ -156,7 +156,10 @@ namespace XPTable.Models
         /// <returns></returns>
         public override IColumnFilter CreateDefaultFilter()
         {
-            return new TextColumnFilter();
+            return new TextColumnFilter()
+            {
+                Column = this
+            };
         }
 
         /// <summary>
