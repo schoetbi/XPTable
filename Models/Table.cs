@@ -1,5 +1,6 @@
 /*
- * Copyright ï¿½ 2005, Mathew Hall * All rights reserved.
+ * Copyright © 2005, Mathew Hall
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
  * are permitted provided that the following conditions are met:
@@ -204,9 +205,14 @@ namespace XPTable.Models
         public event HeaderMouseEventHandler HeaderClick;
 
         /// <summary>
-        /// Occurs when a Column Header Filter is clicked
+        /// Occurs when a Column Header Filter button is clicked
         /// </summary>
         public event HeaderMouseEventHandler HeaderFilterClick;
+
+        /// <summary>
+        /// Occurs when a Column Header Filter is changed
+        /// </summary>
+        public event HeaderMouseEventHandler HeaderFilterChanged;
 
         /// <summary>
         /// Occurs when a Column Header is double-clicked
@@ -6309,6 +6315,42 @@ namespace XPTable.Models
             }
         }
 
+        /// <summary>
+        /// Raises the HeaderFilterClick event
+        /// </summary>
+        /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
+        protected virtual void OnHeaderFilterClick(HeaderMouseEventArgs e)
+        {
+            if (this.CanRaiseEvents)
+            {
+                if (e.Column.Filter != null)
+                {
+                    e.Column.Filter.OnHeaderFilterClick(e);
+                }
+
+                if (HeaderFilterClick != null)
+                {
+                    HeaderFilterClick(e.Column, e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Raises the HeaderFilterChanged event
+        /// </summary>
+        /// <param name="e"></param>
+        public virtual void OnHeaderFilterChanged(HeaderMouseEventArgs e)
+        {
+            if (this.CanRaiseEvents)
+            {
+                this.InvalidateRect(this.PseudoClientRect);
+
+                if (HeaderFilterChanged != null)
+                {
+                    HeaderFilterChanged(e.Column, e);
+                }
+            }
+        }
 
         /// <summary>
         /// Raises the HeaderDoubleClick event
@@ -7015,6 +7057,17 @@ namespace XPTable.Models
                         return;
                     }
 
+                    // If the mouse is over the filter button then do nothing here - handle this in the click event
+                    if (this.EnableFilters && this.ColumnModel.Columns[column].Filterable)
+                    {
+                        ColumnHeaderRegion colRegion = this.HeaderRenderer.HitTest(e.X, e.Y);
+
+                        if (colRegion == ColumnHeaderRegion.FilterButton)
+                        {
+                            return;
+                        }
+                    }
+
                     this.RaiseHeaderMouseDown(column, e);
 
                     if (this.TableState == TableState.ColumnResizing)
@@ -7636,13 +7689,39 @@ namespace XPTable.Models
                 var columnHeaderRect = this.ColumnModel.ColumnHeaderRect(this.hotColumn);
                 var headerRect = this.DisplayRectToClient(columnHeaderRect);
 
-                var mouseEventArgs = new HeaderMouseEventArgs(
-                    this.ColumnModel.Columns[this.hotColumn], 
-                    this, 
-                    this.hotColumn, 
-                    headerRect, 
-                    e);
-                this.OnHeaderClick(mouseEventArgs);
+                bool handled = false;
+
+                // Column filters
+                if (this.EnableFilters && this.ColumnModel.Columns[hotColumn].Filterable)
+                {
+                    Point client = this.DisplayRectToClient(e.X, e.Y);
+                    ColumnHeaderRegion region = this.HeaderRenderer.HitTest(client.X, client.Y);
+
+                    if (region == ColumnHeaderRegion.FilterButton)
+                    {
+                        handled = true;
+
+                        var mouseEventArgs = new HeaderMouseEventArgs(
+                            this.ColumnModel.Columns[this.hotColumn],
+                            this,
+                            this.hotColumn,
+                            headerRect,
+                            e);
+
+                        this.OnHeaderFilterClick(mouseEventArgs);
+                    }
+                }
+
+                if (!handled)
+                {
+                    var mouseEventArgs = new HeaderMouseEventArgs(
+                        this.ColumnModel.Columns[this.hotColumn],
+                        this,
+                        this.hotColumn,
+                        headerRect,
+                        e);
+                    this.OnHeaderClick(mouseEventArgs);
+                }
             }
         }
 
@@ -8534,10 +8613,12 @@ namespace XPTable.Models
 
             Rectangle rowRect = new Rectangle(xPos, yPos, this.ColumnModel.TotalColumnWidth, this.RowHeight);
 
+            IRowFilter filter = GetRowFilter();
+
             for (int i = this.TopIndex; i < this.TableModel.Rows.Count; i++)
             {
                 Row row = this.TableModel.Rows[i];
-                if (row != null && (row.Parent == null || row.Parent.ExpandSubRows))
+                if (row != null && (row.Parent == null || row.Parent.ExpandSubRows) && filter.CanShow(row))
                 {
                     rowRect.Height = row.Height;
 
@@ -8584,6 +8665,29 @@ namespace XPTable.Models
                 }
             }
             #endregion
+        }
+
+        IRowFilter GetRowFilter()
+        {
+            if (!this.EnableFilters)
+                return new NullRowFilter();
+
+            var filters = new Dictionary<int, IColumnFilter>();
+
+            for(int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            {
+                Column column = this.ColumnModel.Columns[i];
+
+                if (column.Filterable && column.Filter != null)
+                {
+                    filters.Add(i, column.Filter);
+                }
+            }
+
+            if (filters.Count == 0)
+                return new NullRowFilter();
+
+            return new ActiveRowFilter(filters);
         }
 
         /// <summary>
