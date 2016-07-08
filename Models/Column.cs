@@ -648,7 +648,7 @@ namespace XPTable.Models
         }
 
         /// <summary>
-        /// Gets or sets whether the Column is able to be filtered
+        /// Gets or sets whether the Column should show a filter drop-down button
         /// </summary>
         [Category("Behaviour"),
         DefaultValue(false),
@@ -686,7 +686,7 @@ namespace XPTable.Models
                 if (this.filter != value)
                 {
                     this.filter = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.RendererChanged, null));
+                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FilterChanged, null));
                 }
             }
         }
