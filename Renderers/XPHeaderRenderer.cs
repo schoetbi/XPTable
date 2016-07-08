@@ -93,15 +93,23 @@ namespace XPTable.Renderers
 			}
 
 			Rectangle textRect = this.ClientRectangle;
-			Rectangle imageRect = Rectangle.Empty;
 
             int imageWidth = 0;
             int arrowWidth = 0;
             int textWidth = 0;
 
-			if (e.Column.Image != null)
+            if (e.Column.Filterable)
+            {
+                Rectangle filterRect = this.CalcFilterRect();
+
+                textRect.Width -= filterRect.Width;
+                
+                ThemeManager.DrawComboBoxButton(e.Graphics, filterRect, ComboBoxState.Normal);
+            }
+            
+            if (e.Column.Image != null)
 			{
-				imageRect = this.CalcImageRect();
+                Rectangle imageRect = this.CalcImageRect();
 
 				textRect.Width -= imageRect.Width;
 				textRect.X += imageRect.Width;
@@ -140,8 +148,8 @@ namespace XPTable.Renderers
                 }
                 else
                 {
-				arrowRect.X = textRect.Right - arrowRect.Width;
-				textRect.Width -= arrowRect.Width;
+				    arrowRect.X = textRect.Right - arrowRect.Width;
+				    textRect.Width -= arrowRect.Width;
                 }
 
 				this.DrawSortArrow(e.Graphics, arrowRect, e.Column.SortOrder, e.Column.Enabled);
@@ -174,14 +182,35 @@ namespace XPTable.Renderers
                     e.Column.IsTextTrimmed = this.IsTextTrimmed(e.Graphics, e.Column.Text);
                 }
             }
+
             if (e.Column.WidthNotSet)
             {
                 e.Column.ContentWidth = imageWidth + arrowWidth + textWidth;
             }
 		}
 
-		#endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+
+        /// <summary>
+        /// Returns a ColumnHeaderRegion value that represents the header region at the specified client coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public override ColumnHeaderRegion HitTest(int x, int y)
+        {
+            Rectangle filterRect = this.CalcFilterRect();
+
+            bool contains = filterRect.Contains(x, y);
+
+            Console.WriteLine("HitTest ({0}, {1}) = {2} [{3}]", x, y, contains, filterRect);
+
+            if (contains)
+                return ColumnHeaderRegion.FilterButton;
+
+            return ColumnHeaderRegion.ColumnTitle;
+        }
+    }
 }

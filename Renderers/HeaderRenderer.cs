@@ -31,7 +31,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using XPTable.Events;
-
+using XPTable.Models;
 
 namespace XPTable.Renderers
 {
@@ -79,6 +79,29 @@ namespace XPTable.Renderers
 
 			return imageRect;
 		}
+
+        /// <summary>
+        /// Returns a Rectangle that represents the size and location of the filter button shown in the ColumnHeader
+        /// </summary>
+        /// <returns></returns>
+        protected Rectangle CalcFilterRect()
+        {
+            Rectangle filterRect = this.ClientRectangle;
+
+            if (filterRect.Width > 16)
+            {
+                // Show filter on RHS
+                filterRect.X = filterRect.Right - 16;
+                filterRect.Width = 16;
+            }
+            else
+            {
+                // Do not show filter if too narrow
+                filterRect.Width = 0;
+            }
+
+            return filterRect;
+        }
 
 
 		/// <summary>
@@ -371,8 +394,21 @@ namespace XPTable.Renderers
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+
+        /// <summary>
+        /// Returns a ColumnHeaderRegion value that represents the header region at the specified client coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public virtual ColumnHeaderRegion HitTest(int x, int y)
+        {
+            // This base class does not render filter buttons
+
+            return ColumnHeaderRegion.ColumnTitle;
+        }
+    }
 }

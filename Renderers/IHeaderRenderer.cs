@@ -28,7 +28,7 @@
 using System;
 
 using XPTable.Events;
-
+using XPTable.Models;
 
 namespace XPTable.Renderers
 {
@@ -91,5 +91,13 @@ namespace XPTable.Renderers
 		/// </summary>
 		/// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
 		void OnDoubleClick(HeaderMouseEventArgs e);
+
+        /// <summary>
+        /// Returns a ColumnHeaderRegion value that represents the header region at the specified client coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        ColumnHeaderRegion HitTest(int x, int y);
 	}
 }
