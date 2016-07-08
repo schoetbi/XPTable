@@ -140,6 +140,16 @@ namespace XPTable.Events
         /// <summary>
         /// Occurs when the value of a Column's AutoResizeMode property changes
         /// </summary>
-        AutoResizeModeChanged = 20
-    }
+        AutoResizeModeChanged = 20,
+
+        /// <summary>
+        /// Occurs when the value of a Column's Filterable property changes
+        /// </summary>
+        FilterableChanged = 21,
+
+        /// <summary>
+        /// Occurs when the value of a Column's Filter property changes
+        /// </summary>
+        FilterChanged = 22,
+}
 }

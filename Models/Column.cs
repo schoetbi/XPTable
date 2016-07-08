@@ -31,6 +31,7 @@ using System.Windows.Forms;
 
 using XPTable.Editors;
 using XPTable.Events;
+using XPTable.Filters;
 using XPTable.Renderers;
 
 namespace XPTable.Models
@@ -60,7 +61,10 @@ namespace XPTable.Models
         // Mateusz [PEYN] Adamus (peyn@tlen.pl)
         // Determines whether the column is able to be resized
         private readonly static int STATE_RESIZABLE = 32;
-        
+
+        // Determines whether the column is able to be filtered
+        private readonly static int STATE_FILTERABLE = 64;
+
         /// <summary>
         /// The amount of space on each side of the Column that can 
         /// be used as a resizing handle
@@ -157,6 +161,11 @@ namespace XPTable.Models
         /// The CellEditor used to edit the Column's Cells
         /// </summary>
         private ICellEditor editor;
+
+        /// <summary>
+        /// The IColumnFilter used to filter rows based on this column
+        /// </summary>
+        private IColumnFilter filter;
 
         /// <summary>
         /// The Type of the IComparer used to compare the Column's Cells
@@ -275,6 +284,7 @@ namespace XPTable.Models
             this.renderer = null;
             this.editor = null;
             this.comparer = null;
+            this.filter = null;
 
             // Mateusz [PEYN] Adamus (peyn@tlen.pl)
             // Added STATE_RESIZABLE to column's initialization
@@ -295,6 +305,12 @@ namespace XPTable.Models
         /// </summary>
         /// <returns>The Column's default CellRenderer</returns>
         public abstract ICellRenderer CreateDefaultRenderer();
+
+        /// <summary>
+        /// Gets the Column's default ColumnFilter
+        /// </summary>
+        /// <returns></returns>
+        public abstract IColumnFilter CreateDefaultFilter();
 
         /// <summary>
         /// Gets a string that specifies the name of the Column's default CellEditor
@@ -628,6 +644,50 @@ namespace XPTable.Models
                 this.SetState( STATE_RESIZABLE, value );
                 if( resizable != value)
                     this.OnPropertyChanged( new ColumnEventArgs( this, ColumnEventType.ResizableChanged, resizable ) );
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether the Column is able to be filtered
+        /// </summary>
+        [Category("Behaviour"),
+        DefaultValue(false),
+        Description("Determines whether the column is able to be filtered.")]
+        public virtual bool Filterable
+        {
+            get { return this.GetState(STATE_FILTERABLE); }
+            set
+            {
+                bool filterable = this.Filterable;
+                this.SetState(STATE_FILTERABLE, value);
+                if (filterable != value)
+                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FilterableChanged, filterable));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the user specified IColumnFilter that is used to filter rows based on this columns values
+        /// </summary>
+        [Browsable(false),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IColumnFilter Filter
+        {
+            get
+            {
+                if (this.filter == null)
+                {
+                    this.filter = CreateDefaultFilter();
+                }
+
+                return this.filter;
+            }
+            set
+            {
+                if (this.filter != value)
+                {
+                    this.filter = value;
+                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.RendererChanged, null));
+                }
             }
         }
 

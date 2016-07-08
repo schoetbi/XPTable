@@ -4,6 +4,7 @@ using System.Drawing;
 
 using XPTable.Editors;
 using XPTable.Events;
+using XPTable.Filters;
 using XPTable.Models.Design;
 using XPTable.Renderers;
 using XPTable.Sorting;
@@ -105,13 +106,21 @@ namespace XPTable.Models
 			return new GroupCellRenderer();
 		}
 
+        /// <summary>
+        /// Get the Column's default ColumnFilter
+        /// </summary>
+        /// <returns></returns>
+        public override IColumnFilter CreateDefaultFilter()
+        {
+            return new TextColumnFilter();
+        }
 
-		/// <summary>
-		/// Gets a string that specifies the name of the Column's default CellEditor
-		/// </summary>
-		/// <returns>A string that specifies the name of the Column's default 
-		/// CellEditor</returns>
-		public override string GetDefaultEditorName()
+        /// <summary>
+        /// Gets a string that specifies the name of the Column's default CellEditor
+        /// </summary>
+        /// <returns>A string that specifies the name of the Column's default 
+        /// CellEditor</returns>
+        public override string GetDefaultEditorName()
 		{
 			return null;
 		}
