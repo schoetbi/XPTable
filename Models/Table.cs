@@ -7721,8 +7721,22 @@ namespace XPTable.Models
 
             if (!painted)
             {
-                OnAfterFirstPaint(EventArgs.Empty);
                 painted = true;
+
+                FirstPaint();
+            }
+        }
+
+        private void FirstPaint()
+        {
+            OnAfterFirstPaint(EventArgs.Empty);
+
+            // Do this so that scrollbars are evaluated whilst the actual row heights are known
+            if (this.EnableWordWrap)
+            {
+                if (autoCalculateRowHeights)
+                    this.CalculateAllRowHeights();
+                this.UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
             }
         }
 
