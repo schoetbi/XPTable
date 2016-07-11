@@ -1086,7 +1086,7 @@ namespace XPTable.Models
             if (row == -1 || row >= this.TableModel.Rows.Count || column == -1 || column >= this.TableModel.Rows[row].Cells.Count)
                 return Rectangle.Empty;
 
-            Rectangle columnRect = this.ColumnRect(column);
+            Rectangle columnRect = this.ColumnHeaderRect(column); // Only the Width and X are used - we don't need to work out the Height or Y
 
             if (columnRect == Rectangle.Empty)
                 return columnRect;
@@ -1630,7 +1630,7 @@ namespace XPTable.Models
         /// <returns></returns>
         private int GetColumnLeft(int column)
         {
-            return this.ColumnRect(column).Left;
+            return this.ColumnHeaderRect(column).Left;
         }
 
         /// <summary>
