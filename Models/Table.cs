@@ -1774,7 +1774,7 @@ namespace XPTable.Models
 
             Rectangle rect = new Rectangle();
 
-            rect.X = this.DisplayRectangle.X;
+            rect.X = this.DisplayRectangleLeft;
 
             if (this.EnableWordWrap)
             {
@@ -3700,6 +3700,24 @@ namespace XPTable.Models
         #endregion
 
         #region DisplayRectangle
+        /// <summary>
+        /// Gets the Left (or X) value of the rectangle that represents the display area of the Table.
+        /// </summary>
+        private int DisplayRectangleLeft
+        {
+            get
+            {
+                int left = this.CellDataRect.Left;
+
+                if (!this.init)
+                {
+                    left -= this.hScrollBar.Value;
+                }
+
+                return left;
+            }
+        }
+
         /// <summary>
         /// Gets the rectangle that represents the display area of the Table
         /// </summary>
@@ -8075,7 +8093,7 @@ namespace XPTable.Models
             int yline = this.CellDataRect.Y - 1;
             int rowright = this.GetGridlineYMax(e);
 
-            int displayRectangleX = this.DisplayRectangle.X;
+            int displayRectangleX = this.DisplayRectangleLeft;
             ColumnCollection columns = this.ColumnModel.Columns;
             RowCollection rows = this.TableModel.Rows;
 
@@ -8224,7 +8242,7 @@ namespace XPTable.Models
 
         void PaintGridColumns(PaintEventArgs e, Pen gridPen)
         {
-            int right = this.DisplayRectangle.X;
+            int right = this.DisplayRectangleLeft;
 
             int columns = this.ColumnModel.Columns.Count;
 
@@ -8397,7 +8415,7 @@ namespace XPTable.Models
                 return;
             }
 
-            int xPos = this.DisplayRectangle.Left;
+            int xPos = this.DisplayRectangleLeft;
             bool needDummyHeader = true;
 
             //
@@ -8527,7 +8545,7 @@ namespace XPTable.Models
         /// <param name="e">A PaintEventArgs that contains the event data</param>
         protected void OnPaintRows(PaintEventArgs e)
         {
-            int xPos = this.DisplayRectangle.Left;
+            int xPos = this.DisplayRectangleLeft;
             int yPos = this.PseudoClientRect.Top;
 
             if (this.HeaderStyle != ColumnHeaderStyle.None)
