@@ -108,11 +108,31 @@ namespace XPTable.Filters
         void UpdateFilter(HeaderMouseEventArgs e, TextColumnFilterDialog dialog)
         {
             if (dialog.AnyUncheckedItems())
-                _allowedItems = new List<string>(dialog.GetCheckedItems());
+                SetFilterItems(dialog.GetCheckedItems());
             else
-                _allowedItems = null;
+                SetFilterItems(null);
 
             e.Table.OnHeaderFilterChanged(e);
+        }
+
+        /// <summary>
+        /// Sets the filter to only display these values.
+        /// </summary>
+        /// <param name="items"></param>
+        public void SetFilterItems(IEnumerable<string> items)
+        {
+            if (items == null)
+            {
+                _allowedItems = null;
+            }
+            else
+            {
+                var list = new List<string>(items);
+                if (list.Count == 0)
+                    _allowedItems = null;
+                else
+                    _allowedItems = list;
+            }
         }
     }
 }

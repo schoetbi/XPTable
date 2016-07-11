@@ -212,7 +212,7 @@ namespace XPTable.Models
         /// <summary>
         /// Occurs when a Column Header Filter is changed
         /// </summary>
-        public event HeaderMouseEventHandler HeaderFilterChanged;
+        public event EventHandler HeaderFilterChanged;
 
         /// <summary>
         /// Occurs when a Column Header is double-clicked
@@ -6339,7 +6339,7 @@ namespace XPTable.Models
         /// Raises the HeaderFilterChanged event
         /// </summary>
         /// <param name="e"></param>
-        public virtual void OnHeaderFilterChanged(HeaderMouseEventArgs e)
+        public virtual void OnHeaderFilterChanged(EventArgs e)
         {
             if (this.CanRaiseEvents)
             {
@@ -6347,7 +6347,7 @@ namespace XPTable.Models
 
                 if (HeaderFilterChanged != null)
                 {
-                    HeaderFilterChanged(e.Column, e);
+                    HeaderFilterChanged(this, e);
                 }
             }
         }
@@ -7724,12 +7724,6 @@ namespace XPTable.Models
                 }
             }
         }
-
-        /// <summary>
-        /// Raises the Click event
-        /// </summary>
-        /// <param name="e">An EventArgs that contains the event data</param>
-        
 
         /// <summary>
         /// Raises the DoubleClick event
