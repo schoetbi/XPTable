@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using XPTable.Events;
 using XPTable.Filters;
 using XPTable.Models;
 
@@ -31,11 +32,13 @@ namespace Filtering
             table.BeginUpdate();
             table.EnableWordWrap = true;    // If false, then Cell.WordWrap is ignored
             table.EnableFilters = true;
+            table.HeaderFilterClick += Table_HeaderFilterClick;
 
             NumberColumn col0 = new NumberColumn("#", 20);
             NumberColumn col1 = new NumberColumn("Height", 50);
             TextColumn col2 = new TextColumn("Name", 80);
             _filter = col2.Filter as TextColumnFilter;
+            col2.Filterable = true;
             
             TextColumn col3 = new TextColumn("Surname", 80);
             DateTimeColumn col4 = new DateTimeColumn("Birthday", 120);
@@ -68,6 +71,25 @@ namespace Filtering
             row.Cells.Add(new Cell(DateTime.Parse(date)));
             row.Cells.Add(new Cell(more));
             table.Rows.Add(row);
+        }
+
+        private void Table_HeaderFilterClick(object sender, HandledHeaderMouseEventArgs e)
+        {
+            var filter = e.Column.Filter as TextColumnFilter;
+
+            if (filter == null)
+                return;
+
+            string[] items = filter.GetDistinctItems(e.Table, e.Index);
+
+            txtFilter.Text = string.Empty;
+
+            foreach (string s in items)
+            {
+                txtFilter.Text += string.Format(@"{0}{1}", s, Environment.NewLine);
+            }
+
+            e.Handled = true;
         }
 
         private void btnFilter_Click(object sender, EventArgs e)

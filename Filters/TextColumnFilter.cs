@@ -88,13 +88,25 @@ namespace XPTable.Filters
 
         void AddItems(TextColumnFilterDialog dialog, Table table, int col)
         {
-            var reader = new TableColumnReader(table.TableModel);
-            string [] toAdd = reader.GetUniqueItems(col);
+            string[] toAdd = GetDistinctItems(table, col);
 
-            foreach(string item in toAdd)
+            foreach (string item in toAdd)
             {
                 dialog.AddItem(item, ItemIsChecked(item));
             }
+        }
+
+        /// <summary>
+        /// Returns a list of distinct items from the given column
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public string[] GetDistinctItems(Table table, int col)
+        {
+            var reader = new TableColumnReader(table.TableModel);
+            string[] toAdd = reader.GetUniqueItems(col);
+            return toAdd;
         }
 
         bool ItemIsChecked(string item)
