@@ -24,20 +24,12 @@ namespace Grouping
 
 		public Demo()
 		{
-			InitializeComponent();
-            if (Directory.Exists("..\\..\\resources\\"))
-            {
-                _unread = new Bitmap("..\\..\\resources\\EmailUnRead.bmp");
-                _read = new Bitmap("..\\..\\resources\\EmailRead.bmp");
-            }
-            else
-            {
-                _unread = new Bitmap("..\\..\\..\\resources\\EmailUnRead.bmp");
-                _read = new Bitmap("..\\..\\..\\resources\\EmailRead.bmp");
-            }
+		    InitializeComponent();
+		    _unread = new Bitmap("resources\\EmailUnRead.bmp");
+		    _read = new Bitmap("resources\\EmailRead.bmp");
 		}
 
-        private void Demo_Load(object sender, EventArgs e)
+	    private void Demo_Load(object sender, EventArgs e)
         {
             DoGroup();
         }

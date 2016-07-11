@@ -123,11 +123,8 @@ namespace DataBinding
         {
             ImageList list = new ImageList();
 
-            string path = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Application.StartupPath)), "images");
+            string path = Path.Combine(Application.StartupPath, "images");
             
-            if (!Directory.Exists(path))
-                path = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Application.StartupPath))), "images");
-
             foreach (string file in Directory.GetFiles(path))
             {
                 Image image = Bitmap.FromFile(file);
