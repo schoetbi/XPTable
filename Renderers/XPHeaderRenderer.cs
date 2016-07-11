@@ -205,7 +205,7 @@ namespace XPTable.Renderers
 
             bool contains = filterRect.Contains(x, y);
 
-            Console.WriteLine("HitTest ({0}, {1}) = {2} [{3}]", x, y, contains, filterRect);
+            //Console.WriteLine("HitTest ({0}, {1}) = {2} [{3}]", x, y, contains, filterRect);
 
             if (contains)
                 return ColumnHeaderRegion.FilterButton;

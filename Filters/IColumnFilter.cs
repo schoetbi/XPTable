@@ -12,6 +12,11 @@ namespace XPTable.Filters
     public interface IColumnFilter
     {
         /// <summary>
+        /// Returns true if this filter is 'active' i.e. would actually affect the display.
+        /// </summary>
+        bool IsFilterActive { get; }
+
+        /// <summary>
         /// Called to determine whether this cell can be shown by this filter
         /// </summary>
         /// <param name="cell"></param>
