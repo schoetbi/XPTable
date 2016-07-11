@@ -648,7 +648,8 @@ namespace XPTable.Models
         }
 
         /// <summary>
-        /// Gets or sets whether the Column should show a filter drop-down button
+        /// Gets or sets whether the Column should show a filter drop-down button.
+        /// Does not stop Filter from being used.
         /// </summary>
         [Category("Behaviour"),
         DefaultValue(false),
@@ -666,7 +667,8 @@ namespace XPTable.Models
         }
 
         /// <summary>
-        /// Gets or sets the user specified IColumnFilter that is used to filter rows based on this columns values
+        /// Gets or sets the user specified IColumnFilter that is used to filter rows based on this columns values. 
+        /// The Filter still applies even if Filterable is false.
         /// </summary>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
