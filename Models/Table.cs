@@ -207,7 +207,7 @@ namespace XPTable.Models
         /// <summary>
         /// Occurs when a Column Header Filter button is clicked
         /// </summary>
-        public event HeaderMouseEventHandler HeaderFilterClick;
+        public event EventHandler<HandledHeaderMouseEventArgs> HeaderFilterClick;
 
         /// <summary>
         /// Occurs when a Column Header Filter is changed
@@ -6323,14 +6323,19 @@ namespace XPTable.Models
         {
             if (this.CanRaiseEvents)
             {
-                if (e.Column.Filter != null)
-                {
-                    e.Column.Filter.OnHeaderFilterClick(e);
-                }
+                var args = new HandledHeaderMouseEventArgs(e);
 
                 if (HeaderFilterClick != null)
                 {
-                    HeaderFilterClick(e.Column, e);
+                    HeaderFilterClick(e.Column, args);
+                }
+
+                if (!args.Handled)
+                {
+                    if (e.Column.Filter != null)
+                    {
+                        e.Column.Filter.OnHeaderFilterClick(e);
+                    }
                 }
             }
         }

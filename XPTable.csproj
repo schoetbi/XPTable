@@ -143,6 +143,7 @@
     <Compile Include="Editors\TextCellEditor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Events\HandledHeaderMouseEventArgs.cs" />
     <Compile Include="Events\CellButtonEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
