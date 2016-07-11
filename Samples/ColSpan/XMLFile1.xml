@@ -1,0 +1,27 @@
+﻿<data>
+  <note conceptid="CM123">
+    <value id="">Sitting</value>
+    <value id="Systolic">123</value>
+    <value id="Distolic">90</value>
+  </note>
+  <note conceptid="CM123">
+    <value id="">Lying</value>
+    <value id="Systolic">100</value>
+    <value id="Distolic">88</value>
+  </note>
+
+
+  <field id="CM123">Sitting</field>
+  <field id="CM123.Systolic">123</field>
+  <field id="CM123.Distolic">90</field>
+  <field id="CM123">Lying</field>
+  <field id="CM123.Systolic">100</field>
+  <field id="CM12.Distolic3">88</field>
+
+  <field id="CM123">Sitting</field>
+  <field id="CM123" subid="Systolic">123</field>
+  <field id="CM123" subid="Distolic">90</field>
+  <field id="CM123">Lying</field>
+  <field id="CM123" subid="Systolic">100</field>
+  <field id="CM12" subid="Distolic3">88</field>
+</data>
