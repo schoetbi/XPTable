@@ -2603,24 +2603,18 @@ namespace XPTable.Models
 
                 if (hscroll)
                     vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
-
-                int visibleRowCount = this.GetVisibleRowCount();
-
+                
                 this.vScrollBar.Visible = true;
                 this.vScrollBar.Bounds = vscrollBounds;
                 this.vScrollBar.Minimum = 0;
                 this.vScrollBar.SmallChange = 1;
 
-                // When at the very bottom,     LargeChange + Value = Maximum + 1
-
-                // This is the total number of rows in the table that are not hidden
                 int rowcount = this.RowCount - this.TableModel.Rows.HiddenSubRows;
-
+                rowcount = rowcount < 0 ? 0 : rowcount;
                 vScrollBar.Maximum = rowcount;
-                // as otherwise resizing could lead to a crash - 12/01/06
-                vScrollBar.Maximum = (this.vScrollBar.Maximum <= 0) ? 0 : this.vScrollBar.Maximum;
-                // as otherwise minimising could lead to a crash
-                vScrollBar.LargeChange = (visibleRowCount < 0) ? 0 : visibleRowCount + 1;
+
+                int visibleRowCount = this.GetVisibleRowCount(hscroll, true);
+                vScrollBar.LargeChange = visibleRowCount < 0 ? 0 : visibleRowCount + 1;
             }
             else
             {
@@ -4207,14 +4201,35 @@ namespace XPTable.Models
         /// <summary>
         /// Gets the number of whole rows that are visible in the Table
         /// </summary>
+        /// <param name="hScroll"></param>
+        /// <param name="vScroll"></param>
         [Browsable(false)]
-        public int GetVisibleRowCount()
+        public int GetVisibleRowCount(bool hScroll, bool vScroll)
         {
             int count;
             if (this.EnableWordWrap)
                 count = this.VisibleRowCountExact();
             else
-                count = this.CellDataRect.Height / this.RowHeight;
+            {
+                Rectangle clientRect = this.InternalBorderRect;
+
+                if (hScroll)
+                {
+                    clientRect.Height -= SystemInformation.HorizontalScrollBarHeight;
+                }
+
+                if (vScroll)
+                {
+                    clientRect.Width -= SystemInformation.VerticalScrollBarWidth;
+                }
+
+                if (this.HeaderStyle != ColumnHeaderStyle.None && this.ColumnCount > 0)
+                {
+                    clientRect.Y += this.HeaderHeight;
+                    clientRect.Height -= this.HeaderHeight;
+                }
+                count = clientRect.Height / this.RowHeight;
+            }
             return count;
         }
 

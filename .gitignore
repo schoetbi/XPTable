@@ -6,4 +6,7 @@ _ReSharper.*
 *.suo
 /AssemblyInfo.githash.cs
 /XPTable.xml
+bin
 packages
+.vs
+*.user
