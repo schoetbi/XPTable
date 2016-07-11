@@ -1,9 +1,12 @@
 /gitStatus.txt
 obj
-_ReSharper.*
-*.suo
 bin
+_ReSharper.*
+.vs
+*.suo
 /AssemblyInfo.githash.cs
 /XPTable.xml
+bin
+packages
 .vs
 *.user
