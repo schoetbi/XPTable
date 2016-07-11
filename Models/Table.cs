@@ -961,6 +961,21 @@ namespace XPTable.Models
             return new Point(xPos, yPos);
         }
 
+        /// <summary>
+        /// Computes the x-coord of the specified client point into an x-coord 
+        /// relative to the display rectangle
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public int ClientXToDisplayRectX(int x)
+        {
+            int xPos = x - this.BorderWidth;
+
+            if (this.HScroll)
+                xPos += this.hScrollBar.Value;
+
+            return xPos;
+        }
 
         /// <summary>
         /// Computes the location of the specified client point into coordinates 
@@ -4966,7 +4981,7 @@ namespace XPTable.Models
 
                 // get the bounding rectangle for the column's header
                 Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                x = this.ClientToDisplayRect(x, y).X;
+                x = this.ClientXToDisplayRectX(x);
 
                 // are we in a resizing section on the left
                 if (x < columnRect.Left + Column.ResizePadding)
@@ -7034,7 +7049,7 @@ namespace XPTable.Models
                     if (this.TableState == TableState.ColumnResizing)
                     {
                         Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                        int x = this.ClientToDisplayRect(e.X, e.Y).X;
+                        int x = this.ClientXToDisplayRectX(e.X);
 
                         if (x <= columnRect.Left + Column.ResizePadding)
                         {
@@ -7278,7 +7293,7 @@ namespace XPTable.Models
                 }
 
                 // calculate the new width for the column
-                int width = this.ClientToDisplayRect(e.X, e.Y).X - this.resizingColumnAnchor - this.resizingColumnOffset;
+                int width = this.ClientXToDisplayRectX(e.X) - this.resizingColumnAnchor - this.resizingColumnOffset;
 
                 // make sure the new width isn't smaller than the minimum allowed
                 // column width, or larger than the maximum allowed column width
@@ -7365,7 +7380,7 @@ namespace XPTable.Models
                 if (this.TableState == TableState.ColumnResizing)
                 {
                     Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                    int x = this.ClientToDisplayRect(e.X, e.Y).X;
+                    int x = this.ClientXToDisplayRectX(e.X);
 
                     this.Cursor = Cursors.VSplit;
 
