@@ -1606,16 +1606,17 @@ namespace XPTable.Models
         /// <returns></returns>
         private int GetColumnWidth(int column, Cell cell)
         {
-            int width = this.ColumnModel.Columns[column].Width;
+            ColumnCollection columns = this.ColumnModel.Columns;
+            int width = columns[column].Width;
 
             if (cell.ColSpan > 1)
             {
                 // Just in case the colspan goes over the end of the table
-                int maxcolindex = Math.Min(cell.ColSpan + column - 1, this.ColumnModel.Columns.Count - 1);
+                int maxcolindex = Math.Min(cell.ColSpan + column - 1, columns.Count - 1);
 
                 for (int i = column + 1; i <= maxcolindex; i++)
                 {
-                    width += this.ColumnModel.Columns[i].Width;
+                    width += columns[i].Width;
                 }
             }
 
@@ -1926,22 +1927,23 @@ namespace XPTable.Models
             int height = row.Height;
             if (row.HasWordWrapCell)
             {
+                ColumnCollection columns = this.ColumnModel.Columns;
                 foreach (Cell varCell in row.Cells)
                 {
                     int column = varCell.InternalIndex;
                     if (varCell.WordWrap)
                     {
                         // get the renderer for the cells column
-                        ICellRenderer renderer = this.ColumnModel.Columns[column].Renderer;
+                        ICellRenderer renderer = columns[column].Renderer;
                         if (renderer == null)
                         {
                             // get the default renderer for the column
-                            renderer = this.ColumnModel.GetCellRenderer(this.ColumnModel.Columns[column].GetDefaultRendererName());
+                            renderer = this.ColumnModel.GetCellRenderer(columns[column].GetDefaultRendererName());
                         }
 
                         // When calling renderer.GetCellHeight(), only the width of the bounds is used.
                         int w = this.GetColumnWidth(column, varCell);
-                        renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, this.GetColumnWidth(column, varCell), 0);
+                        renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, w, 0);
 
                         // If this comes back zero then we have to go with the default
                         int newheight = renderer.GetCellHeight(g, varCell);
@@ -3719,16 +3721,20 @@ namespace XPTable.Models
                 if (this.ColumnModel == null)
                     return displayRect;
 
+                Rectangle myCellDataRect = this.CellDataRect;
+
                 //by netus 2006-02-07
-                if (this.ColumnModel.VisibleColumnsWidth <= this.CellDataRect.Width)
-                    displayRect.Width = this.CellDataRect.Width;
+                if (this.ColumnModel.VisibleColumnsWidth <= myCellDataRect.Width)
+                    displayRect.Width = myCellDataRect.Width;
                 else
                     displayRect.Width = this.ColumnModel.VisibleColumnsWidth;
 
-                if (this.TotalRowHeight <= this.CellDataRect.Height)
-                    displayRect.Height = this.CellDataRect.Height;
+                int myTotalRowHeight = this.TotalRowHeight;
+
+                if (myTotalRowHeight <= myCellDataRect.Height)
+                    displayRect.Height = myCellDataRect.Height;
                 else
-                    displayRect.Height = this.TotalRowHeight;
+                    displayRect.Height = myTotalRowHeight;
 
                 return displayRect;
             }
@@ -8070,6 +8076,10 @@ namespace XPTable.Models
             int yline = this.CellDataRect.Y - 1;
             int rowright = this.GetGridlineYMax(e);
 
+            int displayRectangleX = this.DisplayRectangle.X;
+            ColumnCollection columns = this.ColumnModel.Columns;
+            RowCollection rows = this.TableModel.Rows;
+
             // Need to draw each row grid at its correct height
             for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
             {
@@ -8083,36 +8093,38 @@ namespace XPTable.Models
                     e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
                 }
 
-                yline += this.TableModel.Rows[irow].Height;
+                Row row = rows[irow];
+
+                yline += row.Height;
 
                 // Only draw columns on parent.
-                if (this.tableModel.Rows[irow].Parent != null)
+                if (row.Parent != null)
                 {
                     continue;
                 }
 
-                int right = this.DisplayRectangle.X;
+                int right = displayRectangleX;
 
                 // Draw columns
-                int columns = this.ColumnModel.Columns.Count;
-                for (int i = 0; i < columns; i++)
+                int columnCount = columns.Count;
+                for (int i = 0; i < columnCount; i++)
                 {
-                    if (!this.ColumnModel.Columns[i].Visible)
+                    if (!columns[i].Visible)
                     {
                         continue;
                     }
 
-                    right += this.ColumnModel.Columns[i].Width;
+                    right += columns[i].Width;
 
-                    var flags = this.TableModel.Rows[irow].InternalGridLineFlags;
-                    if (i != columns - 1 && !flags[i])
+                    var flags = row.InternalGridLineFlags;
+                    if (i != columnCount - 1 && !flags[i])
                     {
                         continue;
                     }
 
                     if (right >= e.ClipRectangle.Left && right <= e.ClipRectangle.Right)
                     {
-                        e.Graphics.DrawLine(gridPen, right - 1, yline, right - 1, yline + this.tableModel.Rows[irow].Height);
+                        e.Graphics.DrawLine(gridPen, right - 1, yline, right - 1, yline + row.Height);
                     }
                 }
             }
