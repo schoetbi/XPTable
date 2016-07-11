@@ -11,8 +11,8 @@ namespace XPTable.Filters
     public class TextColumnFilterDialog : Form
     {
         private Button btnOK;
-        private CheckedListBox checkedListBox1;
         private Button btnCancel;
+        private CheckedListBox filterList;
 
         /// <summary>
         /// Creates a new TextColumnFilterDialog
@@ -22,56 +22,89 @@ namespace XPTable.Filters
             InitializeComponent();
         }
 
-        protected override void OnLoad(EventArgs e)
+        /// <summary>
+        /// Adds an item to the list
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="isChecked"></param>
+        public void AddItem(string item, bool isChecked)
         {
-            base.OnLoad(e);
+            filterList.Items.Add(item, isChecked);
+        }
+
+        /// <summary>
+        /// Returns all items that are checked
+        /// </summary>
+        /// <returns></returns>
+        public string [] GetCheckedItems()
+        {
+            var items = new List<string>();
+
+            foreach(string item in filterList.CheckedItems)
+            {
+                items.Add(item);
+            }
+
+            return items.ToArray();
+        }
+
+        /// <summary>
+        /// Returns true if there are any items that are not checked
+        /// </summary>
+        /// <returns></returns>
+        public bool AnyUncheckedItems()
+        {
+            bool different = filterList.Items.Count != filterList.CheckedItems.Count;
+
+            return different;
         }
 
         private void InitializeComponent()
         {
             this.btnOK = new System.Windows.Forms.Button();
+            this.filterList = new System.Windows.Forms.CheckedListBox();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(117, 227);
+            this.btnOK.Location = new System.Drawing.Point(94, 180);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 0;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
+            // filterList
+            // 
+            this.filterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.filterList.CheckOnClick = true;
+            this.filterList.FormattingEnabled = true;
+            this.filterList.Location = new System.Drawing.Point(12, 12);
+            this.filterList.Name = "filterList";
+            this.filterList.Size = new System.Drawing.Size(157, 154);
+            this.filterList.TabIndex = 2;
+            // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(36, 227);
+            this.btnCancel.Location = new System.Drawing.Point(13, 180);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // checkedListBox1
-            // 
-            this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(12, 12);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(180, 199);
-            this.checkedListBox1.TabIndex = 2;
-            // 
             // TextColumnFilterDialog
             // 
-            this.ClientSize = new System.Drawing.Size(204, 262);
-            this.Controls.Add(this.checkedListBox1);
+            this.ClientSize = new System.Drawing.Size(181, 215);
             this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.filterList);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "TextColumnFilterDialog";

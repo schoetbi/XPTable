@@ -7057,7 +7057,7 @@ namespace XPTable.Models
                         return;
                     }
 
-                    // If the mouse is over the filter button then do nothing here - handle this in the click event
+                    // If the mouse is over the filter button then do nothing here - filter buttons are handled in the click event
                     if (this.EnableFilters && this.ColumnModel.Columns[column].Filterable)
                     {
                         ColumnHeaderRegion colRegion = this.HeaderRenderer.HitTest(e.X, e.Y);
@@ -8678,7 +8678,7 @@ namespace XPTable.Models
             {
                 Column column = this.ColumnModel.Columns[i];
 
-                if (column.Filterable && column.Filter != null)
+                if (column.Filter != null && column.Filter.IsFilterActive)
                 {
                     filters.Add(i, column.Filter);
                 }

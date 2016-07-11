@@ -216,6 +216,7 @@
     <Compile Include="Filters\IColumnFilter.cs" />
     <Compile Include="Filters\IRowFilter.cs" />
     <Compile Include="Filters\NullRowFilter.cs" />
+    <Compile Include="Filters\TableColumnReader.cs" />
     <Compile Include="Filters\TextColumnFilter.cs" />
     <Compile Include="Filters\TextColumnFilterDialog.cs">
       <SubType>Form</SubType>
