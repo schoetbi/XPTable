@@ -1778,7 +1778,7 @@ namespace XPTable.Models
 
             if (this.EnableWordWrap)
             {
-                rect.Y = this.BorderWidth + this.RowYDifference(this.TopIndex, row);
+                rect.Y = this.BorderWidth + RowIndexToClient(row);
                 rect.Height = this.TableModel.Rows[row].Height;
             }
             else
@@ -1811,12 +1811,23 @@ namespace XPTable.Models
         }
 
         /// <summary>
+        /// Returns the y-coord of the top of the given row, in client coordinates.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        private int RowIndexToClient(int row)
+        {
+            int y = RowYDifference(this.TopIndex, row);
+            return y;
+        }
+
+        /// <summary>
         /// Returns the Y-coord of the top of the row at the 
         /// specified index in client coordinates
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        private int RowY(int row)
+        internal int RowY(int row)
         {
             return RowYDifference(0, row);
         }
@@ -4188,7 +4199,7 @@ namespace XPTable.Models
                 if (this.TableModel == null || this.TableModel.Rows.Count == 0)
                     return 0;
                 else if (this.EnableWordWrap)
-                    return this.RowYDifference(0, this.TableModel.Rows.Count);
+                    return this.RowY(this.TableModel.Rows.Count);
                 else
                     return this.TableModel.Rows.Count * this.RowHeight;
             }
