@@ -1876,12 +1876,9 @@ namespace XPTable.Models
             int ydiff = 0;
             RowCollection rows = this.TableModel.Rows;
             int visibleHeight = this.CellDataRect.Height;
-            int bottomMostRow = 0;
             int count = 0;
             for (int i = this.TopIndex; i < rows.Count; i++)
             {
-                bottomMostRow = i;
-
                 // Don't count this row if it is currently a hidden subrow
                 Row row = rows[i];
                 if (row != null && (row.Parent == null || row.Parent.ExpandSubRows))
@@ -1890,6 +1887,8 @@ namespace XPTable.Models
 
                     if (ydiff < visibleHeight)
                         count++;
+                    else
+                        break;
                 }
             }
 
