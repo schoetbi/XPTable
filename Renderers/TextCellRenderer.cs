@@ -67,15 +67,13 @@ namespace XPTable.Renderers
         {
             base.GetCellHeight(graphics, cell);
 
-            if (cell != null)
-            {
-                this.Font = cell.Font;
-                // Need to set this.Bounds before we access Client rectangle
-                SizeF size = graphics.MeasureString(cell.Text, this.Font, this.ClientRectangle.Width, StringFormat);
-                return (int)Math.Ceiling(size.Height);
-            }
-            else
+            if (cell == null)
                 return 0;
+
+            this.Font = cell.Font;
+            // Need to set this.Bounds before we access Client rectangle
+            SizeF size = graphics.MeasureString(cell.Text, this.Font, this.ClientRectangle.Width, this.StringFormat);
+            return (int)Math.Ceiling(size.Height);
         }
 
         /// <summary>
@@ -86,6 +84,9 @@ namespace XPTable.Renderers
         /// <returns></returns>
         private int GetCellWidth(Graphics graphics, Cell cell)
         {
+            if (cell == null)
+                return 0;
+
             SizeF size = graphics.MeasureString(cell.Text, this.Font);
             return (int)Math.Ceiling(size.Width);
         }
