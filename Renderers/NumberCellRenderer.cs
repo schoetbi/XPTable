@@ -72,11 +72,6 @@ namespace XPTable.Renderers
         /// </summary>
         private decimal minimum;
 
-        /// <summary>
-        /// The strikeouted font, created from original Cell's font
-        /// </summary>
-        private Font strikeoutFont;
-
         #endregion
 
 
@@ -95,7 +90,6 @@ namespace XPTable.Renderers
             this.upDownAlignment = LeftRightAlignment.Right;
             this.maximum = 100;
             this.minimum = 0;
-            this.strikeoutFont = null;
         }
 
         #endregion
@@ -636,25 +630,7 @@ namespace XPTable.Renderers
                 ThemeManager.DrawUpDownButtons(e.Graphics, this.GetUpButtonBounds(), upButtonState, this.GetDownButtonBounds(), downButtonState);
             }
         }
-
-        private Font StrikeoutFont
-        {
-            get
-            {
-                return this.strikeoutFont 
-                    ?? (this.strikeoutFont = new Font(this.Font, FontStyle.Strikeout));
-            }
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            if (this.strikeoutFont != null)
-            {
-                this.strikeoutFont.Dispose();
-            }
-        }
-
+        
         /// <summary>
         /// Raises the Paint event
         /// </summary>
@@ -674,49 +650,7 @@ namespace XPTable.Renderers
                 return;
             }
 
-            string text;
-            Font font = this.Font;
-            if (cellData is ushort || cellData is uint || cellData is ulong)
-            {
-                ulong value = Convert.ToUInt64(cellData);
-                text = value.ToString(this.Format, this.FormatProvider);
-            }
-            else if (cellData is short || cellData is int || cellData is long)
-            {
-                long value = Convert.ToInt64(cellData);
-                text = value.ToString(this.Format, this.FormatProvider);
-            }
-            else
-            {
-                var cellDataAsString = cellData.ToString();
-                if (cellData is double || cellData is float || cellData is decimal)
-                {
-                    // decimal ±1.0 × 10^−28 to ±7.9 × 10^28
-                    // float ±1.5 × 10^−45 to ±3.4 × 10^38
-                    // double ±5.0 × 10^−324 to ±1.7 × 10^308
-                    // Returns false if the cellValue has wrong format, null. empty or lies outside of the valid decimal range
-                    // (see comments above for more details), otherwise true.
-                    // It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
-                    // We need at the end the float and double without the power to 10 representation (E±XX).
-                    // Default coversion double/float to string without applying a specific format has always the power.
-                    // NaN and Infinity are parsed Ok (not explicit documented by Microsoft).
-                    decimal decimalVal;
-                    if (decimal.TryParse(cellDataAsString, NumberStyles.Number, CultureInfo.CurrentCulture, out decimalVal))
-                    {
-                        text = decimalVal.ToString(this.Format, this.FormatProvider);
-                    }
-                    else
-                    {
-                        text = cellDataAsString;
-                        font = this.StrikeoutFont;
-                    }
-                }
-                else
-                {
-                    text = cellDataAsString;
-                    font = this.StrikeoutFont;
-                }
-            }
+            var text = RenderText(cellData, this.Format, this.FormatProvider);
 
             // draw the value
             Rectangle textRect = this.ClientRectangle;
@@ -738,8 +672,7 @@ namespace XPTable.Renderers
             }
 
             //Draw the formatted or raw value (striked out) if an error occured
-            this.DrawString(e.Graphics, text, font,
-                            e.Enabled ? this.ForeBrush : this.GrayTextBrush, textRect, e.Cell.WordWrap);
+            this.DrawString(e.Graphics, text, this.Font, e.Enabled ? this.ForeBrush : this.GrayTextBrush, textRect, e.Cell.WordWrap);
 
             if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle /*only if we want to show selection rectangle*/)
             {
@@ -757,6 +690,51 @@ namespace XPTable.Renderers
 
                 ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
             }
+        }
+
+        public static string RenderText(object cellData, string format, IFormatProvider formatProvider)
+        {
+            string text;
+            if (cellData is ushort || cellData is uint || cellData is ulong)
+            {
+                ulong value = Convert.ToUInt64(cellData);
+                text = value.ToString(format, formatProvider);
+            }
+            else if (cellData is short || cellData is int || cellData is long)
+            {
+                long value = Convert.ToInt64(cellData);
+                text = value.ToString(format, formatProvider);
+            }
+            else
+            {
+                var cellDataAsString = Convert.ToString(cellData, formatProvider);
+                if (cellData is double || cellData is float || cellData is decimal)
+                {
+                    // decimal ±1.0 × 10^−28 to ±7.9 × 10^28
+                    // float ±1.5 × 10^−45 to ±3.4 × 10^38
+                    // double ±5.0 × 10^−324 to ±1.7 × 10^308
+                    // Returns false if the cellValue has wrong format, null. empty or lies outside of the valid decimal range
+                    // (see comments above for more details), otherwise true.
+                    // It can throw an exception only if NumberStyles (here is the valid enum) is wrong.
+                    // We need at the end the float and double without the power to 10 representation (E±XX).
+                    // Default coversion double/float to string without applying a specific format has always the power.
+                    // NaN and Infinity are parsed Ok (not explicit documented by Microsoft).
+                    decimal decimalVal;
+                    if (decimal.TryParse(cellDataAsString, NumberStyles.Number, formatProvider, out decimalVal))
+                    {
+                        text = decimalVal.ToString(format, formatProvider);
+                    }
+                    else
+                    {
+                        text = cellDataAsString;
+                    }
+                }
+                else
+                {
+                    text = cellDataAsString;
+                }
+            }
+            return text;
         }
 
         #endregion
