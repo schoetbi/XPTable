@@ -2613,7 +2613,7 @@ namespace XPTable.Models
                 rowcount = rowcount < 0 ? 0 : rowcount;
                 vScrollBar.Maximum = rowcount;
 
-                int visibleRowCount = this.GetVisibleRowCount(hscroll, true);
+                int visibleRowCount = this.GetVisibleRowCount();
                 vScrollBar.LargeChange = visibleRowCount < 0 ? 0 : visibleRowCount + 1;
             }
             else
@@ -4201,10 +4201,8 @@ namespace XPTable.Models
         /// <summary>
         /// Gets the number of whole rows that are visible in the Table
         /// </summary>
-        /// <param name="hScroll"></param>
-        /// <param name="vScroll"></param>
         [Browsable(false)]
-        public int GetVisibleRowCount(bool hScroll, bool vScroll)
+        public int GetVisibleRowCount()
         {
             int count;
             if (this.EnableWordWrap)
@@ -4213,12 +4211,12 @@ namespace XPTable.Models
             {
                 Rectangle clientRect = this.InternalBorderRect;
 
-                if (hScroll)
+                if (this.hScrollBar.Visible)
                 {
                     clientRect.Height -= SystemInformation.HorizontalScrollBarHeight;
                 }
 
-                if (vScroll)
+                if (this.vScrollBar.Visible)
                 {
                     clientRect.Width -= SystemInformation.VerticalScrollBarWidth;
                 }
