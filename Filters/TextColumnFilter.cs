@@ -105,9 +105,30 @@ namespace XPTable.Filters
         /// <returns></returns>
         public string[] GetDistinctItems(Table table, int col)
         {
-            var reader = new TableColumnReader(table.TableModel);
-            string[] toAdd = reader.GetUniqueItems(col);
-            return toAdd;
+            if (table?.TableModel == null)
+            {
+                return null;
+            }
+
+            var list = new List<string>();
+
+            foreach (Row row in table.TableModel.Rows)
+            {
+                Cell cell = row.Cells[col];
+
+                if (cell == null)
+                {
+                    continue;
+                }
+
+                string text = cell.Text;
+                if (!list.Contains(text))
+                {
+                    list.Add(text);
+                }
+            }
+
+            return list.ToArray();
         }
 
         bool ItemIsChecked(string item)
