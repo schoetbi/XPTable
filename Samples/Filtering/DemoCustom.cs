@@ -41,6 +41,7 @@ namespace Filtering
             col2.Filterable = true;
             
             TextColumn col3 = new TextColumn("Surname", 80);
+            col3.Filterable = true;
             DateTimeColumn col4 = new DateTimeColumn("Birthday", 120);
             TextColumn col5 = new TextColumn("Comments", 100);
 
@@ -52,6 +53,7 @@ namespace Filtering
             AddRow(model, 2, 1.76, "Dave", "Duke", "2/5/1977", "keeps fish");
             AddRow(model, 3, 1.64, "Holly", "Prench", "14/8/1979", "singer");
             AddRow(model, 4, 1.53, "Mark", "Hobbs", "23/1/1984", "plays football");
+            AddRow(model, 4, 1.53, "Mark", "Prench", "23/1/1984", "shoots arrows");
             AddRow(model, 5, 1.64, "Dave", "Hobbs", "19/1/1980", "vegetarian");
 
             this.table.TableModel = model;
@@ -75,11 +77,16 @@ namespace Filtering
 
         private void Table_HeaderFilterClick(object sender, HandledHeaderMouseEventArgs e)
         {
+            if (e.Index != 2)
+            {
+                return;
+            }
+
             var filter = e.Column.Filter as TextColumnFilter;
 
             if (filter == null)
                 return;
-
+            
             string[] items = filter.GetDistinctItems(e.Table, e.Index);
 
             txtFilter.Text = string.Empty;

@@ -1219,7 +1219,7 @@ namespace XPTable.Models
         private bool _widthSet = false;
 
         /// <summary>
-        /// Returns true if the cells width property has been assigned.
+        /// Returns true if the cells ContentWidth property has not been assigned, or has been invalidated.
         /// </summary>
         [Browsable(false)]
         public bool WidthNotSet

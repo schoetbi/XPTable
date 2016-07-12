@@ -56,24 +56,15 @@ namespace XPTable.Editors
 			this.client = client;
 		}
 
-
 		/// <summary>
 		/// Gets or sets the IMouseMessageFilterClient that wishes to 
 		/// receive mouse events
 		/// </summary>
 		public IMouseMessageFilterClient Client
 		{
-			get
-			{
-				return this.client;
-			}
-
-			set
-			{
-				this.client = value;
-			}
+			get { return this.client; }
+			set { this.client = value; }
 		}
-
 
 		/// <summary>
 		/// Filters out a message before it is dispatched
@@ -100,7 +91,7 @@ namespace XPTable.Editors
 				uiPermission.Demand();
 				Control target = Control.FromChildHandle(m.HWnd);
 
-				return this.Client.ProcessMouseMessage(target, (WindowMessage) m.Msg, m.WParam.ToInt32(), m.LParam.ToInt32());
+				return this.Client.ProcessMouseMessage(target, (WindowMessage) m.Msg, m.WParam.ToInt64(), m.LParam.ToInt64());
 			}
 				
 			return false;

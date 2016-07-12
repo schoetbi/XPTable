@@ -49,6 +49,6 @@ namespace XPTable.Editors
 		/// <param name="lParam">Specifies the LParam field of the message</param>
 		/// <returns>true to filter the message and prevent it from being dispatched; 
 		/// false to allow the message to continue to the next filter or control</returns>
-		bool ProcessMouseMessage(Control target, WindowMessage msg, int wParam, int lParam);
+		bool ProcessMouseMessage(Control target, WindowMessage msg, long wParam, long lParam);
 	}
 }

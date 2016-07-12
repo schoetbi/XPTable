@@ -21,8 +21,9 @@ namespace XPTable.Filters
         /// <summary>
         /// Creates a new TextColumnFilter
         /// </summary>
-        public TextColumnFilter()
+        public TextColumnFilter(Column column)
         {
+            Column = column;
             _allowedItems = null;
         }
 
@@ -104,9 +105,30 @@ namespace XPTable.Filters
         /// <returns></returns>
         public string[] GetDistinctItems(Table table, int col)
         {
-            var reader = new TableColumnReader(table.TableModel);
-            string[] toAdd = reader.GetUniqueItems(col);
-            return toAdd;
+            if (table?.TableModel == null)
+            {
+                return null;
+            }
+
+            var list = new List<string>();
+
+            foreach (Row row in table.TableModel.Rows)
+            {
+                Cell cell = row.Cells[col];
+
+                if (cell == null)
+                {
+                    continue;
+                }
+
+                string text = cell.Text;
+                if (!list.Contains(text))
+                {
+                    list.Add(text);
+                }
+            }
+
+            return list.ToArray();
         }
 
         bool ItemIsChecked(string item)
@@ -119,11 +141,8 @@ namespace XPTable.Filters
 
         void UpdateFilter(HeaderMouseEventArgs e, TextColumnFilterDialog dialog)
         {
-            if (dialog.AnyUncheckedItems())
-                SetFilterItems(dialog.GetCheckedItems());
-            else
-                SetFilterItems(null);
-
+            var checkedItems = dialog.GetCheckedItems();
+            SetFilterItems(checkedItems);
             e.Table.OnHeaderFilterChanged(e);
         }
 
@@ -139,11 +158,7 @@ namespace XPTable.Filters
             }
             else
             {
-                var list = new List<string>(items);
-                if (list.Count == 0)
-                    _allowedItems = null;
-                else
-                    _allowedItems = list;
+                _allowedItems = new List<string>(items);
             }
         }
     }

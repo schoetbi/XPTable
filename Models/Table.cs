@@ -977,6 +977,21 @@ namespace XPTable.Models
             return new Point(xPos, yPos);
         }
 
+        /// <summary>
+        /// Computes the x-coord of the specified client point into an x-coord 
+        /// relative to the display rectangle
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public int ClientXToDisplayRectX(int x)
+        {
+            int xPos = x - this.BorderWidth;
+
+            if (this.HScroll)
+                xPos += this.hScrollBar.Value;
+
+            return xPos;
+        }
 
         /// <summary>
         /// Computes the location of the specified client point into coordinates 
@@ -1102,7 +1117,7 @@ namespace XPTable.Models
             if (row == -1 || row >= this.TableModel.Rows.Count || column == -1 || column >= this.TableModel.Rows[row].Cells.Count)
                 return Rectangle.Empty;
 
-            Rectangle columnRect = this.ColumnRect(column);
+            Rectangle columnRect = this.ColumnHeaderRect(column); // Only the Width and X are used - we don't need to work out the Height or Y
 
             if (columnRect == Rectangle.Empty)
                 return columnRect;
@@ -1622,16 +1637,17 @@ namespace XPTable.Models
         /// <returns></returns>
         private int GetColumnWidth(int column, Cell cell)
         {
-            int width = this.ColumnModel.Columns[column].Width;
+            ColumnCollection columns = this.ColumnModel.Columns;
+            int width = columns[column].Width;
 
             if (cell.ColSpan > 1)
             {
                 // Just in case the colspan goes over the end of the table
-                int maxcolindex = Math.Min(cell.ColSpan + column - 1, this.ColumnModel.Columns.Count - 1);
+                int maxcolindex = Math.Min(cell.ColSpan + column - 1, columns.Count - 1);
 
                 for (int i = column + 1; i <= maxcolindex; i++)
                 {
-                    width += this.ColumnModel.Columns[i].Width;
+                    width += columns[i].Width;
                 }
             }
 
@@ -1645,7 +1661,7 @@ namespace XPTable.Models
         /// <returns></returns>
         private int GetColumnLeft(int column)
         {
-            return this.ColumnRect(column).Left;
+            return this.ColumnHeaderRect(column).Left;
         }
 
         /// <summary>
@@ -1789,11 +1805,11 @@ namespace XPTable.Models
 
             Rectangle rect = new Rectangle();
 
-            rect.X = this.DisplayRectangle.X;
+            rect.X = this.DisplayRectangleLeft;
 
             if (this.EnableWordWrap)
             {
-                rect.Y = this.BorderWidth + this.RowYDifference(this.TopIndex, row);
+                rect.Y = this.BorderWidth + RowIndexToClient(row);
                 rect.Height = this.TableModel.Rows[row].Height;
             }
             else
@@ -1826,12 +1842,23 @@ namespace XPTable.Models
         }
 
         /// <summary>
+        /// Returns the y-coord of the top of the given row, in client coordinates.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        private int RowIndexToClient(int row)
+        {
+            int y = RowYDifference(this.TopIndex, row);
+            return y;
+        }
+
+        /// <summary>
         /// Returns the Y-coord of the top of the row at the 
         /// specified index in client coordinates
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        private int RowY(int row)
+        internal int RowY(int row)
         {
             return RowYDifference(0, row);
         }
@@ -1891,12 +1918,9 @@ namespace XPTable.Models
             int ydiff = 0;
             RowCollection rows = this.TableModel.Rows;
             int visibleHeight = this.CellDataRect.Height;
-            int bottomMostRow = 0;
             int count = 0;
             for (int i = this.TopIndex; i < rows.Count; i++)
             {
-                bottomMostRow = i;
-
                 // Don't count this row if it is currently a hidden subrow
                 Row row = rows[i];
                 if (row != null && (row.Parent == null || row.Parent.ExpandSubRows))
@@ -1905,6 +1929,8 @@ namespace XPTable.Models
 
                     if (ydiff < visibleHeight)
                         count++;
+                    else
+                        break;
                 }
             }
 
@@ -1942,28 +1968,31 @@ namespace XPTable.Models
             int height = row.Height;
             if (row.HasWordWrapCell)
             {
-                int column = row.WordWrapCellIndex;
-                Cell varCell = this.TableModel[row.Index, column];
-                if (varCell.WordWrap)
+                ColumnCollection columns = this.ColumnModel.Columns;
+                foreach (Cell varCell in row.Cells)
                 {
-                    // get the renderer for the cells column
-                    ICellRenderer renderer = this.ColumnModel.Columns[column].Renderer;
-                    if (renderer == null)
+                    int column = varCell.InternalIndex;
+                    if (varCell.WordWrap)
                     {
-                        // get the default renderer for the column
-                        renderer = this.ColumnModel.GetCellRenderer(this.ColumnModel.Columns[column].GetDefaultRendererName());
+                        // get the renderer for the cells column
+                        ICellRenderer renderer = columns[column].Renderer;
+                        if (renderer == null)
+                        {
+                            // get the default renderer for the column
+                            renderer = this.ColumnModel.GetCellRenderer(columns[column].GetDefaultRendererName());
+                        }
+
+                        // When calling renderer.GetCellHeight(), only the width of the bounds is used.
+                        int w = this.GetColumnWidth(column, varCell);
+                        renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, w, 0);
+
+                        // If this comes back zero then we have to go with the default
+                        int newheight = renderer.GetCellHeight(g, varCell);
+                        //Console.WriteLine("    GetRenderedRowHeight colwidth={0} rowheight={1}", w, newheight);
+                        if (newheight == 0)
+                            newheight = row.Height;
+                        height = Math.Max(newheight, height);
                     }
-
-                    // When calling renderer.GetCellHeight(), only the width of the bounds is used.
-                    int w = this.GetColumnWidth(column, varCell);
-                    renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, this.GetColumnWidth(column, varCell), 0);
-
-                    // If this comes back zero then we have to go with the default
-                    int newheight = renderer.GetCellHeight(g, varCell);
-                    //Console.WriteLine("    GetRenderedRowHeight colwidth={0} rowheight={1}", w, newheight);
-                    if (newheight == 0)
-                        newheight = row.Height;
-                    height = newheight;
                 }
             }
             return height;
@@ -3714,6 +3743,24 @@ namespace XPTable.Models
 
         #region DisplayRectangle
         /// <summary>
+        /// Gets the Left (or X) value of the rectangle that represents the display area of the Table.
+        /// </summary>
+        private int DisplayRectangleLeft
+        {
+            get
+            {
+                int left = this.CellDataRect.Left;
+
+                if (!this.init)
+                {
+                    left -= this.hScrollBar.Value;
+                }
+
+                return left;
+            }
+        }
+
+        /// <summary>
         /// Gets the rectangle that represents the display area of the Table
         /// </summary>
         [Browsable(false),
@@ -3733,16 +3780,20 @@ namespace XPTable.Models
                 if (this.ColumnModel == null)
                     return displayRect;
 
+                Rectangle myCellDataRect = this.CellDataRect;
+
                 //by netus 2006-02-07
-                if (this.ColumnModel.VisibleColumnsWidth <= this.CellDataRect.Width)
-                    displayRect.Width = this.CellDataRect.Width;
+                if (this.ColumnModel.VisibleColumnsWidth <= myCellDataRect.Width)
+                    displayRect.Width = myCellDataRect.Width;
                 else
                     displayRect.Width = this.ColumnModel.VisibleColumnsWidth;
 
-                if (this.TotalRowHeight <= this.CellDataRect.Height)
-                    displayRect.Height = this.CellDataRect.Height;
+                int myTotalRowHeight = this.TotalRowHeight;
+
+                if (myTotalRowHeight <= myCellDataRect.Height)
+                    displayRect.Height = myCellDataRect.Height;
                 else
-                    displayRect.Height = this.TotalRowHeight;
+                    displayRect.Height = myTotalRowHeight;
 
                 return displayRect;
             }
@@ -4179,7 +4230,7 @@ namespace XPTable.Models
                 if (this.TableModel == null || this.TableModel.Rows.Count == 0)
                     return 0;
                 else if (this.EnableWordWrap)
-                    return this.RowYDifference(0, this.TableModel.Rows.Count);
+                    return this.RowY(this.TableModel.Rows.Count);
                 else
                     return this.TableModel.Rows.Count * this.RowHeight;
             }
@@ -4946,7 +4997,7 @@ namespace XPTable.Models
 
                 // get the bounding rectangle for the column's header
                 Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                x = this.ClientToDisplayRect(x, y).X;
+                x = this.ClientXToDisplayRectX(x);
 
                 // are we in a resizing section on the left
                 if (x < columnRect.Left + Column.ResizePadding)
@@ -7078,7 +7129,7 @@ namespace XPTable.Models
                     if (this.TableState == TableState.ColumnResizing)
                     {
                         Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                        int x = this.ClientToDisplayRect(e.X, e.Y).X;
+                        int x = this.ClientXToDisplayRectX(e.X);
 
                         if (x <= columnRect.Left + Column.ResizePadding)
                         {
@@ -7322,7 +7373,7 @@ namespace XPTable.Models
                 }
 
                 // calculate the new width for the column
-                int width = this.ClientToDisplayRect(e.X, e.Y).X - this.resizingColumnAnchor - this.resizingColumnOffset;
+                int width = this.ClientXToDisplayRectX(e.X) - this.resizingColumnAnchor - this.resizingColumnOffset;
 
                 // make sure the new width isn't smaller than the minimum allowed
                 // column width, or larger than the maximum allowed column width
@@ -7409,7 +7460,7 @@ namespace XPTable.Models
                 if (this.TableState == TableState.ColumnResizing)
                 {
                     Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                    int x = this.ClientToDisplayRect(e.X, e.Y).X;
+                    int x = this.ClientXToDisplayRectX(e.X);
 
                     this.Cursor = Cursors.VSplit;
 
@@ -7819,8 +7870,22 @@ namespace XPTable.Models
 
             if (!painted)
             {
-                OnAfterFirstPaint(EventArgs.Empty);
                 painted = true;
+
+                FirstPaint();
+            }
+        }
+
+        private void FirstPaint()
+        {
+            OnAfterFirstPaint(EventArgs.Empty);
+
+            // Do this so that scrollbars are evaluated whilst the actual row heights are known
+            if (this.EnableWordWrap)
+            {
+                if (autoCalculateRowHeights)
+                    this.CalculateAllRowHeights();
+                this.UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
             }
         }
 
@@ -8154,6 +8219,10 @@ namespace XPTable.Models
             int yline = this.CellDataRect.Y - 1;
             int rowright = this.GetGridlineYMax(e);
 
+            int displayRectangleX = this.DisplayRectangleLeft;
+            ColumnCollection columns = this.ColumnModel.Columns;
+            RowCollection rows = this.TableModel.Rows;
+
             // Need to draw each row grid at its correct height
             for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
             {
@@ -8167,36 +8236,38 @@ namespace XPTable.Models
                     e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
                 }
 
-                yline += this.TableModel.Rows[irow].Height;
+                Row row = rows[irow];
+
+                yline += row.Height;
 
                 // Only draw columns on parent.
-                if (this.tableModel.Rows[irow].Parent != null)
+                if (row.Parent != null)
                 {
                     continue;
                 }
 
-                int right = this.DisplayRectangle.X;
+                int right = displayRectangleX;
 
                 // Draw columns
-                int columns = this.ColumnModel.Columns.Count;
-                for (int i = 0; i < columns; i++)
+                int columnCount = columns.Count;
+                for (int i = 0; i < columnCount; i++)
                 {
-                    if (!this.ColumnModel.Columns[i].Visible)
+                    if (!columns[i].Visible)
                     {
                         continue;
                     }
 
-                    right += this.ColumnModel.Columns[i].Width;
+                    right += columns[i].Width;
 
-                    var flags = this.TableModel.Rows[irow].InternalGridLineFlags;
-                    if (i != columns - 1 && !flags[i])
+                    var flags = row.InternalGridLineFlags;
+                    if (i != columnCount - 1 && !flags[i])
                     {
                         continue;
                     }
 
                     if (right >= e.ClipRectangle.Left && right <= e.ClipRectangle.Right)
                     {
-                        e.Graphics.DrawLine(gridPen, right - 1, yline, right - 1, yline + this.tableModel.Rows[irow].Height);
+                        e.Graphics.DrawLine(gridPen, right - 1, yline, right - 1, yline + row.Height);
                     }
                 }
             }
@@ -8297,7 +8368,7 @@ namespace XPTable.Models
 
         void PaintGridColumns(PaintEventArgs e, Pen gridPen)
         {
-            int right = this.DisplayRectangle.X;
+            int right = this.DisplayRectangleLeft;
 
             int columns = this.ColumnModel.Columns.Count;
 
@@ -8470,7 +8541,7 @@ namespace XPTable.Models
                 return;
             }
 
-            int xPos = this.DisplayRectangle.Left;
+            int xPos = this.DisplayRectangleLeft;
             bool needDummyHeader = true;
 
             //
@@ -8600,7 +8671,7 @@ namespace XPTable.Models
         /// <param name="e">A PaintEventArgs that contains the event data</param>
         protected void OnPaintRows(PaintEventArgs e)
         {
-            int xPos = this.DisplayRectangle.Left;
+            int xPos = this.DisplayRectangleLeft;
             int yPos = this.PseudoClientRect.Top;
 
             if (this.HeaderStyle != ColumnHeaderStyle.None)
@@ -8612,33 +8683,45 @@ namespace XPTable.Models
 
             Rectangle rowRect = new Rectangle(xPos, yPos, this.ColumnModel.TotalColumnWidth, this.RowHeight);
 
-            IRowFilter filter = GetRowFilter();
+            IRowFilter rowFilter = this.GetRowFilter();
 
             for (int i = this.TopIndex; i < this.TableModel.Rows.Count; i++)
             {
                 Row row = this.TableModel.Rows[i];
-                if (row != null && (row.Parent == null || row.Parent.ExpandSubRows) && filter.CanShow(row))
+                if (row == null)
                 {
-                    rowRect.Height = row.Height;
-
-                    if (wordWrapOn)
-                    {
-                        rowRect.Height = this.GetRenderedRowHeight(e.Graphics, row);
-                        row.InternalHeight = rowRect.Height;
-                    }
-
-                    if (rowRect.IntersectsWith(e.ClipRectangle))
-                    {
-                        this.OnPaintRow(e, i, rowRect);
-                    }
-                    else if (rowRect.Top > e.ClipRectangle.Bottom)
-                    {
-                        break;
-                    }
-
-                    // move to the next row
-                    rowRect.Y += rowRect.Height;
+                    continue;
                 }
+
+                if (row.Parent != null && !row.Parent.ExpandSubRows)
+                {
+                    continue;
+                }
+
+                if (rowFilter != null && !rowFilter.CanShow(row))
+                {
+                    continue;
+                }
+
+                rowRect.Height = row.Height;
+
+                if (wordWrapOn)
+                {
+                    rowRect.Height = this.GetRenderedRowHeight(e.Graphics, row);
+                    row.InternalHeight = rowRect.Height;
+                }
+
+                if (rowRect.IntersectsWith(e.ClipRectangle))
+                {
+                    this.OnPaintRow(e, i, rowRect);
+                }
+                else if (rowRect.Top > e.ClipRectangle.Bottom)
+                {
+                    break;
+                }
+
+                // move to the next row
+                rowRect.Y += rowRect.Height;
             }
 
             #region Set the background colour of the sorted column
@@ -8669,7 +8752,7 @@ namespace XPTable.Models
         IRowFilter GetRowFilter()
         {
             if (!this.EnableFilters)
-                return new NullRowFilter();
+                return null;
 
             var filters = new Dictionary<int, IColumnFilter>();
 
@@ -8684,9 +8767,9 @@ namespace XPTable.Models
             }
 
             if (filters.Count == 0)
-                return new NullRowFilter();
+                return null;
 
-            return new ActiveRowFilter(filters);
+            return new RowFilter(filters);
         }
 
         /// <summary>
