@@ -141,8 +141,11 @@ namespace XPTable.Filters
 
         void UpdateFilter(HeaderMouseEventArgs e, TextColumnFilterDialog dialog)
         {
-            var checkedItems = dialog.GetCheckedItems();
-            SetFilterItems(checkedItems);
+            if (dialog.AnyUncheckedItems())
+                SetFilterItems(dialog.GetCheckedItems());
+            else
+                SetFilterItems(null);   // The user has ticked every item - so no filtering is needed
+
             e.Table.OnHeaderFilterChanged(e);
         }
 
