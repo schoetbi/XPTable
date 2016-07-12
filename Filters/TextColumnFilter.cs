@@ -141,11 +141,8 @@ namespace XPTable.Filters
 
         void UpdateFilter(HeaderMouseEventArgs e, TextColumnFilterDialog dialog)
         {
-            if (dialog.AnyUncheckedItems())
-                SetFilterItems(dialog.GetCheckedItems());
-            else
-                SetFilterItems(null);
-
+            var checkedItems = dialog.GetCheckedItems();
+            SetFilterItems(checkedItems);
             e.Table.OnHeaderFilterChanged(e);
         }
 
@@ -161,11 +158,7 @@ namespace XPTable.Filters
             }
             else
             {
-                var list = new List<string>(items);
-                if (list.Count == 0)
-                    _allowedItems = null;
-                else
-                    _allowedItems = list;
+                _allowedItems = new List<string>(items);
             }
         }
     }

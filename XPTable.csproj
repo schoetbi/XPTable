@@ -213,10 +213,9 @@
     <Compile Include="Events\ToolTipEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Filters\ActiveRowFilter.cs" />
+    <Compile Include="Filters\RowFilter.cs" />
     <Compile Include="Filters\IColumnFilter.cs" />
     <Compile Include="Filters\IRowFilter.cs" />
-    <Compile Include="Filters\NullRowFilter.cs" />
     <Compile Include="Filters\TextColumnFilter.cs" />
     <Compile Include="Filters\TextColumnFilterDialog.cs">
       <SubType>Form</SubType>

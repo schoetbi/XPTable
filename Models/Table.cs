@@ -8683,33 +8683,45 @@ namespace XPTable.Models
 
             Rectangle rowRect = new Rectangle(xPos, yPos, this.ColumnModel.TotalColumnWidth, this.RowHeight);
 
-            IRowFilter filter = GetRowFilter();
+            IRowFilter rowFilter = this.GetRowFilter();
 
             for (int i = this.TopIndex; i < this.TableModel.Rows.Count; i++)
             {
                 Row row = this.TableModel.Rows[i];
-                if (row != null && (row.Parent == null || row.Parent.ExpandSubRows) && filter.CanShow(row))
+                if (row == null)
                 {
-                    rowRect.Height = row.Height;
-
-                    if (wordWrapOn)
-                    {
-                        rowRect.Height = this.GetRenderedRowHeight(e.Graphics, row);
-                        row.InternalHeight = rowRect.Height;
-                    }
-
-                    if (rowRect.IntersectsWith(e.ClipRectangle))
-                    {
-                        this.OnPaintRow(e, i, rowRect);
-                    }
-                    else if (rowRect.Top > e.ClipRectangle.Bottom)
-                    {
-                        break;
-                    }
-
-                    // move to the next row
-                    rowRect.Y += rowRect.Height;
+                    continue;
                 }
+
+                if (row.Parent != null && !row.Parent.ExpandSubRows)
+                {
+                    continue;
+                }
+
+                if (rowFilter != null && !rowFilter.CanShow(row))
+                {
+                    continue;
+                }
+
+                rowRect.Height = row.Height;
+
+                if (wordWrapOn)
+                {
+                    rowRect.Height = this.GetRenderedRowHeight(e.Graphics, row);
+                    row.InternalHeight = rowRect.Height;
+                }
+
+                if (rowRect.IntersectsWith(e.ClipRectangle))
+                {
+                    this.OnPaintRow(e, i, rowRect);
+                }
+                else if (rowRect.Top > e.ClipRectangle.Bottom)
+                {
+                    break;
+                }
+
+                // move to the next row
+                rowRect.Y += rowRect.Height;
             }
 
             #region Set the background colour of the sorted column
@@ -8740,7 +8752,7 @@ namespace XPTable.Models
         IRowFilter GetRowFilter()
         {
             if (!this.EnableFilters)
-                return new NullRowFilter();
+                return null;
 
             var filters = new Dictionary<int, IColumnFilter>();
 
@@ -8755,9 +8767,9 @@ namespace XPTable.Models
             }
 
             if (filters.Count == 0)
-                return new NullRowFilter();
+                return null;
 
-            return new ActiveRowFilter(filters);
+            return new RowFilter(filters);
         }
 
         /// <summary>

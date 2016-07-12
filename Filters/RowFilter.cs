@@ -8,17 +8,17 @@ namespace XPTable.Filters
     /// <summary>
     /// Implementation of IRowFilter that filters rows based on a collection of IColumnFilters.
     /// </summary>
-    class ActiveRowFilter : IRowFilter
+    class RowFilter : IRowFilter
     {
-        readonly Dictionary<int, IColumnFilter> _filters;
+        readonly Dictionary<int, IColumnFilter> columnFilters;
 
         /// <summary>
         /// Creates an IRowFilter that filters rows based on a collection of IColumnFilters.
         /// </summary>
-        /// <param name="filters"></param>
-        public ActiveRowFilter(Dictionary<int, IColumnFilter> filters)
+        /// <param name="columnFilters"></param>
+        public RowFilter(Dictionary<int, IColumnFilter> columnFilters)
         {
-            _filters = filters;
+            this.columnFilters = columnFilters;
         }
 
         /// <summary>
@@ -30,13 +30,13 @@ namespace XPTable.Filters
         {
             bool canShow = true;
 
-            foreach (int col in _filters.Keys)
+            foreach (int col in columnFilters.Keys)
             {
                 Cell cell = row.Cells[col];
 
                 if (cell != null)
                 {
-                    if (!_filters[col].CanShow(cell))
+                    if (!columnFilters[col].CanShow(cell))
                     {
                         canShow = false;
                     }
