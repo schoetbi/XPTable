@@ -21,8 +21,9 @@ namespace XPTable.Filters
         /// <summary>
         /// Creates a new TextColumnFilter
         /// </summary>
-        public TextColumnFilter()
+        public TextColumnFilter(Column column)
         {
+            Column = column;
             _allowedItems = null;
         }
 
