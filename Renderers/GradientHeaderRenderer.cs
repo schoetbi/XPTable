@@ -30,6 +30,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 using XPTable.Events;
 using XPTable.Models;
@@ -217,7 +218,16 @@ namespace XPTable.Renderers
 			}
 
 			Rectangle textRect = this.ClientRectangle;
-			Rectangle imageRect = Rectangle.Empty;
+            if (e.Column.Filterable)
+            {
+                Rectangle filterRect = this.CalcFilterRect();
+
+                textRect.Width -= filterRect.Width;
+
+                ThemeManager.DrawComboBoxButton(e.Graphics, filterRect, ComboBoxState.Normal);
+            }
+
+            Rectangle imageRect = Rectangle.Empty;
 
             int imageWidth = 0;
             int arrowWidth = 0;
@@ -304,8 +314,25 @@ namespace XPTable.Renderers
             }
 		}
 
-		#endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+
+        /// <summary>
+        /// Returns a ColumnHeaderRegion value that represents the header region at the specified client coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public override ColumnHeaderRegion GetColumnHeaderRegion(int x, int y)
+        {
+            Rectangle filterRect = this.CalcFilterRect();
+            if (filterRect.Contains(x, y))
+            {
+                return ColumnHeaderRegion.FilterButton;
+            }
+
+            return ColumnHeaderRegion.ColumnTitle;
+        }
+    }
 }

@@ -98,6 +98,6 @@ namespace XPTable.Renderers
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        ColumnHeaderRegion HitTest(int x, int y);
+        ColumnHeaderRegion GetColumnHeaderRegion(int x, int y);
 	}
 }

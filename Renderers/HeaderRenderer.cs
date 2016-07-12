@@ -404,7 +404,7 @@ namespace XPTable.Renderers
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public virtual ColumnHeaderRegion HitTest(int x, int y)
+        public virtual ColumnHeaderRegion GetColumnHeaderRegion(int x, int y)
         {
             // This base class does not render filter buttons
 

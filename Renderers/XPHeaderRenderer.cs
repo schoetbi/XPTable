@@ -199,16 +199,13 @@ namespace XPTable.Renderers
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public override ColumnHeaderRegion HitTest(int x, int y)
+        public override ColumnHeaderRegion GetColumnHeaderRegion(int x, int y)
         {
             Rectangle filterRect = this.CalcFilterRect();
-
-            bool contains = filterRect.Contains(x, y);
-
-            //Console.WriteLine("HitTest ({0}, {1}) = {2} [{3}]", x, y, contains, filterRect);
-
-            if (contains)
+            if (filterRect.Contains(x, y))
+            {
                 return ColumnHeaderRegion.FilterButton;
+            }
 
             return ColumnHeaderRegion.ColumnTitle;
         }

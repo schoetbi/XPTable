@@ -7116,7 +7116,7 @@ namespace XPTable.Models
                     // If the mouse is over the filter button then do nothing here - filter buttons are handled in the click event
                     if (this.EnableFilters && this.ColumnModel.Columns[column].Filterable)
                     {
-                        ColumnHeaderRegion colRegion = this.HeaderRenderer.HitTest(e.X, e.Y);
+                        ColumnHeaderRegion colRegion = this.HeaderRenderer.GetColumnHeaderRegion(e.X, e.Y);
 
                         if (colRegion == ColumnHeaderRegion.FilterButton)
                         {
@@ -7751,7 +7751,7 @@ namespace XPTable.Models
                 if (this.EnableFilters && this.ColumnModel.Columns[hotColumn].Filterable)
                 {
                     Point client = this.DisplayRectToClient(e.X, e.Y);
-                    ColumnHeaderRegion region = this.HeaderRenderer.HitTest(client.X, client.Y);
+                    ColumnHeaderRegion region = this.HeaderRenderer.GetColumnHeaderRegion(client.X, client.Y);
 
                     if (region == ColumnHeaderRegion.FilterButton)
                     {
