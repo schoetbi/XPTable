@@ -282,7 +282,7 @@ namespace XPTable.Renderers
                 arrowWidth = arrowRect.Width;
 			}
 
-            if (e.Column.Text != null && e.Column.Text.Length > 0 && textRect.Width > 0)
+            if (!string.IsNullOrEmpty(e.Column.Text) && textRect.Width > 0)
             {
                 if (e.Column.Enabled)
                 {

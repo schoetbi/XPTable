@@ -8,7 +8,7 @@ namespace XPTable.Filters
     /// <summary>
     /// Dialog that allows the user to select which items to show
     /// </summary>
-    public class TextColumnFilterDialog : Form
+    public class ColumnFilterDialog : Form
     {
         private Button btnOK;
         private Button btnCancel;
@@ -17,7 +17,7 @@ namespace XPTable.Filters
         /// <summary>
         /// Creates a new TextColumnFilterDialog
         /// </summary>
-        public TextColumnFilterDialog()
+        public ColumnFilterDialog()
         {
             InitializeComponent();
         }
@@ -27,7 +27,7 @@ namespace XPTable.Filters
         /// </summary>
         /// <param name="item"></param>
         /// <param name="isChecked"></param>
-        public void AddItem(string item, bool isChecked)
+        public void AddItem(object item, bool isChecked)
         {
             filterList.Items.Add(item, isChecked);
         }
@@ -36,11 +36,11 @@ namespace XPTable.Filters
         /// Returns all items that are checked
         /// </summary>
         /// <returns></returns>
-        public string [] GetCheckedItems()
+        public object [] GetCheckedItems()
         {
-            var items = new List<string>();
+            var items = new List<object>();
 
-            foreach(string item in filterList.CheckedItems)
+            foreach(var item in filterList.CheckedItems)
             {
                 items.Add(item);
             }
@@ -107,7 +107,7 @@ namespace XPTable.Filters
             this.Controls.Add(this.filterList);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Name = "TextColumnFilterDialog";
+            this.Name = "ColumnFilterDialog";
             this.ShowInTaskbar = false;
             this.ResumeLayout(false);
 

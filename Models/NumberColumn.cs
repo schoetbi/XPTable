@@ -32,6 +32,7 @@ using System.Windows.Forms;
 
 using XPTable.Editors;
 using XPTable.Events;
+using XPTable.Filters;
 using XPTable.Models.Design;
 using XPTable.Renderers;
 using XPTable.Sorting;
@@ -177,7 +178,12 @@ namespace XPTable.Models
 
 		#region Methods
 
-		/// <summary>
+	    public override IColumnFilter CreateDefaultFilter()
+	    {
+	        return new NumberColumnFilter(this);
+	    }
+
+	    /// <summary>
 		/// Gets a string that specifies the name of the Column's default CellRenderer
 		/// </summary>
 		/// <returns>A string that specifies the name of the Column's default 

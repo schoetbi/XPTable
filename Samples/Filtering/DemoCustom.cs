@@ -87,13 +87,13 @@ namespace Filtering
             if (filter == null)
                 return;
             
-            string[] items = filter.GetDistinctItems(e.Table, e.Index);
+            var items = filter.GetDistinctItems(e.Table, e.Index);
 
             txtFilter.Text = string.Empty;
 
             foreach (string s in items)
             {
-                txtFilter.Text += string.Format(@"{0}{1}", s, Environment.NewLine);
+                txtFilter.Text += $@"{s}{Environment.NewLine}";
             }
 
             e.Handled = true;

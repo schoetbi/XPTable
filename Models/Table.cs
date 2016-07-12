@@ -7750,8 +7750,7 @@ namespace XPTable.Models
                 // Column filters
                 if (this.EnableFilters && this.ColumnModel.Columns[hotColumn].Filterable)
                 {
-                    Point client = this.DisplayRectToClient(e.X, e.Y);
-                    ColumnHeaderRegion region = this.HeaderRenderer.GetColumnHeaderRegion(client.X, client.Y);
+                     ColumnHeaderRegion region = this.HeaderRenderer.GetColumnHeaderRegion(e.X, e.Y);
 
                     if (region == ColumnHeaderRegion.FilterButton)
                     {

@@ -213,11 +213,12 @@
     <Compile Include="Events\ToolTipEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Filters\ColumnFilter.cs" />
     <Compile Include="Filters\RowFilter.cs" />
     <Compile Include="Filters\IColumnFilter.cs" />
     <Compile Include="Filters\IRowFilter.cs" />
     <Compile Include="Filters\TextColumnFilter.cs" />
-    <Compile Include="Filters\TextColumnFilterDialog.cs">
+    <Compile Include="Filters\ColumnFilterDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Models\ButtonColumn.cs">
@@ -331,6 +332,7 @@
     <Compile Include="Models\NumberColumn.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Filters\NumberColumnFilter.cs" />
     <Compile Include="Models\ProgressBarColumn.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -553,8 +555,8 @@
     <EmbeddedResource Include="Editors\DropDownContainer.resx">
       <DependentUpon>DropDownContainer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Filters\TextColumnFilterDialog.resx">
-      <DependentUpon>TextColumnFilterDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Filters\ColumnFilterDialog.resx">
+      <DependentUpon>ColumnFilterDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Models\ColumnModel.bmp" />
     <EmbeddedResource Include="Models\Table.bmp" />
