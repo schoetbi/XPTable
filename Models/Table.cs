@@ -4268,10 +4268,19 @@ namespace XPTable.Models
         /// <summary>
         /// Gets the number of whole rows that are visible in the Table
         /// </summary>
-        /// <param name="hScroll"></param>
-        /// <param name="vScroll"></param>
         [Browsable(false)]
-        public int GetVisibleRowCount(bool hScroll, bool vScroll)
+        public int GetVisibleRowCount()
+        {
+            return this.GetVisibleRowCount(this.HScroll, this.VScroll);
+        }
+
+        /// <summary>
+        /// Gets the number of whole rows that are visible in the Table
+        /// </summary>
+        /// <param name="hScroll">True if horizontal scrollbar is visible</param>
+        /// <param name="vScroll">True if vertical scrollbar is visible</param>
+        [Browsable(false)]
+        private int GetVisibleRowCount(bool hScroll, bool vScroll)
         {
             int count;
             if (this.EnableWordWrap)
