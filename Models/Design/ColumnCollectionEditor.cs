@@ -90,7 +90,8 @@ namespace XPTable.Models.Design
 							   typeof(DateTimeColumn),
 							   typeof(ImageColumn),
 							   typeof(NumberColumn),
-							   typeof(ProgressBarColumn)};
+							   typeof(ProgressBarColumn),
+							   typeof(GroupColumn)};
 		}
 		
 		/// <summary>
