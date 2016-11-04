@@ -2852,15 +2852,19 @@ namespace XPTable.Models
                 else
                 {
                     int hidden = this.tableModel.Rows.HiddenRowCountBefore(row);
-                    var visibleRowCount = this.GetVisibleRowCount();
+                    
                     if (row < vscrollVal)
                     {
                         // row is positioned at the top of the viewport
                         vscrollVal = row;
                     }
-                    else if (row - hidden > vscrollVal + visibleRowCount)
+                    else
                     {
-                        vscrollVal = row - visibleRowCount;
+                        var visibleRowCount = this.GetVisibleRowCount();
+                        if (row - hidden > vscrollVal + visibleRowCount)
+                        {
+                            vscrollVal = row - visibleRowCount;
+                        }
                     }
                 }
 
