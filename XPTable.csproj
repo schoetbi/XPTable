@@ -346,6 +346,7 @@
     <Compile Include="Models\RowStyle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\ScrollPosition.cs" />
     <Compile Include="Models\SelectionStyle.cs">
       <SubType>Code</SubType>
     </Compile>

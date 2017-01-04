@@ -1928,9 +1928,13 @@ namespace XPTable.Models
                     ydiff += row.Height;
 
                     if (ydiff < visibleHeight)
+                    {
                         count++;
+                    }
                     else
+                    {
                         break;
+                    }
                 }
             }
 
@@ -2587,6 +2591,22 @@ namespace XPTable.Models
         #region Scrolling
 
         /// <summary>
+        /// Gets or sets the scrollposition
+        /// </summary>
+        public ScrollPosition ScrollPosition
+        {
+            get
+            {
+                return new ScrollPosition(this.hScrollBar.Value, this.vScrollBar.Value);
+            }
+            set
+            {
+                this.hScrollBar.Value = value.HorizontalValue;
+                this.vScrollBar.Value = value.VerticalValue;
+            }
+        }
+
+        /// <summary>
         /// Updates the scrollbars to reflect any changes made to the Table
         /// </summary>
         public void UpdateScrollBars()
@@ -2831,15 +2851,20 @@ namespace XPTable.Models
                 }
                 else
                 {
-                    int hidden = tableModel.Rows.HiddenRowCountBefore(row);
-
+                    int hidden = this.tableModel.Rows.HiddenRowCountBefore(row);
+                    
                     if (row < vscrollVal)
                     {
+                        // row is positioned at the top of the viewport
                         vscrollVal = row;
                     }
-                    else if (row - hidden > vscrollVal + this.vScrollBar.LargeChange)
+                    else
                     {
-                        vscrollVal += row - (vscrollVal + this.vScrollBar.LargeChange);
+                        var visibleRowCount = this.GetVisibleRowCount();
+                        if (row - hidden > vscrollVal + visibleRowCount)
+                        {
+                            vscrollVal = row - visibleRowCount;
+                        }
                     }
                 }
 
@@ -4284,7 +4309,9 @@ namespace XPTable.Models
         {
             int count;
             if (this.EnableWordWrap)
+            {
                 count = this.VisibleRowCountExact();
+            }
             else
             {
                 Rectangle clientRect = this.InternalBorderRect;
@@ -4304,8 +4331,10 @@ namespace XPTable.Models
                     clientRect.Y += this.HeaderHeight;
                     clientRect.Height -= this.HeaderHeight;
                 }
+
                 count = clientRect.Height / this.RowHeight;
             }
+
             return count;
         }
 
