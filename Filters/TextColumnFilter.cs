@@ -62,32 +62,48 @@ namespace XPTable.Filters
         /// <param name="e"></param>
         public void OnHeaderFilterClick(HeaderMouseEventArgs e)
         {
-            TextColumnFilterDialog dialog = CreateFilterDialog(e);
+            Form dialog = InitFilterDialog(e);
 
-            AddItems(dialog, e.Table, e.Index);
+            var filterDialog = dialog as ITextColumnFilterDialog;
+
+            AddItems(filterDialog, e.Table, e.Index);
 
             DialogResult result = dialog.ShowDialog();
 
             if (result == DialogResult.Cancel)
                 return;
 
-            UpdateFilter(e, dialog);
+            UpdateFilter(e, filterDialog);
         }
 
-        TextColumnFilterDialog CreateFilterDialog(HeaderMouseEventArgs e)
+        Form InitFilterDialog(HeaderMouseEventArgs e)
         {
-            var dialog = new TextColumnFilterDialog();
+            Form form = CreateFilterDialog();
+
+            var filter = form as ITextColumnFilterDialog;
+
+            if (filter == null)
+                throw new InvalidOperationException("CreateFilterDialog() must return a Form that implements ITextColumnFilterDialog");
 
             Point screenPos = e.Table.PointToScreen(new Point(e.HeaderRect.Left, e.HeaderRect.Bottom));
 
-            dialog.StartPosition = FormStartPosition.Manual;
-            
-            dialog.Location = screenPos;
+            form.StartPosition = FormStartPosition.Manual;
 
-            return dialog;
+            form.Location = screenPos;
+
+            return form;
         }
 
-        void AddItems(TextColumnFilterDialog dialog, Table table, int col)
+        /// <summary>
+        /// Create the dialog that shows the filter items. This must be a Form that also implements ITextColumnFilterDialog
+        /// </summary>
+        /// <returns></returns>
+        public virtual Form CreateFilterDialog()
+        {
+            return new TextColumnFilterDialog();
+        }
+
+        void AddItems(ITextColumnFilterDialog dialog, Table table, int col)
         {
             string[] toAdd = GetDistinctItems(table, col);
 
@@ -139,7 +155,7 @@ namespace XPTable.Filters
             return _allowedItems.Contains(item);
         }
 
-        void UpdateFilter(HeaderMouseEventArgs e, TextColumnFilterDialog dialog)
+        void UpdateFilter(HeaderMouseEventArgs e, ITextColumnFilterDialog dialog)
         {
             if (dialog.AnyUncheckedItems())
                 SetFilterItems(dialog.GetCheckedItems());
