@@ -45,7 +45,7 @@ namespace XPTable.Filters
         /// </summary>
         /// <param name="cell"></param>
         /// <returns></returns>
-        public bool CanShow(Cell cell)
+        public virtual bool CanShow(Cell cell)
         {
             if (_allowedItems == null)
                 return true;
