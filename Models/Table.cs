@@ -4467,6 +4467,17 @@ namespace XPTable.Models
         public bool VScroll
         {
             get { return this.vScrollBar == null ? false : this.vScrollBar.Visible; }
+		}
+
+        /// <summary>
+        /// Gets the vertical scroll bar
+        /// </summary>
+        [Browsable(false),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public VScrollBar VerticalScrollBar
+        {
+            get { return vScrollBar; }
+            set { vScrollBar = value; }
         }
         #endregion
 
