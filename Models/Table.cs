@@ -1969,36 +1969,39 @@ namespace XPTable.Models
         /// <returns></returns>
         int GetRenderedRowHeight(Graphics g, Row row)
         {
-            int height = row.Height;
-            if (row.HasWordWrapCell)
+            if (!row.HasWordWrapCell)
+                return row.Height;
+
+            int height = row.TableModel.RowHeight;  // if we have word wrapping, we ignore the current row height, but start at the default row height and make it taller if need be
+
+            ColumnCollection columns = this.ColumnModel.Columns;
+            foreach (Cell varCell in row.Cells)
             {
-                ColumnCollection columns = this.ColumnModel.Columns;
-                foreach (Cell varCell in row.Cells)
+                int column = varCell.InternalIndex;
+                if (varCell.WordWrap)
                 {
-                    int column = varCell.InternalIndex;
-                    if (varCell.WordWrap)
+                    // get the renderer for the cells column
+                    ICellRenderer renderer = columns[column].Renderer;
+                    if (renderer == null)
                     {
-                        // get the renderer for the cells column
-                        ICellRenderer renderer = columns[column].Renderer;
-                        if (renderer == null)
-                        {
-                            // get the default renderer for the column
-                            renderer = this.ColumnModel.GetCellRenderer(columns[column].GetDefaultRendererName());
-                        }
-
-                        // When calling renderer.GetCellHeight(), only the width of the bounds is used.
-                        int w = this.GetColumnWidth(column, varCell);
-                        renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, w, 0);
-
-                        // If this comes back zero then we have to go with the default
-                        int newheight = renderer.GetCellHeight(g, varCell);
-                        //Console.WriteLine("    GetRenderedRowHeight colwidth={0} rowheight={1}", w, newheight);
-                        if (newheight == 0)
-                            newheight = row.Height;
-                        height = Math.Max(newheight, height);
+                        // get the default renderer for the column
+                        renderer = this.ColumnModel.GetCellRenderer(columns[column].GetDefaultRendererName());
                     }
+
+                    // When calling renderer.GetCellHeight(), only the width of the bounds is used.
+                    int w = this.GetColumnWidth(column, varCell);
+                    renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, w, 0);
+
+                    // If this comes back zero then we have to go with the default
+                    int cellHeight = renderer.GetCellHeight(g, varCell);
+                    //Console.WriteLine("    GetRenderedRowHeight colwidth={0} rowheight={1}", w, newheight);
+                    if (cellHeight == 0)
+                        cellHeight = row.TableModel.RowHeight;
+
+                    height = Math.Max(cellHeight, height);
                 }
             }
+
             return height;
         }
         #endregion
