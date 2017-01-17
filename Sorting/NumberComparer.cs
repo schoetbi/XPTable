@@ -62,41 +62,41 @@ namespace XPTable.Sorting
 	    /// Compares two cells and returns a value indicating whether one is less 
 	    /// than, equal to or greater than the other.
 	    /// </summary>
-	    /// <param name="lhs"></param>
-	    /// <param name="rhs"></param>
+        /// <param name="cell1"></param>
+        /// <param name="cell2"></param>
 	    /// <returns></returns>
-	    protected override int CompareCells(Cell lhs, Cell rhs)
+        protected override int CompareCells(Cell cell1, Cell cell2)
 	    {
 	        // check for null data
-	        var lhsData = lhs.Data;
-	        var rhsData = rhs.Data;
+	        var cell1Data = cell1.Data;
+	        var cell2Data = cell2.Data;
 
-	        if (lhsData == null && rhsData == null)
+	        if (cell1Data == null && cell2Data == null)
 	        {
 	            return 0;
 	        }
 
-	        if (lhsData == null)
+	        if (cell1Data == null)
 	        {
 	            return -1;
 	        }
 
-	        if (rhsData == null)
+	        if (cell2Data == null)
 	        {
 	            return 1;
 	        }
 
 	        // comare types
-	        if (lhsData.GetType() != rhsData.GetType())
+	        if (cell1Data.GetType() != cell2Data.GetType())
 	        {
 	            return 1;
 	        }
 
-            var lhsComparable = lhsData as IComparable;
-            var rhsComparable = rhsData as IComparable;
-            if (lhsComparable != null && rhsComparable != null)
+            var cell1Comparable = cell1Data as IComparable;
+            var cell2Comparable = cell2Data as IComparable;
+            if (cell1Comparable != null && cell2Comparable != null)
             {
-                return lhsComparable.CompareTo(rhsData);
+                return cell1Comparable.CompareTo(cell2Comparable);
             }
 
             return 1;
