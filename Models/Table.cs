@@ -7745,14 +7745,14 @@ namespace XPTable.Models
 
             if (this.IsValidCell(this.LastMouseCell))
             {
-                if (e is MouseEventArgs)
-                {
-                    this.OnCellMouseHover(new CellMouseEventArgs(this.TableModel[this.LastMouseCell], this, this.LastMouseCell, this.CellRect(this.LastMouseCell), e as MouseEventArgs));
-                }
-                else
-                {
-                    this.OnCellMouseHover(new CellMouseEventArgs(this.TableModel[this.LastMouseCell], this, this.LastMouseCell, this.CellRect(this.LastMouseCell)));
-                }
+                var cell = this.TableModel[this.LastMouseCell];
+                var cellRect = this.CellRect(this.LastMouseCell);
+                var mouseEventArgs = e as MouseEventArgs;
+                var cellMouseEventArgs = mouseEventArgs != null
+                    ? new CellMouseEventArgs(cell, this, this.LastMouseCell, cellRect, mouseEventArgs)
+                    : new CellMouseEventArgs(cell, this, this.LastMouseCell, cellRect);
+
+                this.OnCellMouseHover(cellMouseEventArgs);
             }
             else if (this.hotColumn != -1)
             {
