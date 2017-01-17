@@ -7756,7 +7756,14 @@ namespace XPTable.Models
 
             if (this.IsValidCell(this.LastMouseCell))
             {
-                this.OnCellMouseHover(new CellMouseEventArgs(this.TableModel[this.LastMouseCell], this, this.LastMouseCell, this.CellRect(this.LastMouseCell)));
+                var cell = this.TableModel[this.LastMouseCell];
+                var cellRect = this.CellRect(this.LastMouseCell);
+                var mouseEventArgs = e as MouseEventArgs;
+                var cellMouseEventArgs = mouseEventArgs != null
+                    ? new CellMouseEventArgs(cell, this, this.LastMouseCell, cellRect, mouseEventArgs)
+                    : new CellMouseEventArgs(cell, this, this.LastMouseCell, cellRect);
+
+                this.OnCellMouseHover(cellMouseEventArgs);
             }
             else if (this.hotColumn != -1)
             {
@@ -7844,7 +7851,14 @@ namespace XPTable.Models
                 // LastMouseCell may be a cell that is 'under' a colspan cell
                 CellPos realCell = this.ResolveColspan(this.LastMouseCell);
 
-                this.OnCellDoubleClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell)));
+                if (e is MouseEventArgs)
+                {
+                    this.OnCellDoubleClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell), e as MouseEventArgs));
+                }
+                else
+                {
+                    this.OnCellDoubleClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell)));
+                }
             }
             else if (this.hotColumn != -1)
             {
