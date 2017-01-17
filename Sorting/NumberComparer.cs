@@ -57,31 +57,50 @@ namespace XPTable.Sorting
 
 
 		#region Methods
-        /// <summary>
-        /// Compares two cells and returns a value indicating whether one is less 
-        /// than, equal to or greater than the other.
-        /// </summary>
-        /// <param name="cell1"></param>
-        /// <param name="cell2"></param>
-        /// <returns></returns>
-        protected override int CompareCells(Cell cell1, Cell cell2)
-        {
-			// check for null data
-			if (cell1.Data == null && cell2.Data == null)
-			{
-				return 0;
-			}
-			else if (cell1.Data == null)
-			{
-				return -1;
-			}
-			else if (cell2.Data == null)
-			{
-				return 1;
-			}
 
-			return Convert.ToDecimal(cell1.Data).CompareTo(Convert.ToDecimal(cell2.Data));
-		}
+	    /// <summary>
+	    /// Compares two cells and returns a value indicating whether one is less 
+	    /// than, equal to or greater than the other.
+	    /// </summary>
+	    /// <param name="lhs"></param>
+	    /// <param name="rhs"></param>
+	    /// <returns></returns>
+	    protected override int CompareCells(Cell lhs, Cell rhs)
+	    {
+	        // check for null data
+	        var lhsData = lhs.Data;
+	        var rhsData = rhs.Data;
+
+	        if (lhsData == null && rhsData == null)
+	        {
+	            return 0;
+	        }
+
+	        if (lhsData == null)
+	        {
+	            return -1;
+	        }
+
+	        if (rhsData == null)
+	        {
+	            return 1;
+	        }
+
+	        // comare types
+	        if (lhsData.GetType() != rhsData.GetType())
+	        {
+	            return 1;
+	        }
+
+            var lhsComparable = lhsData as IComparable;
+            var rhsComparable = rhsData as IComparable;
+            if (lhsComparable != null && rhsComparable != null)
+            {
+                return lhsComparable.CompareTo(rhsData);
+            }
+
+            return 1;
+        }
 
 		#endregion
 	}
