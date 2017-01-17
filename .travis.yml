@@ -2,7 +2,7 @@ language: csharp
 solution: XPTable.sln
 install:
   - nuget restore XPTable.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory NUnit
+  - nuget install NUnit.Runners -Version 3.5.0 -OutputDirectory NUnit
 script:
   - xbuild /p:Configuration=Release XPTable.sln
-  - mono ./NUnit/NUnit.Runners.2.6.4/tools/nunit-console.exe ./UnitTest/bin/Test/UnitTest.dll
+  - mono ./NUnit/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe ./UnitTest/bin/Test/UnitTest.dll
