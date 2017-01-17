@@ -1,0 +1,11 @@
+language: csharp
+solution: XPTable.sln
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y git
+install:
+  - nuget restore XPTable.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory NUnit
+script:
+  - xbuild /p:Configuration=Release XPTable.sln
+  - mono ./NUnit/NUnit.Runners.2.6.4/tools/nunit-console.exe ./UnitTest/bin/Test/UnitTest.dll

@@ -551,21 +551,9 @@
     <Compile Include="Win32\WindowStyles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Editors\DropDownContainer.resx">
-      <DependentUpon>DropDownContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Filters\TextColumnFilterDialog.resx">
-      <DependentUpon>TextColumnFilterDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Models\ColumnModel.bmp" />
     <EmbeddedResource Include="Models\Table.bmp" />
-    <EmbeddedResource Include="Models\Table.resx">
-      <DependentUpon>Table.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Models\TableModel.bmp" />
-    <EmbeddedResource Include="Models\TableModel.resx">
-      <DependentUpon>TableModel.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="XPTable.nuspec">
