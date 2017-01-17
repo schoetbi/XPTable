@@ -1,0 +1,21 @@
+version: 1.6.1.{build}
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '$(APPVEYOR_BUILD_VERSION)'
+  assembly_file_version: '$(APPVEYOR_BUILD_VERSION)'
+  assembly_informational_version: '$(APPVEYOR_BUILD_VERSION).$(APPVEYOR_BUILD_NUMBER) $(APPVEYOR_REPO_COMMIT)'
+  
+before_build:
+- cmd: nuget restore
+
+build:
+  project: XPTable.sln
+  verbosity: minimal
+
+after_build:
+- nuget pack XPTable.nuspec -Properties version=%APPVEYOR_BUILD_VERSION%
+  
+artifacts:
+- path: bin

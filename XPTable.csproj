@@ -29,6 +29,7 @@
     <SignAssembly>true</SignAssembly>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -551,12 +552,6 @@
     <Compile Include="Win32\WindowStyles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Editors\DropDownContainer.resx">
-      <DependentUpon>DropDownContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Filters\TextColumnFilterDialog.resx">
-      <DependentUpon>TextColumnFilterDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Models\ColumnModel.bmp" />
     <EmbeddedResource Include="Models\Table.bmp" />
     <EmbeddedResource Include="Models\Table.resx">
