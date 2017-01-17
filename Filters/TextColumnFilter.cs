@@ -62,7 +62,7 @@ namespace XPTable.Filters
         /// <param name="e"></param>
         public void OnHeaderFilterClick(HeaderMouseEventArgs e)
         {
-            Form dialog = InitFilterDialog(e);
+            var dialog = InitFilterDialog(e);
 
             var filterDialog = dialog as ITextColumnFilterDialog;
 
@@ -76,14 +76,9 @@ namespace XPTable.Filters
             UpdateFilter(e, filterDialog);
         }
 
-        Form InitFilterDialog(HeaderMouseEventArgs e)
+        ITextColumnFilterDialog InitFilterDialog(HeaderMouseEventArgs e)
         {
-            Form form = CreateFilterDialog();
-
-            var filter = form as ITextColumnFilterDialog;
-
-            if (filter == null)
-                throw new InvalidOperationException("CreateFilterDialog() must return a Form that implements ITextColumnFilterDialog");
+            ITextColumnFilterDialog form = CreateFilterDialog();
 
             Point screenPos = e.Table.PointToScreen(new Point(e.HeaderRect.Left, e.HeaderRect.Bottom));
 
@@ -98,7 +93,7 @@ namespace XPTable.Filters
         /// Create the dialog that shows the filter items. This must be a Form that also implements ITextColumnFilterDialog
         /// </summary>
         /// <returns></returns>
-        public virtual Form CreateFilterDialog()
+        public virtual ITextColumnFilterDialog CreateFilterDialog()
         {
             return new TextColumnFilterDialog();
         }
