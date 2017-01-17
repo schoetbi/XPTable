@@ -1,0 +1,9 @@
+version: 1.6.1.{build}
+before_build:
+- cmd: nuget restore
+build:
+  project: XPTable.sln
+  publish_nuget: true
+  verbosity: minimal
+artifacts:
+- path: bin
