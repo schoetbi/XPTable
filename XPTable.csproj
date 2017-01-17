@@ -94,7 +94,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AssemblyInfo.githash.cs" />
     <Compile Include="Editors\CellEditor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -562,16 +561,8 @@
     <None Include="XPTable.snk" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="gitStatus.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="readme.txt" />
     <Content Include="Resources\XPTable32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)createGitStatus.bat $(ProjectDir)\gitStatus.txt $(ProjectDir)\AssemblyInfo.githash.cs</PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

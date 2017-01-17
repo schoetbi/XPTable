@@ -1,8 +1,5 @@
 language: csharp
 solution: XPTable.sln
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y git
 install:
   - nuget restore XPTable.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory NUnit
