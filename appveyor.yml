@@ -16,6 +16,10 @@ build:
 
 after_build:
 - nuget pack XPTable.nuspec -Properties version=%APPVEYOR_BUILD_VERSION%
-  
+
+test:
+  assemblies:
+    - UnitTest\bin\Test\UnitTest.dll
+    
 artifacts:
 - path: bin
