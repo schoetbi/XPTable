@@ -13,9 +13,17 @@ before_build:
 build:
   project: XPTable.sln
   verbosity: minimal
+  
+configuration:
+  - Release  
 
 after_build:
-- nuget pack XPTable.nuspec -Properties version=%APPVEYOR_BUILD_VERSION%
-  
+- nuget pack XPTable.nuspec -Properties version=%APPVEYOR_BUILD_VERSION%;configuration=%CONFIGURATION%
+
+test:
+  assemblies:
+    - UnitTest\bin\Test\UnitTest.dll
+    
 artifacts:
 - path: bin
+- path: XPTable*.nupkg

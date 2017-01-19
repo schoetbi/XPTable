@@ -23,5 +23,11 @@
       **Ver 1.5.1 = !Bugfix for non-custom editor cells during first draw
     </releaseNotes>
     <tags>XPTable WinForms</tags>
+    <references>
+      <reference file="XPTable.dll"/>
+    </references>
   </metadata>
+  <files>
+    <file src="bin/$configuration$/XPTable.dll" target="lib\net20\XPTable.dll"/>
+  </files>
 </package>
