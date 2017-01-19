@@ -120,7 +120,10 @@ namespace XPTable.Models
 			switch (column.GetType().Name)
 			{
 				case "TextColumn":
-					cell = new Cell(val.ToString());
+                    if (val == null)
+                        cell = new Cell();
+                    else
+					    cell = new Cell(val.ToString());
 					break;
 
 				case "CheckBoxColumn":
