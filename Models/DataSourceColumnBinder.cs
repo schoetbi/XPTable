@@ -115,19 +115,16 @@ namespace XPTable.Models
 		/// <returns></returns>
 		public virtual Cell GetCell(Column column, object val)
 		{
-			Cell cell = null;
-
+			Cell cell;
 			switch (column.GetType().Name)
 			{
-				case "TextColumn":
-					cell = new Cell(val.ToString());
+				case nameof(TextColumn):
+                    cell = val == null ? new Cell() : new Cell(val.ToString());
 					break;
 
-				case "CheckBoxColumn":
-					bool check = false;
-					if (val is Boolean)
-						check = (bool)val;
-					cell = new Cell("", check);
+				case nameof(CheckBoxColumn):
+					bool check = val is bool && (bool)val;
+			        cell = new Cell("", check);
 					break;
 
 				default:
