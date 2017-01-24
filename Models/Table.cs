@@ -7072,8 +7072,10 @@ namespace XPTable.Models
                     {
                         if (this.pressedColumn == column)
                         {
-                            if (this.hotColumn != -1 && this.hotColumn != column)
-                                this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Normal;
+                            if (this.hotColumn != column)
+                            {
+                                this.SetInternalColumnState(this.hotColumn,  ColumnState.Normal);
+                            }
 
                             this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Hot;
                             this.RaiseHeaderMouseUp(column, e);
@@ -7394,6 +7396,7 @@ namespace XPTable.Models
                 return;
 
             #region Left mouse button
+
             // if the left mouse button is down, check if the LastMouseDownCell 
             // references a valid cell.  if it does, send the mouse move message 
             // to the cell and then exit (this will stop other cells/headers 
@@ -7413,9 +7416,11 @@ namespace XPTable.Models
                     }
                 }
             }
+
             #endregion
 
             #region Column resizing
+
             // are we resizing a column?
             if (this.resizingColumnIndex != -1)
             {
@@ -7445,6 +7450,7 @@ namespace XPTable.Models
 
                 return;
             }
+
             #endregion
 
             // work out the potential state of play
@@ -7468,12 +7474,8 @@ namespace XPTable.Models
                 // to be the hot column
                 if (this.hotColumn != column)
                 {
-                    if (this.hotColumn != -1)
-                    {
-                        this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Normal;
-
-                        this.RaiseHeaderMouseLeave(this.hotColumn);
-                    }
+                    this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
+                    this.RaiseHeaderMouseLeave(this.hotColumn);
 
                     if (this.TableState != TableState.ColumnResizing)
                     {
@@ -7481,8 +7483,7 @@ namespace XPTable.Models
 
                         if (this.hotColumn != -1 && this.ColumnModel.Columns[column].Enabled)
                         {
-                            this.ColumnModel.Columns[column].InternalColumnState = ColumnState.Hot;
-
+                            this.SetInternalColumnState(column, ColumnState.Hot);
                             this.RaiseHeaderMouseEnter(column);
                         }
                     }
@@ -7497,15 +7498,16 @@ namespace XPTable.Models
 
                 // if this isn't the pressed column, then the pressed columns
                 // state should be set back to normal
-                if (this.pressedColumn != -1 && this.pressedColumn != column)
+                if (this.pressedColumn != column)
                 {
-                    this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Normal;
+                    this.SetInternalColumnState(this.pressedColumn, ColumnState.Normal);
                 }
                 // else if this is the pressed column and its state is not
                 // pressed, then we had better set it
-                else if (column != -1 && this.pressedColumn == column && this.ColumnModel.Columns[this.pressedColumn].ColumnState != ColumnState.Pressed)
+                else if (column != -1 && this.pressedColumn == column &&
+                         this.ColumnModel.Columns[this.pressedColumn].ColumnState != ColumnState.Pressed)
                 {
-                    this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Pressed;
+                    this.SetInternalColumnState(this.pressedColumn, ColumnState.Pressed);
                 }
 
                 // set the cursor to a resizing cursor if necesary
@@ -7546,13 +7548,9 @@ namespace XPTable.Models
                         {
                             if (this.ColumnModel.Columns[col].Enabled)
                             {
-                                if (this.hotColumn != -1)
-                                {
-                                    this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Normal;
-                                }
-
+                                this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
                                 this.hotColumn = col;
-                                this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Hot;
+                                this.SetInternalColumnState(this.hotColumn, ColumnState.Hot);
 
                                 this.RaiseHeaderMouseEnter(col);
                             }
@@ -7569,7 +7567,7 @@ namespace XPTable.Models
                             // this mouse is in the right side of the column, 
                             // so this column needs to be dsiplayed hot
                             this.hotColumn = column;
-                            this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Hot;
+                            this.SetInternalColumnState(this.hotColumn, ColumnState.Hot);
                         }
                         else
                         {
@@ -7595,22 +7593,15 @@ namespace XPTable.Models
 
             // we're outside of the header, so if there is a hot column,
             // it need to be reset
-            if (this.hotColumn != -1)
-            {
-                this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Normal;
-
-                this.Cursor = Cursors.Default;
-
-                this.ResetHotColumn();
-            }
+            this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
+            this.Cursor = Cursors.Default;
+            this.ResetHotColumn();
 
             // if there is a pressed column, its state need to beset to normal
-            if (this.pressedColumn != -1)
-            {
-                this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Normal;
-            }
+            this.SetInternalColumnState(this.pressedColumn, ColumnState.Normal);
 
             #region Cells
+
             if (hitTest == TableRegion.Cells)
             {
                 // find the cell the mouse is over
@@ -7681,6 +7672,21 @@ namespace XPTable.Models
 
             #endregion
         }
+
+        private void SetInternalColumnState(int columnIndex, ColumnState state)
+        {
+            if (this.ColumnModel == null)
+            {
+                return;
+            }
+
+            if (columnIndex >= 0 && columnIndex < this.ColumnModel.Columns.Count)
+            {
+                var column = this.ColumnModel.Columns[columnIndex];
+                column.InternalColumnState = state;
+            }
+        }
+
         #endregion
 
         #region MouseLeave
@@ -7696,12 +7702,8 @@ namespace XPTable.Models
             // we're outside of the header, so if there is a hot column,
             // it needs to be reset (this shouldn't happen, but better 
             // safe than sorry ;)
-            if (this.hotColumn != -1)
-            {
-                this.ColumnModel.Columns[this.hotColumn].InternalColumnState = ColumnState.Normal;
-
-                this.ResetHotColumn();
-            }
+            this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
+            this.ResetHotColumn();
         }
 
         #endregion
