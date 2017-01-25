@@ -7477,6 +7477,7 @@ namespace XPTable.Models
                     if (this.hotColumn != -1)
                     {
                         this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);                        this.RaiseHeaderMouseLeave(this.hotColumn);
+                        this.RaiseHeaderMouseLeave(this.hotColumn);
                     }
 
                     if (this.TableState != TableState.ColumnResizing)
@@ -7598,7 +7599,8 @@ namespace XPTable.Models
             if (this.hotColumn != -1)
             {
                 this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-                this.Cursor = Cursors.Default;                this.ResetHotColumn();
+                this.Cursor = Cursors.Default;
+                this.ResetHotColumn();
             }
 
             // if there is a pressed column, its state need to beset to normal
