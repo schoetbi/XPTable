@@ -252,12 +252,12 @@ namespace XPTable.Models
         /// </summary>
         public event CellEditEventHandler BeginEditing;
 
-		/// <summary>
-		/// Occurs when the Table stops editing a Cell, but before the cell value is changed
-		/// </summary>
-		public event CellEditEventHandler EditingStopping;
-		
-		/// <summary>
+        /// <summary>
+        /// Occurs when the Table stops editing a Cell, but before the cell value is changed
+        /// </summary>
+        public event CellEditEventHandler EditingStopping;
+
+        /// <summary>
         /// Occurs when the Table stops editing a Cell and the cell value is changed
         /// </summary>
         public event CellEditEventHandler EditingStopped;
@@ -2671,7 +2671,7 @@ namespace XPTable.Models
 
                 if (hscroll)
                     vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
-                
+
                 this.vScrollBar.Visible = true;
                 this.vScrollBar.Bounds = vscrollBounds;
                 this.vScrollBar.Minimum = 0;
@@ -2855,7 +2855,7 @@ namespace XPTable.Models
                 else
                 {
                     int hidden = this.tableModel.Rows.HiddenRowCountBefore(row);
-                    
+
                     if (row < vscrollVal)
                     {
                         // row is positioned at the top of the viewport
@@ -2882,10 +2882,10 @@ namespace XPTable.Models
                 vscrollVal++;
             }
 
-            var moved = 
+            var moved =
                   SetScrollValue(this.hScrollBar, hscrollVal)
-                | SetScrollValue(this.vScrollBar, vscrollVal); 
-            
+                | SetScrollValue(this.vScrollBar, vscrollVal);
+
             if (moved)
             {
                 this.Invalidate(this.PseudoClientRect);
@@ -2896,8 +2896,8 @@ namespace XPTable.Models
 
         private static bool SetScrollValue(ScrollBar scrollbar, int value)
         {
-            if (scrollbar.Value == value 
-                || value > scrollbar.Maximum 
+            if (scrollbar.Value == value
+                || value > scrollbar.Maximum
                 || value < scrollbar.Minimum)
             {
                 return false;
@@ -4470,7 +4470,7 @@ namespace XPTable.Models
         public bool VScroll
         {
             get { return this.vScrollBar == null ? false : this.vScrollBar.Visible; }
-		}
+        }
 
         /// <summary>
         /// Gets the vertical scroll bar
@@ -6596,8 +6596,8 @@ namespace XPTable.Models
             }
         }
 
-		
-		/// <summary>
+
+        /// <summary>
         /// Raises the EditingStopped event
         /// </summary>
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
@@ -7074,7 +7074,7 @@ namespace XPTable.Models
                         {
                             if (this.hotColumn != column)
                             {
-                                this.SetInternalColumnState(this.hotColumn,  ColumnState.Normal);
+                                this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
                             }
 
                             this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Hot;
@@ -7474,8 +7474,10 @@ namespace XPTable.Models
                 // to be the hot column
                 if (this.hotColumn != column)
                 {
-                    this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-                    this.RaiseHeaderMouseLeave(this.hotColumn);
+                    if (this.hotColumn != -1)
+                    {
+                        this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);                        this.RaiseHeaderMouseLeave(this.hotColumn);
+                    }
 
                     if (this.TableState != TableState.ColumnResizing)
                     {
@@ -7593,9 +7595,11 @@ namespace XPTable.Models
 
             // we're outside of the header, so if there is a hot column,
             // it need to be reset
-            this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-            this.Cursor = Cursors.Default;
-            this.ResetHotColumn();
+            if (this.hotColumn != -1)
+            {
+                this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
+                this.Cursor = Cursors.Default;                this.ResetHotColumn();
+            }
 
             // if there is a pressed column, its state need to beset to normal
             this.SetInternalColumnState(this.pressedColumn, ColumnState.Normal);
@@ -7703,7 +7707,10 @@ namespace XPTable.Models
             // it needs to be reset (this shouldn't happen, but better 
             // safe than sorry ;)
             this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-            this.ResetHotColumn();
+            if (this.hotColumn != -1)
+            {
+                this.ResetHotColumn();
+            }
         }
 
         #endregion
@@ -7794,10 +7801,10 @@ namespace XPTable.Models
                 CellPos realCell = this.ResolveColspan(this.LastMouseCell);
 
                 var cellMouseEventArgs = new CellMouseEventArgs(
-                    this.TableModel[realCell], 
-                    this, 
-                    realCell, 
-                    this.CellRect(realCell), 
+                    this.TableModel[realCell],
+                    this,
+                    realCell,
+                    this.CellRect(realCell),
                     e);
                 this.OnCellClick(cellMouseEventArgs);
             }
@@ -8824,7 +8831,7 @@ namespace XPTable.Models
 
             var filters = new Dictionary<int, IColumnFilter>();
 
-            for(int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
             {
                 Column column = this.ColumnModel.Columns[i];
 
