@@ -43,7 +43,7 @@ namespace XPTable.Renderers
     /// <summary>
     /// A base class for drawing Cells contents as numbers
     /// </summary>
-    public class NumberCellRenderer : CellRenderer
+    public class DoubleCellRenderer : CellRenderer
     {
         #region Class Data
 
@@ -65,12 +65,12 @@ namespace XPTable.Renderers
         /// <summary>
         /// The maximum value for the Cell
         /// </summary>
-        private decimal maximum;
+        private double maximum;
 
         /// <summary>
         /// The minimum value for the Cell
         /// </summary>
-        private decimal minimum;
+        private double minimum;
 
         #endregion
 
@@ -81,7 +81,7 @@ namespace XPTable.Renderers
         /// Initializes a new instance of the NumberCellRenderer class with 
         /// default settings
         /// </summary>
-        public NumberCellRenderer()
+        public DoubleCellRenderer()
         {
             this.StringFormat.Trimming = StringTrimming.None;
             this.Format = "G";
@@ -185,7 +185,7 @@ namespace XPTable.Renderers
         /// Cell at the specified CellPos, false otherwise</returns>
         internal bool TableUsingNumericCellEditor(Table table, CellPos cellPos)
         {
-            return (table.IsEditing && cellPos == table.EditingCell && table.EditingCellEditor is NumberCellEditor);
+            return (table.IsEditing && cellPos == table.EditingCell && table.EditingCellEditor is DoubleCellEditor);
         }
 
         #endregion
@@ -252,7 +252,7 @@ namespace XPTable.Renderers
         /// <summary>
         /// Gets or sets the maximum value for the Cell
         /// </summary>
-        protected decimal Maximum
+        protected double Maximum
         {
             get
             {
@@ -274,7 +274,7 @@ namespace XPTable.Renderers
         /// <summary>
         /// Gets or sets the minimum value for the Cell
         /// </summary>
-        protected decimal Minimum
+        protected double Minimum
         {
             get
             {
@@ -414,7 +414,7 @@ namespace XPTable.Renderers
                     
                     if (this.CalcButtonBounds().Contains(e.X, e.Y))
                     {
-                        if (!(e.Table.ColumnModel.GetCellEditor(e.CellPos.Column) is NumberCellEditor))
+                        if (!(e.Table.ColumnModel.GetCellEditor(e.CellPos.Column) is DoubleCellEditor))
                         {
                             throw new InvalidOperationException("Cannot edit Cell as NumberCellRenderer requires a NumberColumn that uses a NumberCellEditor");
                         }
@@ -574,17 +574,17 @@ namespace XPTable.Renderers
         /// <param name="e">A PaintCellEventArgs that contains the event data</param>
         public override void OnPaintCell(PaintCellEventArgs e)
         {
-            var numberColumn = e.Table.ColumnModel.Columns[e.Column] as NumberColumn;
-            if (numberColumn != null)
+            var doubleColumn = e.Table.ColumnModel.Columns[e.Column] as DoubleColumn;
+            if (doubleColumn != null)
             {
-                this.ShowUpDownButtons = numberColumn.ShowUpDownButtons;
-                this.UpDownAlign = numberColumn.UpDownAlign;
-                this.Maximum = numberColumn.Maximum;
-                this.Minimum = numberColumn.Minimum;
+                this.ShowUpDownButtons = doubleColumn.ShowUpDownButtons;
+                this.UpDownAlign = doubleColumn.UpDownAlign;
+                this.Maximum = doubleColumn.Maximum;
+                this.Minimum = doubleColumn.Minimum;
 
                 // if the table is editing this cell and the editor is a 
                 // NumberCellEditor then we should display the updown buttons
-                if (e.Table.IsEditing && e.Table.EditingCell == e.CellPos && e.Table.EditingCellEditor is NumberCellEditor)
+                if (e.Table.IsEditing && e.Table.EditingCell == e.CellPos && e.Table.EditingCellEditor is DoubleCellEditor)
                 {
                     this.ShowUpDownButtons = true;
                 }
