@@ -4,7 +4,7 @@
     <id>XPTable</id>
     <title>XPTable - .NET ListView meets Java's JTable</title>
     <version>$version$</version>
-    <authors>$author$</authors>
+    <authors>Hall, adambl, adarmus, lanwin, peyn, schoetbi, Jeoffman</authors>
     <owners>Jeoffman</owners>
     <projectUrl>https://github.com/schoetbi/XPTable</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/schoetbi/XPTable/master/Resources/XPTable32x32.png?raw=true</iconUrl>
@@ -23,5 +23,11 @@
       **Ver 1.5.1 = !Bugfix for non-custom editor cells during first draw
     </releaseNotes>
     <tags>XPTable WinForms</tags>
+    <references>
+      <reference file="XPTable.dll"/>
+    </references>
   </metadata>
+  <files>
+    <file src="bin/$configuration$/XPTable.dll" target="lib\net20\XPTable.dll"/>
+  </files>
 </package>

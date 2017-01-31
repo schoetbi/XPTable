@@ -44,47 +44,24 @@ namespace XPTable.Models
         /// <returns></returns>
         public virtual Column GetColumn(PropertyDescriptor prop, int index)
         {
-            NumberColumn numCol = null;
-            Column column = null;
-            switch (prop.PropertyType.Name)
+            Column column;
+            var propertyType = prop.PropertyType;
+            switch (propertyType.Name)
             {
-                case "Int32":
-                    numCol = new NumberColumn(prop.Name);
-                    numCol.Maximum = Int32.MaxValue;
-                    numCol.Minimum = Int32.MinValue;
-                    column = numCol;
+                case nameof(Int32):
+                case nameof(Double):
+                case nameof(Single):
+                case nameof(Int16):
+                case nameof(Int64):
+                case nameof(Decimal):
+                    var fieldMin = propertyType.GetField("MinValue");
+                    var fieldMax = propertyType.GetField("MaxValue");
+                    column = new DoubleColumn(prop.Name)
+                             {
+                                 Minimum = (double)fieldMin.GetValue(propertyType),
+                                 Maximum = (double)fieldMax.GetValue(propertyType),
+                             };
                     break;
-                case "Double":
-                    numCol = new NumberColumn(prop.Name);
-                    numCol.Maximum = Decimal.MaxValue;
-                    numCol.Minimum = Decimal.MinValue;
-                    column = numCol;
-                    break;
-                case "Float":
-                    numCol = new NumberColumn(prop.Name);
-                    numCol.Maximum = Convert.ToDecimal(float.MaxValue);
-                    numCol.Minimum = Convert.ToDecimal(float.MinValue);
-                    column = numCol;
-                    break;
-                case "Int16":
-                    numCol = new NumberColumn(prop.Name);
-                    numCol.Maximum = Int16.MaxValue;
-                    numCol.Minimum = Int16.MinValue;
-                    column = numCol;
-                    break;
-                case "Int64":
-                    numCol = new NumberColumn(prop.Name);
-                    numCol.Maximum = Int64.MaxValue;
-                    numCol.Minimum = Int64.MinValue;
-                    column = numCol;
-                    break;
-                case "Decimal":
-                    numCol = new NumberColumn(prop.Name);
-                    numCol.Maximum = Decimal.MaxValue;
-                    numCol.Minimum = Decimal.MinValue;
-                    column = numCol;
-                    break;
-
                 case "DateTime":
                     column = new DateTimeColumn(prop.Name);
                     break;
@@ -101,6 +78,7 @@ namespace XPTable.Models
                     column = new TextColumn(prop.Name);
                     break;
             }
+
             return column;
         }
 
@@ -115,19 +93,16 @@ namespace XPTable.Models
 		/// <returns></returns>
 		public virtual Cell GetCell(Column column, object val)
 		{
-			Cell cell = null;
-
+			Cell cell;
 			switch (column.GetType().Name)
 			{
-				case "TextColumn":
-					cell = new Cell(val.ToString());
+				case nameof(TextColumn):
+                    cell = val == null ? new Cell() : new Cell(val.ToString());
 					break;
 
-				case "CheckBoxColumn":
-					bool check = false;
-					if (val is Boolean)
-						check = (bool)val;
-					cell = new Cell("", check);
+				case nameof(CheckBoxColumn):
+					bool check = val is bool && (bool)val;
+			        cell = new Cell("", check);
 					break;
 
 				default:

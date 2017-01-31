@@ -29,6 +29,7 @@
     <SignAssembly>true</SignAssembly>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -137,9 +138,8 @@
     <Compile Include="Editors\MouseMessageFilter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Editors\NumberCellEditor.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Editors\NumberCellEditor.cs" />
+    <Compile Include="Editors\DoubleCellEditor.cs" />
     <Compile Include="Editors\TextCellEditor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -183,9 +183,8 @@
     <Compile Include="Events\HeaderMouseEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Events\NumericCellEditEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Events\DoubleCellEditEventArgs.cs" />
+    <Compile Include="Events\NumericCellEditEventArgs.cs" />
     <Compile Include="Events\PaintCellEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -331,6 +330,9 @@
     <Compile Include="Models\NumberColumn.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Models\DoubleColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Models\ProgressBarColumn.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -346,6 +348,7 @@
     <Compile Include="Models\RowStyle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\ScrollPosition.cs" />
     <Compile Include="Models\SelectionStyle.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -435,9 +438,8 @@
     <Compile Include="Renderers\IRenderer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Renderers\NumberCellRenderer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Renderers\NumberCellRenderer.cs" />
+    <Compile Include="Renderers\DoubleCellRenderer.cs" />
     <Compile Include="Renderers\NumberRendererData.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -550,12 +552,6 @@
     <Compile Include="Win32\WindowStyles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Editors\DropDownContainer.resx">
-      <DependentUpon>DropDownContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Filters\TextColumnFilterDialog.resx">
-      <DependentUpon>TextColumnFilterDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Models\ColumnModel.bmp" />
     <EmbeddedResource Include="Models\Table.bmp" />
     <EmbeddedResource Include="Models\Table.resx">

@@ -57,31 +57,50 @@ namespace XPTable.Sorting
 
 
 		#region Methods
-        /// <summary>
-        /// Compares two cells and returns a value indicating whether one is less 
-        /// than, equal to or greater than the other.
-        /// </summary>
+
+	    /// <summary>
+	    /// Compares two cells and returns a value indicating whether one is less 
+	    /// than, equal to or greater than the other.
+	    /// </summary>
         /// <param name="cell1"></param>
         /// <param name="cell2"></param>
-        /// <returns></returns>
+	    /// <returns></returns>
         protected override int CompareCells(Cell cell1, Cell cell2)
-        {
-			// check for null data
-			if (cell1.Data == null && cell2.Data == null)
-			{
-				return 0;
-			}
-			else if (cell1.Data == null)
-			{
-				return -1;
-			}
-			else if (cell2.Data == null)
-			{
-				return 1;
-			}
+	    {
+	        // check for null data
+	        var cell1Data = cell1.Data;
+	        var cell2Data = cell2.Data;
 
-			return Convert.ToDecimal(cell1.Data).CompareTo(Convert.ToDecimal(cell2.Data));
-		}
+	        if (cell1Data == null && cell2Data == null)
+	        {
+	            return 0;
+	        }
+
+	        if (cell1Data == null)
+	        {
+	            return -1;
+	        }
+
+	        if (cell2Data == null)
+	        {
+	            return 1;
+	        }
+
+	        // comare types
+	        if (cell1Data.GetType() != cell2Data.GetType())
+	        {
+	            return 1;
+	        }
+
+            var cell1Comparable = cell1Data as IComparable;
+            var cell2Comparable = cell2Data as IComparable;
+            if (cell1Comparable != null && cell2Comparable != null)
+            {
+                return cell1Comparable.CompareTo(cell2Comparable);
+            }
+
+            return 1;
+        }
 
 		#endregion
 	}

@@ -82,16 +82,20 @@ namespace XPTable.Models.Design
 		/// <returns>An array of data types that this collection can contain</returns>
 		protected override Type[] CreateNewItemTypes()
 		{
-			return new Type[] {typeof(TextColumn),
-							   typeof(ButtonColumn),
-							   typeof(CheckBoxColumn),
-							   typeof(ColorColumn),
-							   typeof(ComboBoxColumn),
-							   typeof(DateTimeColumn),
-							   typeof(ImageColumn),
-							   typeof(NumberColumn),
-							   typeof(ProgressBarColumn),
-							   typeof(GroupColumn)};
+		    return new[]
+		           {
+		               typeof(TextColumn),
+		               typeof(ButtonColumn),
+		               typeof(CheckBoxColumn),
+		               typeof(ColorColumn),
+		               typeof(ComboBoxColumn),
+		               typeof(DateTimeColumn),
+		               typeof(ImageColumn),
+		               typeof(NumberColumn),
+		               typeof(DoubleColumn),
+		               typeof(ProgressBarColumn),
+		               typeof(GroupColumn)
+		           };
 		}
 		
 		/// <summary>
