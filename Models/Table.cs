@@ -2506,7 +2506,7 @@ namespace XPTable.Models
             if (this.IsHandleCreated)
             {
                 if (this.beginUpdateCount == 0)
-                    NativeMethods.SendMessage(this.Handle, 11, 0, 0);
+                    NativeMethods.SendMessage(this.Handle, 11, IntPtr.Zero, IntPtr.Zero);
 
                 this.beginUpdateCount++;
             }
@@ -2525,7 +2525,7 @@ namespace XPTable.Models
 
             if (this.beginUpdateCount == 0)
             {
-                NativeMethods.SendMessage(this.Handle, 11, -1, 0);
+                NativeMethods.SendMessage(this.Handle, 11, new IntPtr(-1), IntPtr.Zero);
 
                 this.PerformLayout();
 
