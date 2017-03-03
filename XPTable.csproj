@@ -212,6 +212,7 @@
     <Compile Include="Events\ToolTipEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Filters\ITextColumnFilterDialog.cs" />
     <Compile Include="Filters\RowFilter.cs" />
     <Compile Include="Filters\IColumnFilter.cs" />
     <Compile Include="Filters\IRowFilter.cs" />

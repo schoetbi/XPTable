@@ -310,7 +310,7 @@ namespace XPTable.Models
         /// Gets the Column's default ColumnFilter
         /// </summary>
         /// <returns></returns>
-        public virtual IColumnFilter CreateDefaultFilter()
+        protected virtual IColumnFilter CreateDefaultFilter()
         {
             return new TextColumnFilter(this);
         }

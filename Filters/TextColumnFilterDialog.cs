@@ -8,7 +8,7 @@ namespace XPTable.Filters
     /// <summary>
     /// Dialog that allows the user to select which items to show
     /// </summary>
-    public class TextColumnFilterDialog : Form
+    public class TextColumnFilterDialog : Form, ITextColumnFilterDialog
     {
         private Button btnOK;
         private Button btnCancel;
