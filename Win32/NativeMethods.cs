@@ -51,10 +51,10 @@ namespace XPTable.Win32
 		/// <param name="lParam">Specifies additional message-specific information</param>
 		/// <returns>The return value specifies the result of the message processing; 
 		/// it depends on the message sent</returns>
-		[DllImport("User32.dll", CharSet=CharSet.Auto, SetLastError=true)] 
-		internal static extern int SendMessage(IntPtr hwnd, int msg, int wParam, int lParam);
+		[DllImport("User32.dll", CharSet=CharSet.Auto, SetLastError=true)]
+		internal static extern IntPtr SendMessage( IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam );
 
-
+		
 		/// <summary>
 		/// The TrackMouseEvent function posts messages when the mouse pointer 
 		/// leaves a window or hovers over a window for a specified amount of time
@@ -78,8 +78,8 @@ namespace XPTable.Win32
 		/// <param name="lparam">Specifies additional message-specific information</param>
 		/// <returns>If the function succeeds, the return value is nonzero. If the function 
 		/// fails, the return value is zero</returns>
-		[DllImport("User32.dll", CharSet=CharSet.Auto, SetLastError=true)]
-		internal static extern IntPtr PostMessage(IntPtr hwnd, int msg, int wparam, int lparam);
+		[DllImport( "User32.dll", CharSet = CharSet.Auto, SetLastError = true )]
+		internal static extern IntPtr PostMessage( IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam );
 
 
 		/// <summary>

@@ -705,7 +705,7 @@ namespace XPTable.Editors
                     {
                         if (((int)m.WParam) == 0)
                         {
-                            NativeMethods.SendMessage(this.Handle, (int)WindowMessage.WM_NCACTIVATE, 1, 0);
+                            NativeMethods.SendMessage(this.Handle, (int)WindowMessage.WM_NCACTIVATE, new IntPtr(1), IntPtr.Zero);
                         }
                     }
                     else if (m.Msg == (int)WindowMessage.WM_ACTIVATEAPP)
@@ -714,7 +714,7 @@ namespace XPTable.Editors
                         {
                             this.owner.DroppedDown = false;
 
-                            NativeMethods.PostMessage(this.Handle, (int)WindowMessage.WM_NCACTIVATE, 0, 0);
+                            NativeMethods.PostMessage(this.Handle, (int)WindowMessage.WM_NCACTIVATE, IntPtr.Zero, IntPtr.Zero);
                         }
                     }
                 }
