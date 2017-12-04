@@ -8127,7 +8127,7 @@ namespace XPTable.Models
                 }
             }
 
-            if (column < currentRow.Cells.Count)
+            if (currentRow?.Cells != null && column < currentRow.Cells.Count)
             {
                 // is the cell selected
                 bool isSelected = false;
@@ -8145,12 +8145,10 @@ namespace XPTable.Models
                             isSelected = true;
                         }
                     }
-                    else if (this.SelectionStyle == SelectionStyle.Grid)
+                    else if (this.SelectionStyle == SelectionStyle.Grid &&
+                             this.TableModel.Selections.IsCellSelected(row, column))
                     {
-                        if (this.TableModel.Selections.IsCellSelected(row, column))
-                        {
-                            isSelected = true;
-                        }
+                        isSelected = true;
                     }
                 }
 
