@@ -18,7 +18,7 @@ configuration:
   - Release  
 
 after_build:
-- nuget pack XPTable.nuspec -Properties version=%APPVEYOR_BUILD_VERSION%;configuration=%CONFIGURATION%
+- nuget pack XPTable.csproj
 
 test:
   assemblies:

@@ -9,7 +9,6 @@ using System.Runtime.CompilerServices;
 //
 [assembly: AssemblyTitle("XPTable")]
 [assembly: AssemblyDescription("A fully customizable ListView style control based on Java's JTable")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Hall, adambl, adarmus, lanwin, peyn, schoetbi, Jeoffman")]
 [assembly: AssemblyProduct("XPTable")]
 [assembly: AssemblyCopyright("Copyright © 2005, Mathew Hall.  All rights reserved.")]
@@ -17,7 +16,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")] 
 [assembly: CLSCompliant(true)]  
 
-[assembly: AssemblyVersion("1.6.1.*")]
+[assembly: AssemblyVersion("1.6.1.1")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

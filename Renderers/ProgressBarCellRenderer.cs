@@ -228,14 +228,17 @@ namespace XPTable.Renderers
             }
             else
             {
-                using (Bitmap b = new Bitmap(chunkRect.Width, chunkRect.Height))
+                if (chunkRect.Width != 0)
                 {
-                    using (Graphics g = Graphics.FromImage(b))
+                    using (Bitmap b = new Bitmap(chunkRect.Width, chunkRect.Height))
                     {
-                        ThemeManager.DrawProgressBarChunks(g, new Rectangle(0, 0, chunkRect.Width, chunkRect.Height));
-                    }
+                        using (Graphics g = Graphics.FromImage(b))
+                        {
+                            ThemeManager.DrawProgressBarChunks(g, new Rectangle(0, 0, chunkRect.Width, chunkRect.Height));
+                        }
 
-                    ControlPaint.DrawImageDisabled(e.Graphics, b, chunkRect.X, chunkRect.Y, this.BackBrush.Color);
+                        ControlPaint.DrawImageDisabled(e.Graphics, b, chunkRect.X, chunkRect.Y, this.BackBrush.Color);
+                    }
                 }
             }
 
