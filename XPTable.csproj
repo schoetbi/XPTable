@@ -572,8 +572,7 @@
     <EmbeddedResource Include="gitStatus.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="readme.txt" />
-    <Content Include="Resources\XPTable32x32.png" />
+    <None Include="Resources\XPTable32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

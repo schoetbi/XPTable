@@ -16,6 +16,7 @@
       <frameworkAssembly assemblyName="System.Windows.Forms" />
     </frameworkAssemblies>
     <releaseNotes>
+      **Ver 1.6.1 = Minor bugfixes
       **Ver 1.6.0 = Merging to the schoetbi branch of XPTable on GitHub
       **Ver 1.5.4 = Nailed a nasty bug in renderer - causes Visual Studio (2015 at least) Designer to sometimes not load Forms with XPTable in them
       **Ver 1.5.3 = Back to .NET 2.0, trying to keep sync'd with schoetbi as of 11/16/2015
@@ -23,11 +24,5 @@
       **Ver 1.5.1 = !Bugfix for non-custom editor cells during first draw
     </releaseNotes>
     <tags>XPTable WinForms</tags>
-    <references>
-      <reference file="XPTable.dll"/>
-    </references>
   </metadata>
-  <files>
-    <file src="bin/$configuration$/XPTable.dll" target="lib\net20\XPTable.dll"/>
-  </files>
 </package>
