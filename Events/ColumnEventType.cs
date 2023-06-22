@@ -151,5 +151,10 @@ namespace XPTable.Events
         /// Occurs when the value of a Column's Filter property changes
         /// </summary>
         FilterChanged = 22,
+
+        /// <summary>
+        /// Occurs when the value of a Column's WordWrap property changes
+        /// </summary>
+        WordWrapChanged = 23
 }
 }

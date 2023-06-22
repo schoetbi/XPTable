@@ -66,14 +66,17 @@ namespace WordWrap
             table.SelectionStyle = SelectionStyle.Grid;
             table.GridLines = GridLines.Both;
 
-            TextColumn col1 = new TextColumn("col A col A col A col A col A col A", 100);
+            TextColumn col1 = new TextColumn("no wrap col A col A col A col A col A col A", 100);
+            col1.WordWrap = false;
+
             TextColumn col2 = new TextColumn("col B col B col B col B col B col B col B", 100);
             table.ColumnModel = new ColumnModel(new Column[] { col1, col2 });
-             
+            
             TableModel model = new TableModel();
 
             Row row;
             Cell cell;
+            table.EnableToolTips = true;
 
             int n = 0;
 

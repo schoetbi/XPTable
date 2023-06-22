@@ -171,6 +171,11 @@ namespace XPTable.Models
         /// The Type of the IComparer used to compare the Column's Cells
         /// </summary>
         private Type comparer;
+
+        /// <summary>
+        /// Whether the text can wrap (and force the cell's height to increase)
+        /// </summary>
+        private bool wordWrap;
         #endregion
 
         #region Constructor
@@ -285,6 +290,7 @@ namespace XPTable.Models
             this.editor = null;
             this.comparer = null;
             this.filter = null;
+            this.wordWrap = true;   // To preserve backeards compatibility
 
             // Mateusz [PEYN] Adamus (peyn@tlen.pl)
             // Added STATE_RESIZABLE to column's initialization
@@ -370,6 +376,27 @@ namespace XPTable.Models
                     string oldText = this.text;
                     this.text = value;
                     this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.TextChanged, oldText));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether the column text can wrap
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(null),
+        Description("Whether the column text can wrap."),
+        Localizable(true)]
+        public bool WordWrap
+        {
+            get { return this.wordWrap; }
+            set
+            {
+                if (!value.Equals(this.wordWrap))
+                {
+                    bool oldVal = this.wordWrap;
+                    this.wordWrap = value;
+                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.WordWrapChanged, oldVal));
                 }
             }
         }

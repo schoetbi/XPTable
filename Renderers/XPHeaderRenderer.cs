@@ -158,6 +158,12 @@ namespace XPTable.Renderers
 
             if (e.Column.Text != null && e.Column.Text.Length > 0 && textRect.Width > 0)
             {
+                StringFormatFlags orig = this.StringFormat.FormatFlags;
+                if (!e.Column.WordWrap)
+                {
+                    this.StringFormat.FormatFlags = StringFormat.FormatFlags | StringFormatFlags.NoWrap;
+                }
+
                 if (e.Column.Enabled)
                 {
                     e.Graphics.DrawString(e.Column.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
@@ -168,6 +174,11 @@ namespace XPTable.Renderers
                     {
                         e.Graphics.DrawString(e.Column.Text, this.Font, brush, textRect, this.StringFormat);
                     }
+                }
+
+                if (!e.Column.WordWrap)
+                {
+                    this.StringFormat.FormatFlags = orig;
                 }
 
                 if (e.Column.WidthNotSet)
