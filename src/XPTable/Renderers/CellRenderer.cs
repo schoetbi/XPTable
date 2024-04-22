@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -75,16 +75,16 @@ namespace XPTable.Renderers
         protected CellRenderer()
             : base()
         {
-            this.format = string.Empty;
+            format = string.Empty;
 
             // this.formatProvider was initialised using System.Globalization.CultureInfo.CurrentUICulture,
             // but this means formatProvider can be set to a Neutral Culture which does not cantain Numberic 
             // and DateTime formatting information.  System.Globalization.CultureInfo.CurrentCulture is 
             // guaranteed to include this formatting information and thus avoids crashes during formatting.
-            this.formatProvider = System.Globalization.CultureInfo.CurrentCulture;
+            formatProvider = System.Globalization.CultureInfo.CurrentCulture;
 
-            this.grayTextBrush = new SolidBrush(SystemColors.GrayText);
-            this.padding = CellPadding.Empty;
+            grayTextBrush = new SolidBrush(SystemColors.GrayText);
+            padding = CellPadding.Empty;
         }
 
         #endregion
@@ -100,10 +100,10 @@ namespace XPTable.Renderers
         {
             base.Dispose();
 
-            if (this.grayTextBrush != null)
+            if (grayTextBrush != null)
             {
-                this.grayTextBrush.Dispose();
-                this.grayTextBrush = null;
+                grayTextBrush.Dispose();
+                grayTextBrush = null;
             }
         }
 
@@ -139,8 +139,8 @@ namespace XPTable.Renderers
         /// <returns></returns>
         public virtual int GetCellHeight(Graphics graphics, Cell cell)
         {
-            this.Padding = cell.Padding;
-            this.Font = cell.Font;
+            Padding = cell.Padding;
+            Font = cell.Font;
             return 0;
         }
 
@@ -155,7 +155,7 @@ namespace XPTable.Renderers
         /// <param name="canWrap"></param>
         protected void DrawString(Graphics graphics, string s, Font font, Brush brush, RectangleF layoutRectangle, bool canWrap)
         {
-            StringFormatFlags orig = this.StringFormat.FormatFlags;
+            var orig = StringFormat.FormatFlags;
             if (!canWrap)
             {
                 StringFormat.FormatFlags = StringFormat.FormatFlags | StringFormatFlags.NoWrap;
@@ -163,7 +163,7 @@ namespace XPTable.Renderers
 
             try
             {
-                graphics.DrawString(s, font, brush, layoutRectangle, this.StringFormat);
+                graphics.DrawString(s, font, brush, layoutRectangle, StringFormat);
             }
             catch (Exception e)
             {
@@ -192,17 +192,17 @@ namespace XPTable.Renderers
         {
             get
             {
-                Rectangle client = new Rectangle(this.Bounds.Location, this.Bounds.Size);
+                var client = new Rectangle(Bounds.Location, Bounds.Size);
 
                 // take borders into account
                 client.Width -= Renderer.BorderWidth;
                 client.Height -= Renderer.BorderWidth;
 
                 // take cell padding into account
-                client.X += this.Padding.Left + 1;
-                client.Y += this.Padding.Top;
-                client.Width -= this.Padding.Left + this.Padding.Right + 1;
-                client.Height -= this.Padding.Top + this.Padding.Bottom;
+                client.X += Padding.Left + 1;
+                client.Y += Padding.Top;
+                client.Width -= Padding.Left + Padding.Right + 1;
+                client.Height -= Padding.Top + Padding.Bottom;
 
                 return client;
             }
@@ -214,8 +214,8 @@ namespace XPTable.Renderers
         /// </summary>
         protected string Format
         {
-            get { return this.format; }
-            set { this.format = value; }
+            get => format;
+            set => format = value;
         }
 
         /// <summary>
@@ -223,17 +223,14 @@ namespace XPTable.Renderers
         /// </summary>
         protected IFormatProvider FormatProvider
         {
-            get { return this.formatProvider; }
-            set { this.formatProvider = value; }
+            get => formatProvider;
+            set => formatProvider = value;
         }
 
         /// <summary>
         /// Gets the Brush used to draw disabled text
         /// </summary>
-        protected Brush GrayTextBrush
-        {
-            get { return this.grayTextBrush; }
-        }
+        protected Brush GrayTextBrush => grayTextBrush;
 
 
         /// <summary>
@@ -241,15 +238,9 @@ namespace XPTable.Renderers
         /// </summary>
         protected CellPadding Padding
         {
-            get
-            {
-                return this.padding;
-            }
+            get => padding;
 
-            set
-            {
-                this.padding = value;
-            }
+            set => padding = value;
         }
 
         #endregion
@@ -265,16 +256,9 @@ namespace XPTable.Renderers
         /// <param name="e">A CellFocusEventArgs that contains the event data</param>
         public virtual void OnGotFocus(CellFocusEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
 
             e.Table.Invalidate(e.CellRect);
         }
@@ -286,16 +270,9 @@ namespace XPTable.Renderers
         /// <param name="e">A CellFocusEventArgs that contains the event data</param>
         public virtual void OnLostFocus(CellFocusEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
 
             e.Table.Invalidate(e.CellRect);
         }
@@ -335,14 +312,16 @@ namespace XPTable.Renderers
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         public virtual void OnMouseEnter(CellMouseEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            this.Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
 
-            bool tooltipActive = e.Table.ToolTip.Active;
+            var tooltipActive = e.Table.ToolTip.Active;
 
             if (tooltipActive)
+            {
                 e.Table.ToolTip.Active = false;
+            }
 
             e.Table.ResetMouseEventArgs();
 
@@ -350,20 +329,26 @@ namespace XPTable.Renderers
             {
                 if (e.Cell != null)
                 {
-                    CellToolTipEventArgs args = new CellToolTipEventArgs(e.Cell, new Point(e.X, e.Y));
+                    var args = new CellToolTipEventArgs(e.Cell, new Point(e.X, e.Y));
 
                     // The default tooltip is to show the full text for any cell that has been truncated
                     if (e.Cell.IsTextTrimmed)
+                    {
                         args.ToolTipText = e.Cell.Text;
+                    }
 
                     // Allow the outside world to modify the text or cancel this tooltip
                     e.Table.OnCellToolTipPopup(args);
 
                     // Even if this tooltip has been cancelled we need to get rid of the old tooltip
                     if (args.Cancel)
+                    {
                         e.Table.ToolTip.SetToolTip(e.Table, string.Empty);
+                    }
                     else
+                    {
                         e.Table.ToolTip.SetToolTip(e.Table, args.ToolTipText);
+                    }
                 }
                 else
                 {
@@ -382,16 +367,9 @@ namespace XPTable.Renderers
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         public virtual void OnMouseLeave(CellMouseEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
         }
 
         #endregion
@@ -404,16 +382,9 @@ namespace XPTable.Renderers
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         public virtual void OnMouseUp(CellMouseEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
         }
 
         #endregion
@@ -434,16 +405,9 @@ namespace XPTable.Renderers
                 }
             }
 
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
         }
 
         #endregion
@@ -456,16 +420,9 @@ namespace XPTable.Renderers
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         public virtual void OnMouseMove(CellMouseEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
         }
 
         #endregion
@@ -478,18 +435,11 @@ namespace XPTable.Renderers
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         public virtual void OnClick(CellMouseEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
 
-            if ((((e.Table.EditStartAction & EditStartAction.SingleClick) == EditStartAction.SingleClick))
+            if ((e.Table.EditStartAction & EditStartAction.SingleClick) == EditStartAction.SingleClick
                 && e.Table.IsCellEditable(e.CellPos))
             {
                 e.Table.EditCell(e.CellPos);
@@ -503,18 +453,11 @@ namespace XPTable.Renderers
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         public virtual void OnDoubleClick(CellMouseEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
-            if (e.Cell == null)
-            {
-                this.Padding = CellPadding.Empty;
-            }
-            else
-            {
-                this.Padding = e.Cell.Padding;
-            }
+            Padding = e.Cell == null ? CellPadding.Empty : e.Cell.Padding;
 
-            if ((((e.Table.EditStartAction & EditStartAction.DoubleClick) == EditStartAction.DoubleClick))
+            if ((e.Table.EditStartAction & EditStartAction.DoubleClick) == EditStartAction.DoubleClick
                 && e.Table.IsCellEditable(e.CellPos))
             {
                 e.Table.EditCell(e.CellPos);
@@ -533,54 +476,59 @@ namespace XPTable.Renderers
         /// <param name="e">A PaintCellEventArgs that contains the event data</param>
         public virtual void OnPaintCell(PaintCellEventArgs e)
         {
-            this.Bounds = e.CellRect;
+            Bounds = e.CellRect;
 
             if (e.Cell != null)
             {
-                this.Padding = e.Cell.Padding;
+                Padding = e.Cell.Padding;
 
                 // Cell settings supercede Column/Row settings
 
-                bool alignmentSet = false;
-                bool lineAlignmentSet = false;
+                var alignmentSet = false;
+                var lineAlignmentSet = false;
                 if (e.Cell.CellStyle != null)
                 {
-                    CellStyle style = e.Cell.CellStyle;
+                    var style = e.Cell.CellStyle;
                     if (style.IsAlignmentSet)
                     {
                         alignmentSet = true;
-                        this.Alignment = style.Alignment;
+                        Alignment = style.Alignment;
                     }
                     if (style.IsLineAlignmentSet)
                     {
                         lineAlignmentSet = true;
-                        this.LineAlignment = style.LineAlignment;
+                        LineAlignment = style.LineAlignment;
                     }
                 }
 
                 if (!alignmentSet)
-                    this.Alignment = e.Table.ColumnModel.Columns[e.Column].Alignment;
+                {
+                    Alignment = e.Table.ColumnModel.Columns[e.Column].Alignment;
+                }
+
                 if (!lineAlignmentSet)
-                    this.LineAlignment = e.Table.TableModel.Rows[e.Row].Alignment;
+                {
+                    LineAlignment = e.Table.TableModel.Rows[e.Row].Alignment;
+                }
 
-                this.Format = e.Table.ColumnModel.Columns[e.Column].Format;
+                Format = e.Table.ColumnModel.Columns[e.Column].Format;
 
-                this.Font = e.Cell.Font;
+                Font = e.Cell.Font;
             }
             else
             {
-                this.Padding = CellPadding.Empty;
-                this.Alignment = ColumnAlignment.Left;
-                this.LineAlignment = RowAlignment.Center;
-                this.Format = string.Empty;
-                this.Font = null;
+                Padding = CellPadding.Empty;
+                Alignment = ColumnAlignment.Left;
+                LineAlignment = RowAlignment.Center;
+                Format = string.Empty;
+                Font = null;
             }
 
             // paint the Cells background
-            this.OnPaintBackground(e);
+            OnPaintBackground(e);
 
             // paint the Cells foreground
-            this.OnPaint(e);
+            OnPaint(e);
         }
 
 
@@ -594,7 +542,7 @@ namespace XPTable.Renderers
             // we have to figure it out if row is in the alternate span or not
             // if position is odd it's alternate, even it's not (it's normal)
             // netus 2006-03-13 - new formula for calculating alternating background color
-            bool isAlternateRow = (Math.Ceiling((double)(e.Row) / e.Table.AlternatingRowSpan) % 2) == 0;
+            var isAlternateRow = (Math.Ceiling((double)e.Row / e.Table.AlternatingRowSpan) % 2) == 0;
 
             //Debug.WriteLine("row: " + e.Row.ToString() + ", isAlternateRow: " + isAlternateRow.ToString());
 
@@ -602,23 +550,23 @@ namespace XPTable.Renderers
             {
                 if (e.Table.Focused || e.Table.IsEditing)
                 {
-                    this.ForeColor = e.Table.SelectionForeColor;
-                    this.BackColor = e.Table.SelectionBackColor;
+                    ForeColor = e.Table.SelectionForeColor;
+                    BackColor = e.Table.SelectionBackColor;
                 }
                 else
                 {
-                    this.BackColor = e.Table.UnfocusedSelectionBackColor;
-                    this.ForeColor = e.Table.UnfocusedSelectionForeColor;
+                    BackColor = e.Table.UnfocusedSelectionBackColor;
+                    ForeColor = e.Table.UnfocusedSelectionForeColor;
                 }
 
-                if (this.BackColor.A != 0)
+                if (BackColor.A != 0)
                 {
-                    e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                    e.Graphics.FillRectangle(BackBrush, e.CellRect);
                 }
             }
             else
             {
-                this.ForeColor = e.Cell != null ? e.Cell.ForeColor : Color.Black;
+                ForeColor = e.Cell != null ? e.Cell.ForeColor : Color.Black;
 
                 if (!e.Sorted || (e.Sorted && e.Table.SortedColumnBackColor.A < 255))
                 {
@@ -631,23 +579,23 @@ namespace XPTable.Renderers
                             {
                                 if (e.Table.AlternatingRowColor.A != 0)
                                 {
-                                    this.BackColor = e.Table.AlternatingRowColor;
-                                    e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                                    BackColor = e.Table.AlternatingRowColor;
+                                    e.Graphics.FillRectangle(BackBrush, e.CellRect);
                                 }
                             }
 
-                            this.BackColor = e.Cell.BackColor;
+                            BackColor = e.Cell.BackColor;
                             if (e.Cell.BackColor.A != 0)
                             {
-                                e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                                e.Graphics.FillRectangle(BackBrush, e.CellRect);
                             }
                         }
                         else
                         {
-                            this.BackColor = e.Cell.BackColor;
+                            BackColor = e.Cell.BackColor;
                             if (e.Cell.BackColor.A != 0)
                             {
-                                e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                                e.Graphics.FillRectangle(BackBrush, e.CellRect);
                             }
                         }
                     }
@@ -658,25 +606,25 @@ namespace XPTable.Renderers
                         {
                             if (e.Table.AlternatingRowColor.A != 0)
                             {
-                                this.BackColor = e.Table.AlternatingRowColor;
-                                e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                                BackColor = e.Table.AlternatingRowColor;
+                                e.Graphics.FillRectangle(BackBrush, e.CellRect);
                             }
                         }
                     }
 
                     if (e.Sorted)
                     {
-                        this.BackColor = e.Table.SortedColumnBackColor;
+                        BackColor = e.Table.SortedColumnBackColor;
                         if (e.Table.SortedColumnBackColor.A != 0)
                         {
-                            e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                            e.Graphics.FillRectangle(BackBrush, e.CellRect);
                         }
                     }
                 }
                 else
                 {
-                    this.BackColor = e.Table.SortedColumnBackColor;
-                    e.Graphics.FillRectangle(this.BackBrush, e.CellRect);
+                    BackColor = e.Table.SortedColumnBackColor;
+                    e.Graphics.FillRectangle(BackBrush, e.CellRect);
                 }
             }
         }

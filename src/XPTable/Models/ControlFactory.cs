@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Windows.Forms;
 
@@ -39,7 +39,7 @@ namespace XPTable.Models
         {
             return null;
         }
-        
+
         #endregion
     }
 }

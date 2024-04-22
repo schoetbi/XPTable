@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -37,1145 +37,1108 @@ using XPTable.Renderers;
 
 namespace XPTable.Models
 {
-	/// <summary>
-	/// Represents a Cell that is displayed in a Table
-	/// </summary>
-	[DesignTimeVisible(true),
-	TypeConverter(typeof(CellConverter))]
-	public class Cell : IDisposable
-	{
-		#region EventHandlers
+    /// <summary>
+    /// Represents a Cell that is displayed in a Table
+    /// </summary>
+    [DesignTimeVisible(true),
+    TypeConverter(typeof(CellConverter))]
+    public class Cell : IDisposable
+    {
+        #region EventHandlers
 
-		/// <summary>
-		/// Occurs when the value of a Cells property changes
-		/// </summary>
-		public event CellEventHandler PropertyChanged;
+        /// <summary>
+        /// Occurs when the value of a Cells property changes
+        /// </summary>
+        public event CellEventHandler PropertyChanged;
 
-		#endregion
+        #endregion
 
 
-		#region Class Data
+        #region Class Data
 
-		// Cell state flags
-		private static readonly int STATE_EDITABLE = 1;
-		private static readonly int STATE_ENABLED = 2;
-		private static readonly int STATE_SELECTED = 4;
+        // Cell state flags
+        private static readonly int STATE_EDITABLE = 1;
+        private static readonly int STATE_ENABLED = 2;
+        private static readonly int STATE_SELECTED = 4;
 
-		/// <summary>
-		/// The text displayed in the Cell
-		/// </summary>
-		private string text;
+        /// <summary>
+        /// The text displayed in the Cell
+        /// </summary>
+        private string text;
 
-		/// <summary>
-		/// An object that contains data to be displayed in the Cell
-		/// </summary>
-		private object data;
+        /// <summary>
+        /// An object that contains data to be displayed in the Cell
+        /// </summary>
+        private object data;
 
-		/// <summary>
-		/// An object that contains data about the Cell
-		/// </summary>
-		private object tag;
+        /// <summary>
+        /// An object that contains data about the Cell
+        /// </summary>
+        private object tag;
 
-		/// <summary>
-		/// Stores information used by CellRenderers to record the current 
-		/// state of the Cell
-		/// </summary>
-		private object rendererData;
+        /// <summary>
+        /// Stores information used by CellRenderers to record the current 
+        /// state of the Cell
+        /// </summary>
+        private object rendererData;
 
-		/// <summary>
-		/// The Row that the Cell belongs to
-		/// </summary>
-		private Row row;
+        /// <summary>
+        /// The Row that the Cell belongs to
+        /// </summary>
+        private Row row;
 
-		/// <summary>
-		/// The index of the Cell
-		/// </summary>
-		private int index;
+        /// <summary>
+        /// The index of the Cell
+        /// </summary>
+        private int index;
 
-		/// <summary>
-		/// Contains the current state of the the Cell
-		/// </summary>
-		private byte state;
-		
-		/// <summary>
-		/// The Cells CellStyle settings
-		/// </summary>
-		private CellStyle cellStyle;
+        /// <summary>
+        /// Contains the current state of the the Cell
+        /// </summary>
+        private byte state;
 
-		/// <summary>
-		/// The Cells CellCheckStyle settings
-		/// </summary>
-		private CellCheckStyle checkStyle;
+        /// <summary>
+        /// The Cells CellStyle settings
+        /// </summary>
+        private CellStyle cellStyle;
 
-		/// <summary>
-		/// The Cells CellImageStyle settings
-		/// </summary>
-		private CellImageStyle imageStyle;
+        /// <summary>
+        /// The Cells CellCheckStyle settings
+        /// </summary>
+        private CellCheckStyle checkStyle;
 
-		/// <summary>
-		/// The text displayed in the Cells tooltip
-		/// </summary>
-		private string tooltipText;
+        /// <summary>
+        /// The Cells CellImageStyle settings
+        /// </summary>
+        private CellImageStyle imageStyle;
 
-		/// <summary>
-		/// Specifies whether the Cell has been disposed
-		/// </summary>
-		private bool disposed = false;
+        /// <summary>
+        /// The text displayed in the Cells tooltip
+        /// </summary>
+        private string tooltipText;
+
+        /// <summary>
+        /// Specifies whether the Cell has been disposed
+        /// </summary>
+        private bool disposed = false;
 
         /// <summary>
         /// Specifies how many columns this cell occupies.
         /// </summary>
         private int colspan;
 
-		#endregion
-
-
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the Cell class with default settings
-		/// </summary>
-		public Cell() : base()
-		{
-			this.Init();
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		public Cell(string text)
-		{	
-			this.Init();
-
-			this.text = text;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified object
-		/// </summary>
-		/// <param name="value">The object displayed in the Cell</param>
-		public Cell(object value)
-		{
-			this.Init();
-
-			this.data = value;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text 
-		/// and object
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="value">The object displayed in the Cell</param>
-		public Cell(string text, object value)
-		{
-			this.Init();
-
-			this.text = text;
-			this.data = value;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text 
-		/// and check value
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="check">Specifies whether the Cell is Checked</param>
-		public Cell(string text, bool check)
-		{
-			this.Init();
-
-			this.text = text;
-			this.Checked = check;
-		}
-		
-		
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text 
-		/// and Image value
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="image">The Image displayed in the Cell</param>
-		public Cell(string text, Image image)
-		{
-			this.Init();
-
-			this.text = text;
-			this.Image = image;
-		}
-		
-		
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text, 
-		/// fore Color, back Color and Font
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="foreColor">The foreground Color of the Cell</param>
-		/// <param name="backColor">The background Color of the Cell</param>
-		/// <param name="font">The Font used to draw the text in the Cell</param>
-		public Cell(string text, Color foreColor, Color backColor, Font font)
-		{
-			this.Init();
-
-			this.text = text;
-			this.ForeColor = foreColor;
-			this.BackColor = backColor;
-			this.Font = font;
-		}
-
+        #endregion
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with default settings
+        /// </summary>
+        public Cell() : base()
+        {
+            Init();
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        public Cell(string text)
+        {
+            Init();
+
+            this.text = text;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified object
+        /// </summary>
+        /// <param name="value">The object displayed in the Cell</param>
+        public Cell(object value)
+        {
+            Init();
+
+            data = value;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text 
+        /// and object
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="value">The object displayed in the Cell</param>
+        public Cell(string text, object value)
+        {
+            Init();
+
+            this.text = text;
+            data = value;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text 
+        /// and check value
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="check">Specifies whether the Cell is Checked</param>
+        public Cell(string text, bool check)
+        {
+            Init();
+
+            this.text = text;
+            Checked = check;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text 
+        /// and Image value
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="image">The Image displayed in the Cell</param>
+        public Cell(string text, Image image)
+        {
+            Init();
+
+            this.text = text;
+            Image = image;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text, 
+        /// fore Color, back Color and Font
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="foreColor">The foreground Color of the Cell</param>
+        /// <param name="backColor">The background Color of the Cell</param>
+        /// <param name="font">The Font used to draw the text in the Cell</param>
+        public Cell(string text, Color foreColor, Color backColor, Font font)
+        {
+            Init();
+
+            this.text = text;
+            ForeColor = foreColor;
+            BackColor = backColor;
+            Font = font;
+        }
+
 
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text 
-		/// and CellStyle
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="cellStyle">A CellStyle that specifies the visual appearance 
-		/// of the Cell</param>
-		public Cell(string text, CellStyle cellStyle)
-		{
-			this.Init();
-
-			this.text = text;
-			this.cellStyle = cellStyle;
-		}
-		
-		
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified object, 
-		/// fore Color, back Color and Font
-		/// </summary>
-		/// <param name="value">The object displayed in the Cell</param>
-		/// <param name="foreColor">The foreground Color of the Cell</param>
-		/// <param name="backColor">The background Color of the Cell</param>
-		/// <param name="font">The Font used to draw the text in the Cell</param>
-		public Cell(object value, Color foreColor, Color backColor, Font font)
-		{
-			this.Init();
-
-			this.data = value;
-			this.ForeColor = foreColor;
-			this.BackColor = backColor;
-			this.Font = font;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text 
-		/// and CellStyle
-		/// </summary>
-		/// <param name="value">The object displayed in the Cell</param>
-		/// <param name="cellStyle">A CellStyle that specifies the visual appearance 
-		/// of the Cell</param>
-		public Cell(object value, CellStyle cellStyle)
-		{
-			this.Init();
-
-			this.data = value;
-			this.cellStyle = cellStyle;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text, 
-		/// object, fore Color, back Color and Font
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="value">The object displayed in the Cell</param>
-		/// <param name="foreColor">The foreground Color of the Cell</param>
-		/// <param name="backColor">The background Color of the Cell</param>
-		/// <param name="font">The Font used to draw the text in the Cell</param>
-		public Cell(string text, object value, Color foreColor, Color backColor, Font font)
-		{
-			this.Init();
-
-			this.text = text;
-			this.data = value;
-			this.ForeColor = foreColor;
-			this.BackColor = backColor;
-			this.Font = font;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text, 
-		/// object and CellStyle
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="value">The object displayed in the Cell</param>
-		/// <param name="cellStyle">A CellStyle that specifies the visual appearance 
-		/// of the Cell</param>
-		public Cell(string text, object value, CellStyle cellStyle)
-		{
-			this.Init();
-
-			this.text = text;
-			this.data = value;
-			this.cellStyle = cellStyle;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text, 
-		/// check value, fore Color, back Color and Font
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="check">Specifies whether the Cell is Checked</param>
-		/// <param name="foreColor">The foreground Color of the Cell</param>
-		/// <param name="backColor">The background Color of the Cell</param>
-		/// <param name="font">The Font used to draw the text in the Cell</param>
-		public Cell(string text, bool check, Color foreColor, Color backColor, Font font)
-		{
-			this.Init();
-
-			this.text = text;
-			this.Checked = check;
-			this.ForeColor = foreColor;
-			this.BackColor = backColor;
-			this.Font = font;
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text, 
-		/// check value and CellStyle
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="check">Specifies whether the Cell is Checked</param>
-		/// <param name="cellStyle">A CellStyle that specifies the visual appearance 
-		/// of the Cell</param>
-		public Cell(string text, bool check, CellStyle cellStyle)
-		{
-			this.Init();
-
-			this.text = text;
-			this.Checked = check;
-			this.cellStyle = cellStyle;
-		}
-		
-		
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text, 
-		/// Image, fore Color, back Color and Font
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="image">The Image displayed in the Cell</param>
-		/// <param name="foreColor">The foreground Color of the Cell</param>
-		/// <param name="backColor">The background Color of the Cell</param>
-		/// <param name="font">The Font used to draw the text in the Cell</param>
-		public Cell(string text, Image image, Color foreColor, Color backColor, Font font)
-		{
-			this.Init();
-
-			this.text = text;
-			this.Image = image;
-			this.ForeColor = foreColor;
-			this.BackColor = backColor;
-			this.Font = font;
-		}
-		
-		
-		/// <summary>
-		/// Initializes a new instance of the Cell class with the specified text, 
-		/// Image and CellStyle
-		/// </summary>
-		/// <param name="text">The text displayed in the Cell</param>
-		/// <param name="image">The Image displayed in the Cell</param>
-		/// <param name="cellStyle">A CellStyle that specifies the visual appearance 
-		/// of the Cell</param>
-		public Cell(string text, Image image, CellStyle cellStyle)
-		{
-			this.Init();
-
-			this.text = text;
-			this.Image = image;
-			this.cellStyle = cellStyle;
-		}
-
-
-		/// <summary>
-		/// Initialise default values
-		/// </summary>
-		private void Init()
-		{
-			this.text = null;
-			this.data = null;
-			this.rendererData = null;
-			this.tag = null;
-			this.row = null;
-			this.index = -1;
-			this.cellStyle = null;
-			this.checkStyle = null;
-			this.imageStyle = null;
-			this.tooltipText = null;
-            this.colspan = 1;
-
-			this.state = (byte) (STATE_EDITABLE | STATE_ENABLED);
-		}
-
-		#endregion
-
-
-		#region Methods
-
-		/// <summary>
-		/// Releases all resources used by the Cell
-		/// </summary>
-		public void Dispose()
-		{
-			if (!this.disposed)
-			{
-				this.text = null;
-				this.data = null;
-				this.tag = null;
-				this.rendererData = null;
-
-				if (this.row != null)
-				{
-					this.row.Cells.Remove(this);
-				}
-
-				this.row = null;
-				this.index = -1;
-				this.cellStyle = null;
-				this.checkStyle = null;
-				this.imageStyle = null;
-				this.tooltipText = null;
-
-				this.state = (byte) 0;
-				
-				this.disposed = true;
-			}
-		}
-
-
-		/// <summary>
-		/// Returns the state represented by the specified state flag
-		/// </summary>
-		/// <param name="flag">A flag that represents the state to return</param>
-		/// <returns>The state represented by the specified state flag</returns>
-		internal bool GetState(int flag)
-		{
-			return ((this.state & flag) != 0);
-		}
-
-
-		/// <summary>
-		/// Sets the state represented by the specified state flag to the specified value
-		/// </summary>
-		/// <param name="flag">A flag that represents the state to be set</param>
-		/// <param name="value">The new value of the state</param>
-		internal void SetState(int flag, bool value)
-		{
-			this.state = (byte) (value ? (this.state | flag) : (this.state & ~flag));
-		}
-
-		#endregion
-
-
-		#region Properties
-
-		/// <summary>
-		/// Gets or sets the text displayed by the Cell
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(null),
-		Description("The text displayed by the cell")]
-		public string Text
-		{
-			get
-			{
-				return this.text;
-			}
-
-			set
-			{
-				if (this.text == null || !this.text.Equals(value))
-				{
-					string oldText = this.Text;
-					
-					this.text = value;
-
-                    this._widthSet = false; // Need to re-calc the width
-
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ValueChanged, oldText));
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the Cells non-text data
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(null),
-		Description("The non-text data displayed by the cell"),
-		TypeConverter(typeof(StringConverter))]
-		public object Data
-		{
-			get
-			{
-				return this.data;
-			}
-
-			set
-			{
-				if (this.data != value)
-				{
-					object oldData = this.Data;
-					
-					this.data = value;
-
-                    this._widthSet = false; // Need to re-calc the width
-
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ValueChanged, oldData));
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the object that contains data about the Cell
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(null),
-		Description("User defined data associated with the cell"),
-		TypeConverter(typeof(StringConverter))]
-		public object Tag
-		{
-			get
-			{
-				return this.tag;
-			}
-
-			set
-			{
-				this.tag = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the CellStyle used by the Cell
-		/// </summary>
-		[Browsable(false),
-		DefaultValue(null)]
-		public CellStyle CellStyle
-		{
-			get
-			{
-				return this.cellStyle;
-			}
-
-			set
-			{
-				if (this.cellStyle != value)
-				{
-					CellStyle oldStyle = this.CellStyle;
-					
-					this.cellStyle = value;
-
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.StyleChanged, oldStyle));
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets whether the Cell is selected
-		/// </summary>
-		[Browsable(false)]
-		public bool Selected
-		{
-			get
-			{
-				return this.GetState(STATE_SELECTED);
-			}
-		}
-
-
-		/// <summary>
-		/// Sets whether the Cell is selected
-		/// </summary>
-		/// <param name="selected">A boolean value that specifies whether the 
-		/// cell is selected</param>
-		internal void SetSelected(bool selected)
-		{
-			this.SetState(STATE_SELECTED, selected);
-		}
-
-		/// <summary>
-		/// Gets of sets whether text can wrap in this cell (and force the cell's height to increase)
-		/// </summary>
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text 
+        /// and CellStyle
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="cellStyle">A CellStyle that specifies the visual appearance 
+        /// of the Cell</param>
+        public Cell(string text, CellStyle cellStyle)
+        {
+            Init();
+
+            this.text = text;
+            this.cellStyle = cellStyle;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified object, 
+        /// fore Color, back Color and Font
+        /// </summary>
+        /// <param name="value">The object displayed in the Cell</param>
+        /// <param name="foreColor">The foreground Color of the Cell</param>
+        /// <param name="backColor">The background Color of the Cell</param>
+        /// <param name="font">The Font used to draw the text in the Cell</param>
+        public Cell(object value, Color foreColor, Color backColor, Font font)
+        {
+            Init();
+
+            data = value;
+            ForeColor = foreColor;
+            BackColor = backColor;
+            Font = font;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text 
+        /// and CellStyle
+        /// </summary>
+        /// <param name="value">The object displayed in the Cell</param>
+        /// <param name="cellStyle">A CellStyle that specifies the visual appearance 
+        /// of the Cell</param>
+        public Cell(object value, CellStyle cellStyle)
+        {
+            Init();
+
+            data = value;
+            this.cellStyle = cellStyle;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text, 
+        /// object, fore Color, back Color and Font
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="value">The object displayed in the Cell</param>
+        /// <param name="foreColor">The foreground Color of the Cell</param>
+        /// <param name="backColor">The background Color of the Cell</param>
+        /// <param name="font">The Font used to draw the text in the Cell</param>
+        public Cell(string text, object value, Color foreColor, Color backColor, Font font)
+        {
+            Init();
+
+            this.text = text;
+            data = value;
+            ForeColor = foreColor;
+            BackColor = backColor;
+            Font = font;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text, 
+        /// object and CellStyle
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="value">The object displayed in the Cell</param>
+        /// <param name="cellStyle">A CellStyle that specifies the visual appearance 
+        /// of the Cell</param>
+        public Cell(string text, object value, CellStyle cellStyle)
+        {
+            Init();
+
+            this.text = text;
+            data = value;
+            this.cellStyle = cellStyle;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text, 
+        /// check value, fore Color, back Color and Font
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="check">Specifies whether the Cell is Checked</param>
+        /// <param name="foreColor">The foreground Color of the Cell</param>
+        /// <param name="backColor">The background Color of the Cell</param>
+        /// <param name="font">The Font used to draw the text in the Cell</param>
+        public Cell(string text, bool check, Color foreColor, Color backColor, Font font)
+        {
+            Init();
+
+            this.text = text;
+            Checked = check;
+            ForeColor = foreColor;
+            BackColor = backColor;
+            Font = font;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text, 
+        /// check value and CellStyle
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="check">Specifies whether the Cell is Checked</param>
+        /// <param name="cellStyle">A CellStyle that specifies the visual appearance 
+        /// of the Cell</param>
+        public Cell(string text, bool check, CellStyle cellStyle)
+        {
+            Init();
+
+            this.text = text;
+            Checked = check;
+            this.cellStyle = cellStyle;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text, 
+        /// Image, fore Color, back Color and Font
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="image">The Image displayed in the Cell</param>
+        /// <param name="foreColor">The foreground Color of the Cell</param>
+        /// <param name="backColor">The background Color of the Cell</param>
+        /// <param name="font">The Font used to draw the text in the Cell</param>
+        public Cell(string text, Image image, Color foreColor, Color backColor, Font font)
+        {
+            Init();
+
+            this.text = text;
+            Image = image;
+            ForeColor = foreColor;
+            BackColor = backColor;
+            Font = font;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the Cell class with the specified text, 
+        /// Image and CellStyle
+        /// </summary>
+        /// <param name="text">The text displayed in the Cell</param>
+        /// <param name="image">The Image displayed in the Cell</param>
+        /// <param name="cellStyle">A CellStyle that specifies the visual appearance 
+        /// of the Cell</param>
+        public Cell(string text, Image image, CellStyle cellStyle)
+        {
+            Init();
+
+            this.text = text;
+            Image = image;
+            this.cellStyle = cellStyle;
+        }
+
+
+        /// <summary>
+        /// Initialise default values
+        /// </summary>
+        private void Init()
+        {
+            text = null;
+            data = null;
+            rendererData = null;
+            tag = null;
+            row = null;
+            index = -1;
+            cellStyle = null;
+            checkStyle = null;
+            imageStyle = null;
+            tooltipText = null;
+            colspan = 1;
+
+            state = (byte)(STATE_EDITABLE | STATE_ENABLED);
+        }
+
+        #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// Releases all resources used by the Cell
+        /// </summary>
+        public void Dispose()
+        {
+            if (!disposed)
+            {
+                text = null;
+                data = null;
+                tag = null;
+                rendererData = null;
+
+                row?.Cells.Remove(this);
+
+                row = null;
+                index = -1;
+                cellStyle = null;
+                checkStyle = null;
+                imageStyle = null;
+                tooltipText = null;
+
+                state = (byte)0;
+
+                disposed = true;
+            }
+        }
+
+
+        /// <summary>
+        /// Returns the state represented by the specified state flag
+        /// </summary>
+        /// <param name="flag">A flag that represents the state to return</param>
+        /// <returns>The state represented by the specified state flag</returns>
+        internal bool GetState(int flag)
+        {
+            return (state & flag) != 0;
+        }
+
+
+        /// <summary>
+        /// Sets the state represented by the specified state flag to the specified value
+        /// </summary>
+        /// <param name="flag">A flag that represents the state to be set</param>
+        /// <param name="value">The new value of the state</param>
+        internal void SetState(int flag, bool value)
+        {
+            state = (byte)(value ? (state | flag) : (state & ~flag));
+        }
+
+        #endregion
+
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the text displayed by the Cell
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(null),
+        Description("The text displayed by the cell")]
+        public string Text
+        {
+            get => text;
+
+            set
+            {
+                if (text == null || !text.Equals(value))
+                {
+                    var oldText = Text;
+
+                    text = value;
+
+                    _widthSet = false; // Need to re-calc the width
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.ValueChanged, oldText));
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the Cells non-text data
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(null),
+        Description("The non-text data displayed by the cell"),
+        TypeConverter(typeof(StringConverter))]
+        public object Data
+        {
+            get => data;
+
+            set
+            {
+                if (data != value)
+                {
+                    var oldData = Data;
+
+                    data = value;
+
+                    _widthSet = false; // Need to re-calc the width
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.ValueChanged, oldData));
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the object that contains data about the Cell
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(null),
+        Description("User defined data associated with the cell"),
+        TypeConverter(typeof(StringConverter))]
+        public object Tag
+        {
+            get => tag;
+
+            set => tag = value;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the CellStyle used by the Cell
+        /// </summary>
+        [Browsable(false),
+        DefaultValue(null)]
+        public CellStyle CellStyle
+        {
+            get => cellStyle;
+
+            set
+            {
+                if (cellStyle != value)
+                {
+                    var oldStyle = CellStyle;
+
+                    cellStyle = value;
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.StyleChanged, oldStyle));
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets whether the Cell is selected
+        /// </summary>
+        [Browsable(false)]
+        public bool Selected => GetState(STATE_SELECTED);
+
+
+        /// <summary>
+        /// Sets whether the Cell is selected
+        /// </summary>
+        /// <param name="selected">A boolean value that specifies whether the 
+        /// cell is selected</param>
+        internal void SetSelected(bool selected)
+        {
+            SetState(STATE_SELECTED, selected);
+        }
+
+        /// <summary>
+        /// Gets of sets whether text can wrap in this cell (and force the cell's height to increase)
+        /// </summary>
         [Category("Appearance"),
         Description("Whether the text can wrap (and force the cell's height to increase)")]
         public bool WordWrap
         {
             get
             {
-                if (this.CellStyle == null || !this.CellStyle.IsWordWrapSet)
+                if (CellStyle == null || !CellStyle.IsWordWrapSet)
+                {
                     return false;
+                }
                 else
-                    return this.CellStyle.WordWrap;
+                {
+                    return CellStyle.WordWrap;
+                }
             }
 
             set
             {
-                if (this.CellStyle == null)
-                {
-                    this.CellStyle = new CellStyle();
-                }
+                CellStyle ??= new CellStyle();
 
-                if (this.CellStyle.WordWrap != value)
+                if (CellStyle.WordWrap != value)
                 {
-                    bool oldValue = this.CellStyle.WordWrap;
-                    this.CellStyle.WordWrap = value;
-                    this.OnPropertyChanged(new CellEventArgs(this, CellEventType.WordWrapChanged, oldValue));
+                    var oldValue = CellStyle.WordWrap;
+                    CellStyle.WordWrap = value;
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.WordWrapChanged, oldValue));
                 }
             }
         }
 
-		/// <summary>
-		/// Gets or sets the background Color for the Cell
-		/// </summary>
-		[Category("Appearance"),
-		Description("The background color used to display text and graphics in the cell")]
-		public Color BackColor
-		{
-			get
-			{
-				if (this.CellStyle == null || ! this.CellStyle.IsBackColorSet)
-				{
-					if (this.Row != null)
-						return this.Row.BackColor;
+        /// <summary>
+        /// Gets or sets the background Color for the Cell
+        /// </summary>
+        [Category("Appearance"),
+        Description("The background color used to display text and graphics in the cell")]
+        public Color BackColor
+        {
+            get
+            {
+                if (CellStyle == null || !CellStyle.IsBackColorSet)
+                {
+                    if (Row != null)
+                    {
+                        return Row.BackColor;
+                    }
                     else
-    					return Color.Transparent;
-				}
-				
-				return this.CellStyle.BackColor;
-			}
+                    {
+                        return Color.Transparent;
+                    }
+                }
 
-			set
-			{
-				if (this.CellStyle == null)
-				{
-					this.CellStyle = new CellStyle();
-				}
-				
-				if (this.CellStyle.BackColor != value)
-				{
-					Color oldBackColor = this.BackColor;
-					
-					this.CellStyle.BackColor = value;
+                return CellStyle.BackColor;
+            }
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.BackColorChanged, oldBackColor));
-				}
-			}
-		}
+            set
+            {
+                CellStyle ??= new CellStyle();
 
+                if (CellStyle.BackColor != value)
+                {
+                    var oldBackColor = BackColor;
 
-		/// <summary>
-		/// Specifies whether the BackColor property should be serialized at 
-		/// design time
-		/// </summary>
-		/// <returns>true if the BackColor property should be serialized, 
-		/// false otherwise</returns>
-		private bool ShouldSerializeBackColor()
-		{
-			return (this.cellStyle != null && this.cellStyle.BackColor != Color.Empty);
-		}
+                    CellStyle.BackColor = value;
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.BackColorChanged, oldBackColor));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets the foreground Color for the Cell
-		/// </summary>
-		[Category("Appearance"),
-		Description("The foreground color used to display text and graphics in the cell")]
-		public Color ForeColor
-		{
-			get
-			{
-				if (this.CellStyle == null || !this.CellStyle.IsForeColorSet)
-				{
-					if (this.Row != null)
-						return this.Row.ForeColor;
+        /// <summary>
+        /// Specifies whether the BackColor property should be serialized at 
+        /// design time
+        /// </summary>
+        /// <returns>true if the BackColor property should be serialized, 
+        /// false otherwise</returns>
+        private bool ShouldSerializeBackColor()
+        {
+            return cellStyle != null && cellStyle.BackColor != Color.Empty;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the foreground Color for the Cell
+        /// </summary>
+        [Category("Appearance"),
+        Description("The foreground color used to display text and graphics in the cell")]
+        public Color ForeColor
+        {
+            get
+            {
+                if (CellStyle == null || !CellStyle.IsForeColorSet)
+                {
+                    if (Row != null)
+                    {
+                        return Row.ForeColor;
+                    }
                     else
-    					return Color.Transparent;
-				}
-				else
-				{
-					if (this.CellStyle.ForeColor == Color.Empty || this.CellStyle.ForeColor == Color.Transparent)
-					{
-						if (this.Row != null)
-						{
-							return this.Row.ForeColor;
-						}
-					}
+                    {
+                        return Color.Transparent;
+                    }
+                }
+                else
+                {
+                    if (CellStyle.ForeColor == Color.Empty || CellStyle.ForeColor == Color.Transparent)
+                    {
+                        if (Row != null)
+                        {
+                            return Row.ForeColor;
+                        }
+                    }
 
-					return this.CellStyle.ForeColor;
-				}
-			}
+                    return CellStyle.ForeColor;
+                }
+            }
 
-			set
-			{
-				if (this.CellStyle == null)
-				{
-					this.CellStyle = new CellStyle();
-				}
-				
-				if (this.CellStyle.ForeColor != value)
-				{
-					Color oldForeColor = this.ForeColor;
-					
-					this.CellStyle.ForeColor = value;
+            set
+            {
+                CellStyle ??= new CellStyle();
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ForeColorChanged, oldForeColor));
-				}
-			}
-		}
+                if (CellStyle.ForeColor != value)
+                {
+                    var oldForeColor = ForeColor;
 
+                    CellStyle.ForeColor = value;
 
-		/// <summary>
-		/// Specifies whether the ForeColor property should be serialized at 
-		/// design time
-		/// </summary>
-		/// <returns>true if the ForeColor property should be serialized, 
-		/// false otherwise</returns>
-		private bool ShouldSerializeForeColor()
-		{
-			return (this.cellStyle != null && this.cellStyle.ForeColor != Color.Empty);
-		}
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.ForeColorChanged, oldForeColor));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets the Font used by the Cell
-		/// </summary>
-		[Category("Appearance"),
-		Description("The font used to display text in the cell")]
-		public Font Font
-		{
-			get
-			{
-				if (this.CellStyle == null || !this.CellStyle.IsFontSet)
-				{
-					if (this.Row != null)
-						return this.Row.Font;
+        /// <summary>
+        /// Specifies whether the ForeColor property should be serialized at 
+        /// design time
+        /// </summary>
+        /// <returns>true if the ForeColor property should be serialized, 
+        /// false otherwise</returns>
+        private bool ShouldSerializeForeColor()
+        {
+            return cellStyle != null && cellStyle.ForeColor != Color.Empty;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the Font used by the Cell
+        /// </summary>
+        [Category("Appearance"),
+        Description("The font used to display text in the cell")]
+        public Font Font
+        {
+            get
+            {
+                if (CellStyle == null || !CellStyle.IsFontSet)
+                {
+                    if (Row != null)
+                    {
+                        return Row.Font;
+                    }
                     else
-    					return null;
-				}
-				else
-				{
-					if (this.CellStyle.Font == null)
-					{
-						if (this.Row != null)
-						{
-							return this.Row.Font;
-						}
-					}
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    if (CellStyle.Font == null)
+                    {
+                        if (Row != null)
+                        {
+                            return Row.Font;
+                        }
+                    }
 
-					return this.CellStyle.Font;
-				}
-			}
+                    return CellStyle.Font;
+                }
+            }
 
-			set
-			{
-				if (this.CellStyle == null)
-				{
-					this.CellStyle = new CellStyle();
-				}
-				
-				if (this.CellStyle.Font != value)
-				{
-					Font oldFont = this.Font;
-					
-					this.CellStyle.Font = value;
+            set
+            {
+                CellStyle ??= new CellStyle();
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.FontChanged, oldFont));
-				}
-			}
-		}
+                if (CellStyle.Font != value)
+                {
+                    var oldFont = Font;
 
+                    CellStyle.Font = value;
 
-		/// <summary>
-		/// Specifies whether the Font property should be serialized at 
-		/// design time
-		/// </summary>
-		/// <returns>true if the Font property should be serialized, 
-		/// false otherwise</returns>
-		private bool ShouldSerializeFont()
-		{
-			return (this.cellStyle != null && this.cellStyle.Font != null);
-		}
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.FontChanged, oldFont));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets the amount of space between the Cells Border and its contents
-		/// </summary>
-		[Category("Appearance"),
-		Description("The amount of space between the cells border and its contents")]
-		public CellPadding Padding
-		{
-			get
-			{
-				if (this.CellStyle == null || !this.CellStyle.IsPaddingSet)
-					return CellPadding.Empty;
-				else
-    				return this.CellStyle.Padding;
-			}
-
-			set
-			{
-				if (this.CellStyle == null)
-				{
-					this.CellStyle = new CellStyle();
-				}
-				
-				if (this.CellStyle.Padding != value)
-				{
-					CellPadding oldPadding = this.Padding;
-					
-					this.CellStyle.Padding = value;
-
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.PaddingChanged, oldPadding));
-				}
-			}
-		}
+        /// <summary>
+        /// Specifies whether the Font property should be serialized at 
+        /// design time
+        /// </summary>
+        /// <returns>true if the Font property should be serialized, 
+        /// false otherwise</returns>
+        private bool ShouldSerializeFont()
+        {
+            return cellStyle != null && cellStyle.Font != null;
+        }
 
 
-		/// <summary>
-		/// Specifies whether the Padding property should be serialized at 
-		/// design time
-		/// </summary>
-		/// <returns>true if the Padding property should be serialized, 
-		/// false otherwise</returns>
-		private bool ShouldSerializePadding()
-		{
-			return this.Padding != CellPadding.Empty;
-		}
+        /// <summary>
+        /// Gets or sets the amount of space between the Cells Border and its contents
+        /// </summary>
+        [Category("Appearance"),
+        Description("The amount of space between the cells border and its contents")]
+        public CellPadding Padding
+        {
+            get
+            {
+                if (CellStyle == null || !CellStyle.IsPaddingSet)
+                {
+                    return CellPadding.Empty;
+                }
+                else
+                {
+                    return CellStyle.Padding;
+                }
+            }
+
+            set
+            {
+                CellStyle ??= new CellStyle();
+
+                if (CellStyle.Padding != value)
+                {
+                    var oldPadding = Padding;
+
+                    CellStyle.Padding = value;
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.PaddingChanged, oldPadding));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets whether the Cell is in the checked state
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(false),
-		Description("Indicates whether the cell is checked or unchecked"),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden),
-		RefreshProperties(RefreshProperties.Repaint)]
-		public bool Checked
-		{
-			get
-			{
-				if (this.checkStyle == null)
-				{
-					return false;
-				}
-				
-				return this.checkStyle.Checked;
-			}
-
-			set
-			{
-				if (this.checkStyle == null)
-				{
-					this.checkStyle = new CellCheckStyle();
-				}
-				
-				if (this.checkStyle.Checked != value)
-				{
-					bool oldCheck = this.Checked;
-					
-					this.checkStyle.Checked = value;
-
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.CheckStateChanged, oldCheck));
-				}
-			}
-		}
+        /// <summary>
+        /// Specifies whether the Padding property should be serialized at 
+        /// design time
+        /// </summary>
+        /// <returns>true if the Padding property should be serialized, 
+        /// false otherwise</returns>
+        private bool ShouldSerializePadding()
+        {
+            return Padding != CellPadding.Empty;
+        }
 
 
-		/// <summary>
-		/// Gets or sets the state of the Cells check box
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(CheckState.Unchecked),
-		Description("Indicates the state of the cells check box"),
-		RefreshProperties(RefreshProperties.Repaint)]
-		public CheckState CheckState
-		{
-			get
-			{
-				if (this.checkStyle == null)
-				{
-					return CheckState.Unchecked;
-				}
-				
-				return this.checkStyle.CheckState;
-			}
+        /// <summary>
+        /// Gets or sets whether the Cell is in the checked state
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(false),
+        Description("Indicates whether the cell is checked or unchecked"),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden),
+        RefreshProperties(RefreshProperties.Repaint)]
+        public bool Checked
+        {
+            get
+            {
+                if (checkStyle == null)
+                {
+                    return false;
+                }
 
-			set
-			{
-				if (!Enum.IsDefined(typeof(CheckState), value))
-				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(CheckState));
-				}
-				
-				if (this.checkStyle == null)
-				{
-					this.checkStyle = new CellCheckStyle();
-				}
-				
-				if (this.checkStyle.CheckState != value)
-				{
-					CheckState oldCheckState = this.CheckState;
-					
-					this.checkStyle.CheckState = value;
+                return checkStyle.Checked;
+            }
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.CheckStateChanged, oldCheckState));
-				}
-			}
-		}
+            set
+            {
+                checkStyle ??= new CellCheckStyle();
+
+                if (checkStyle.Checked != value)
+                {
+                    var oldCheck = Checked;
+
+                    checkStyle.Checked = value;
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.CheckStateChanged, oldCheck));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets a value indicating whether the Cells check box 
-		/// will allow three check states rather than two
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(false),
-		Description("Controls whether or not the user can select the indeterminate state of the cells check box"),
-		RefreshProperties(RefreshProperties.Repaint)]
-		public bool ThreeState
-		{
-			get
-			{
-				if (this.checkStyle == null)
-				{
-					return false;
-				}
-				
-				return this.checkStyle.ThreeState;
-			}
+        /// <summary>
+        /// Gets or sets the state of the Cells check box
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(CheckState.Unchecked),
+        Description("Indicates the state of the cells check box"),
+        RefreshProperties(RefreshProperties.Repaint)]
+        public CheckState CheckState
+        {
+            get
+            {
+                if (checkStyle == null)
+                {
+                    return CheckState.Unchecked;
+                }
 
-			set
-			{
-				if (this.checkStyle == null)
-				{
-					this.checkStyle = new CellCheckStyle();
-				}
-				
-				if (this.checkStyle.ThreeState != value)
-				{
-					bool oldThreeState = this.ThreeState;
-					
-					this.checkStyle.ThreeState = value;
+                return checkStyle.CheckState;
+            }
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ThreeStateChanged, oldThreeState));
-				}
-			}
-		}
+            set
+            {
+                if (!Enum.IsDefined(typeof(CheckState), value))
+                {
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(CheckState));
+                }
 
+                checkStyle ??= new CellCheckStyle();
 
-		/// <summary>
-		/// Gets or sets the image that is displayed in the Cell
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(null),
-		Description("The image that will be displayed in the cell")]
-		public Image Image
-		{
-			get
-			{
-				if (this.imageStyle == null)
-				{
-					return null;
-				}
-				
-				return this.imageStyle.Image;
-			}
+                if (checkStyle.CheckState != value)
+                {
+                    var oldCheckState = CheckState;
 
-			set
-			{
-				if (this.imageStyle == null)
-				{
-					this.imageStyle = new CellImageStyle();
-				}
-				
-				if (this.imageStyle.Image != value)
-				{
-					Image oldImage = this.Image;
-					
-					this.imageStyle.Image = value;
+                    checkStyle.CheckState = value;
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ImageChanged, oldImage));
-				}
-			}
-		}
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.CheckStateChanged, oldCheckState));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets how the Cells image is sized within the Cell
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(ImageSizeMode.Normal),
-		Description("Controls how the image is sized within the cell")]
-		public ImageSizeMode ImageSizeMode
-		{
-			get
-			{
-				if (this.imageStyle == null)
-				{
-					return ImageSizeMode.Normal;
-				}
-				
-				return this.imageStyle.ImageSizeMode;
-			}
+        /// <summary>
+        /// Gets or sets a value indicating whether the Cells check box 
+        /// will allow three check states rather than two
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(false),
+        Description("Controls whether or not the user can select the indeterminate state of the cells check box"),
+        RefreshProperties(RefreshProperties.Repaint)]
+        public bool ThreeState
+        {
+            get
+            {
+                if (checkStyle == null)
+                {
+                    return false;
+                }
 
-			set
-			{
-				if (this.imageStyle == null)
-				{
-					this.imageStyle = new CellImageStyle();
-				}
-				
-				if (this.imageStyle.ImageSizeMode != value)
-				{
-					ImageSizeMode oldSizeMode = this.ImageSizeMode;
-					
-					this.imageStyle.ImageSizeMode = value;
+                return checkStyle.ThreeState;
+            }
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ImageSizeModeChanged, oldSizeMode));
-				}
-			}
-		}
+            set
+            {
+                checkStyle ??= new CellCheckStyle();
 
+                if (checkStyle.ThreeState != value)
+                {
+                    var oldThreeState = ThreeState;
 
-		/// <summary>
-		/// Gets or sets a value indicating whether the Cells contents are able 
-		/// to be edited
-		/// </summary>
-		[Category("Appearance"),
-		Description("Controls whether the cells contents are able to be changed by the user")]
-		public bool Editable
-		{
-			get
-			{
-				if (!this.GetState(STATE_EDITABLE))
-				{
-					return false;
-				}
+                    checkStyle.ThreeState = value;
 
-				if (this.Row == null)
-				{
-					return this.Enabled;
-				}
-
-				return this.Enabled && this.Row.Editable;
-			}
-
-			set
-			{
-				bool editable = this.Editable;
-				
-				this.SetState(STATE_EDITABLE, value);
-				
-				if (editable != value)
-				{
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.EditableChanged, editable));
-				}
-			}
-		}
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.ThreeStateChanged, oldThreeState));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Specifies whether the Editable property should be serialized at 
-		/// design time
-		/// </summary>
-		/// <returns>true if the Editable property should be serialized, 
-		/// false otherwise</returns>
-		private bool ShouldSerializeEditable()
-		{
-			return !this.GetState(STATE_EDITABLE);
-		}
+        /// <summary>
+        /// Gets or sets the image that is displayed in the Cell
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(null),
+        Description("The image that will be displayed in the cell")]
+        public Image Image
+        {
+            get
+            {
+                if (imageStyle == null)
+                {
+                    return null;
+                }
+
+                return imageStyle.Image;
+            }
+
+            set
+            {
+                imageStyle ??= new CellImageStyle();
+
+                if (imageStyle.Image != value)
+                {
+                    var oldImage = Image;
+
+                    imageStyle.Image = value;
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.ImageChanged, oldImage));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets a value indicating whether the Cell 
-		/// can respond to user interaction
-		/// </summary>
-		[Category("Appearance"),
-		Description("Indicates whether the cell is enabled")]
-		public bool Enabled
-		{
-			get
-			{
-				if (!this.GetState(STATE_ENABLED))
-				{
-					return false;
-				}
+        /// <summary>
+        /// Gets or sets how the Cells image is sized within the Cell
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(ImageSizeMode.Normal),
+        Description("Controls how the image is sized within the cell")]
+        public ImageSizeMode ImageSizeMode
+        {
+            get
+            {
+                if (imageStyle == null)
+                {
+                    return ImageSizeMode.Normal;
+                }
 
-				if (this.Row == null)
-				{
-					return true;
-				}
+                return imageStyle.ImageSizeMode;
+            }
 
-				return this.Row.Enabled;
-			}
+            set
+            {
+                imageStyle ??= new CellImageStyle();
 
-			set
-			{
-				bool enabled = this.Enabled;
-				
-				this.SetState(STATE_ENABLED, value);
-				
-				if (enabled != value)
-				{
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.EnabledChanged, enabled));
-				}
-			}
-		}
+                if (imageStyle.ImageSizeMode != value)
+                {
+                    var oldSizeMode = ImageSizeMode;
+
+                    imageStyle.ImageSizeMode = value;
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.ImageSizeModeChanged, oldSizeMode));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Specifies whether the Enabled property should be serialized at 
-		/// design time
-		/// </summary>
-		/// <returns>true if the Enabled property should be serialized, 
-		/// false otherwise</returns>
-		private bool ShouldSerializeEnabled()
-		{
-			return !this.GetState(STATE_ENABLED);
-		}
+        /// <summary>
+        /// Gets or sets a value indicating whether the Cells contents are able 
+        /// to be edited
+        /// </summary>
+        [Category("Appearance"),
+        Description("Controls whether the cells contents are able to be changed by the user")]
+        public bool Editable
+        {
+            get
+            {
+                if (!GetState(STATE_EDITABLE))
+                {
+                    return false;
+                }
+
+                if (Row == null)
+                {
+                    return Enabled;
+                }
+
+                return Enabled && Row.Editable;
+            }
+
+            set
+            {
+                var editable = Editable;
+
+                SetState(STATE_EDITABLE, value);
+
+                if (editable != value)
+                {
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.EditableChanged, editable));
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Gets or sets the text displayed in the Cells tooltip
-		/// </summary>
-		[Category("Appearance"),
-		DefaultValue(null),
-		Description("The text displayed in the cells tooltip")]
-		public string ToolTipText
-		{
-			get
-			{
-				return this.tooltipText;
-			}
+        /// <summary>
+        /// Specifies whether the Editable property should be serialized at 
+        /// design time
+        /// </summary>
+        /// <returns>true if the Editable property should be serialized, 
+        /// false otherwise</returns>
+        private bool ShouldSerializeEditable()
+        {
+            return !GetState(STATE_EDITABLE);
+        }
 
-			set
-			{
-				if (this.tooltipText != value)
-				{
-					string oldToolTip = this.tooltipText;
-					
-					this.tooltipText = value;
 
-					this.OnPropertyChanged(new CellEventArgs(this, CellEventType.ToolTipTextChanged, oldToolTip));
-				}
-			}
-		}
+        /// <summary>
+        /// Gets or sets a value indicating whether the Cell 
+        /// can respond to user interaction
+        /// </summary>
+        [Category("Appearance"),
+        Description("Indicates whether the cell is enabled")]
+        public bool Enabled
+        {
+            get
+            {
+                if (!GetState(STATE_ENABLED))
+                {
+                    return false;
+                }
+
+                if (Row == null)
+                {
+                    return true;
+                }
+
+                return Row.Enabled;
+            }
+
+            set
+            {
+                var enabled = Enabled;
+
+                SetState(STATE_ENABLED, value);
+
+                if (enabled != value)
+                {
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.EnabledChanged, enabled));
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Specifies whether the Enabled property should be serialized at 
+        /// design time
+        /// </summary>
+        /// <returns>true if the Enabled property should be serialized, 
+        /// false otherwise</returns>
+        private bool ShouldSerializeEnabled()
+        {
+            return !GetState(STATE_ENABLED);
+        }
+
+
+        /// <summary>
+        /// Gets or sets the text displayed in the Cells tooltip
+        /// </summary>
+        [Category("Appearance"),
+        DefaultValue(null),
+        Description("The text displayed in the cells tooltip")]
+        public string ToolTipText
+        {
+            get => tooltipText;
+
+            set
+            {
+                if (tooltipText != value)
+                {
+                    var oldToolTip = tooltipText;
+
+                    tooltipText = value;
+
+                    OnPropertyChanged(new CellEventArgs(this, CellEventType.ToolTipTextChanged, oldToolTip));
+                }
+            }
+        }
 
         /// <summary>
         /// Indicates whether the text has all been shown when rendered.
@@ -1187,18 +1150,15 @@ namespace XPTable.Models
         /// </summary>
         internal bool InternalIsTextTrimmed
         {
-            get { return _isTextTrimmed; }
-            set { _isTextTrimmed = value; }
+            get => _isTextTrimmed;
+            set => _isTextTrimmed = value;
         }
 
         /// <summary>
         /// Gets a value that indicates whether the text has all been shown when rendered.
         /// </summary>
         [Browsable(false)]
-        public bool IsTextTrimmed
-        {
-            get { return _isTextTrimmed; }
-        }
+        public bool IsTextTrimmed => _isTextTrimmed;
 
         private int _width;
 
@@ -1208,7 +1168,7 @@ namespace XPTable.Models
         [Browsable(false)]
         public int ContentWidth
         {
-            get { return _width; }
+            get => _width;
             set
             {
                 _width = value;
@@ -1222,10 +1182,7 @@ namespace XPTable.Models
         /// Returns true if the cells ContentWidth property has not been assigned, or has been invalidated.
         /// </summary>
         [Browsable(false)]
-        public bool WidthNotSet
-        {
-            get { return !_widthSet; }
-        }
+        public bool WidthNotSet => !_widthSet;
 
         /// <summary>
         /// Gets or sets how many columns this cell occupies
@@ -1235,147 +1192,105 @@ namespace XPTable.Models
         Description("How many columns this cell occupies")]
         public int ColSpan
         {
-            get
-            {
-                return this.colspan;
-            }
+            get => colspan;
 
-            set
-            {
-                this.colspan = value;
-            }
+            set => colspan = value;
         }
 
 
-		/// <summary>
-		/// Gets or sets the information used by CellRenderers to record the current 
-		/// state of the Cell
-		/// </summary>
-		protected internal object RendererData
-		{
-			get
-			{
-				return this.rendererData;
-			}
+        /// <summary>
+        /// Gets or sets the information used by CellRenderers to record the current 
+        /// state of the Cell
+        /// </summary>
+        protected internal object RendererData
+        {
+            get => rendererData;
 
-			set
-			{
-				this.rendererData = value;
-			}
-		}
+            set => rendererData = value;
+        }
 
 
-		/// <summary>
-		/// Gets the Row that the Cell belongs to
-		/// </summary>
-		[Browsable(false)]
-		public Row Row
-		{
-			get
-			{
-				return this.row;
-			}
-		}
+        /// <summary>
+        /// Gets the Row that the Cell belongs to
+        /// </summary>
+        [Browsable(false)]
+        public Row Row => row;
 
 
-		/// <summary>
-		/// Gets or sets the Row that the Cell belongs to
-		/// </summary>
-		internal Row InternalRow
-		{
-			get
-			{
-				return this.row;
-			}
+        /// <summary>
+        /// Gets or sets the Row that the Cell belongs to
+        /// </summary>
+        internal Row InternalRow
+        {
+            get => row;
 
-			set
-			{
-				this.row = value;
-			}
-		}
+            set => row = value;
+        }
 
 
-		/// <summary>
-		/// Gets the index of the Cell within its Row
-		/// </summary>
-		[Browsable(false)]
-		public int Index
-		{
-			get
-			{
-				return this.index;
-			}
-		}
+        /// <summary>
+        /// Gets the index of the Cell within its Row
+        /// </summary>
+        [Browsable(false)]
+        public int Index => index;
 
 
-		/// <summary>
-		/// Gets or sets the index of the Cell within its Row
-		/// </summary>
-		internal int InternalIndex
-		{
-			get
-			{
-				return this.index;
-			}
+        /// <summary>
+        /// Gets or sets the index of the Cell within its Row
+        /// </summary>
+        internal int InternalIndex
+        {
+            get => index;
 
-			set
-			{
-				this.index = value;
-			}
-		}
+            set => index = value;
+        }
 
 
-		/// <summary>
-		/// Gets whether the Cell is able to raise events
-		/// </summary>
-		protected internal bool CanRaiseEvents
-		{
-			get
-			{
-				// check if the Row that the Cell belongs to is able to 
-				// raise events (if it can't, the Cell shouldn't raise 
-				// events either)
-				if (this.Row != null)
-				{
-					return this.Row.CanRaiseEvents;
-				}
+        /// <summary>
+        /// Gets whether the Cell is able to raise events
+        /// </summary>
+        protected internal bool CanRaiseEvents
+        {
+            get
+            {
+                // check if the Row that the Cell belongs to is able to 
+                // raise events (if it can't, the Cell shouldn't raise 
+                // events either)
+                if (Row != null)
+                {
+                    return Row.CanRaiseEvents;
+                }
 
-				return true;
-			}
-		}
+                return true;
+            }
+        }
 
-		#endregion
+        #endregion
 
 
-		#region Events
+        #region Events
 
-		/// <summary>
-		/// Raises the PropertyChanged event
-		/// </summary>
-		/// <param name="e">A CellEventArgs that contains the event data</param>
-		protected virtual void OnPropertyChanged(CellEventArgs e)
-		{
-			e.SetColumn(this.Index);
+        /// <summary>
+        /// Raises the PropertyChanged event
+        /// </summary>
+        /// <param name="e">A CellEventArgs that contains the event data</param>
+        protected virtual void OnPropertyChanged(CellEventArgs e)
+        {
+            e.SetColumn(Index);
 
-			if (this.Row != null)
-			{
-				e.SetRow(this.Row.Index);
-			}
-			
-			if (this.CanRaiseEvents)
-			{
-				if (this.Row != null)
-				{
-					this.Row.OnCellPropertyChanged(e);
-				}
-				
-				if (PropertyChanged != null)
-				{
-					PropertyChanged(this, e);
-				}
-			}
-		}
+            if (Row != null)
+            {
+                e.SetRow(Row.Index);
+            }
 
-		#endregion
-	}
+            if (CanRaiseEvents)
+            {
+                Row?.OnCellPropertyChanged(e);
+
+                PropertyChanged?.Invoke(this, e);
+            }
+        }
+
+        #endregion
+    }
 }

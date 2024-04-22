@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -34,167 +34,137 @@ using XPTable.Models;
 
 namespace XPTable.Events
 {
-	#region Delegates
+    #region Delegates
 
-	/// <summary>
-	/// Represents the methods that will handle the BeginEdit, StopEdit and 
-	/// CancelEdit events of a Table
-	/// </summary>
-	public delegate void CellEditEventHandler(object sender, CellEditEventArgs e);
+    /// <summary>
+    /// Represents the methods that will handle the BeginEdit, StopEdit and 
+    /// CancelEdit events of a Table
+    /// </summary>
+    public delegate void CellEditEventHandler(object sender, CellEditEventArgs e);
 
-	#endregion
-
-	
-	
-	#region CellEditEventArgs
-	
-	/// <summary>
-	/// Provides data for the BeginEdit, StopEdit and CancelEdit events of a Table
-	/// </summary>
-	public class CellEditEventArgs : CellEventArgsBase
-	{
-		#region Class Data
-
-		/// <summary>
-		/// The CellEditor used to edit the Cell
-		/// </summary>
-		private ICellEditor editor;
-		
-		/// <summary>
-		/// The Table the Cell belongs to
-		/// </summary>
-		private Table table;
-
-		/// <summary>
-		/// The Cells bounding Rectangle
-		/// </summary>
-		private Rectangle cellRect;
-
-		/// <summary>
-		/// Specifies whether the event should be cancelled
-		/// </summary>
-		private bool cancel;
-
-		/// <summary>
-		/// Indicates whether the event was handled
-		/// </summary>
-		private bool handled;
-
-		#endregion
+    #endregion
 
 
-		#region Constructor
 
-		/// <summary>
-		/// Initializes a new instance of the CellEventArgs class with 
-		/// the specified Cell source, column index and row index
-		/// </summary>
-		/// <param name="source">The Cell that Raised the event</param>
-		/// <param name="editor">The CellEditor used to edit the Cell</param>
-		/// <param name="table">The Table that the Cell belongs to</param>
-		private CellEditEventArgs(Cell source, ICellEditor editor, Table table) 
-			: this(source, editor, table, -1, -1, Rectangle.Empty)
-		{
-			
-		}
+    #region CellEditEventArgs
 
+    /// <summary>
+    /// Provides data for the BeginEdit, StopEdit and CancelEdit events of a Table
+    /// </summary>
+    public class CellEditEventArgs : CellEventArgsBase
+    {
+        #region Class Data
 
-		/// <summary>
-		/// Initializes a new instance of the CellEventArgs class with 
-		/// the specified Cell source, column index and row index
-		/// </summary>
-		/// <param name="source">The Cell that Raised the event</param>
-		/// <param name="editor">The CellEditor used to edit the Cell</param>
-		/// <param name="table">The Table that the Cell belongs to</param>
-		/// <param name="row">The Column index of the Cell</param>
-		/// <param name="column">The Row index of the Cell</param>
-		/// <param name="cellRect"></param>
-		public CellEditEventArgs(Cell source, ICellEditor editor, Table table, int row, int column, Rectangle cellRect) 
-			: base(source, column, row)
-		{
-			this.editor = editor;
-			this.table = table;
-			this.cellRect = cellRect;
+        /// <summary>
+        /// The CellEditor used to edit the Cell
+        /// </summary>
+        private readonly ICellEditor editor;
 
-			this.cancel = false;
-		}
+        /// <summary>
+        /// The Table the Cell belongs to
+        /// </summary>
+        private readonly Table table;
 
-		#endregion
+        /// <summary>
+        /// The Cells bounding Rectangle
+        /// </summary>
+        private Rectangle cellRect;
 
+        /// <summary>
+        /// Specifies whether the event should be cancelled
+        /// </summary>
+        private bool cancel;
 
-		#region Properties
+        /// <summary>
+        /// Indicates whether the event was handled
+        /// </summary>
+        private bool handled;
 
-		/// <summary>
-		/// Gets the CellEditor used to edit the Cell
-		/// </summary>
-		public ICellEditor Editor
-		{
-			get
-			{
-				return this.editor;
-			}
-		}
+        #endregion
 
 
-		/// <summary>
-		/// Gets the Table the Cell belongs to
-		/// </summary>
-		public Table Table
-		{
-			get
-			{
-				return this.table;
-			}
-		}
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the CellEventArgs class with 
+        /// the specified Cell source, column index and row index
+        /// </summary>
+        /// <param name="source">The Cell that Raised the event</param>
+        /// <param name="editor">The CellEditor used to edit the Cell</param>
+        /// <param name="table">The Table that the Cell belongs to</param>
+        private CellEditEventArgs(Cell source, ICellEditor editor, Table table)
+            : this(source, editor, table, -1, -1, Rectangle.Empty)
+        {
+
+        }
 
 
-		/// <summary>
-		/// Gets the Cells bounding Rectangle
-		/// </summary>
-		public Rectangle CellRect
-		{
-			get
-			{
-				return this.cellRect;
-			}
-		}
+        /// <summary>
+        /// Initializes a new instance of the CellEventArgs class with 
+        /// the specified Cell source, column index and row index
+        /// </summary>
+        /// <param name="source">The Cell that Raised the event</param>
+        /// <param name="editor">The CellEditor used to edit the Cell</param>
+        /// <param name="table">The Table that the Cell belongs to</param>
+        /// <param name="row">The Column index of the Cell</param>
+        /// <param name="column">The Row index of the Cell</param>
+        /// <param name="cellRect"></param>
+        public CellEditEventArgs(Cell source, ICellEditor editor, Table table, int row, int column, Rectangle cellRect)
+            : base(source, column, row)
+        {
+            this.editor = editor;
+            this.table = table;
+            this.cellRect = cellRect;
+
+            cancel = false;
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// Gets or sets whether the event should be cancelled
-		/// </summary>
-		public bool Cancel
-		{
-			get
-			{
-				return this.cancel;
-			}
+        #region Properties
 
-			set
-			{
-				this.cancel = value;
-			}
-		}
+        /// <summary>
+        /// Gets the CellEditor used to edit the Cell
+        /// </summary>
+        public ICellEditor Editor => editor;
 
 
-		/// <summary>
-		/// Gets or sets a value indicating whether the event was handled
-		/// </summary>
-		public bool Handled
-		{
-			get
-			{
-				return this.handled;
-			}
+        /// <summary>
+        /// Gets the Table the Cell belongs to
+        /// </summary>
+        public Table Table => table;
 
-			set
-			{
-				this.handled = value;
-			}
-		}
 
-		#endregion
-	}
+        /// <summary>
+        /// Gets the Cells bounding Rectangle
+        /// </summary>
+        public Rectangle CellRect => cellRect;
 
-	#endregion
+
+        /// <summary>
+        /// Gets or sets whether the event should be cancelled
+        /// </summary>
+        public bool Cancel
+        {
+            get => cancel;
+
+            set => cancel = value;
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the event was handled
+        /// </summary>
+        public bool Handled
+        {
+            get => handled;
+
+            set => handled = value;
+        }
+
+        #endregion
+    }
+
+    #endregion
 }

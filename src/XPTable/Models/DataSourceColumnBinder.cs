@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Text;
 
@@ -23,11 +23,11 @@ namespace XPTable.Models
         /// <returns></returns>
         public virtual ColumnModel GetColumnModel(PropertyDescriptorCollection properties)
         {
-            ColumnModel columns = new ColumnModel();
-            int index = 0;
+            var columns = new ColumnModel();
+            var index = 0;
             foreach (PropertyDescriptor prop in properties)
             {
-                Column column = GetColumn(prop, index);
+                var column = GetColumn(prop, index);
                 columns.Columns.Add(column);
                 index++;
             }
@@ -57,10 +57,10 @@ namespace XPTable.Models
                     var fieldMin = propertyType.GetField("MinValue");
                     var fieldMax = propertyType.GetField("MaxValue");
                     column = new DoubleColumn(prop.Name)
-                             {
-                                 Minimum = (double)fieldMin.GetValue(propertyType),
-                                 Maximum = (double)fieldMax.GetValue(propertyType),
-                             };
+                    {
+                        Minimum = (double)fieldMin.GetValue(propertyType),
+                        Maximum = (double)fieldMax.GetValue(propertyType),
+                    };
                     break;
                 case "DateTime":
                     column = new DateTimeColumn(prop.Name);
@@ -82,35 +82,35 @@ namespace XPTable.Models
             return column;
         }
 
-		/// <summary>
-		/// Returns the cell to add to a row for the given value, depending on the type of column it will be 
-		/// shown in.
-		/// If the column is a TextColumn then just the Text property is set. For all other
-		/// column types just the Data value is set.
-		/// </summary>
-		/// <param name="column"></param>
-		/// <param name="val"></param>
-		/// <returns></returns>
-		public virtual Cell GetCell(Column column, object val)
-		{
-			Cell cell;
-			switch (column.GetType().Name)
-			{
-				case nameof(TextColumn):
+        /// <summary>
+        /// Returns the cell to add to a row for the given value, depending on the type of column it will be 
+        /// shown in.
+        /// If the column is a TextColumn then just the Text property is set. For all other
+        /// column types just the Data value is set.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public virtual Cell GetCell(Column column, object val)
+        {
+            Cell cell;
+            switch (column.GetType().Name)
+            {
+                case nameof(TextColumn):
                     cell = val == null ? new Cell() : new Cell(val.ToString());
-					break;
+                    break;
 
-				case nameof(CheckBoxColumn):
-					bool check = val is bool && (bool)val;
-			        cell = new Cell("", check);
-					break;
+                case nameof(CheckBoxColumn):
+                    var check = val is bool && (bool)val;
+                    cell = new Cell("", check);
+                    break;
 
-				default:
-					cell = new Cell(val);
-					break;
-			}
+                default:
+                    cell = new Cell(val);
+                    break;
+            }
 
-			return cell;
-		}
+            return cell;
+        }
     }
 }

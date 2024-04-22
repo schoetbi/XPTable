@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -35,29 +35,29 @@ using XPTable.Models;
 
 namespace XPTable.Sorting
 {
-	/// <summary>
-	/// An IComparer for sorting Cells that contain Color information
-	/// </summary>
-	public class ColorComparer : ComparerBase
-	{
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ColorComparer class with the specified 
-		/// TableModel, Column index and SortOrder
-		/// </summary>
-		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public ColorComparer(TableModel tableModel, int column, SortOrder sortOrder) : base(tableModel, column, sortOrder)
-		{
-			
-		}
+    /// <summary>
+    /// An IComparer for sorting Cells that contain Color information
+    /// </summary>
+    public class ColorComparer : ComparerBase
+    {
+        #region Constructor
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the ColorComparer class with the specified 
+        /// TableModel, Column index and SortOrder
+        /// </summary>
+        /// <param name="tableModel">The TableModel that contains the data to be sorted</param>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public ColorComparer(TableModel tableModel, int column, SortOrder sortOrder) : base(tableModel, column, sortOrder)
+        {
+
+        }
+
+        #endregion
 
 
-		#region Methods
+        #region Methods
 
         /// <summary>
         /// Compares two cells and returns a value indicating whether one is less 
@@ -68,57 +68,57 @@ namespace XPTable.Sorting
         /// <returns></returns>
         protected override int CompareCells(Cell cell1, Cell cell2)
         {
-			// check for null data
-			if (cell1.Data == null && cell2.Data == null)
-			{
-				return 0;
-			}
-			else if (cell1.Data == null)
-			{
-				return -1;
-			}
-			else if (cell2.Data == null)
-			{
-				return 1;
-			}
+            // check for null data
+            if (cell1.Data == null && cell2.Data == null)
+            {
+                return 0;
+            }
+            else if (cell1.Data == null)
+            {
+                return -1;
+            }
+            else if (cell2.Data == null)
+            {
+                return 1;
+            }
 
-			Color color1 = (Color) cell1.Data;
-			Color color2 = (Color) cell2.Data;
+            var color1 = (Color)cell1.Data;
+            var color2 = (Color)cell2.Data;
 
-			if (color1.GetHue() < color2.GetHue()) 
-			{
-				return -1; 
-			}
-			else if (color1.GetHue() > color2.GetHue()) 
-			{
-				return 1;
-			}
-			else 
-			{
-				if (color1.GetSaturation() < color2.GetSaturation()) 
-				{
-					return -1;
-				}
-				else if (color1.GetSaturation() > color2.GetSaturation()) 
-				{
-					return 1;
-				}
-				else 
-				{
-					if (color1.GetBrightness() < color2.GetBrightness()) 
-					{
-						return -1;
-					}
-					else if (color1.GetBrightness() > color2.GetBrightness()) 
-					{
-						return 1;
-					}
-					
-					return 0;
-				}
-			}
-		}
+            if (color1.GetHue() < color2.GetHue())
+            {
+                return -1;
+            }
+            else if (color1.GetHue() > color2.GetHue())
+            {
+                return 1;
+            }
+            else
+            {
+                if (color1.GetSaturation() < color2.GetSaturation())
+                {
+                    return -1;
+                }
+                else if (color1.GetSaturation() > color2.GetSaturation())
+                {
+                    return 1;
+                }
+                else
+                {
+                    if (color1.GetBrightness() < color2.GetBrightness())
+                    {
+                        return -1;
+                    }
+                    else if (color1.GetBrightness() > color2.GetBrightness())
+                    {
+                        return 1;
+                    }
 
-		#endregion
-	}
+                    return 0;
+                }
+            }
+        }
+
+        #endregion
+    }
 }

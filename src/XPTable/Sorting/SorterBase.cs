@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  * 
  * Modified from the C# implementation written by Jonathan de Halleux, Marc Clifton, 
@@ -49,22 +49,22 @@ namespace XPTable.Sorting
         /// <summary>
         /// The TableModel that contains the Cells to be sorted
         /// </summary>
-        private TableModel tableModel;
+        private readonly TableModel tableModel;
 
         /// <summary>
         /// The index of the Column to be sorted
         /// </summary>
-        private int column;
+        private readonly int column;
 
         /// <summary>
         /// The IComparer used to sort the Column's Cells
         /// </summary>
-        private IComparer comparer;
+        private readonly IComparer comparer;
 
         /// <summary>
         /// Specifies how the Column is to be sorted
         /// </summary>
-        private SortOrder sortOrder;
+        private readonly SortOrder sortOrder;
 
         /// <summary>
         /// Specifies a collection of underlying sort order(s)
@@ -95,8 +95,8 @@ namespace XPTable.Sorting
             this.column = column;
             this.comparer = comparer;
             this.sortOrder = sortOrder;
-            this.secondarySortOrder = new SortColumnCollection();
-            this.secondaryComparers = new IComparerCollection();
+            secondarySortOrder = new SortColumnCollection();
+            secondaryComparers = new IComparerCollection();
         }
 
         #endregion
@@ -113,9 +113,9 @@ namespace XPTable.Sorting
         /// <returns>-1 if a is less than b, 1 if a is greater than b, or 0 if a equals b</returns>
         protected int Compare(Row row1, Row row2)
         {
-            int result = 0;
+            var result = 0;
 
-            if (this.SortOrder == SortOrder.None)
+            if (SortOrder == SortOrder.None)
             {
                 result = 0;
             }
@@ -202,21 +202,23 @@ namespace XPTable.Sorting
         protected virtual int CompareRows(Row row1, Row row2)
         {
 
-            int result = CompareRows(row1, row2, this.SortColumn, this.Comparer);
+            var result = CompareRows(row1, row2, SortColumn, Comparer);
 
             if (result == 0)
             {
-                int i = 0;  // used to get the right comparer out of the collection
+                var i = 0;  // used to get the right comparer out of the collection
 
-                foreach (SortColumn col in this.SecondarySortOrders)
+                foreach (SortColumn col in SecondarySortOrders)
                 {
-                    IComparer comparer = this.SecondaryComparers[i];
+                    var comparer = SecondaryComparers[i];
                     result = CompareRows(row1, row2, col.SortColumnIndex, comparer);
 
                     if (result != 0)
                     {
                         if (col.SortOrder == SortOrder.Descending)
+                        {
                             result = -result;
+                        }
 
                         // Need to invert the result if a DESC sort order was used
 
@@ -229,8 +231,10 @@ namespace XPTable.Sorting
 
             // If we do this then the direction of the secondary sorting is NOT reversed when
             // the main sort order is DESC
-            else if (this.SortOrder == SortOrder.Descending)
+            else if (SortOrder == SortOrder.Descending)
+            {
                 result = -result;
+            }
 
             // If we do this then the direction of the secondary sorting IS reversed when
             // the main sort order is DESC
@@ -252,8 +256,8 @@ namespace XPTable.Sorting
         /// <returns></returns>
         protected virtual int CompareRows(Row row1, Row row2, int column, IComparer comparer)
         {
-            Cell cell1 = row1.Cells[column];
-            Cell cell2 = row2.Cells[column];
+            var cell1 = row1.Cells[column];
+            var cell2 = row2.Cells[column];
 
             // check for null cells
             if (cell1 == null && cell2 == null)
@@ -269,7 +273,7 @@ namespace XPTable.Sorting
                 return 1;
             }
 
-            int result = comparer.Compare(cell1, cell2);
+            var result = comparer.Compare(cell1, cell2);
 
             return result;
         }
@@ -287,10 +291,10 @@ namespace XPTable.Sorting
         /// <param name="b">The index of the second Row to be swapped</param>
         protected void Swap(int a, int b)
         {
-            Row swap = this.TableModel.Rows[a];
+            var swap = TableModel.Rows[a];
 
-            this.TableModel.Rows.SetRow(a, this.TableModel.Rows[b]);
-            this.TableModel.Rows.SetRow(b, swap);
+            TableModel.Rows.SetRow(a, TableModel.Rows[b]);
+            TableModel.Rows.SetRow(b, swap);
         }
 
 
@@ -302,7 +306,7 @@ namespace XPTable.Sorting
         /// <param name="b">The index of the Row that will be moved to index a</param>
         protected void Set(int a, int b)
         {
-            this.TableModel.Rows.SetRow(a, this.TableModel.Rows[b]);
+            TableModel.Rows.SetRow(a, TableModel.Rows[b]);
         }
 
 
@@ -313,7 +317,7 @@ namespace XPTable.Sorting
         /// <param name="row">The Row that will be moved to index a</param>
         protected void Set(int a, Row row)
         {
-            this.TableModel.Rows.SetRow(a, row);
+            TableModel.Rows.SetRow(a, row);
         }
 
         #endregion
@@ -324,63 +328,33 @@ namespace XPTable.Sorting
         /// <summary>
         /// Gets the TableModel that contains the Cells to be sorted
         /// </summary>
-        public TableModel TableModel
-        {
-            get
-            {
-                return this.tableModel;
-            }
-        }
+        public TableModel TableModel => tableModel;
 
 
         /// <summary>
         /// Gets the index of the Column to be sorted
         /// </summary>
-        public int SortColumn
-        {
-            get
-            {
-                return this.column;
-            }
-        }
+        public int SortColumn => column;
 
 
         /// <summary>
         /// Gets the IComparer used to sort the Column's Cells
         /// </summary>
-        public IComparer Comparer
-        {
-            get
-            {
-                return this.comparer;
-            }
-        }
+        public IComparer Comparer => comparer;
 
 
         /// <summary>
         /// Gets how the Column is to be sorted
         /// </summary>
-        public SortOrder SortOrder
-        {
-            get
-            {
-                return this.sortOrder;
-            }
-        }
+        public SortOrder SortOrder => sortOrder;
 
         /// <summary>
         /// Gets or sets a collection of underlying sort order(s)
         /// </summary>
         public SortColumnCollection SecondarySortOrders
         {
-            get
-            {
-                return this.secondarySortOrder;
-            }
-            set
-            {
-                this.secondarySortOrder = value;
-            }
+            get => secondarySortOrder;
+            set => secondarySortOrder = value;
         }
 
         /// <summary>
@@ -388,14 +362,8 @@ namespace XPTable.Sorting
         /// </summary>
         public IComparerCollection SecondaryComparers
         {
-            get
-            {
-                return this.secondaryComparers;
-            }
-            set
-            {
-                this.secondaryComparers = value;
-            }
+            get => secondaryComparers;
+            set => secondaryComparers = value;
         }
 
         #endregion

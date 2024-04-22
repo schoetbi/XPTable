@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -28,25 +28,25 @@ using System;
 
 namespace XPTable.Editors
 {
-	/// <summary>
-	/// Specifies the action that causes a Cell to start editing
-	/// </summary>
-	public enum EditStartAction
-	{
-		/// <summary>
-		/// A double click will start cell editing
-		/// </summary>
-		DoubleClick = 1,
+    /// <summary>
+    /// Specifies the action that causes a Cell to start editing
+    /// </summary>
+    public enum EditStartAction
+    {
+        /// <summary>
+        /// A double click will start cell editing
+        /// </summary>
+        DoubleClick = 1,
 
-		/// <summary>
-		/// A single click will start cell editing
-		/// </summary>
-		SingleClick = 2,
+        /// <summary>
+        /// A single click will start cell editing
+        /// </summary>
+        SingleClick = 2,
 
-		/// <summary>
-		/// A user defined key press will start cell editing
-		/// </summary>
-		CustomKey = 3,
+        /// <summary>
+        /// A user defined key press will start cell editing
+        /// </summary>
+        CustomKey = 3,
 
         /// <summary>
         /// A key press event will start cell editing
@@ -57,5 +57,5 @@ namespace XPTable.Editors
         /// A key press event or double-click will start cell editing
         /// </summary>
         KeyPressDoubleClick = 5
-	}
+    }
 }

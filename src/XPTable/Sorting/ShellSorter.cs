@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  * 
  * Sort algorithm modified from the C# implementation written by Jonathan de Halleux, 
@@ -61,36 +61,36 @@ namespace XPTable.Sorting
         /// </summary>
         public override void Sort()
         {
-            if (this.TableModel == null)
+            if (TableModel == null)
             {
                 return;
             }
 
-            int h = 1;
+            var h = 1;
 
-            while (h * 3 + 1 <= this.TableModel.Rows.Count)
+            while ((h * 3) + 1 <= TableModel.Rows.Count)
             {
-                h = 3 * h + 1;
+                h = (3 * h) + 1;
             }
 
             while (h > 0)
             {
                 int i;
-                for (i = h - 1; i < this.TableModel.Rows.Count; i++)
+                for (i = h - 1; i < TableModel.Rows.Count; i++)
                 {
-                    Row b = this.TableModel.Rows[i];
-                    int j = i;
-                    bool loop = true;
+                    var b = TableModel.Rows[i];
+                    var j = i;
+                    var loop = true;
 
                     while (loop)
                     {
                         if (j >= h)
                         {
-                            if (this.Compare(this.TableModel.Rows[j - h], b) > 0)
+                            if (Compare(TableModel.Rows[j - h], b) > 0)
                             {
-                                this.Set(j, j - h);
+                                Set(j, j - h);
 
-                                j = j - h;
+                                j -= h;
                             }
                             else
                             {
@@ -103,10 +103,10 @@ namespace XPTable.Sorting
                         }
                     }
 
-                    this.Set(j, b);
+                    Set(j, b);
                 }
 
-                h = h / 3;
+                h /= 3;
             }
         }
     }

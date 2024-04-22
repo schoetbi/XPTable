@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -118,7 +118,7 @@ namespace XPTable.Models
         /// </summary>
         public TableModel()
         {
-            this.Init();
+            Init();
         }
 
 
@@ -134,11 +134,11 @@ namespace XPTable.Models
                 throw new ArgumentNullException("rows", "Row[] cannot be null");
             }
 
-            this.Init();
+            Init();
 
             if (rows.Length > 0)
             {
-                this.Rows.AddRange(rows);
+                Rows.AddRange(rows);
             }
         }
 
@@ -148,11 +148,11 @@ namespace XPTable.Models
         /// </summary>
         private void Init()
         {
-            this.rows = null;
+            rows = null;
 
-            this.selection = new Selection(this);
-            this.table = null;
-            this.rowHeight = TableModel.DefaultRowHeight;
+            selection = new Selection(this);
+            table = null;
+            rowHeight = TableModel.DefaultRowHeight;
         }
 
         #endregion
@@ -183,17 +183,8 @@ namespace XPTable.Models
         /// no Row is found</returns>
         public int RowIndexAt(int yPosition)
         {
-            int row;
-            if (this.Table.EnableWordWrap)
-            {
-                row = this.RowIndexAtExact(yPosition);
-            }
-            else
-            {
-                row = yPosition / this.RowHeight;
-            }
-
-            if (row < 0 || row > this.Rows.Count - 1)
+            var row = Table.EnableWordWrap ? RowIndexAtExact(yPosition) : yPosition / RowHeight;
+            if (row < 0 || row > Rows.Count - 1)
             {
                 return -1;
             }
@@ -209,20 +200,22 @@ namespace XPTable.Models
         /// <returns></returns>
         private int RowIndexAtExact(int yPosition)
         {
-            int height = 0;
-            for (int i = 0; i < this.Rows.Count; i++)
+            var height = 0;
+            for (var i = 0; i < Rows.Count; i++)
             {
-                Row row = this.Rows[i];
+                var row = Rows[i];
                 if (row.Parent == null || row.Parent.ExpandSubRows)
                 {
                     height += row.Height;
                     if (yPosition < height)
+                    {
                         return i;
+                    }
                 }
             }
 
             // If we've got this far then its the last row
-            return this.Rows.Count - 1;
+            return Rows.Count - 1;
         }
         #endregion
 
@@ -238,13 +231,17 @@ namespace XPTable.Models
         {
             get
             {
-                if (row < 0 || row >= this.Rows.Count)
+                if (row < 0 || row >= Rows.Count)
+                {
                     return null;
+                }
 
-                if (column < 0 || column >= this.Rows[row].Cells.Count)
+                if (column < 0 || column >= Rows[row].Cells.Count)
+                {
                     return null;
+                }
 
-                return this.Rows[row].Cells[column];
+                return Rows[row].Cells[column];
             }
         }
 
@@ -253,10 +250,7 @@ namespace XPTable.Models
         /// </summary>
         /// <param name="cellPos">The position of the Cell</param>
         [Browsable(false)]
-        public Cell this[CellPos cellPos]
-        {
-            get { return this[cellPos.Row, cellPos.Column]; }
-        }
+        public Cell this[CellPos cellPos] => this[cellPos.Row, cellPos.Column];
 
         /// <summary>
         /// A TableModel.RowCollection representing the collection of 
@@ -270,12 +264,9 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.rows == null)
-                {
-                    this.rows = new RowCollection(this);
-                }
+                rows ??= new RowCollection(this);
 
-                return this.rows;
+                return rows;
             }
         }
 
@@ -289,12 +280,9 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.selection == null)
-                {
-                    this.selection = new Selection(this);
-                }
+                selection ??= new Selection(this);
 
-                return this.selection;
+                return selection;
             }
         }
 
@@ -306,10 +294,7 @@ namespace XPTable.Models
         Description("The height of each row")]
         public int RowHeight
         {
-            get
-            {
-                return this.rowHeight;
-            }
+            get => rowHeight;
 
             set
             {
@@ -322,11 +307,11 @@ namespace XPTable.Models
                     value = TableModel.MaximumRowHeight;
                 }
 
-                if (this.rowHeight != value)
+                if (rowHeight != value)
                 {
-                    this.rowHeight = value;
+                    rowHeight = value;
 
-                    this.OnRowHeightChanged(EventArgs.Empty);
+                    OnRowHeightChanged(EventArgs.Empty);
                 }
             }
         }
@@ -340,7 +325,7 @@ namespace XPTable.Models
         /// false otherwise</returns>
         private bool ShouldSerializeRowHeight()
         {
-            return this.rowHeight != TableModel.DefaultRowHeight;
+            return rowHeight != TableModel.DefaultRowHeight;
         }
 
 
@@ -348,13 +333,7 @@ namespace XPTable.Models
         /// Gets the Table the TableModel belongs to
         /// </summary>
         [Browsable(false)]
-        public Table Table
-        {
-            get
-            {
-                return this.table;
-            }
-        }
+        public Table Table => table;
 
 
         /// <summary>
@@ -362,15 +341,9 @@ namespace XPTable.Models
         /// </summary>
         internal Table InternalTable
         {
-            get
-            {
-                return this.table;
-            }
+            get => table;
 
-            set
-            {
-                this.table = value;
-            }
+            set => table = value;
         }
 
 
@@ -384,9 +357,9 @@ namespace XPTable.Models
                 // check if the Table that the TableModel belongs to is able to 
                 // raise events (if it can't, the TableModel shouldn't raise 
                 // events either)
-                if (this.Table != null)
+                if (Table != null)
                 {
-                    return this.Table.CanRaiseEventsInternal;
+                    return Table.CanRaiseEventsInternal;
                 }
 
                 return true;
@@ -396,10 +369,7 @@ namespace XPTable.Models
         /// <summary>
         /// Gets the value for CanRaiseEvents.
         /// </summary>
-        protected internal bool CanRaiseEventsInternal
-        {
-            get { return this.CanRaiseEvents; }
-        }
+        protected internal bool CanRaiseEventsInternal => CanRaiseEvents;
 
         /// <summary>
         /// Gets whether the TableModel is enabled
@@ -408,12 +378,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.Table == null)
+                if (Table == null)
                 {
                     return true;
                 }
 
-                return this.Table.Enabled;
+                return Table.Enabled;
             }
         }
 
@@ -430,9 +400,9 @@ namespace XPTable.Models
                 start = 0;
             }
 
-            for (int i = start; i < this.Rows.Count; i++)
+            for (var i = start; i < Rows.Count; i++)
             {
-                this.Rows[i].InternalIndex = i;
+                Rows[i].InternalIndex = i;
             }
         }
 
@@ -451,19 +421,13 @@ namespace XPTable.Models
             e.Row.InternalIndex = e.RowFromIndex;
             e.Row.ClearSelection();
 
-            this.UpdateRowIndicies(e.RowFromIndex);
+            UpdateRowIndicies(e.RowFromIndex);
 
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnRowAdded(e);
-                }
+                Table?.OnRowAdded(e);
 
-                if (RowAdded != null)
-                {
-                    RowAdded(this, e);
-                }
+                RowAdded?.Invoke(this, e);
             }
         }
 
@@ -483,23 +447,17 @@ namespace XPTable.Models
                 {
                     e.Row.ClearSelection();
 
-                    this.Selections.RemoveRow(e.Row);
+                    Selections.RemoveRow(e.Row);
                 }
             }
 
-            this.UpdateRowIndicies(e.RowFromIndex);
+            UpdateRowIndicies(e.RowFromIndex);
 
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnRowRemoved(e);
-                }
+                Table?.OnRowRemoved(e);
 
-                if (RowRemoved != null)
-                {
-                    RowRemoved(this, e);
-                }
+                RowRemoved?.Invoke(this, e);
             }
         }
 
@@ -510,17 +468,11 @@ namespace XPTable.Models
         /// <param name="e">A SelectionEventArgs that contains the event data</param>
         protected virtual void OnSelectionChanged(SelectionEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnSelectionChanged(e);
-                }
+                Table?.OnSelectionChanged(e);
 
-                if (SelectionChanged != null)
-                {
-                    SelectionChanged(this, e);
-                }
+                SelectionChanged?.Invoke(this, e);
             }
         }
 
@@ -531,17 +483,11 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected virtual void OnRowHeightChanged(EventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnRowHeightChanged(e);
-                }
+                Table?.OnRowHeightChanged(e);
 
-                if (RowHeightChanged != null)
-                {
-                    RowHeightChanged(this, e);
-                }
+                RowHeightChanged?.Invoke(this, e);
             }
         }
 
@@ -552,10 +498,7 @@ namespace XPTable.Models
         /// <param name="e">A RowEventArgs that contains the event data</param>
         internal void OnRowPropertyChanged(RowEventArgs e)
         {
-            if (this.Table != null)
-            {
-                this.Table.OnRowPropertyChanged(e);
-            }
+            Table?.OnRowPropertyChanged(e);
         }
 
 
@@ -565,10 +508,7 @@ namespace XPTable.Models
         /// <param name="e">A RowEventArgs that contains the event data</param>
         internal void OnCellAdded(RowEventArgs e)
         {
-            if (this.Table != null)
-            {
-                this.Table.OnCellAdded(e);
-            }
+            Table?.OnCellAdded(e);
         }
 
 
@@ -578,10 +518,7 @@ namespace XPTable.Models
         /// <param name="e">A RowEventArgs that contains the event data</param>
         internal void OnCellRemoved(RowEventArgs e)
         {
-            if (this.Table != null)
-            {
-                this.Table.OnCellRemoved(e);
-            }
+            Table?.OnCellRemoved(e);
         }
 
 
@@ -591,10 +528,7 @@ namespace XPTable.Models
         /// <param name="e">A CellEventArgs that contains the event data</param>
         internal void OnCellPropertyChanged(CellEventArgs e)
         {
-            if (this.Table != null)
-            {
-                this.Table.OnCellPropertyChanged(e);
-            }
+            Table?.OnCellPropertyChanged(e);
         }
 
         #endregion
@@ -612,12 +546,12 @@ namespace XPTable.Models
             /// <summary>
             /// The TableModel that owns the Selection
             /// </summary>
-            private TableModel owner;
+            private readonly TableModel owner;
 
             /// <summary>
             /// The list of Rows that have selected Cells
             /// </summary>
-            private ArrayList rows;
+            private readonly ArrayList rows;
 
             /// <summary>
             /// The starting cell of a selection that uses the shift key
@@ -641,16 +575,11 @@ namespace XPTable.Models
             /// the Selection</param>
             public Selection(TableModel owner)
             {
-                if (owner == null)
-                {
-                    throw new ArgumentNullException("owner", "owner cannot be null");
-                }
+                this.owner = owner ?? throw new ArgumentNullException("owner", "owner cannot be null");
+                rows = new ArrayList();
 
-                this.owner = owner;
-                this.rows = new ArrayList();
-
-                this.shiftSelectStart = CellPos.Empty;
-                this.shiftSelectEnd = CellPos.Empty;
+                shiftSelectStart = CellPos.Empty;
+                shiftSelectEnd = CellPos.Empty;
             }
 
             #endregion
@@ -669,9 +598,9 @@ namespace XPTable.Models
             {
                 // don't bother going any further if the cell 
                 // is already selected
-                if (this.rows.Count == 1)
+                if (rows.Count == 1)
                 {
-                    Row r = (Row)this.rows[0];
+                    var r = (Row)rows[0];
 
                     if (r.InternalIndex == row && r.SelectedCellCount == 1)
                     {
@@ -685,7 +614,7 @@ namespace XPTable.Models
                     }
                 }
 
-                this.SelectCells(row, column, row, column);
+                SelectCells(row, column, row, column);
             }
 
 
@@ -696,7 +625,7 @@ namespace XPTable.Models
             /// the Cell to be selected</param>
             public void SelectCell(CellPos cellPos)
             {
-                this.SelectCell(cellPos.Row, cellPos.Column);
+                SelectCell(cellPos.Row, cellPos.Column);
             }
 
 
@@ -710,17 +639,17 @@ namespace XPTable.Models
             /// <param name="endColumn">The column index of the end Cell</param>
             public void SelectCells(int startRow, int startColumn, int endRow, int endColumn)
             {
-                int[] oldSelectedIndicies = this.SelectedIndicies;
+                var oldSelectedIndicies = SelectedIndicies;
 
-                this.InternalClear();
+                InternalClear();
 
-                if (this.InternalAddCells(startRow, startColumn, endRow, endColumn))
+                if (InternalAddCells(startRow, startColumn, endRow, endColumn))
                 {
-                    this.owner.OnSelectionChanged(new SelectionEventArgs(this.owner, oldSelectedIndicies, this.SelectedIndicies));
+                    owner.OnSelectionChanged(new SelectionEventArgs(owner, oldSelectedIndicies, SelectedIndicies));
                 }
 
-                this.shiftSelectStart = new CellPos(startRow, startColumn);
-                this.shiftSelectEnd = new CellPos(endRow, endColumn);
+                shiftSelectStart = new CellPos(startRow, startColumn);
+                shiftSelectEnd = new CellPos(endRow, endColumn);
             }
 
 
@@ -732,7 +661,7 @@ namespace XPTable.Models
             /// <param name="end">A CellPos that specifies the end Cell</param>
             public void SelectCells(CellPos start, CellPos end)
             {
-                this.SelectCells(start.Row, start.Column, end.Row, end.Column);
+                SelectCells(start.Row, start.Column, end.Row, end.Column);
             }
 
 
@@ -743,7 +672,7 @@ namespace XPTable.Models
             /// <param name="column">The column index of the Cell to add to the selection</param>
             public void AddCell(int row, int column)
             {
-                this.AddCells(row, column, row, column);
+                AddCells(row, column, row, column);
             }
 
 
@@ -753,7 +682,7 @@ namespace XPTable.Models
             /// <param name="cellPos">A CellPos that specifies the Cell to add to the selection</param>
             public void AddCell(CellPos cellPos)
             {
-                this.AddCell(cellPos.Row, cellPos.Column);
+                AddCell(cellPos.Row, cellPos.Column);
             }
 
 
@@ -767,15 +696,15 @@ namespace XPTable.Models
             /// <param name="endColumn">The column index of the end Cell</param>
             public void AddCells(int startRow, int startColumn, int endRow, int endColumn)
             {
-                int[] oldSelectedIndicies = this.SelectedIndicies;
+                var oldSelectedIndicies = SelectedIndicies;
 
                 if (InternalAddCells(startRow, startColumn, endRow, endColumn))
                 {
-                    this.owner.OnSelectionChanged(new SelectionEventArgs(this.owner, oldSelectedIndicies, this.SelectedIndicies));
+                    owner.OnSelectionChanged(new SelectionEventArgs(owner, oldSelectedIndicies, SelectedIndicies));
                 }
 
-                this.shiftSelectStart = new CellPos(startRow, startColumn);
-                this.shiftSelectEnd = new CellPos(endRow, endColumn);
+                shiftSelectStart = new CellPos(startRow, startColumn);
+                shiftSelectEnd = new CellPos(endRow, endColumn);
             }
 
 
@@ -787,7 +716,7 @@ namespace XPTable.Models
             /// <param name="end">A CellPos that specifies the end Cell</param>
             public void AddCells(CellPos start, CellPos end)
             {
-                this.AddCells(start.Row, start.Column, end.Row, end.Column);
+                AddCells(start.Row, start.Column, end.Row, end.Column);
             }
 
 
@@ -800,7 +729,7 @@ namespace XPTable.Models
             /// <returns>true if any Cells were added, false otherwise</returns>
             private bool InternalAddCells(CellPos start, CellPos end)
             {
-                return this.InternalAddCells(start.Row, start.Column, end.Row, end.Column);
+                return InternalAddCells(start.Row, start.Column, end.Row, end.Column);
             }
 
 
@@ -815,22 +744,22 @@ namespace XPTable.Models
             /// <returns>true if any Cells were added, false otherwise</returns>
             private bool InternalAddCells(int startRow, int startColumn, int endRow, int endColumn)
             {
-                this.Normalise(ref startRow, ref endRow);
-                this.Normalise(ref startColumn, ref endColumn);
+                Normalise(ref startRow, ref endRow);
+                Normalise(ref startColumn, ref endColumn);
 
-                bool anyAdded = false;
-                bool anyAddedInRow = false;
+                var anyAdded = false;
+                var anyAddedInRow = false;
 
-                for (int i = startRow; i <= endRow; i++)
+                for (var i = startRow; i <= endRow; i++)
                 {
-                    if (i >= this.owner.Rows.Count)
+                    if (i >= owner.Rows.Count)
                     {
                         break;
                     }
 
-                    Row r = this.owner.Rows[i];
+                    var r = owner.Rows[i];
 
-                    for (int j = startColumn; j <= endColumn; j++)
+                    for (var j = startColumn; j <= endColumn; j++)
                     {
                         if (j >= r.Cells.Count)
                         {
@@ -839,7 +768,7 @@ namespace XPTable.Models
 
                         if (!r.Cells[j].Selected && r.Cells[j].Enabled)
                         {
-                            if (this.owner.Table != null && !this.owner.Table.IsCellEnabled(i, j))
+                            if (owner.Table != null && !owner.Table.IsCellEnabled(i, j))
                             {
                                 continue;
                             }
@@ -852,9 +781,9 @@ namespace XPTable.Models
                         }
                     }
 
-                    if (anyAddedInRow && !this.rows.Contains(r))
+                    if (anyAddedInRow && !rows.Contains(r))
                     {
-                        this.rows.Add(r);
+                        rows.Add(r);
                     }
 
                     anyAddedInRow = false;
@@ -874,31 +803,31 @@ namespace XPTable.Models
             /// <param name="column">The column index of the shift selected Cell</param>
             public void AddShiftSelectedCell(int row, int column)
             {
-                int[] oldSelectedIndicies = this.SelectedIndicies;
+                var oldSelectedIndicies = SelectedIndicies;
 
-                if (this.shiftSelectStart == CellPos.Empty)
+                if (shiftSelectStart == CellPos.Empty)
                 {
-                    this.shiftSelectStart = new CellPos(0, 0);
+                    shiftSelectStart = new CellPos(0, 0);
                 }
 
-                bool changed = false;
+                var changed = false;
 
-                if (this.shiftSelectEnd != CellPos.Empty)
+                if (shiftSelectEnd != CellPos.Empty)
                 {
-                    changed = this.InternalRemoveCells(this.shiftSelectStart, this.shiftSelectEnd);
-                    changed |= this.InternalAddCells(this.shiftSelectStart, new CellPos(row, column));
+                    changed = InternalRemoveCells(shiftSelectStart, shiftSelectEnd);
+                    changed |= InternalAddCells(shiftSelectStart, new CellPos(row, column));
                 }
                 else
                 {
-                    changed = this.InternalAddCells(0, 0, row, column);
+                    changed = InternalAddCells(0, 0, row, column);
                 }
 
                 if (changed)
                 {
-                    this.owner.OnSelectionChanged(new SelectionEventArgs(this.owner, oldSelectedIndicies, this.SelectedIndicies));
+                    owner.OnSelectionChanged(new SelectionEventArgs(owner, oldSelectedIndicies, SelectedIndicies));
                 }
 
-                this.shiftSelectEnd = new CellPos(row, column);
+                shiftSelectEnd = new CellPos(row, column);
             }
 
 
@@ -911,7 +840,7 @@ namespace XPTable.Models
             /// <param name="cellPos">A CellPos that specifies the shift selected Cell</param>
             public void AddShiftSelectedCell(CellPos cellPos)
             {
-                this.AddShiftSelectedCell(cellPos.Row, cellPos.Column);
+                AddShiftSelectedCell(cellPos.Row, cellPos.Column);
             }
 
 
@@ -935,9 +864,7 @@ namespace XPTable.Models
 
                 if (b < a)
                 {
-                    int temp = a;
-                    a = b;
-                    b = temp;
+                    (b, a) = (a, b);
                 }
             }
 
@@ -950,16 +877,16 @@ namespace XPTable.Models
             /// </summary>
             public void Clear()
             {
-                if (this.rows.Count > 0)
+                if (rows.Count > 0)
                 {
-                    int[] oldSelectedIndicies = this.SelectedIndicies;
+                    var oldSelectedIndicies = SelectedIndicies;
 
-                    this.InternalClear();
+                    InternalClear();
 
-                    this.shiftSelectStart = CellPos.Empty;
-                    this.shiftSelectEnd = CellPos.Empty;
+                    shiftSelectStart = CellPos.Empty;
+                    shiftSelectEnd = CellPos.Empty;
 
-                    this.owner.OnSelectionChanged(new SelectionEventArgs(this.owner, oldSelectedIndicies, this.SelectedIndicies));
+                    owner.OnSelectionChanged(new SelectionEventArgs(owner, oldSelectedIndicies, SelectedIndicies));
                 }
             }
 
@@ -969,15 +896,15 @@ namespace XPTable.Models
             /// </summary>
             private void InternalClear()
             {
-                if (this.rows.Count > 0)
+                if (rows.Count > 0)
                 {
-                    for (int i = 0; i < this.rows.Count; i++)
+                    for (var i = 0; i < rows.Count; i++)
                     {
-                        ((Row)this.rows[i]).ClearSelection();
+                        ((Row)rows[i]).ClearSelection();
                     }
 
-                    this.rows.Clear();
-                    this.rows.Capacity = 0;
+                    rows.Clear();
+                    rows.Capacity = 0;
                 }
             }
 
@@ -992,7 +919,7 @@ namespace XPTable.Models
             /// <param name="column">The column index of the Cell to remove from the selection</param>
             public void RemoveCell(int row, int column)
             {
-                this.RemoveCells(row, column, row, column);
+                RemoveCells(row, column, row, column);
             }
 
 
@@ -1002,7 +929,7 @@ namespace XPTable.Models
             /// <param name="cellPos">A CellPos that specifies the Cell to remove from the selection</param>
             public void RemoveCell(CellPos cellPos)
             {
-                this.RemoveCell(cellPos.Row, cellPos.Column);
+                RemoveCell(cellPos.Row, cellPos.Column);
             }
 
 
@@ -1016,17 +943,17 @@ namespace XPTable.Models
             /// <param name="endColumn">The column index of the end Cell</param>
             public void RemoveCells(int startRow, int startColumn, int endRow, int endColumn)
             {
-                if (this.rows.Count > 0)
+                if (rows.Count > 0)
                 {
-                    int[] oldSelectedIndicies = this.SelectedIndicies;
+                    var oldSelectedIndicies = SelectedIndicies;
 
-                    if (this.InternalRemoveCells(startRow, startColumn, endRow, endColumn))
+                    if (InternalRemoveCells(startRow, startColumn, endRow, endColumn))
                     {
-                        this.owner.OnSelectionChanged(new SelectionEventArgs(this.owner, oldSelectedIndicies, this.SelectedIndicies));
+                        owner.OnSelectionChanged(new SelectionEventArgs(owner, oldSelectedIndicies, SelectedIndicies));
                     }
 
-                    this.shiftSelectStart = new CellPos(startRow, startColumn);
-                    this.shiftSelectEnd = new CellPos(endRow, endColumn);
+                    shiftSelectStart = new CellPos(startRow, startColumn);
+                    shiftSelectEnd = new CellPos(endRow, endColumn);
                 }
             }
 
@@ -1039,7 +966,7 @@ namespace XPTable.Models
             /// <param name="end">A CellPos that specifies the end Cell</param>
             public void RemoveCells(CellPos start, CellPos end)
             {
-                this.RemoveCells(start.Row, start.Column, end.Row, end.Column);
+                RemoveCells(start.Row, start.Column, end.Row, end.Column);
             }
 
 
@@ -1052,7 +979,7 @@ namespace XPTable.Models
             /// <returns>true if any Cells were added, false otherwise</returns>
             private bool InternalRemoveCells(CellPos start, CellPos end)
             {
-                return this.InternalRemoveCells(start.Row, start.Column, end.Row, end.Column);
+                return InternalRemoveCells(start.Row, start.Column, end.Row, end.Column);
             }
 
 
@@ -1067,21 +994,21 @@ namespace XPTable.Models
             /// <returns>true if any Cells were added, false otherwise</returns>
             private bool InternalRemoveCells(int startRow, int startColumn, int endRow, int endColumn)
             {
-                this.Normalise(ref startRow, ref endRow);
-                this.Normalise(ref startColumn, ref endColumn);
+                Normalise(ref startRow, ref endRow);
+                Normalise(ref startColumn, ref endColumn);
 
-                bool anyRemoved = false;
+                var anyRemoved = false;
 
-                for (int i = startRow; i <= endRow; i++)
+                for (var i = startRow; i <= endRow; i++)
                 {
-                    if (i >= this.owner.Rows.Count)
+                    if (i >= owner.Rows.Count)
                     {
                         break;
                     }
 
-                    Row r = this.owner.Rows[i];
+                    var r = owner.Rows[i];
 
-                    for (int j = startColumn; j <= endColumn; j++)
+                    for (var j = startColumn; j <= endColumn; j++)
                     {
                         if (j >= r.Cells.Count)
                         {
@@ -1099,9 +1026,9 @@ namespace XPTable.Models
 
                     if (!r.AnyCellsSelected)
                     {
-                        if (this.rows.Contains(r))
+                        if (rows.Contains(r))
                         {
-                            this.rows.Remove(r);
+                            rows.Remove(r);
                         }
                     }
                 }
@@ -1119,21 +1046,21 @@ namespace XPTable.Models
                 // Mateusz [PEYN] Adamus (peyn@tlen.pl)
                 // old method didn't work well
                 // it removed rows from selection but didn't refreshed table's view
-                if (this.rows.Contains(row))
+                if (rows.Contains(row))
                 {
                     // if Row has already been removed from the table then just remove it from selection
-                    if (this.owner.Rows.IndexOf(row) == -1)
+                    if (owner.Rows.IndexOf(row) == -1)
                     {
-                        int[] oldSelectedIndicies = this.SelectedIndicies;
-                        this.rows.Remove(row);
-                        this.owner.OnSelectionChanged(new SelectionEventArgs(this.owner, oldSelectedIndicies, this.SelectedIndicies));
+                        var oldSelectedIndicies = SelectedIndicies;
+                        rows.Remove(row);
+                        owner.OnSelectionChanged(new SelectionEventArgs(owner, oldSelectedIndicies, SelectedIndicies));
 
                         return;
                     }
 
                     // remove from selection every cell that is in the Row we want to remove
                     // - remove Row
-                    this.RemoveCells(row.Index, 0, row.Index, row.Cells.Count - 1);
+                    RemoveCells(row.Index, 0, row.Index, row.Cells.Count - 1);
                 }
             }
 
@@ -1146,14 +1073,14 @@ namespace XPTable.Models
             internal void RemoveRow(int row)
             {
                 // if specified row isn't in the rows collection
-                if ((row < 0) || (row >= this.owner.Rows.Count))
+                if ((row < 0) || (row >= owner.Rows.Count))
                 {
                     // then do nothing and exit
                     return;
                 }
 
                 // remove specified Row
-                this.RemoveRow(this.owner.Rows[row]);
+                RemoveRow(owner.Rows[row]);
             }
 
             #endregion
@@ -1170,12 +1097,12 @@ namespace XPTable.Models
             /// selected, false otherwise</returns>
             public bool IsCellSelected(int row, int column)
             {
-                if (row < 0 || row >= this.owner.Rows.Count)
+                if (row < 0 || row >= owner.Rows.Count)
                 {
                     return false;
                 }
 
-                return this.owner.Rows[row].IsCellSelected(column);
+                return owner.Rows[row].IsCellSelected(column);
             }
 
 
@@ -1188,7 +1115,7 @@ namespace XPTable.Models
             /// false otherwise</returns>
             public bool IsCellSelected(CellPos cellPos)
             {
-                return this.IsCellSelected(cellPos.Row, cellPos.Column);
+                return IsCellSelected(cellPos.Row, cellPos.Column);
             }
 
 
@@ -1201,12 +1128,12 @@ namespace XPTable.Models
             /// false otherwise</returns>
             public bool IsRowSelected(int index)
             {
-                if (index < 0 || index >= this.owner.Rows.Count)
+                if (index < 0 || index >= owner.Rows.Count)
                 {
                     return false;
                 }
 
-                return this.owner.Rows[index].AnyCellsSelected;
+                return owner.Rows[index].AnyCellsSelected;
             }
 
             #endregion
@@ -1221,12 +1148,14 @@ namespace XPTable.Models
             {
                 get
                 {
-                    if (this.rows.Count == 0)
+                    if (rows.Count == 0)
+                    {
                         return new Row[0];
+                    }
 
-                    this.rows.Sort(new RowComparer());
+                    rows.Sort(new RowComparer());
 
-                    return (Row[])this.rows.ToArray(typeof(Row));
+                    return (Row[])rows.ToArray(typeof(Row));
                 }
             }
 
@@ -1238,16 +1167,18 @@ namespace XPTable.Models
             {
                 get
                 {
-                    if (this.rows.Count == 0)
-                        return new int[0];
-
-                    this.rows.Sort(new RowComparer());
-
-                    int[] indicies = new int[this.rows.Count];
-
-                    for (int i = 0; i < this.rows.Count; i++)
+                    if (rows.Count == 0)
                     {
-                        indicies[i] = ((Row)this.rows[i]).InternalIndex;
+                        return new int[0];
+                    }
+
+                    rows.Sort(new RowComparer());
+
+                    var indicies = new int[rows.Count];
+
+                    for (var i = 0; i < rows.Count; i++)
+                    {
+                        indicies[i] = ((Row)rows[i]).InternalIndex;
                     }
 
                     return indicies;
@@ -1262,12 +1193,14 @@ namespace XPTable.Models
             {
                 get
                 {
-                    if (this.rows.Count == 0)
+                    if (rows.Count == 0)
+                    {
                         return Rectangle.Empty;
+                    }
 
-                    int[] indicies = this.SelectedIndicies;
+                    var indicies = SelectedIndicies;
 
-                    return this.CalcSelectionBounds(indicies[0], indicies[indicies.Length - 1]);
+                    return CalcSelectionBounds(indicies[0], indicies[^1]);
                 }
             }
 
@@ -1280,41 +1213,37 @@ namespace XPTable.Models
             /// <returns></returns>
             internal Rectangle CalcSelectionBounds(int start, int end)
             {
-                this.Normalise(ref start, ref end);
+                Normalise(ref start, ref end);
 
-                Rectangle bounds = new Rectangle();
+                var bounds = new Rectangle();
 
-                if (this.owner.Table != null && this.owner.Table.ColumnModel != null)
-                    bounds.Width = this.owner.Table.ColumnModel.VisibleColumnsWidth;
+                if (owner.Table != null && owner.Table.ColumnModel != null)
+                {
+                    bounds.Width = owner.Table.ColumnModel.VisibleColumnsWidth;
+                }
 
-                if (this.owner.Table.EnableWordWrap)
+                if (owner.Table.EnableWordWrap)
                 {
                     // v1.1.1 fix - this Y value used to include the border + header height
 
-                    bounds.Y = this.owner.Table.RowY(start);
+                    bounds.Y = owner.Table.RowY(start);
 
                     if (start == end)
                     {
                         // no object when using subrows here
                         // fix by CINAMON
-                        if (this.owner.rows[start] != null)
-                            bounds.Height = this.owner.Rows[start].Height;
-                        else
-                            bounds.Height = this.owner.RowHeight;
+                        bounds.Height = owner.rows[start] != null ? owner.Rows[start].Height : owner.RowHeight;
                     }
                     else
                     {
-                        bounds.Height = this.owner.Table.RowYDifference(start, end) + this.owner.Rows[end].Height;
+                        bounds.Height = owner.Table.RowYDifference(start, end) + owner.Rows[end].Height;
                     }
                 }
                 else
                 {
-                    bounds.Y = start * this.owner.RowHeight;
+                    bounds.Y = start * owner.RowHeight;
 
-                    if (start == end)
-                        bounds.Height = this.owner.RowHeight;
-                    else
-                        bounds.Height = ((end + 1) * this.owner.RowHeight) - bounds.Y;
+                    bounds.Height = start == end ? owner.RowHeight : ((end + 1) * owner.RowHeight) - bounds.Y;
                 }
 
                 return bounds;

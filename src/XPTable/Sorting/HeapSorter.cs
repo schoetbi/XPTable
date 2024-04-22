@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  * 
  * Sort algorithm modified from the C# implementation written by Jonathan de Halleux, 
@@ -62,23 +62,23 @@ namespace XPTable.Sorting
         /// </summary>
         public override void Sort()
         {
-            if (this.TableModel == null)
+            if (TableModel == null)
             {
                 return;
             }
 
-            int n = this.TableModel.Rows.Count;
+            var n = TableModel.Rows.Count;
 
-            for (int i = n / 2; i > 0; i--)
+            for (var i = n / 2; i > 0; i--)
             {
-                this.DownHeap(i, n);
+                DownHeap(i, n);
             }
 
             do
             {
-                this.Swap(0, n - 1);
-                n = n - 1;
-                this.DownHeap(1, n);
+                Swap(0, n - 1);
+                n--;
+                DownHeap(1, n);
             }
             while (n > 1);
         }
@@ -91,7 +91,7 @@ namespace XPTable.Sorting
         private void DownHeap(int k, int n)
         {
             int j;
-            bool loop = true;
+            var loop = true;
 
             while ((k <= n / 2) && loop)
             {
@@ -99,19 +99,19 @@ namespace XPTable.Sorting
 
                 if (j < n)
                 {
-                    if (this.Compare(this.TableModel.Rows[j - 1], this.TableModel.Rows[j]) < 0)
+                    if (Compare(TableModel.Rows[j - 1], TableModel.Rows[j]) < 0)
                     {
                         j++;
                     }
                 }
 
-                if (this.Compare(this.TableModel.Rows[k - 1], this.TableModel.Rows[j - 1]) >= 0)
+                if (Compare(TableModel.Rows[k - 1], TableModel.Rows[j - 1]) >= 0)
                 {
                     loop = false;
                 }
                 else
                 {
-                    this.Swap(k - 1, j - 1);
+                    Swap(k - 1, j - 1);
 
                     k = j;
                 }

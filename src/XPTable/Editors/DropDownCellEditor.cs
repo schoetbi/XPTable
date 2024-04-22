@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  * 
  * DropDownCellEditor.ActivationListener, DropDownCellEditor.ShowDropDown() and 
@@ -52,7 +52,7 @@ namespace XPTable.Editors
         /// <summary>
         /// The container that holds the Control displayed when editor is dropped down
         /// </summary>
-        private DropDownContainer dropDownContainer;
+        private readonly DropDownContainer dropDownContainer;
 
         /// <summary>
         /// Specifies whether the DropDownContainer is currently displayed
@@ -72,7 +72,7 @@ namespace XPTable.Editors
         /// <summary>
         /// Listener for WM_NCACTIVATE and WM_ACTIVATEAPP messages
         /// </summary>
-        private ActivationListener activationListener;
+        private readonly ActivationListener activationListener;
 
         /// <summary>
         /// The Form that will own the DropDownContainer
@@ -96,22 +96,24 @@ namespace XPTable.Editors
         public DropDownCellEditor()
             : base()
         {
-            TextBox textbox = new TextBox();
-            textbox.AutoSize = false;
-            textbox.BackColor = SystemColors.Window;
-            textbox.BorderStyle = BorderStyle.None;
+            var textbox = new TextBox
+            {
+                AutoSize = false,
+                BackColor = SystemColors.Window,
+                BorderStyle = BorderStyle.None
+            };
             textbox.MouseEnter += new EventHandler(textbox_MouseEnter);
-            this.Control = textbox;
+            Control = textbox;
 
-            this.dropDownContainer = new DropDownContainer(this);
+            dropDownContainer = new DropDownContainer(this);
 
-            this.droppedDown = false;
-            this.DropDownStyle = DropDownStyle.DropDownList;
-            this.dropDownWidth = -1;
+            droppedDown = false;
+            DropDownStyle = DropDownStyle.DropDownList;
+            dropDownWidth = -1;
 
-            this.parentForm = null;
-            this.activationListener = new ActivationListener(this);
-            this.containsMouse = false;
+            parentForm = null;
+            activationListener = new ActivationListener(this);
+            containsMouse = false;
         }
 
         #endregion
@@ -131,7 +133,7 @@ namespace XPTable.Editors
         /// <returns>true if the ICellEditor can continue editing the Cell, false otherwise</returns>
         public override bool PrepareForEditing(Cell cell, Table table, CellPos cellPos, Rectangle cellRect, bool userSetEditorValues)
         {
-            if (!(table.ColumnModel.Columns[cellPos.Column] is DropDownColumn))
+            if (table.ColumnModel.Columns[cellPos.Column] is not DropDownColumn)
             {
                 throw new InvalidOperationException("Cannot edit Cell as DropDownCellEditor can only be used with a DropDownColumn");
             }
@@ -145,19 +147,19 @@ namespace XPTable.Editors
         /// </summary>
         public override void StartEditing()
         {
-            this.TextBox.KeyPress += new KeyPressEventHandler(OnKeyPress);
-            this.TextBox.LostFocus += new EventHandler(OnLostFocus);
+            TextBox.KeyPress += new KeyPressEventHandler(OnKeyPress);
+            TextBox.LostFocus += new EventHandler(OnLostFocus);
 
             base.StartEditing();
 
-            this.parentForm = this.EditingTable.FindForm();
+            parentForm = EditingTable.FindForm();
 
-            if (this.DroppedDown)
+            if (DroppedDown)
             {
-                this.ShowDropDown();
+                ShowDropDown();
             }
 
-            this.TextBox.Focus();
+            TextBox.Focus();
         }
 
 
@@ -166,14 +168,14 @@ namespace XPTable.Editors
         /// </summary>
         public override void StopEditing()
         {
-            this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
-            this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
+            TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
+            TextBox.LostFocus -= new EventHandler(OnLostFocus);
 
             base.StopEditing();
 
-            this.DroppedDown = false;
+            DroppedDown = false;
 
-            this.parentForm = null;
+            parentForm = null;
         }
 
 
@@ -182,14 +184,14 @@ namespace XPTable.Editors
         /// </summary>
         public override void CancelEditing()
         {
-            this.TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
-            this.TextBox.LostFocus -= new EventHandler(OnLostFocus);
+            TextBox.KeyPress -= new KeyPressEventHandler(OnKeyPress);
+            TextBox.LostFocus -= new EventHandler(OnLostFocus);
 
             base.CancelEditing();
 
-            this.DroppedDown = false;
+            DroppedDown = false;
 
-            this.parentForm = null;
+            parentForm = null;
         }
 
 
@@ -198,31 +200,31 @@ namespace XPTable.Editors
         /// </summary>
         protected virtual void ShowDropDown()
         {
-            Point p = this.EditingTable.PointToScreen(this.TextBox.Location);
-            p.Y += this.TextBox.Height + 1;
+            var p = EditingTable.PointToScreen(TextBox.Location);
+            p.Y += TextBox.Height + 1;
 
-            Rectangle screenBounds = Screen.GetBounds(p);
+            var screenBounds = Screen.GetBounds(p);
 
-            if (p.Y + this.dropDownContainer.Height > screenBounds.Bottom)
+            if (p.Y + dropDownContainer.Height > screenBounds.Bottom)
             {
-                p.Y -= this.TextBox.Height + this.dropDownContainer.Height + 1;
+                p.Y -= TextBox.Height + dropDownContainer.Height + 1;
             }
 
-            if (p.X + this.dropDownContainer.Width > screenBounds.Right)
+            if (p.X + dropDownContainer.Width > screenBounds.Right)
             {
-                ICellRenderer renderer = this.EditingTable.ColumnModel.GetCellRenderer(this.EditingCellPos.Column);
-                int buttonWidth = ((DropDownCellRenderer)renderer).ButtonWidth;
+                var renderer = EditingTable.ColumnModel.GetCellRenderer(EditingCellPos.Column);
+                var buttonWidth = ((DropDownCellRenderer)renderer).ButtonWidth;
 
-                p.X = p.X + this.TextBox.Width + buttonWidth - this.dropDownContainer.Width;
+                p.X = p.X + TextBox.Width + buttonWidth - dropDownContainer.Width;
             }
 
-            this.dropDownContainer.Location = p;
+            dropDownContainer.Location = p;
 
-            this.parentForm.AddOwnedForm(this.dropDownContainer);
-            this.activationListener.AssignHandle(this.parentForm.Handle);
+            parentForm.AddOwnedForm(dropDownContainer);
+            activationListener.AssignHandle(parentForm.Handle);
 
-            this.dropDownContainer.ShowDropDown();
-            this.dropDownContainer.Activate();
+            dropDownContainer.ShowDropDown();
+            dropDownContainer.Activate();
 
             // A little bit of fun.  We've shown the popup,
             // but because we've kept the main window's
@@ -249,13 +251,13 @@ namespace XPTable.Editors
         /// </summary>
         protected virtual void HideDropDown()
         {
-            this.dropDownContainer.HideDropDown();
+            dropDownContainer.HideDropDown();
 
-            this.parentForm.RemoveOwnedForm(this.dropDownContainer);
+            parentForm.RemoveOwnedForm(dropDownContainer);
 
-            this.activationListener.ReleaseHandle();
+            activationListener.ReleaseHandle();
 
-            this.parentForm.Activate();
+            parentForm.Activate();
         }
 
 
@@ -283,42 +285,42 @@ namespace XPTable.Editors
         /// false to allow the message to continue to the next filter or control</returns>
         public override bool ProcessMouseMessage(Control target, WindowMessage msg, long wParam, long lParam)
         {
-            if (this.DroppedDown)
+            if (DroppedDown)
             {
-                if (msg == WindowMessage.WM_LBUTTONDOWN || msg == WindowMessage.WM_RBUTTONDOWN ||
-                    msg == WindowMessage.WM_MBUTTONDOWN || msg == WindowMessage.WM_XBUTTONDOWN ||
-                    msg == WindowMessage.WM_NCLBUTTONDOWN || msg == WindowMessage.WM_NCRBUTTONDOWN ||
-                    msg == WindowMessage.WM_NCMBUTTONDOWN || msg == WindowMessage.WM_NCXBUTTONDOWN)
+                if (msg is WindowMessage.WM_LBUTTONDOWN or WindowMessage.WM_RBUTTONDOWN or
+                    WindowMessage.WM_MBUTTONDOWN or WindowMessage.WM_XBUTTONDOWN or
+                    WindowMessage.WM_NCLBUTTONDOWN or WindowMessage.WM_NCRBUTTONDOWN or
+                    WindowMessage.WM_NCMBUTTONDOWN or WindowMessage.WM_NCXBUTTONDOWN)
                 {
-                    Point cursorPos = Cursor.Position;
+                    var cursorPos = Cursor.Position;
 
-                    if (!this.DropDown.Bounds.Contains(cursorPos))
+                    if (!DropDown.Bounds.Contains(cursorPos))
                     {
-                        if (target != this.EditingTable && target != this.TextBox)
+                        if (target != EditingTable && target != TextBox)
                         {
-                            if (this.ShouldStopEditing(target, cursorPos))
+                            if (ShouldStopEditing(target, cursorPos))
                             {
-                                this.EditingTable.StopEditing();
+                                EditingTable.StopEditing();
                             }
                         }
                     }
                 }
                 else if (msg == WindowMessage.WM_MOUSEMOVE)
                 {
-                    Point cursorPos = Cursor.Position;
+                    var cursorPos = Cursor.Position;
 
-                    if (this.DropDown.Bounds.Contains(cursorPos))
+                    if (DropDown.Bounds.Contains(cursorPos))
                     {
-                        if (!this.containsMouse)
+                        if (!containsMouse)
                         {
-                            this.containsMouse = true;
+                            containsMouse = true;
 
-                            this.EditingTable.RaiseCellMouseLeave(this.EditingCellPos);
+                            EditingTable.RaiseCellMouseLeave(EditingCellPos);
                         }
                     }
                     else
                     {
-                        this.containsMouse = true;
+                        containsMouse = true;
                     }
                 }
             }
@@ -342,9 +344,9 @@ namespace XPTable.Editors
             {
                 if (((Keys)wParam) == Keys.F4)
                 {
-                    if (this.TextBox.Focused || this.DropDown.ContainsFocus)
+                    if (TextBox.Focused || DropDown.ContainsFocus)
                     {
-                        this.DroppedDown = !this.DroppedDown;
+                        DroppedDown = !DroppedDown;
 
                         return true;
                     }
@@ -362,25 +364,13 @@ namespace XPTable.Editors
         /// <summary>
         /// Gets the TextBox used to edit the Cells contents
         /// </summary>
-        protected TextBox TextBox
-        {
-            get
-            {
-                return this.Control as TextBox;
-            }
-        }
+        protected TextBox TextBox => Control as TextBox;
 
 
         /// <summary>
         /// Gets the container that holds the Control displayed when editor is dropped down
         /// </summary>
-        protected DropDownContainer DropDown
-        {
-            get
-            {
-                return this.dropDownContainer;
-            }
-        }
+        protected DropDownContainer DropDown => dropDownContainer;
 
 
         /// <summary>
@@ -388,24 +378,21 @@ namespace XPTable.Editors
         /// </summary>
         public bool DroppedDown
         {
-            get
-            {
-                return this.droppedDown;
-            }
+            get => droppedDown;
 
             set
             {
-                if (this.droppedDown != value)
+                if (droppedDown != value)
                 {
-                    this.droppedDown = value;
+                    droppedDown = value;
 
                     if (value)
                     {
-                        this.ShowDropDown();
+                        ShowDropDown();
                     }
                     else
                     {
-                        this.HideDropDown();
+                        HideDropDown();
                     }
                 }
             }
@@ -419,18 +406,18 @@ namespace XPTable.Editors
         {
             get
             {
-                if (this.dropDownWidth != -1)
+                if (dropDownWidth != -1)
                 {
-                    return this.dropDownWidth;
+                    return dropDownWidth;
                 }
 
-                return this.dropDownContainer.Width;
+                return dropDownContainer.Width;
             }
 
             set
             {
-                this.dropDownWidth = value;
-                this.dropDownContainer.Width = value;
+                dropDownWidth = value;
+                dropDownContainer.Width = value;
             }
         }
 
@@ -439,28 +426,16 @@ namespace XPTable.Editors
         /// </summary>
         public int DropDownHeight
         {
-            get
-            {
-                return this.dropDownContainer.Height;
-            }
+            get => dropDownContainer.Height;
 
-            set
-            {
-                this.dropDownContainer.Height = value;
-            }
+            set => dropDownContainer.Height = value;
         }
 
 
         /// <summary>
         /// Gets the user defined width of the of the drop-down portion of the editor
         /// </summary>
-        internal int InternalDropDownWidth
-        {
-            get
-            {
-                return this.dropDownWidth;
-            }
-        }
+        internal int InternalDropDownWidth => dropDownWidth;
 
 
         /// <summary>
@@ -468,10 +443,7 @@ namespace XPTable.Editors
         /// </summary>
         public DropDownStyle DropDownStyle
         {
-            get
-            {
-                return this.dropDownStyle;
-            }
+            get => dropDownStyle;
 
             set
             {
@@ -480,11 +452,11 @@ namespace XPTable.Editors
                     throw new InvalidEnumArgumentException("value", (int)value, typeof(DropDownStyle));
                 }
 
-                if (this.dropDownStyle != value)
+                if (dropDownStyle != value)
                 {
-                    this.dropDownStyle = value;
+                    dropDownStyle = value;
 
-                    this.TextBox.ReadOnly = (value == DropDownStyle.DropDownList);
+                    TextBox.ReadOnly = value == DropDownStyle.DropDownList;
                 }
             }
         }
@@ -497,19 +469,19 @@ namespace XPTable.Editors
         {
             get
             {
-                if (this.DropDownStyle == DropDownStyle.DropDownList)
+                if (DropDownStyle == DropDownStyle.DropDownList)
                 {
                     return "";
                 }
 
-                return this.TextBox.SelectedText;
+                return TextBox.SelectedText;
             }
 
             set
             {
-                if (this.DropDownStyle != DropDownStyle.DropDownList && value != null)
+                if (DropDownStyle != DropDownStyle.DropDownList && value != null)
                 {
-                    this.TextBox.SelectedText = value;
+                    TextBox.SelectedText = value;
                 }
             }
         }
@@ -521,15 +493,9 @@ namespace XPTable.Editors
         /// </summary>
         public int SelectionLength
         {
-            get
-            {
-                return this.TextBox.SelectionLength;
-            }
+            get => TextBox.SelectionLength;
 
-            set
-            {
-                this.TextBox.SelectionLength = value;
-            }
+            set => TextBox.SelectionLength = value;
         }
 
 
@@ -538,15 +504,9 @@ namespace XPTable.Editors
         /// </summary>
         public int SelectionStart
         {
-            get
-            {
-                return this.TextBox.SelectionStart;
-            }
+            get => TextBox.SelectionStart;
 
-            set
-            {
-                this.TextBox.SelectionStart = value;
-            }
+            set => TextBox.SelectionStart = value;
         }
 
 
@@ -555,15 +515,9 @@ namespace XPTable.Editors
         /// </summary>
         public string Text
         {
-            get
-            {
-                return this.TextBox.Text;
-            }
+            get => TextBox.Text;
 
-            set
-            {
-                this.TextBox.Text = value;
-            }
+            set => TextBox.Text = value;
         }
 
         #endregion
@@ -580,17 +534,11 @@ namespace XPTable.Editors
         {
             if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
             {
-                if (this.EditingTable != null)
-                {
-                    this.EditingTable.StopEditing();
-                }
+                EditingTable?.StopEditing();
             }
             else if (e.KeyChar == AsciiChars.Escape)
             {
-                if (this.EditingTable != null)
-                {
-                    this.EditingTable.CancelEditing();
-                }
+                EditingTable?.CancelEditing();
             }
         }
 
@@ -602,15 +550,12 @@ namespace XPTable.Editors
         /// <param name="e">An EventArgs that contains the event data</param>
         protected virtual void OnLostFocus(object sender, EventArgs e)
         {
-            if (this.TextBox.Focused || this.DropDown.ContainsFocus)
+            if (TextBox.Focused || DropDown.ContainsFocus)
             {
                 return;
             }
 
-            if (this.EditingTable != null)
-            {
-                this.EditingTable.StopEditing();
-            }
+            EditingTable?.StopEditing();
         }
 
 
@@ -621,7 +566,7 @@ namespace XPTable.Editors
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         public virtual void OnEditorButtonMouseDown(object sender, CellMouseEventArgs e)
         {
-            this.DroppedDown = !this.DroppedDown;
+            DroppedDown = !DroppedDown;
         }
 
 
@@ -643,7 +588,7 @@ namespace XPTable.Editors
         /// <param name="e">An EventArgs that contains the event data</param>
         private void textbox_MouseEnter(object sender, EventArgs e)
         {
-            this.EditingTable.RaiseCellMouseLeave(this.EditingCellPos);
+            EditingTable.RaiseCellMouseLeave(EditingCellPos);
         }
 
         #endregion
@@ -679,15 +624,9 @@ namespace XPTable.Editors
             /// </summary>
             public DropDownCellEditor Editor
             {
-                get
-                {
-                    return this.owner;
-                }
+                get => owner;
 
-                set
-                {
-                    this.owner = value;
-                }
+                set => owner = value;
             }
 
 
@@ -699,22 +638,22 @@ namespace XPTable.Editors
             {
                 base.WndProc(ref m);
 
-                if (this.owner != null && this.owner.DroppedDown)
+                if (owner != null && owner.DroppedDown)
                 {
                     if (m.Msg == (int)WindowMessage.WM_NCACTIVATE)
                     {
                         if (((int)m.WParam) == 0)
                         {
-                            NativeMethods.SendMessage(this.Handle, (int)WindowMessage.WM_NCACTIVATE, new IntPtr(1), IntPtr.Zero);
+                            NativeMethods.SendMessage(Handle, (int)WindowMessage.WM_NCACTIVATE, new IntPtr(1), IntPtr.Zero);
                         }
                     }
                     else if (m.Msg == (int)WindowMessage.WM_ACTIVATEAPP)
                     {
                         if ((int)m.WParam == 0)
                         {
-                            this.owner.DroppedDown = false;
+                            owner.DroppedDown = false;
 
-                            NativeMethods.PostMessage(this.Handle, (int)WindowMessage.WM_NCACTIVATE, IntPtr.Zero, IntPtr.Zero);
+                            NativeMethods.PostMessage(Handle, (int)WindowMessage.WM_NCACTIVATE, IntPtr.Zero, IntPtr.Zero);
                         }
                     }
                 }

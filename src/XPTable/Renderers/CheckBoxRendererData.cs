@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -34,59 +34,56 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// Contains information about the current state of a Cell's check box
-	/// </summary>
-	public class CheckBoxRendererData
-	{
-		#region Class Data
+    /// <summary>
+    /// Contains information about the current state of a Cell's check box
+    /// </summary>
+    public class CheckBoxRendererData
+    {
+        #region Class Data
 
-		/// <summary>
-		/// The current state of the Cells check box
-		/// </summary>
-		private CheckBoxState checkState;
+        /// <summary>
+        /// The current state of the Cells check box
+        /// </summary>
+        private CheckBoxState checkState;
 
-		#endregion
-
-
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ButtonRendererData class with the 
-		/// specified CheckBox state
-		/// </summary>
-		/// <param name="checkState">The current state of the Cells CheckBox</param>
-		public CheckBoxRendererData(CheckBoxState checkState)
-		{
-			this.checkState = checkState;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Properties
+        #region Constructor
 
-		/// <summary>
-		/// Gets or sets the current state of the Cells checkbox
-		/// </summary>
-		public CheckBoxState CheckState
-		{
-			get
-			{
-				return this.checkState;
-			}
+        /// <summary>
+        /// Initializes a new instance of the ButtonRendererData class with the 
+        /// specified CheckBox state
+        /// </summary>
+        /// <param name="checkState">The current state of the Cells CheckBox</param>
+        public CheckBoxRendererData(CheckBoxState checkState)
+        {
+            this.checkState = checkState;
+        }
 
-			set
-			{
-				if (!Enum.IsDefined(typeof(CheckBoxState), value)) 
-				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(CheckBoxState));
-				}
-					
-				this.checkState = value;
-			}
-		}
+        #endregion
 
-		#endregion
-	}
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the current state of the Cells checkbox
+        /// </summary>
+        public CheckBoxState CheckState
+        {
+            get => checkState;
+
+            set
+            {
+                if (!Enum.IsDefined(typeof(CheckBoxState), value))
+                {
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(CheckBoxState));
+                }
+
+                checkState = value;
+            }
+        }
+
+        #endregion
+    }
 }

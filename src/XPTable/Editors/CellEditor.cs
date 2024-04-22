@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -93,13 +93,13 @@ namespace XPTable.Editors
         /// A MouseMessageFilter that receives mouse messages before they 
         /// are dispatched to their destination
         /// </summary>
-        private MouseMessageFilter mouseMessageFilter;
+        private readonly MouseMessageFilter mouseMessageFilter;
 
         /// <summary>
         /// A KeyMessageFilter that receives key messages before they 
         /// are dispatched to their destination
         /// </summary>
-        private KeyMessageFilter keyMessageFilter;
+        private readonly KeyMessageFilter keyMessageFilter;
 
         #endregion
 
@@ -111,14 +111,14 @@ namespace XPTable.Editors
         /// </summary>
         protected CellEditor()
         {
-            this.control = null;
-            this.cell = null;
-            this.table = null;
-            this.cellPos = CellPos.Empty;
-            this.cellRect = Rectangle.Empty;
+            control = null;
+            cell = null;
+            table = null;
+            cellPos = CellPos.Empty;
+            cellRect = Rectangle.Empty;
 
-            this.mouseMessageFilter = new MouseMessageFilter(this);
-            this.keyMessageFilter = new KeyMessageFilter(this);
+            mouseMessageFilter = new MouseMessageFilter(this);
+            keyMessageFilter = new KeyMessageFilter(this);
         }
 
         #endregion
@@ -146,23 +146,23 @@ namespace XPTable.Editors
             // check if the user has already set the editors value for us
             if (!userSetEditorValues)
             {
-                this.SetEditValue();
+                SetEditValue();
             }
 
-            this.SetEditLocation(cellRect);
+            SetEditLocation(cellRect);
 
             // raise the BeginEdit event
             var e = new CellEditEventArgs(cell, this, table, cellPos.Row, cellPos.Column, cellRect)
-                        {
-                            Handled = userSetEditorValues
-                        };
+            {
+                Handled = userSetEditorValues
+            };
 
-            this.OnBeginEdit(e);
+            OnBeginEdit(e);
 
             // if the edit has been canceled, remove the editor and return false
             if (e.Cancel)
             {
-                this.RemoveEditControl();
+                RemoveEditControl();
                 return false;
             }
 
@@ -197,9 +197,9 @@ namespace XPTable.Editors
         /// </summary>
         protected virtual void ShowEditControl()
         {
-            this.control.Parent = this.table;
+            control.Parent = table;
 
-            this.control.Visible = true;
+            control.Visible = true;
         }
 
 
@@ -209,7 +209,7 @@ namespace XPTable.Editors
         /// </summary>
         protected virtual void HideEditControl()
         {
-            this.control.Visible = false;
+            control.Visible = false;
         }
 
 
@@ -219,21 +219,18 @@ namespace XPTable.Editors
         /// </summary>
         protected virtual void RemoveEditControl()
         {
-            if (this.control != null)
+            if (control != null)
             {
-                this.control.Visible = false;
-                this.control.Parent = null;
+                control.Visible = false;
+                control.Parent = null;
             }
 
-            if (this.table != null)
-            {
-                this.table.Focus();
-            }
+            table?.Focus();
 
-            this.cell = null;
-            this.table = null;
-            this.cellPos = CellPos.Empty;
-            this.cellRect = Rectangle.Empty;
+            cell = null;
+            table = null;
+            cellPos = CellPos.Empty;
+            cellRect = Rectangle.Empty;
         }
 
 
@@ -242,10 +239,10 @@ namespace XPTable.Editors
         /// </summary>
         public virtual void StartEditing()
         {
-            this.ShowEditControl();
+            ShowEditControl();
 
-            Application.AddMessageFilter(this.keyMessageFilter);
-            Application.AddMessageFilter(this.mouseMessageFilter);
+            Application.AddMessageFilter(keyMessageFilter);
+            Application.AddMessageFilter(mouseMessageFilter);
         }
 
 
@@ -254,21 +251,21 @@ namespace XPTable.Editors
         /// </summary>
         public virtual void StopEditing()
         {
-            Application.RemoveMessageFilter(this.keyMessageFilter);
-            Application.RemoveMessageFilter(this.mouseMessageFilter);
+            Application.RemoveMessageFilter(keyMessageFilter);
+            Application.RemoveMessageFilter(mouseMessageFilter);
 
-            var e = new CellEditEventArgs(this.cell, this, this.table, this.cellPos.Row, this.cellPos.Column, this.cellRect);
+            var e = new CellEditEventArgs(cell, this, table, cellPos.Row, cellPos.Column, cellRect);
 
-            this.table.OnEditingStopping(e);
-            this.OnEndEdit(e);
+            table.OnEditingStopping(e);
+            OnEndEdit(e);
 
             if (!e.Cancel && !e.Handled)
             {
-                this.SetCellValue();
-				this.table.OnEditingStopped(e);
+                SetCellValue();
+                table.OnEditingStopped(e);
             }
 
-            this.RemoveEditControl();
+            RemoveEditControl();
         }
 
 
@@ -277,15 +274,15 @@ namespace XPTable.Editors
         /// </summary>
         public virtual void CancelEditing()
         {
-            Application.RemoveMessageFilter(this.keyMessageFilter);
-            Application.RemoveMessageFilter(this.mouseMessageFilter);
+            Application.RemoveMessageFilter(keyMessageFilter);
+            Application.RemoveMessageFilter(mouseMessageFilter);
 
-            var e = new CellEditEventArgs(this.cell, this, this.table, this.cellPos.Row, this.cellPos.Column, this.cellRect);
+            var e = new CellEditEventArgs(cell, this, table, cellPos.Row, cellPos.Column, cellRect);
 
-            this.table.OnEditingCancelled(e);
-            this.OnCancelEdit(e);
+            table.OnEditingCancelled(e);
+            OnCancelEdit(e);
 
-            this.RemoveEditControl();
+            RemoveEditControl();
         }
 
 
@@ -300,16 +297,16 @@ namespace XPTable.Editors
         /// false to allow the message to continue to the next filter or control</returns>
         public virtual bool ProcessMouseMessage(Control target, WindowMessage msg, long wParam, long lParam)
         {
-            if (msg == WindowMessage.WM_LBUTTONDOWN || msg == WindowMessage.WM_RBUTTONDOWN ||
-                msg == WindowMessage.WM_MBUTTONDOWN || msg == WindowMessage.WM_XBUTTONDOWN ||
-                msg == WindowMessage.WM_NCLBUTTONDOWN || msg == WindowMessage.WM_NCRBUTTONDOWN ||
-                msg == WindowMessage.WM_NCMBUTTONDOWN || msg == WindowMessage.WM_NCXBUTTONDOWN)
+            if (msg is WindowMessage.WM_LBUTTONDOWN or WindowMessage.WM_RBUTTONDOWN or
+                WindowMessage.WM_MBUTTONDOWN or WindowMessage.WM_XBUTTONDOWN or
+                WindowMessage.WM_NCLBUTTONDOWN or WindowMessage.WM_NCRBUTTONDOWN or
+                WindowMessage.WM_NCMBUTTONDOWN or WindowMessage.WM_NCXBUTTONDOWN)
             {
-                Point cursorPos = Cursor.Position;
+                var cursorPos = Cursor.Position;
 
-                if (target != this.EditingTable && target != this.Control)
+                if (target != EditingTable && target != Control)
                 {
-                    this.EditingTable.StopEditing();
+                    EditingTable.StopEditing();
                 }
             }
 
@@ -341,63 +338,33 @@ namespace XPTable.Editors
         /// </summary>
         protected Control Control
         {
-            get
-            {
-                return this.control;
-            }
+            get => control;
 
-            set
-            {
-                this.control = value;
-            }
+            set => control = value;
         }
 
 
         /// <summary>
         /// Gets the Cell that is being edited
         /// </summary>
-        public Cell EditingCell
-        {
-            get
-            {
-                return this.cell;
-            }
-        }
+        public Cell EditingCell => cell;
 
 
         /// <summary>
         /// Gets the Table that contains the Cell being edited
         /// </summary>
-        public Table EditingTable
-        {
-            get
-            {
-                return this.table;
-            }
-        }
+        public Table EditingTable => table;
 
 
         /// <summary>
         /// Gets a CellPos that represents the position of the Cell being edited
         /// </summary>
-        public CellPos EditingCellPos
-        {
-            get
-            {
-                return this.cellPos;
-            }
-        }
+        public CellPos EditingCellPos => cellPos;
 
         /// <summary>
         /// Gets whether the CellEditor is currently editing a Cell
         /// </summary>
-        public bool IsEditing
-        {
-            get
-            {
-                return this.cell != null;
-            }
-        }
+        public bool IsEditing => cell != null;
 
         #endregion
 
@@ -410,10 +377,7 @@ namespace XPTable.Editors
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
         protected virtual void OnBeginEdit(CellEditEventArgs e)
         {
-            if (this.BeginEdit != null)
-            {
-                this.BeginEdit(this, e);
-            }
+            BeginEdit?.Invoke(this, e);
         }
 
 
@@ -423,10 +387,7 @@ namespace XPTable.Editors
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
         protected virtual void OnEndEdit(CellEditEventArgs e)
         {
-            if (this.EndEdit != null)
-            {
-                this.EndEdit(this, e);
-            }
+            EndEdit?.Invoke(this, e);
         }
 
 
@@ -436,10 +397,7 @@ namespace XPTable.Editors
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
         protected virtual void OnCancelEdit(CellEditEventArgs e)
         {
-            if (this.CancelEdit != null)
-            {
-                this.CancelEdit(this, e);
-            }
+            CancelEdit?.Invoke(this, e);
         }
 
         #endregion

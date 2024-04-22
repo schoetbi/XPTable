@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -56,12 +56,12 @@ namespace XPTable.Models
         /// <summary>
         /// More columns menuitem
         /// </summary>
-        private ToolStripMenuItem moreMenuItem;
+        private readonly ToolStripMenuItem moreMenuItem;
 
         /// <summary>
         /// Seperator menuitem
         /// </summary>
-        private ToolStripMenuItem separator;
+        private readonly ToolStripMenuItem separator;
 
         #endregion
 
@@ -74,12 +74,12 @@ namespace XPTable.Models
         /// </summary>
         public HeaderContextMenu() : base()
         {
-            this.model = null;
-            this.enabled = true;
+            model = null;
+            enabled = true;
 
-            this.moreMenuItem = new ToolStripMenuItem("More...");
-            this.moreMenuItem.Click += moreMenuItem_Click;
-            this.separator = new ToolStripMenuItem("-");
+            moreMenuItem = new ToolStripMenuItem("More...");
+            moreMenuItem.Click += moreMenuItem_Click;
+            separator = new ToolStripMenuItem("-");
         }
 
         private void MoreMenuItem_Click(object sender, EventArgs e)
@@ -108,7 +108,7 @@ namespace XPTable.Models
                 throw new ArgumentNullException("control", "control cannot be null");
             }
 
-            if (!(control is Table))
+            if (control is not Table)
             {
                 throw new ArgumentException("control must be of type Table", "control");
             }
@@ -119,10 +119,10 @@ namespace XPTable.Models
             }
 
             //
-            this.model = ((Table)control).ColumnModel;
+            model = ((Table)control).ColumnModel;
 
             //
-            this.Items.Clear();
+            Items.Clear();
 
             base.Show(control, pos);
         }
@@ -133,15 +133,9 @@ namespace XPTable.Models
         /// </summary>
         internal bool Enabled
         {
-            get
-            {
-                return this.enabled;
-            }
+            get => enabled;
 
-            set
-            {
-                this.enabled = value;
-            }
+            set => enabled = value;
         }
 
         #endregion
@@ -156,26 +150,26 @@ namespace XPTable.Models
 
         protected override void OnOpening(CancelEventArgs e)
         {
-            if (this.model.Columns.Count > 0)
+            if (model.Columns.Count > 0)
             {
                 ToolStripMenuItem item;
 
-                for (int i = 0; i < this.model.Columns.Count; i++)
+                for (var i = 0; i < model.Columns.Count; i++)
                 {
                     if (i == 10)
                     {
-                        this.Items.Add(this.separator);
-                        this.Items.Add(this.moreMenuItem);
+                        Items.Add(separator);
+                        Items.Add(moreMenuItem);
 
                         break;
                     }
 
                     // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-                    item = new ToolStripMenuItem(this.model.Columns[i].Text);
+                    item = new ToolStripMenuItem(model.Columns[i].Text);
                     item.Click += menuItem_Click;
-                    item.Checked = this.model.Columns[i].Visible;
+                    item.Checked = model.Columns[i].Visible;
 
-                    this.Items.Add(item);
+                    Items.Add(item);
                 }
             }
 
@@ -191,7 +185,7 @@ namespace XPTable.Models
         {
             var item = (ToolStripMenuItem)sender;
 
-            this.model.Columns[item.MergeIndex].Visible = !item.Checked;
+            model.Columns[item.MergeIndex].Visible = !item.Checked;
         }
 
 
@@ -202,9 +196,9 @@ namespace XPTable.Models
         /// <param name="e"></param>
         private void moreMenuItem_Click(object sender, EventArgs e)
         {
-            ShowColumnsDialog scd = new ShowColumnsDialog();
-            scd.AddColumns(this.model);
-            scd.ShowDialog(this.SourceControl);
+            var scd = new ShowColumnsDialog();
+            scd.AddColumns(model);
+            scd.ShowDialog(SourceControl);
         }
 
         #endregion

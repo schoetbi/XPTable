@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -36,110 +36,109 @@ using XPTable.Win32;
 
 namespace XPTable.Editors
 {
-	/// <summary>
-	/// A class for editing Cells that contain numbers
-	/// </summary>
-	public class DoubleCellEditor : CellEditor, IEditorUsesRendererButtons
-	{
-		#region Class Data
+    /// <summary>
+    /// A class for editing Cells that contain numbers
+    /// </summary>
+    public class DoubleCellEditor : CellEditor, IEditorUsesRendererButtons
+    {
+        #region Class Data
 
-	    /// <summary>
-	    /// ID number for the up button
-	    /// </summary>
-	    protected enum ButtonId
-	    {
+        /// <summary>
+        /// ID number for the up button
+        /// </summary>
+        protected enum ButtonId
+        {
             Undefined,
             UpButtonID = 1,
             DownButtonID = 2
-        } 
-        
-		/// <summary>
-		/// The current value of the editor
-		/// </summary>
-		private double currentValue;
+        }
 
-		/// <summary>
-		/// The value to increment or decrement when the up or down buttons are clicked
-		/// </summary>
-		private double increment;
+        /// <summary>
+        /// The current value of the editor
+        /// </summary>
+        private double currentValue;
 
-		/// <summary>
-		/// The maximum value for the editor
-		/// </summary>
-		private double maximum;
+        /// <summary>
+        /// The value to increment or decrement when the up or down buttons are clicked
+        /// </summary>
+        private double increment;
 
-		/// <summary>
-		/// The inximum value for the editor
-		/// </summary>
-		private double minimum;
+        /// <summary>
+        /// The maximum value for the editor
+        /// </summary>
+        private double maximum;
 
-		/// <summary>
-		/// A string that specifies how editors value is formatted
-		/// </summary>
-		private string format;
+        /// <summary>
+        /// The inximum value for the editor
+        /// </summary>
+        private double minimum;
 
-		/// <summary>
-		/// The amount the mouse wheel has moved
-		/// </summary>
-		private int wheelDelta;
+        /// <summary>
+        /// A string that specifies how editors value is formatted
+        /// </summary>
+        private string format;
 
-		/// <summary>
-		/// Indicates whether the arrow keys should be passed to the editor
-		/// </summary>
-		private bool interceptArrowKeys;
+        /// <summary>
+        /// The amount the mouse wheel has moved
+        /// </summary>
+        private int wheelDelta;
 
-		/// <summary>
-		/// Specifies whether the editors text value is changing
-		/// </summary>
-		private bool changingText;
+        /// <summary>
+        /// Indicates whether the arrow keys should be passed to the editor
+        /// </summary>
+        private bool interceptArrowKeys;
 
-		/// <summary>
-		/// Initial interval between timer events
-		/// </summary>
-		private const int TimerInterval = 500;
+        /// <summary>
+        /// Specifies whether the editors text value is changing
+        /// </summary>
+        private bool changingText;
 
-		/// <summary>
-		/// Current interval between timer events
-		/// </summary>
-		private int interval;
+        /// <summary>
+        /// Initial interval between timer events
+        /// </summary>
+        private const int TimerInterval = 500;
 
-		/// <summary>
-		/// Indicates whether the user has changed the editors value
-		/// </summary>
-		private bool userEdit;
+        /// <summary>
+        /// Current interval between timer events
+        /// </summary>
+        private int interval;
 
-		/// <summary>
-		/// The bounding Rectangle of the up and down buttons
-		/// </summary>
-		private Rectangle buttonBounds;
+        /// <summary>
+        /// Indicates whether the user has changed the editors value
+        /// </summary>
+        private bool userEdit;
 
-		/// <summary>
-		/// The id of the button that was pressed
-		/// </summary>
-		private ButtonId buttonID;
+        /// <summary>
+        /// The bounding Rectangle of the up and down buttons
+        /// </summary>
+        private Rectangle buttonBounds;
 
-		/// <summary>
-		/// Timer to to fire button presses at regular intervals while 
-		/// a button is pressed
-		/// </summary>
-		private Timer timer;
-		#endregion
+        /// <summary>
+        /// The id of the button that was pressed
+        /// </summary>
+        private ButtonId buttonID;
 
-		#region Events
-		/// <summary>
-		/// Occurs when the CellEditor is just about to change the value
-		/// </summary>
-		public event DoubleCellEditEventHandler BeforeChange;
+        /// <summary>
+        /// Timer to to fire button presses at regular intervals while 
+        /// a button is pressed
+        /// </summary>
+        private Timer timer;
+        #endregion
 
-		/// <summary>
-		/// Raises the BeforeChange event
-		/// </summary>
-		/// <param name="e">A CellEditEventArgs that contains the event data</param>
-		protected virtual void OnBeforeChange(DoubleCellEditEventArgs e)
-		{
-			if (this.BeforeChange != null)
-				this.BeforeChange(this, e);
-		}
+        #region Events
+        /// <summary>
+        /// Occurs when the CellEditor is just about to change the value
+        /// </summary>
+        public event DoubleCellEditEventHandler BeforeChange;
+
+        /// <summary>
+        /// Raises the BeforeChange event
+        /// </summary>
+        /// <param name="e">A CellEditEventArgs that contains the event data</param>
+        protected virtual void OnBeforeChange(DoubleCellEditEventArgs e)
+        {
+            BeforeChange?.Invoke(this, e);
+        }
         #endregion
 
         #region Constructor
@@ -147,599 +146,574 @@ namespace XPTable.Editors
         /// Initializes a new instance of the DoubleCellEditor class with default settings
         /// </summary>
         public DoubleCellEditor()
-		{
-		    TextBox textbox = new TextBox
-		                      {
-		                          AutoSize = false,
-		                          BorderStyle = BorderStyle.None
-		                      };
-		    this.Control = textbox;
-
-			this.currentValue = 0;
-			this.increment = 1;
-			this.minimum = 0;
-			this.maximum = 100;
-			this.format = "G";
-
-			this.wheelDelta = 0;
-			this.interceptArrowKeys = true;
-			this.userEdit = false;
-			this.changingText = false;
-			this.buttonBounds = Rectangle.Empty;
-			this.buttonID = ButtonId.Undefined;
-			this.interval = TimerInterval;
-		}
-		#endregion
-
-		#region Methods
-
-		/// <summary>
-		/// Prepares the CellEditor to edit the specified Cell
-		/// </summary>
-		/// <param name="cell">The Cell to be edited</param>
-		/// <param name="table">The Table that contains the Cell</param>
-		/// <param name="cellPos">A CellPos representing the position of the Cell</param>
-		/// <param name="cellRect">The Rectangle that represents the Cells location and size</param>
-		/// <param name="userSetEditorValues">Specifies whether the ICellEditors 
-		/// starting value has already been set by the user</param>
-		/// <returns>true if the ICellEditor can continue editing the Cell, false otherwise</returns>
-		public override bool PrepareForEditing(Cell cell, Table table, CellPos cellPos, Rectangle cellRect, bool userSetEditorValues)
-		{
-			//
-			if (!(table.ColumnModel.Columns[cellPos.Column] is DoubleColumn))
-			{
-				throw new InvalidOperationException("Cannot edit Cell as DoubleCellEditor can only be used with a NumberColumn");
-			}
-			
-			if (!(table.ColumnModel.GetCellRenderer(cellPos.Column) is DoubleCellRenderer))
-			{
-				throw new InvalidOperationException("Cannot edit Cell as DoubleCellEditor can only be used with a NumberColumn that uses a NumberCellRenderer");
-			}
-			
-			this.Minimum = ((DoubleColumn) table.ColumnModel.Columns[cellPos.Column]).Minimum;
-			this.Maximum = ((DoubleColumn) table.ColumnModel.Columns[cellPos.Column]).Maximum;
-			this.Increment = ((DoubleColumn) table.ColumnModel.Columns[cellPos.Column]).Increment;
-			
-			return base.PrepareForEditing (cell, table, cellPos, cellRect, userSetEditorValues);
-		}
-
-
-		/// <summary>
-		/// Sets the initial value of the editor based on the contents of 
-		/// the Cell being edited
-		/// </summary>
-		protected override void SetEditValue()
-		{
-			// make sure we start with a valid value
-			this.Value = this.Minimum;
-
-			// attempt to get the cells data
-			this.Value = Convert.ToDouble(this.EditingCell.Data);
-		}
-
-
-		/// <summary>
-		/// Sets the contents of the Cell being edited based on the value 
-		/// in the editor
-		/// </summary>
-		protected override void SetCellValue()
-		{
-			this.EditingCell.Data = this.Value;
-		}
-
-
-		/// <summary>
-		/// Starts editing the Cell
-		/// </summary>
-		public override void StartEditing()
-		{
-			this.TextBox.MouseWheel += new MouseEventHandler(OnMouseWheel);
-			this.TextBox.KeyDown += new KeyEventHandler(OnTextBoxKeyDown);
-			this.TextBox.KeyPress += new KeyPressEventHandler(OnTextBoxKeyPress);
-			this.TextBox.LostFocus += new EventHandler(OnTextBoxLostFocus);
-			
-			base.StartEditing();
-
-			this.TextBox.Focus();
-		}
-
-
-		/// <summary>
-		/// Stops editing the Cell and commits any changes
-		/// </summary>
-		public override void StopEditing()
-		{
-			this.TextBox.MouseWheel -= new MouseEventHandler(OnMouseWheel);
-			this.TextBox.KeyDown -= new KeyEventHandler(OnTextBoxKeyDown);
-			this.TextBox.KeyPress -= new KeyPressEventHandler(OnTextBoxKeyPress);
-			this.TextBox.LostFocus -= new EventHandler(OnTextBoxLostFocus);
-			
-			base.StopEditing();
-		}
-
-
-		/// <summary>
-		/// Stops editing the Cell and ignores any changes
-		/// </summary>
-		public override void CancelEditing()
-		{
-			this.TextBox.MouseWheel -= new MouseEventHandler(OnMouseWheel);
-			this.TextBox.KeyDown -= new KeyEventHandler(OnTextBoxKeyDown);
-			this.TextBox.KeyPress -= new KeyPressEventHandler(OnTextBoxKeyPress);
-			this.TextBox.LostFocus -= new EventHandler(OnTextBoxLostFocus);
-			
-			base.CancelEditing();
-		}
-
-
-		/// <summary>
-		/// Sets the location and size of the CellEditor
-		/// </summary>
-		/// <param name="cellRect">A Rectangle that represents the size and location 
-		/// of the Cell being edited</param>
-		protected override void SetEditLocation(Rectangle cellRect)
-		{
-			// calc the size of the textbox
-			ICellRenderer renderer = this.EditingTable.ColumnModel.GetCellRenderer(this.EditingCellPos.Column);
-			int buttonWidth = ((DoubleCellRenderer) renderer).ButtonWidth;
-
-			this.TextBox.Size = new Size(cellRect.Width - 1 - buttonWidth, cellRect.Height-1);
-			
-			// calc the location of the textbox
-			this.TextBox.Location = cellRect.Location;
-			this.buttonBounds = new Rectangle(this.TextBox.Left + 1, this.TextBox.Top, buttonWidth, this.TextBox.Height);
-
-			if (((DoubleColumn) this.EditingTable.ColumnModel.Columns[this.EditingCellPos.Column]).UpDownAlign == LeftRightAlignment.Left)
-			{
-				this.TextBox.Location = new Point(cellRect.Left + buttonWidth, cellRect.Top);
-				this.buttonBounds.Location = new Point(cellRect.Left, cellRect.Top);
-			}
-		}
-
-
-		/// <summary>
-		/// Simulates the up button being pressed
-		/// </summary>
-		protected void UpButton()
-		{
-			if (this.UserEdit)
-			{
-				this.ParseEditText();
-			}
-
-			double newValue = this.currentValue;
-
-		    if (newValue > (double.MaxValue - this.increment))
-			{
-				newValue = double.MaxValue;
-			}
-			else
-			{
-				newValue += this.increment;
-
-				if (newValue > this.maximum)
-				{
-					newValue = this.maximum;
-				}
-			}
-
-			//Cell source, ICellEditor editor, Table table, int row, int column, Rectangle cellRect
-		    DoubleCellEditEventArgs e = new DoubleCellEditEventArgs(this.cell, this, this.table, this.cell.Row.Index,
-		                                     this.cellPos.Column, this.cellRect, this.currentValue)
-		                                 {
-		                                     NewValue = newValue
-		                                 };
-
-		    this.OnBeforeChange(e);
-
-			if (!e.Cancel)
-				this.Value = e.NewValue;
-		}
-
-
-		/// <summary>
-		/// Simulates the down button being pressed
-		/// </summary>
-		protected void DownButton()
-		{
-			if (this.UserEdit)
-			{
-				this.ParseEditText();
-			}
-
-			double num = this.currentValue;
-
-			if (num < (double.MinValue + this.increment))
-			{
-				num = double.MinValue;
-			}
-			else
-			{
-				num -= this.increment;
-
-				if (num < this.minimum)
-				{
-					num = this.minimum;
-				}
-			}
-
-		    DoubleCellEditEventArgs e = new DoubleCellEditEventArgs(this.cell, this, this.table, this.cell.Row.Index,
-		                                     this.cellPos.Column, this.cellRect, this.currentValue)
-		                                 {
-		                                     NewValue = num
-		                                 };
-
-		    OnBeforeChange(e);
-
-		    if (!e.Cancel)
-		    {
-		        this.Value = e.NewValue;
-		    }
-		}
-
-
-		/// <summary>
-		/// Updates the editors text value to the current value
-		/// </summary>
-		protected void UpdateEditText()
-		{
-			if (this.UserEdit)
-			{
-				this.ParseEditText();
-			}
-
-			this.ChangingText = true;
-
-			this.Control.Text = this.currentValue.ToString(this.Format);
-		}
-
-
-		/// <summary>
-		/// Checks the current value and updates the editors text value
-		/// </summary>
-		protected virtual void ValidateEditText()
-		{
-			this.ParseEditText();
-			this.UpdateEditText();
-		}
-
-
-		/// <summary>
-		/// Converts the editors current value to a number
-		/// </summary>
-		protected void ParseEditText()
-		{
-			try
-			{
-				this.Value = this.Constrain(double.Parse(this.Control.Text));
-			}
-			catch (Exception)
-			{
-				return;
-			}
-			finally
-			{
-				this.UserEdit = false;
-			}
-		}
-
-
-		/// <summary>
-		/// Ensures that the specified value is between the editors Maximun and 
-		/// Minimum values
-		/// </summary>
-		/// <param name="value">The value to be checked</param>
-		/// <returns>A value is between the editors Maximun and Minimum values</returns>
-		private double Constrain(double value)
-		{
-			if (value < this.minimum)
-			{
-				value = this.minimum;
-			}
-
-			if (value > this.maximum)
-			{
-				value = this.maximum;
-			}
-
-			return value;
-		}
-
-
-		/// <summary>
-		/// Starts the Timer
-		/// </summary>
-		protected void StartTimer()
-		{
-			if (this.timer == null)
-			{
-				this.timer = new Timer();
-				this.timer.Tick += new EventHandler(this.TimerHandler);
-			}
-
-			this.interval = TimerInterval;
-			this.timer.Interval = this.interval;
-			this.timer.Start();
-		}
-
-
-		/// <summary>
-		/// Stops the Timer
-		/// </summary>
-		protected void StopTimer()
-		{
-			if (this.timer != null)
-			{
-				this.timer.Stop();
-				this.timer.Dispose();
-				this.timer = null;
-			}
-		}
-
-		#endregion
-
-		#region Properties
-
-		/// <summary>
-		/// Gets the TextBox used to edit the Cells contents
-		/// </summary>
-		public TextBox TextBox
-		{
-			get
-			{
-				return this.Control as TextBox;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the editors current value
-		/// </summary>
-		protected double Value
-		{
-			get
-			{
-				if (this.UserEdit)
-					this.ValidateEditText();
-
-				return this.currentValue;
-			}
-
-			set
-			{
-				if (value != this.currentValue)
-				{
-					if (value < this.minimum)
-						value = this.minimum;
-
-					if (value > this.maximum)
-						value = this.maximum;
-
-					this.currentValue = value;
-
-					this.UpdateEditText();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the value to increment or decrement when the up or down 
-		/// buttons are clicked
-		/// </summary>
-		protected double Increment
-		{
-			get
-			{
-				return this.increment;
-			}
-
-			set
-			{
-				if (value < 0)
-				{
-					throw new ArgumentException("increment must be greater than zero");
-				}
-
-				this.increment = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the maximum value for the editor
-		/// </summary>
-		protected double Maximum
-		{
-			get
-			{
-				return this.maximum;
-			}
-
-			set
-			{
-				this.maximum = value;
-				
-				if (this.minimum > this.maximum)
-				{
-					this.minimum = this.maximum;
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the minimum value for the editor
-		/// </summary>
-		protected double Minimum
-		{
-			get
-			{
-				return this.minimum;
-			}
-
-			set
-			{
-				this.minimum = value;
-
-				if (this.minimum > this.maximum)
-				{
-					this.maximum = value;
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the string that specifies how the editors contents 
-		/// are formatted
-		/// </summary>
-		protected string Format
-		{
-			get
-			{
-				return this.format;
-			}
-
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException("value");
-				}
-				
-				this.format = value;
-
-				this.UpdateEditText();
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets whether the editors text is being updated
-		/// </summary>
-		protected bool ChangingText
-		{
-			get
-			{
-				return this.changingText;
-			}
-
-			set
-			{
-				this.changingText = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets whether the arrow keys should be passed to the editor
-		/// </summary>
-		public bool InterceptArrowKeys
-		{
-			get
-			{
-				return this.interceptArrowKeys;
-			}
-
-			set
-			{
-				this.interceptArrowKeys = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets whether the user has changed the editors value
-		/// </summary>
-		protected bool UserEdit
-		{
-			get
-			{
-				return this.userEdit;
-			}
-			set
-			{
-				this.userEdit = value;
-			}
-		}
-
-		#endregion
-
-		#region Events
-		/// <summary>
-		/// Handler for the editors TextBox.MouseWheel event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A MouseEventArgs that contains the event data</param>
-		protected internal virtual void OnMouseWheel(object sender, MouseEventArgs e)
-		{
-			bool up = true;
-
-			this.wheelDelta += e.Delta;
-
-			if (Math.Abs(this.wheelDelta) >= 120)
-			{
-				if (this.wheelDelta < 0)
-					up = false;
-
-				if (up)
-					this.UpButton();
-				else
-					this.DownButton();
-
-				this.wheelDelta = 0;
-			}
-		}
-
-		/// <summary>
-		/// Handler for the editors TextBox.KeyDown event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A KeyEventArgs that contains the event data</param>
-		protected virtual void OnTextBoxKeyDown(object sender, KeyEventArgs e)
-		{
-			if (this.interceptArrowKeys)
-			{
-				if (e.KeyData == Keys.Up)
-				{
-					this.UpButton();
-
-					e.Handled = true;
-				}
-				else if (e.KeyData == Keys.Down)
-				{
-					this.DownButton();
-
-					e.Handled = true;
-				}
-			}
-
-			if (e.KeyCode == Keys.Return)
-				this.ValidateEditText();
-		}
-
-		/// <summary>
-		/// Handler for the editors TextBox.KeyPress event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A KeyPressEventArgs that contains the event data</param>
-		protected virtual void OnTextBoxKeyPress(object sender, KeyPressEventArgs e)
-		{
-			char enter = AsciiChars.CarriageReturn;
-			char escape = AsciiChars.Escape;
-			char tab = AsciiChars.HorizontalTab;
-			// netus fix by Richard Sadler on 2006-01-13 - added backspace key
-			char backspace = AsciiChars.Backspace;
-			
-			NumberFormatInfo info = CultureInfo.CurrentCulture.NumberFormat;
-			
-			string decimalSeparator = info.NumberDecimalSeparator;
-			string groupSeparator = info.NumberGroupSeparator;
-			string negativeSign = info.NegativeSign;
-			string character = e.KeyChar.ToString();
-
-			// netus fix by Richard Sadler on 2006-01-13 - added backspace key
-            if ((!char.IsDigit(e.KeyChar) && !character.Equals(decimalSeparator) && !character.Equals(groupSeparator)) &&
+        {
+            var textbox = new TextBox
+            {
+                AutoSize = false,
+                BorderStyle = BorderStyle.None
+            };
+            Control = textbox;
+
+            currentValue = 0;
+            increment = 1;
+            minimum = 0;
+            maximum = 100;
+            format = "G";
+
+            wheelDelta = 0;
+            interceptArrowKeys = true;
+            userEdit = false;
+            changingText = false;
+            buttonBounds = Rectangle.Empty;
+            buttonID = ButtonId.Undefined;
+            interval = TimerInterval;
+        }
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepares the CellEditor to edit the specified Cell
+        /// </summary>
+        /// <param name="cell">The Cell to be edited</param>
+        /// <param name="table">The Table that contains the Cell</param>
+        /// <param name="cellPos">A CellPos representing the position of the Cell</param>
+        /// <param name="cellRect">The Rectangle that represents the Cells location and size</param>
+        /// <param name="userSetEditorValues">Specifies whether the ICellEditors 
+        /// starting value has already been set by the user</param>
+        /// <returns>true if the ICellEditor can continue editing the Cell, false otherwise</returns>
+        public override bool PrepareForEditing(Cell cell, Table table, CellPos cellPos, Rectangle cellRect, bool userSetEditorValues)
+        {
+            //
+            if (table.ColumnModel.Columns[cellPos.Column] is not DoubleColumn)
+            {
+                throw new InvalidOperationException("Cannot edit Cell as DoubleCellEditor can only be used with a NumberColumn");
+            }
+
+            if (table.ColumnModel.GetCellRenderer(cellPos.Column) is not DoubleCellRenderer)
+            {
+                throw new InvalidOperationException("Cannot edit Cell as DoubleCellEditor can only be used with a NumberColumn that uses a NumberCellRenderer");
+            }
+
+            Minimum = ((DoubleColumn)table.ColumnModel.Columns[cellPos.Column]).Minimum;
+            Maximum = ((DoubleColumn)table.ColumnModel.Columns[cellPos.Column]).Maximum;
+            Increment = ((DoubleColumn)table.ColumnModel.Columns[cellPos.Column]).Increment;
+
+            return base.PrepareForEditing(cell, table, cellPos, cellRect, userSetEditorValues);
+        }
+
+
+        /// <summary>
+        /// Sets the initial value of the editor based on the contents of 
+        /// the Cell being edited
+        /// </summary>
+        protected override void SetEditValue()
+        {
+            // make sure we start with a valid value
+            Value = Minimum;
+
+            // attempt to get the cells data
+            Value = Convert.ToDouble(EditingCell.Data);
+        }
+
+
+        /// <summary>
+        /// Sets the contents of the Cell being edited based on the value 
+        /// in the editor
+        /// </summary>
+        protected override void SetCellValue()
+        {
+            EditingCell.Data = Value;
+        }
+
+
+        /// <summary>
+        /// Starts editing the Cell
+        /// </summary>
+        public override void StartEditing()
+        {
+            TextBox.MouseWheel += new MouseEventHandler(OnMouseWheel);
+            TextBox.KeyDown += new KeyEventHandler(OnTextBoxKeyDown);
+            TextBox.KeyPress += new KeyPressEventHandler(OnTextBoxKeyPress);
+            TextBox.LostFocus += new EventHandler(OnTextBoxLostFocus);
+
+            base.StartEditing();
+
+            TextBox.Focus();
+        }
+
+
+        /// <summary>
+        /// Stops editing the Cell and commits any changes
+        /// </summary>
+        public override void StopEditing()
+        {
+            TextBox.MouseWheel -= new MouseEventHandler(OnMouseWheel);
+            TextBox.KeyDown -= new KeyEventHandler(OnTextBoxKeyDown);
+            TextBox.KeyPress -= new KeyPressEventHandler(OnTextBoxKeyPress);
+            TextBox.LostFocus -= new EventHandler(OnTextBoxLostFocus);
+
+            base.StopEditing();
+        }
+
+
+        /// <summary>
+        /// Stops editing the Cell and ignores any changes
+        /// </summary>
+        public override void CancelEditing()
+        {
+            TextBox.MouseWheel -= new MouseEventHandler(OnMouseWheel);
+            TextBox.KeyDown -= new KeyEventHandler(OnTextBoxKeyDown);
+            TextBox.KeyPress -= new KeyPressEventHandler(OnTextBoxKeyPress);
+            TextBox.LostFocus -= new EventHandler(OnTextBoxLostFocus);
+
+            base.CancelEditing();
+        }
+
+
+        /// <summary>
+        /// Sets the location and size of the CellEditor
+        /// </summary>
+        /// <param name="cellRect">A Rectangle that represents the size and location 
+        /// of the Cell being edited</param>
+        protected override void SetEditLocation(Rectangle cellRect)
+        {
+            // calc the size of the textbox
+            var renderer = EditingTable.ColumnModel.GetCellRenderer(EditingCellPos.Column);
+            var buttonWidth = ((DoubleCellRenderer)renderer).ButtonWidth;
+
+            TextBox.Size = new Size(cellRect.Width - 1 - buttonWidth, cellRect.Height - 1);
+
+            // calc the location of the textbox
+            TextBox.Location = cellRect.Location;
+            buttonBounds = new Rectangle(TextBox.Left + 1, TextBox.Top, buttonWidth, TextBox.Height);
+
+            if (((DoubleColumn)EditingTable.ColumnModel.Columns[EditingCellPos.Column]).UpDownAlign == LeftRightAlignment.Left)
+            {
+                TextBox.Location = new Point(cellRect.Left + buttonWidth, cellRect.Top);
+                buttonBounds.Location = new Point(cellRect.Left, cellRect.Top);
+            }
+        }
+
+
+        /// <summary>
+        /// Simulates the up button being pressed
+        /// </summary>
+        protected void UpButton()
+        {
+            if (UserEdit)
+            {
+                ParseEditText();
+            }
+
+            var newValue = currentValue;
+
+            if (newValue > (double.MaxValue - increment))
+            {
+                newValue = double.MaxValue;
+            }
+            else
+            {
+                newValue += increment;
+
+                if (newValue > maximum)
+                {
+                    newValue = maximum;
+                }
+            }
+
+            //Cell source, ICellEditor editor, Table table, int row, int column, Rectangle cellRect
+            var e = new DoubleCellEditEventArgs(cell, this, table, cell.Row.Index,
+                                             cellPos.Column, cellRect, currentValue)
+            {
+                NewValue = newValue
+            };
+
+            OnBeforeChange(e);
+
+            if (!e.Cancel)
+            {
+                Value = e.NewValue;
+            }
+        }
+
+
+        /// <summary>
+        /// Simulates the down button being pressed
+        /// </summary>
+        protected void DownButton()
+        {
+            if (UserEdit)
+            {
+                ParseEditText();
+            }
+
+            var num = currentValue;
+
+            if (num < (double.MinValue + increment))
+            {
+                num = double.MinValue;
+            }
+            else
+            {
+                num -= increment;
+
+                if (num < minimum)
+                {
+                    num = minimum;
+                }
+            }
+
+            var e = new DoubleCellEditEventArgs(cell, this, table, cell.Row.Index,
+                                             cellPos.Column, cellRect, currentValue)
+            {
+                NewValue = num
+            };
+
+            OnBeforeChange(e);
+
+            if (!e.Cancel)
+            {
+                Value = e.NewValue;
+            }
+        }
+
+
+        /// <summary>
+        /// Updates the editors text value to the current value
+        /// </summary>
+        protected void UpdateEditText()
+        {
+            if (UserEdit)
+            {
+                ParseEditText();
+            }
+
+            ChangingText = true;
+
+            Control.Text = currentValue.ToString(Format);
+        }
+
+
+        /// <summary>
+        /// Checks the current value and updates the editors text value
+        /// </summary>
+        protected virtual void ValidateEditText()
+        {
+            ParseEditText();
+            UpdateEditText();
+        }
+
+
+        /// <summary>
+        /// Converts the editors current value to a number
+        /// </summary>
+        protected void ParseEditText()
+        {
+            try
+            {
+                Value = Constrain(double.Parse(Control.Text));
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            finally
+            {
+                UserEdit = false;
+            }
+        }
+
+
+        /// <summary>
+        /// Ensures that the specified value is between the editors Maximun and 
+        /// Minimum values
+        /// </summary>
+        /// <param name="value">The value to be checked</param>
+        /// <returns>A value is between the editors Maximun and Minimum values</returns>
+        private double Constrain(double value)
+        {
+            if (value < minimum)
+            {
+                value = minimum;
+            }
+
+            if (value > maximum)
+            {
+                value = maximum;
+            }
+
+            return value;
+        }
+
+
+        /// <summary>
+        /// Starts the Timer
+        /// </summary>
+        protected void StartTimer()
+        {
+            if (timer == null)
+            {
+                timer = new Timer();
+                timer.Tick += new EventHandler(TimerHandler);
+            }
+
+            interval = TimerInterval;
+            timer.Interval = interval;
+            timer.Start();
+        }
+
+
+        /// <summary>
+        /// Stops the Timer
+        /// </summary>
+        protected void StopTimer()
+        {
+            if (timer != null)
+            {
+                timer.Stop();
+                timer.Dispose();
+                timer = null;
+            }
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the TextBox used to edit the Cells contents
+        /// </summary>
+        public TextBox TextBox => Control as TextBox;
+
+
+        /// <summary>
+        /// Gets or sets the editors current value
+        /// </summary>
+        protected double Value
+        {
+            get
+            {
+                if (UserEdit)
+                {
+                    ValidateEditText();
+                }
+
+                return currentValue;
+            }
+
+            set
+            {
+                if (value != currentValue)
+                {
+                    if (value < minimum)
+                    {
+                        value = minimum;
+                    }
+
+                    if (value > maximum)
+                    {
+                        value = maximum;
+                    }
+
+                    currentValue = value;
+
+                    UpdateEditText();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value to increment or decrement when the up or down 
+        /// buttons are clicked
+        /// </summary>
+        protected double Increment
+        {
+            get => increment;
+
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("increment must be greater than zero");
+                }
+
+                increment = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the maximum value for the editor
+        /// </summary>
+        protected double Maximum
+        {
+            get => maximum;
+
+            set
+            {
+                maximum = value;
+
+                if (minimum > maximum)
+                {
+                    minimum = maximum;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the minimum value for the editor
+        /// </summary>
+        protected double Minimum
+        {
+            get => minimum;
+
+            set
+            {
+                minimum = value;
+
+                if (minimum > maximum)
+                {
+                    maximum = value;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the string that specifies how the editors contents 
+        /// are formatted
+        /// </summary>
+        protected string Format
+        {
+            get => format;
+
+            set
+            {
+                format = value ?? throw new ArgumentNullException("value");
+
+                UpdateEditText();
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets whether the editors text is being updated
+        /// </summary>
+        protected bool ChangingText
+        {
+            get => changingText;
+
+            set => changingText = value;
+        }
+
+
+        /// <summary>
+        /// Gets or sets whether the arrow keys should be passed to the editor
+        /// </summary>
+        public bool InterceptArrowKeys
+        {
+            get => interceptArrowKeys;
+
+            set => interceptArrowKeys = value;
+        }
+
+
+        /// <summary>
+        /// Gets or sets whether the user has changed the editors value
+        /// </summary>
+        protected bool UserEdit
+        {
+            get => userEdit;
+            set => userEdit = value;
+        }
+
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Handler for the editors TextBox.MouseWheel event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A MouseEventArgs that contains the event data</param>
+        protected internal virtual void OnMouseWheel(object sender, MouseEventArgs e)
+        {
+            var up = true;
+
+            wheelDelta += e.Delta;
+
+            if (Math.Abs(wheelDelta) >= 120)
+            {
+                if (wheelDelta < 0)
+                {
+                    up = false;
+                }
+
+                if (up)
+                {
+                    UpButton();
+                }
+                else
+                {
+                    DownButton();
+                }
+
+                wheelDelta = 0;
+            }
+        }
+
+        /// <summary>
+        /// Handler for the editors TextBox.KeyDown event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A KeyEventArgs that contains the event data</param>
+        protected virtual void OnTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (interceptArrowKeys)
+            {
+                if (e.KeyData == Keys.Up)
+                {
+                    UpButton();
+
+                    e.Handled = true;
+                }
+                else if (e.KeyData == Keys.Down)
+                {
+                    DownButton();
+
+                    e.Handled = true;
+                }
+            }
+
+            if (e.KeyCode == Keys.Return)
+            {
+                ValidateEditText();
+            }
+        }
+
+        /// <summary>
+        /// Handler for the editors TextBox.KeyPress event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A KeyPressEventArgs that contains the event data</param>
+        protected virtual void OnTextBoxKeyPress(object sender, KeyPressEventArgs e)
+        {
+            var enter = AsciiChars.CarriageReturn;
+            var escape = AsciiChars.Escape;
+            var tab = AsciiChars.HorizontalTab;
+            // netus fix by Richard Sadler on 2006-01-13 - added backspace key
+            var backspace = AsciiChars.Backspace;
+
+            var info = CultureInfo.CurrentCulture.NumberFormat;
+
+            var decimalSeparator = info.NumberDecimalSeparator;
+            var groupSeparator = info.NumberGroupSeparator;
+            var negativeSign = info.NegativeSign;
+            var character = e.KeyChar.ToString();
+
+            // netus fix by Richard Sadler on 2006-01-13 - added backspace key
+            if (!char.IsDigit(e.KeyChar) && !character.Equals(decimalSeparator) && !character.Equals(groupSeparator) &&
                 !character.Equals(negativeSign) && (e.KeyChar != tab) && (e.KeyChar != backspace))
             {
                 if ((Control.ModifierKeys & (Keys.Alt | Keys.Control)) == Keys.None)
@@ -748,13 +722,11 @@ namespace XPTable.Editors
 
                     if (e.KeyChar == enter)
                     {
-                        if (this.EditingTable != null)
-                            this.EditingTable.StopEditing();
+                        EditingTable?.StopEditing();
                     }
                     else if (e.KeyChar == escape)
                     {
-                        if (this.EditingTable != null)
-                            this.EditingTable.CancelEditing();
+                        EditingTable?.CancelEditing();
                     }
                     else
                     {
@@ -764,93 +736,96 @@ namespace XPTable.Editors
             }
             else
             {
-                this.userEdit = true;
+                userEdit = true;
             }
-		}
+        }
 
-		/// <summary>
-		/// Handler for the editors TextBox.LostFocus event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		protected virtual void OnTextBoxLostFocus(object sender, EventArgs e)
-		{
-			if (this.UserEdit)
-				this.ValidateEditText();
+        /// <summary>
+        /// Handler for the editors TextBox.LostFocus event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        protected virtual void OnTextBoxLostFocus(object sender, EventArgs e)
+        {
+            if (UserEdit)
+            {
+                ValidateEditText();
+            }
 
-			if (this.EditingTable != null)
-				this.EditingTable.StopEditing();
-		}
+            EditingTable?.StopEditing();
+        }
 
-		/// <summary>
-		/// Handler for the editors buttons MouseDown event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public void OnEditorButtonMouseDown(object sender, CellMouseEventArgs e)
-		{
-			this.ParseEditText();
+        /// <summary>
+        /// Handler for the editors buttons MouseDown event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public void OnEditorButtonMouseDown(object sender, CellMouseEventArgs e)
+        {
+            ParseEditText();
 
-			if (e.Y < this.buttonBounds.Top + (this.buttonBounds.Height / 2))
-			{
-				this.buttonID = ButtonId.UpButtonID;
-				
-				this.UpButton();
-			}
-			else
-			{
-				this.buttonID = ButtonId.DownButtonID;
-				
-				this.DownButton();
-			}
+            if (e.Y < buttonBounds.Top + (buttonBounds.Height / 2))
+            {
+                buttonID = ButtonId.UpButtonID;
 
-			this.StartTimer();
-		}
+                UpButton();
+            }
+            else
+            {
+                buttonID = ButtonId.DownButtonID;
 
-		/// <summary>
-		/// Handler for the editors buttons MouseUp event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A CellMouseEventArgs that contains the event data</param>
-		public void OnEditorButtonMouseUp(object sender, CellMouseEventArgs e)
-		{
-			this.StopTimer();
+                DownButton();
+            }
 
-			this.buttonID = ButtonId.Undefined;
-		}
+            StartTimer();
+        }
 
-		/// <summary>
-		/// Handler for the editors Timer event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		private void TimerHandler(object sender, EventArgs e)
-		{
-			if (this.buttonID == ButtonId.Undefined || this.cell == null)
-			{
-				this.StopTimer();
+        /// <summary>
+        /// Handler for the editors buttons MouseUp event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A CellMouseEventArgs that contains the event data</param>
+        public void OnEditorButtonMouseUp(object sender, CellMouseEventArgs e)
+        {
+            StopTimer();
 
-				return;
-			}
+            buttonID = ButtonId.Undefined;
+        }
 
-		    if (this.buttonID == ButtonId.UpButtonID)
-		    {
-		        this.UpButton();
-		    }
-		    else
-		    {
-		        this.DownButton();
-		    }
+        /// <summary>
+        /// Handler for the editors Timer event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        private void TimerHandler(object sender, EventArgs e)
+        {
+            if (buttonID == ButtonId.Undefined || cell == null)
+            {
+                StopTimer();
 
-            this.interval *= 7;
-            this.interval /= 10;
+                return;
+            }
+
+            if (buttonID == ButtonId.UpButtonID)
+            {
+                UpButton();
+            }
+            else
+            {
+                DownButton();
+            }
+
+            interval *= 7;
+            interval /= 10;
 
 
-            if (this.interval < 1)
-				this.interval = 1;
-			
-			this.timer.Interval = this.interval;
-		}
-		#endregion
-	}
+            if (interval < 1)
+            {
+                interval = 1;
+            }
+
+            timer.Interval = interval;
+        }
+        #endregion
+    }
 }

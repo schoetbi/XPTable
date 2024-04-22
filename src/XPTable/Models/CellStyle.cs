@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -66,10 +66,9 @@ namespace XPTable.Models
 
         private RowAlignment lineAlignment;
         private ColumnAlignment alignment;
+        private readonly Dictionary<AllProperties, bool> isPropertySet;
 
-        Dictionary<AllProperties, bool> isPropertySet;
-
-        enum AllProperties
+        private enum AllProperties
         {
             BackColor,
             ForeColor,
@@ -87,12 +86,12 @@ namespace XPTable.Models
         /// </summary>
         public CellStyle()
         {
-            this.isPropertySet = new Dictionary<AllProperties, bool>();
-            this.backColor = Color.Empty;
-            this.foreColor = Color.Empty;
-            this.font = null;
-            this.padding = CellPadding.Empty;
-            this.wordWrap = false;
+            isPropertySet = new Dictionary<AllProperties, bool>();
+            backColor = Color.Empty;
+            foreColor = Color.Empty;
+            font = null;
+            padding = CellPadding.Empty;
+            wordWrap = false;
         }
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace XPTable.Models
         public CellStyle(RowAlignment lineAlignment)
             : this()
         {
-            this.LineAlignment = lineAlignment;
+            LineAlignment = lineAlignment;
         }
 
         /// <summary>
@@ -112,7 +111,7 @@ namespace XPTable.Models
         public CellStyle(ColumnAlignment alignment)
             : this()
         {
-            this.Alignment = alignment;
+            Alignment = alignment;
         }
         #endregion
 
@@ -124,10 +123,10 @@ namespace XPTable.Models
         Description("The font used to display text in the cell")]
         public Font Font
         {
-            get { return this.font; }
+            get => font;
             set
             {
-                this.font = value;
+                font = value;
                 PropertyIsSet(AllProperties.Font);
             }
         }
@@ -139,10 +138,10 @@ namespace XPTable.Models
         Description("The background color used to display text and graphics in the cell")]
         public Color BackColor
         {
-            get { return this.backColor; }
+            get => backColor;
             set
             {
-                this.backColor = value;
+                backColor = value;
                 PropertyIsSet(AllProperties.BackColor);
             }
         }
@@ -154,10 +153,10 @@ namespace XPTable.Models
         Description("The foreground color used to display text and graphics in the cell")]
         public Color ForeColor
         {
-            get { return this.foreColor; }
+            get => foreColor;
             set
             {
-                this.foreColor = value;
+                foreColor = value;
                 PropertyIsSet(AllProperties.ForeColor);
             }
         }
@@ -169,10 +168,10 @@ namespace XPTable.Models
         Description("The amount of space between the cells border and its contents")]
         public CellPadding Padding
         {
-            get { return this.padding; }
+            get => padding;
             set
             {
-                this.padding = value;
+                padding = value;
                 PropertyIsSet(AllProperties.Padding);
             }
         }
@@ -184,10 +183,10 @@ namespace XPTable.Models
         Description("Whether the text can wrap (and force the cell's height to increase)")]
         public bool WordWrap
         {
-            get { return this.wordWrap; }
+            get => wordWrap;
             set
             {
-                this.wordWrap = value;
+                wordWrap = value;
                 PropertyIsSet(AllProperties.WordWrap);
             }
         }
@@ -199,7 +198,7 @@ namespace XPTable.Models
         Description("Value of the vertical alignment for this cell")]
         public RowAlignment LineAlignment
         {
-            get { return lineAlignment; }
+            get => lineAlignment;
             set
             {
                 lineAlignment = value;
@@ -214,7 +213,7 @@ namespace XPTable.Models
         Description("Value of the horizontal alignment for this cell")]
         public ColumnAlignment Alignment
         {
-            get { return alignment; }
+            get => alignment;
             set
             {
                 alignment = value;
@@ -227,70 +226,49 @@ namespace XPTable.Models
         /// If false then this value should not be used.
         /// </summary>
         [Browsable(false)]
-        public bool IsAlignmentSet
-        {
-            get { return IsPropertySet(AllProperties.Alignment); }
-        }
+        public bool IsAlignmentSet => IsPropertySet(AllProperties.Alignment);
 
         /// <summary>
         /// Gets whether the BackColor property of the cell has been set.
         /// If false then this value should not be used.
         /// </summary>
         [Browsable(false)]
-        public bool IsBackColorSet
-        {
-            get { return IsPropertySet(AllProperties.BackColor); }
-        }
+        public bool IsBackColorSet => IsPropertySet(AllProperties.BackColor);
 
         /// <summary>
         /// Gets whether the Font property of the cell has been set.
         /// If false then this value should not be used.
         /// </summary>
         [Browsable(false)]
-        public bool IsFontSet
-        {
-            get { return IsPropertySet(AllProperties.Font); }
-        }
+        public bool IsFontSet => IsPropertySet(AllProperties.Font);
 
         /// <summary>
         /// Gets whether the ForeColor property of the cell has been set.
         /// If false then this value should not be used.
         /// </summary>
         [Browsable(false)]
-        public bool IsForeColorSet
-        {
-            get { return IsPropertySet(AllProperties.ForeColor); }
-        }
+        public bool IsForeColorSet => IsPropertySet(AllProperties.ForeColor);
 
         /// <summary>
         /// Gets whether the LineAlignment property of the cell has been set.
         /// If false then this value should not be used.
         /// </summary>
         [Browsable(false)]
-        public bool IsLineAlignmentSet
-        {
-            get { return IsPropertySet(AllProperties.LineAlignment); }
-        }
+        public bool IsLineAlignmentSet => IsPropertySet(AllProperties.LineAlignment);
 
         /// <summary>
         /// Gets whether the Padding property of the cell has been set.
         /// If false then this value should not be used.
         /// </summary>
         [Browsable(false)]
-        public bool IsPaddingSet
-        {
-            get { return IsPropertySet(AllProperties.Padding); }
-        }
+        public bool IsPaddingSet => IsPropertySet(AllProperties.Padding);
 
         /// <summary>
         /// Gets whether the WordWrap property of the cell has been set.
         /// If false then this value should not be used.
         /// </summary>
         [Browsable(false)]
-        public bool IsWordWrapSet
-        {
-            get { return IsPropertySet(AllProperties.WordWrap); }
-        }
+        public bool IsWordWrapSet => IsPropertySet(AllProperties.WordWrap);
         #endregion
 
         /// <summary>
@@ -298,20 +276,28 @@ namespace XPTable.Models
         /// </summary>
         /// <param name="propertyToCheck"></param>
         /// <returns></returns>
-        bool IsPropertySet(AllProperties propertyToCheck)
+        private bool IsPropertySet(AllProperties propertyToCheck)
         {
             if (isPropertySet.ContainsKey(propertyToCheck))
+            {
                 return isPropertySet[propertyToCheck];
+            }
             else
+            {
                 return false;
+            }
         }
 
-        void PropertyIsSet(AllProperties propertyToCheck)
+        private void PropertyIsSet(AllProperties propertyToCheck)
         {
             if (isPropertySet.ContainsKey(propertyToCheck))
+            {
                 isPropertySet[propertyToCheck] = true;
+            }
             else
+            {
                 isPropertySet.Add(propertyToCheck, true);
+            }
         }
     }
 }

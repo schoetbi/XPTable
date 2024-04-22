@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Text;
 
@@ -46,8 +46,8 @@ namespace XPTable.Renderers
         /// </summary>
         public Color ForeColor
         {
-            get { return _forecolor; }
-            set { _forecolor = value; }
+            get => _forecolor;
+            set => _forecolor = value;
         }
     }
 }

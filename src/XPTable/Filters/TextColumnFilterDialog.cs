@@ -36,11 +36,11 @@ namespace XPTable.Filters
         /// Returns all items that are checked
         /// </summary>
         /// <returns></returns>
-        public string [] GetCheckedItems()
+        public string[] GetCheckedItems()
         {
             var items = new List<string>();
 
-            foreach(string item in filterList.CheckedItems)
+            foreach (string item in filterList.CheckedItems)
             {
                 items.Add(item);
             }
@@ -54,62 +54,62 @@ namespace XPTable.Filters
         /// <returns></returns>
         public bool AnyUncheckedItems()
         {
-            bool different = filterList.Items.Count != filterList.CheckedItems.Count;
+            var different = filterList.Items.Count != filterList.CheckedItems.Count;
 
             return different;
         }
 
         private void InitializeComponent()
         {
-            this.btnOK = new System.Windows.Forms.Button();
-            this.filterList = new System.Windows.Forms.CheckedListBox();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            btnOK = new System.Windows.Forms.Button();
+            filterList = new System.Windows.Forms.CheckedListBox();
+            btnCancel = new System.Windows.Forms.Button();
+            SuspendLayout();
             // 
             // btnOK
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(94, 180);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 0;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
+            btnOK.Anchor = (System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            btnOK.Location = new System.Drawing.Point(94, 180);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new System.Drawing.Size(75, 23);
+            btnOK.TabIndex = 0;
+            btnOK.Text = "OK";
+            btnOK.UseVisualStyleBackColor = true;
             // 
             // filterList
             // 
-            this.filterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.filterList.CheckOnClick = true;
-            this.filterList.FormattingEnabled = true;
-            this.filterList.Location = new System.Drawing.Point(12, 12);
-            this.filterList.Name = "filterList";
-            this.filterList.Size = new System.Drawing.Size(157, 154);
-            this.filterList.TabIndex = 2;
+            filterList.Anchor = (System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom
+            | System.Windows.Forms.AnchorStyles.Left
+            | System.Windows.Forms.AnchorStyles.Right);
+            filterList.CheckOnClick = true;
+            filterList.FormattingEnabled = true;
+            filterList.Location = new System.Drawing.Point(12, 12);
+            filterList.Name = "filterList";
+            filterList.Size = new System.Drawing.Size(157, 154);
+            filterList.TabIndex = 2;
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(13, 180);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Anchor = (System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            btnCancel.Location = new System.Drawing.Point(13, 180);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 23);
+            btnCancel.TabIndex = 3;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
             // 
             // TextColumnFilterDialog
             // 
-            this.ClientSize = new System.Drawing.Size(181, 215);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.filterList);
-            this.Controls.Add(this.btnOK);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Name = "TextColumnFilterDialog";
-            this.ShowInTaskbar = false;
-            this.ResumeLayout(false);
+            ClientSize = new System.Drawing.Size(181, 215);
+            Controls.Add(btnCancel);
+            Controls.Add(filterList);
+            Controls.Add(btnOK);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            Name = "TextColumnFilterDialog";
+            ShowInTaskbar = false;
+            ResumeLayout(false);
 
         }
     }

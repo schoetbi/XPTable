@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+
 using XPTable.Events;
 using XPTable.Models;
 
@@ -16,7 +17,7 @@ namespace XPTable.Filters
         /// <summary>
         /// Contains the items that were checked when the dialog was previously shown, or null if everything is checked.
         /// </summary>
-        List<string> _allowedItems;
+        private List<string> _allowedItems;
 
         /// <summary>
         /// Creates a new TextColumnFilter
@@ -35,10 +36,7 @@ namespace XPTable.Filters
         /// <summary>
         /// Returns true if this filter is 'active' i.e. would actually affect the display.
         /// </summary>
-        public bool IsFilterActive
-        {
-            get { return _allowedItems != null; }
-        }
+        public bool IsFilterActive => _allowedItems != null;
 
         /// <summary>
         /// Called to determine whether this cell can be shown by this filter
@@ -48,10 +46,14 @@ namespace XPTable.Filters
         public bool CanShow(Cell cell)
         {
             if (_allowedItems == null)
+            {
                 return true;
+            }
 
             if (cell == null)
+            {
                 return true;
+            }
 
             return _allowedItems.Contains(cell.Text);
         }
@@ -62,36 +64,38 @@ namespace XPTable.Filters
         /// <param name="e"></param>
         public void OnHeaderFilterClick(HeaderMouseEventArgs e)
         {
-            TextColumnFilterDialog dialog = CreateFilterDialog(e);
+            var dialog = CreateFilterDialog(e);
 
             AddItems(dialog, e.Table, e.Index);
 
-            DialogResult result = dialog.ShowDialog();
+            var result = dialog.ShowDialog();
 
             if (result == DialogResult.Cancel)
+            {
                 return;
+            }
 
             UpdateFilter(e, dialog);
         }
 
-        TextColumnFilterDialog CreateFilterDialog(HeaderMouseEventArgs e)
+        private TextColumnFilterDialog CreateFilterDialog(HeaderMouseEventArgs e)
         {
             var dialog = new TextColumnFilterDialog();
 
-            Point screenPos = e.Table.PointToScreen(new Point(e.HeaderRect.Left, e.HeaderRect.Bottom));
+            var screenPos = e.Table.PointToScreen(new Point(e.HeaderRect.Left, e.HeaderRect.Bottom));
 
             dialog.StartPosition = FormStartPosition.Manual;
-            
+
             dialog.Location = screenPos;
 
             return dialog;
         }
 
-        void AddItems(TextColumnFilterDialog dialog, Table table, int col)
+        private void AddItems(TextColumnFilterDialog dialog, Table table, int col)
         {
-            string[] toAdd = GetDistinctItems(table, col);
+            var toAdd = GetDistinctItems(table, col);
 
-            foreach (string item in toAdd)
+            foreach (var item in toAdd)
             {
                 dialog.AddItem(item, ItemIsChecked(item));
             }
@@ -114,14 +118,14 @@ namespace XPTable.Filters
 
             foreach (Row row in table.TableModel.Rows)
             {
-                Cell cell = row.Cells[col];
+                var cell = row.Cells[col];
 
                 if (cell == null)
                 {
                     continue;
                 }
 
-                string text = cell.Text;
+                var text = cell.Text;
                 if (!list.Contains(text))
                 {
                     list.Add(text);
@@ -131,20 +135,26 @@ namespace XPTable.Filters
             return list.ToArray();
         }
 
-        bool ItemIsChecked(string item)
+        private bool ItemIsChecked(string item)
         {
             if (_allowedItems == null)
+            {
                 return true;
+            }
 
             return _allowedItems.Contains(item);
         }
 
-        void UpdateFilter(HeaderMouseEventArgs e, TextColumnFilterDialog dialog)
+        private void UpdateFilter(HeaderMouseEventArgs e, TextColumnFilterDialog dialog)
         {
             if (dialog.AnyUncheckedItems())
+            {
                 SetFilterItems(dialog.GetCheckedItems());
+            }
             else
+            {
                 SetFilterItems(null);   // The user has ticked every item - so no filtering is needed
+            }
 
             e.Table.OnHeaderFilterChanged(e);
         }
@@ -155,14 +165,7 @@ namespace XPTable.Filters
         /// <param name="items"></param>
         public void SetFilterItems(IEnumerable<string> items)
         {
-            if (items == null)
-            {
-                _allowedItems = null;
-            }
-            else
-            {
-                _allowedItems = new List<string>(items);
-            }
+            _allowedItems = items == null ? null : new List<string>(items);
         }
     }
 }

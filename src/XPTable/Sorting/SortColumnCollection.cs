@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Text;
 
@@ -35,7 +35,7 @@ namespace XPTable.Sorting
                 throw new System.ArgumentNullException("SortColumn is null");
             }
 
-            int index = this.List.Add(sortColumn);
+            var index = List.Add(sortColumn);
 
             return index;
         }
@@ -52,12 +52,12 @@ namespace XPTable.Sorting
         {
             get
             {
-                if (index < 0 || index >= this.Count)
+                if (index < 0 || index >= Count)
                 {
                     return null;
                 }
 
-                return this.List[index] as SortColumn;
+                return List[index] as SortColumn;
             }
         }
 

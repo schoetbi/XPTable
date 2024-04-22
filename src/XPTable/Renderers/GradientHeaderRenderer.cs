@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -38,225 +38,214 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// A HeaderRenderer that draws gradient Column headers
-	/// </summary>
-	public class GradientHeaderRenderer : HeaderRenderer
-	{
-		#region Class Data
+    /// <summary>
+    /// A HeaderRenderer that draws gradient Column headers
+    /// </summary>
+    public class GradientHeaderRenderer : HeaderRenderer
+    {
+        #region Class Data
 
-		/// <summary>
-		/// The start Color of the gradient
-		/// </summary>
-		private Color startColor;
+        /// <summary>
+        /// The start Color of the gradient
+        /// </summary>
+        private Color startColor;
 
-		/// <summary>
-		/// The ned Color of the gradient
-		/// </summary>
-		private Color endColor;
+        /// <summary>
+        /// The ned Color of the gradient
+        /// </summary>
+        private Color endColor;
 
-		/// <summary>
-		/// The Color of the Column header when it is pressed
-		/// </summary>
-		private Color pressedColor; 
+        /// <summary>
+        /// The Color of the Column header when it is pressed
+        /// </summary>
+        private Color pressedColor;
 
-		#endregion
-
-		
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the GradientHeaderRenderer class 
-		/// with default settings
-		/// </summary>
-		public GradientHeaderRenderer() : base()
-		{
-			// steel blue gradient
-			this.startColor = Color.FromArgb(200, 209, 215);
-			this.endColor = Color.FromArgb(239, 239, 239);
-			this.pressedColor = Color.Empty;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Properties
+        #region Constructor
 
-		/// <summary>
-		/// Gets or sets the start Color of the gradient
-		/// </summary>
-		[Category("Appearance"),
-		Description("The start color of a ColumnHeaders gradient")]
-		public Color StartColor
-		{
-			get
-			{
-				return this.startColor;
-			}
+        /// <summary>
+        /// Initializes a new instance of the GradientHeaderRenderer class 
+        /// with default settings
+        /// </summary>
+        public GradientHeaderRenderer() : base()
+        {
+            // steel blue gradient
+            startColor = Color.FromArgb(200, 209, 215);
+            endColor = Color.FromArgb(239, 239, 239);
+            pressedColor = Color.Empty;
+        }
 
-			set
-			{
-				if (this.startColor != value)
-				{
-					this.startColor = value;
-				}
-			}
-		}
-		
-
-		/// <summary>
-		/// Gets or sets the end Color of the gradient
-		/// </summary>
-		[Category("Appearance"),
-		Description("The end color of a ColumnHeaders gradient")]
-		public Color EndColor
-		{
-			get
-			{
-				return this.endColor;
-			}
-
-			set
-			{
-				if (this.endColor != value)
-				{
-					this.endColor = value;
-				}
-			}
-		}
-		
-
-		/// <summary>
-		/// Gets or sets the Color of the Column header when it is pressed
-		/// </summary>
-		[Category("Appearance"),
-		Description("The color of a ColumnHeader when it is in a pressed state")]
-		public Color PressedColor
-		{
-			get
-			{
-				return this.pressedColor;
-			}
-
-			set
-			{
-				if (this.pressedColor != value)
-				{
-					this.pressedColor = value;
-				}
-			}
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Events
+        #region Properties
 
-		#region Paint
+        /// <summary>
+        /// Gets or sets the start Color of the gradient
+        /// </summary>
+        [Category("Appearance"),
+        Description("The start color of a ColumnHeaders gradient")]
+        public Color StartColor
+        {
+            get => startColor;
 
-		/// <summary>
-		/// Raises the PaintBackground event
-		/// </summary>
-		/// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
-		protected override void OnPaintBackground(PaintHeaderEventArgs e)
-		{
-			base.OnPaintBackground(e);
-
-			if (e.Column == null || e.Column.ColumnState != ColumnState.Pressed)
-			{
-				using (LinearGradientBrush brush = new LinearGradientBrush(e.HeaderRect, this.StartColor, this.EndColor, LinearGradientMode.Vertical))
-				{
-					e.Graphics.FillRectangle(brush, e.HeaderRect);
-				}
-
-				using (Pen pen = new Pen(this.EndColor))
-				{
-					e.Graphics.DrawLine(pen, e.HeaderRect.Left, e.HeaderRect.Top, e.HeaderRect.Right-2, e.HeaderRect.Top);
-					e.Graphics.DrawLine(pen, e.HeaderRect.Left, e.HeaderRect.Top, e.HeaderRect.Left, e.HeaderRect.Bottom-1);
-				}
-
-				using (Pen pen = new Pen(this.StartColor))
-				{
-					e.Graphics.DrawLine(pen, e.HeaderRect.Right-1, e.HeaderRect.Top, e.HeaderRect.Right-1, e.HeaderRect.Bottom-1);
-					e.Graphics.DrawLine(pen, e.HeaderRect.Left+1, e.HeaderRect.Bottom-1, e.HeaderRect.Right-1, e.HeaderRect.Bottom-1);
-				}
-			}
-			else
-			{
-				Color pressed = this.PressedColor;
-
-				if (pressed == Color.Empty)
-				{
-					pressed = ControlPaint.Light(this.startColor);
-				}
-				
-				using (SolidBrush brush = new SolidBrush(pressed))
-				{
-					e.Graphics.FillRectangle(brush, e.HeaderRect);
-				}
-				
-				using (Pen pen = new Pen(this.StartColor))
-				{
-					e.Graphics.DrawRectangle(pen, e.HeaderRect.X, e.HeaderRect.Y, e.HeaderRect.Width-1, e.HeaderRect.Height-1);
-				}
-			}
-		}
+            set
+            {
+                if (startColor != value)
+                {
+                    startColor = value;
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Raises the Paint event
-		/// </summary>
-		/// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
-		protected override void OnPaint(PaintHeaderEventArgs e)
-		{
-			base.OnPaint(e);
+        /// <summary>
+        /// Gets or sets the end Color of the gradient
+        /// </summary>
+        [Category("Appearance"),
+        Description("The end color of a ColumnHeaders gradient")]
+        public Color EndColor
+        {
+            get => endColor;
 
-			if (e.Column == null)
-			{
-				return;
-			}
+            set
+            {
+                if (endColor != value)
+                {
+                    endColor = value;
+                }
+            }
+        }
 
-			Rectangle textRect = this.ClientRectangle;
-			Rectangle imageRect = Rectangle.Empty;
 
-            int imageWidth = 0;
-            int arrowWidth = 0;
-            int textWidth = 0;
+        /// <summary>
+        /// Gets or sets the Color of the Column header when it is pressed
+        /// </summary>
+        [Category("Appearance"),
+        Description("The color of a ColumnHeader when it is in a pressed state")]
+        public Color PressedColor
+        {
+            get => pressedColor;
 
-			if (e.Column.Image != null)
-			{
-				imageRect = this.CalcImageRect();
+            set
+            {
+                if (pressedColor != value)
+                {
+                    pressedColor = value;
+                }
+            }
+        }
 
-				textRect.Width -= imageRect.Width;
-				textRect.X += imageRect.Width;
+        #endregion
 
-				if (e.Column.ImageOnRight)
-				{
-					imageRect.X = this.ClientRectangle.Right - imageRect.Width;
-					textRect.X = this.ClientRectangle.X;
-				}
 
-				if (e.Column.ColumnState == ColumnState.Pressed)
-				{
-					imageRect.X += 1;
-					imageRect.Y += 1;
-				}
+        #region Events
 
-				this.DrawColumnHeaderImage(e.Graphics, e.Column.Image, imageRect, e.Column.Enabled);
+        #region Paint
+
+        /// <summary>
+        /// Raises the PaintBackground event
+        /// </summary>
+        /// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
+        protected override void OnPaintBackground(PaintHeaderEventArgs e)
+        {
+            base.OnPaintBackground(e);
+
+            if (e.Column == null || e.Column.ColumnState != ColumnState.Pressed)
+            {
+                using (var brush = new LinearGradientBrush(e.HeaderRect, StartColor, EndColor, LinearGradientMode.Vertical))
+                {
+                    e.Graphics.FillRectangle(brush, e.HeaderRect);
+                }
+
+                using (var pen = new Pen(EndColor))
+                {
+                    e.Graphics.DrawLine(pen, e.HeaderRect.Left, e.HeaderRect.Top, e.HeaderRect.Right - 2, e.HeaderRect.Top);
+                    e.Graphics.DrawLine(pen, e.HeaderRect.Left, e.HeaderRect.Top, e.HeaderRect.Left, e.HeaderRect.Bottom - 1);
+                }
+
+                using (var pen = new Pen(StartColor))
+                {
+                    e.Graphics.DrawLine(pen, e.HeaderRect.Right - 1, e.HeaderRect.Top, e.HeaderRect.Right - 1, e.HeaderRect.Bottom - 1);
+                    e.Graphics.DrawLine(pen, e.HeaderRect.Left + 1, e.HeaderRect.Bottom - 1, e.HeaderRect.Right - 1, e.HeaderRect.Bottom - 1);
+                }
+            }
+            else
+            {
+                var pressed = PressedColor;
+
+                if (pressed == Color.Empty)
+                {
+                    pressed = ControlPaint.Light(startColor);
+                }
+
+                using (var brush = new SolidBrush(pressed))
+                {
+                    e.Graphics.FillRectangle(brush, e.HeaderRect);
+                }
+
+                using var pen = new Pen(StartColor);
+                e.Graphics.DrawRectangle(pen, e.HeaderRect.X, e.HeaderRect.Y, e.HeaderRect.Width - 1, e.HeaderRect.Height - 1);
+            }
+        }
+
+
+        /// <summary>
+        /// Raises the Paint event
+        /// </summary>
+        /// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
+        protected override void OnPaint(PaintHeaderEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if (e.Column == null)
+            {
+                return;
+            }
+
+            var textRect = ClientRectangle;
+            var imageRect = Rectangle.Empty;
+
+            var imageWidth = 0;
+            var arrowWidth = 0;
+            var textWidth = 0;
+
+            if (e.Column.Image != null)
+            {
+                imageRect = CalcImageRect();
+
+                textRect.Width -= imageRect.Width;
+                textRect.X += imageRect.Width;
+
+                if (e.Column.ImageOnRight)
+                {
+                    imageRect.X = ClientRectangle.Right - imageRect.Width;
+                    textRect.X = ClientRectangle.X;
+                }
+
+                if (e.Column.ColumnState == ColumnState.Pressed)
+                {
+                    imageRect.X += 1;
+                    imageRect.Y += 1;
+                }
+
+                DrawColumnHeaderImage(e.Graphics, e.Column.Image, imageRect, e.Column.Enabled);
                 imageWidth = imageRect.Width;
-			}
+            }
 
-			if (e.Column.ColumnState == ColumnState.Pressed)
-			{
-				textRect.X += 1;
-				textRect.Y += 1;
-			}
+            if (e.Column.ColumnState == ColumnState.Pressed)
+            {
+                textRect.X += 1;
+                textRect.Y += 1;
+            }
 
-			if (e.Column.SortOrder != SortOrder.None)
-			{
-				Rectangle arrowRect = this.CalcSortArrowRect();
-				
-                if (this.Alignment == ColumnAlignment.Right)
+            if (e.Column.SortOrder != SortOrder.None)
+            {
+                var arrowRect = CalcSortArrowRect();
+
+                if (Alignment == ColumnAlignment.Right)
                 {
                     arrowRect.X = textRect.Left;
                     textRect.Width -= arrowRect.Width;
@@ -264,48 +253,46 @@ namespace XPTable.Renderers
                 }
                 else
                 {
-				    arrowRect.X = textRect.Right - arrowRect.Width;
-				    textRect.Width -= arrowRect.Width;
+                    arrowRect.X = textRect.Right - arrowRect.Width;
+                    textRect.Width -= arrowRect.Width;
                 }
 
-				this.DrawSortArrow(e.Graphics, arrowRect, e.Column.SortOrder, e.Column.Enabled);
+                DrawSortArrow(e.Graphics, arrowRect, e.Column.SortOrder, e.Column.Enabled);
                 arrowWidth = arrowRect.Width;
-			}
+            }
 
             if (e.Column.Text != null && e.Column.Text.Length > 0 && textRect.Width > 0)
             {
                 if (e.Column.Enabled)
                 {
-                    e.Graphics.DrawString(e.Column.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
+                    e.Graphics.DrawString(e.Column.Text, Font, ForeBrush, textRect, StringFormat);
                 }
                 else
                 {
-                    using (SolidBrush brush = new SolidBrush(SystemPens.GrayText.Color))
-                    {
-                        e.Graphics.DrawString(e.Column.Text, this.Font, brush, textRect, this.StringFormat);
-                    }
+                    using var brush = new SolidBrush(SystemPens.GrayText.Color);
+                    e.Graphics.DrawString(e.Column.Text, Font, brush, textRect, StringFormat);
                 }
 
                 if (e.Column.WidthNotSet)
                 {
-                    SizeF size = e.Graphics.MeasureString(e.Column.Text, this.Font);
+                    var size = e.Graphics.MeasureString(e.Column.Text, Font);
                     textWidth = (int)Math.Ceiling(size.Width);
                 }
 
                 // Also, determine whether we need a tooltip, if the text was truncated.
                 if (e.Table.EnableToolTips)
                 {
-                    e.Column.IsTextTrimmed = this.IsTextTrimmed(e.Graphics, e.Column.Text);
+                    e.Column.IsTextTrimmed = IsTextTrimmed(e.Graphics, e.Column.Text);
                 }
             }
             if (e.Column.WidthNotSet)
             {
                 e.Column.ContentWidth = imageWidth + arrowWidth + textWidth;
             }
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+    }
 }

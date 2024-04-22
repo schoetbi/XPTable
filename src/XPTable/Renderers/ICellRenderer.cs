@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -28,8 +28,8 @@
 using System;
 using System.Windows.Forms;
 
-using XPTable.Models;
 using XPTable.Events;
+using XPTable.Models;
 
 
 namespace XPTable.Renderers

@@ -1,5 +1,5 @@
-/*
-* Copyright � 2005, Mathew Hall
+﻿/*
+* Copyright © 2005, Mathew Hall
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification, 
@@ -33,46 +33,41 @@ using XPTable.Events;
 
 namespace XPTable.Models
 {
-	/// <summary>
-	/// Represents a collection of Row objects
-	/// </summary>
-	public class RowCollection : CollectionBase
-	{
-		#region Class Data
+    /// <summary>
+    /// Represents a collection of Row objects
+    /// </summary>
+    public class RowCollection : CollectionBase
+    {
+        #region Class Data
 
-		/// <summary>
-		/// The TableModel that owns the RowCollection
-		/// </summary>
-		private TableModel owner;
+        /// <summary>
+        /// The TableModel that owns the RowCollection
+        /// </summary>
+        private readonly TableModel owner;
 
         /// <summary>
         /// A Row that owns this row
         /// </summary>
-        private Row rowowner;
+        private readonly Row rowowner;
 
-        private RowEventHandler propertyChangedEventHandler;
-		#endregion
+        private readonly RowEventHandler propertyChangedEventHandler;
+        #endregion
 
 
-		#region Constructor
+        #region Constructor
 
-		/// <summary>
-		/// Initializes a new instance of the RowCollection class 
-		/// that belongs to the specified TableModel
-		/// </summary>
-		/// <param name="owner">A TableModel representing the tableModel that owns 
-		/// the RowCollection</param>
-		public RowCollection(TableModel owner) : base()
-		{
-			if (owner == null)
-			{
-				throw new ArgumentNullException("owner");
-			}
-				
-			this.owner = owner;
+        /// <summary>
+        /// Initializes a new instance of the RowCollection class 
+        /// that belongs to the specified TableModel
+        /// </summary>
+        /// <param name="owner">A TableModel representing the tableModel that owns 
+        /// the RowCollection</param>
+        public RowCollection(TableModel owner) : base()
+        {
+            this.owner = owner ?? throw new ArgumentNullException("owner");
 
             propertyChangedEventHandler = new RowEventHandler(row_PropertyChanged);
-		}
+        }
 
         /// <summary>
         /// Initializes a new instance of the RowCollection class 
@@ -82,58 +77,52 @@ namespace XPTable.Models
         public RowCollection(Row owner)
             : base()
         {
-            if (owner == null)
-            {
-                throw new ArgumentNullException("owner");
-            }
-
-            this.rowowner = owner;
+            rowowner = owner ?? throw new ArgumentNullException("owner");
         }
 
-		#endregion
-		
+        #endregion
 
-		#region Methods
-		
-		/// <summary>
-		/// Adds the specified Row to the end of the collection
-		/// </summary>
-		/// <param name="row">The Row to add</param>
-		public int Add(Row row)
-		{
-			if (row == null) 
-				throw new System.ArgumentNullException("Row is null");
 
-			int index = this.List.Add(row);
+        #region Methods
+
+        /// <summary>
+        /// Adds the specified Row to the end of the collection
+        /// </summary>
+        /// <param name="row">The Row to add</param>
+        public int Add(Row row)
+        {
+            if (row == null)
+            {
+                throw new System.ArgumentNullException("Row is null");
+            }
+
+            var index = List.Add(row);
 
             if (owner != null)
             {
                 // this RowCollection is the collection of toplevel rows
-                this.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
+                OnRowAdded(new TableModelEventArgs(owner, row, index, index));
             }
             else if (rowowner != null)
             {
                 // this is a sub row, so it needs a parent
                 row.Parent = rowowner;
-                row.ChildIndex = this.List.Count;
-                this.OnRowAdded(new RowEventArgs(row, RowEventType.SubRowAdded, rowowner));
+                row.ChildIndex = List.Count;
+                OnRowAdded(new RowEventArgs(row, RowEventType.SubRowAdded, rowowner));
             }
 
             row.PropertyChanged += propertyChangedEventHandler;
 
-			return index;
-		}
+            return index;
+        }
 
-		private int _totalHiddenSubRows = 0;
+        private int _totalHiddenSubRows = 0;
 
         /// <summary>
         /// Gets the total number of subrows that are currently not expanded.
         /// </summary>
-        public int HiddenSubRows
-        {
-            get { return _totalHiddenSubRows; }
-        }
-        
+        public int HiddenSubRows => _totalHiddenSubRows;
+
         /// <summary>
         /// Count the number of hidden rows before the supplied row.
         /// </summary>
@@ -141,20 +130,24 @@ namespace XPTable.Models
         /// <returns>The number of hidden rows.</returns>
         internal int HiddenRowCountBefore(int row)
         {
-            int result = 0;
+            var result = 0;
 
-            int skip = 0;
-            for (int i = 0; i < row; i++)
+            var skip = 0;
+            for (var i = 0; i < row; i++)
             {
                 if (skip > 0)
+                {
                     skip--;
+                }
                 else if ((skip == 0) && (!this[i].ExpandSubRows))
                 {
                     skip = this[i].SubRows.Count;
                     result += skip;
                 }
                 else
+                {
                     skip = this[i].SubRows.Count;
+                }
             }
 
             return result;
@@ -175,11 +168,14 @@ namespace XPTable.Models
         /// </summary>
         public void CollapseAllSubRows()
         {
-            int i = 0;
-            while (i < this.Count)
+            var i = 0;
+            while (i < Count)
             {
                 if (this[i].SubRows.Count > 0)
+                {
                     this[i].ExpandSubRows = false;
+                }
+
                 i++;
             }
         }
@@ -189,8 +185,8 @@ namespace XPTable.Models
         /// </summary>
         public void ExpandAllSubRows()
         {
-            int i = 0;
-            while (i < this.Count)
+            var i = 0;
+            while (i < Count)
             {
                 if (this[i].Parent == null)
                 {
@@ -205,306 +201,313 @@ namespace XPTable.Models
             if (e.EventType == RowEventType.ExpandSubRowsChanged)
             {
                 if (!e.Row.ExpandSubRows)
+                {
                     _totalHiddenSubRows += e.Row.SubRows.Count;
+                }
                 else
+                {
                     _totalHiddenSubRows -= e.Row.SubRows.Count;
-
+                }
             }
-		}
+        }
 
 
-		/// <summary>
-		/// Adds an array of Row objects to the collection
-		/// </summary>
-		/// <param name="rows">An array of Row objects to add 
-		/// to the collection</param>
-		public void AddRange(Row[] rows)
-		{
-			if (rows == null) 
-			{
-				throw new System.ArgumentNullException("Row[] is null");
-			}
+        /// <summary>
+        /// Adds an array of Row objects to the collection
+        /// </summary>
+        /// <param name="rows">An array of Row objects to add 
+        /// to the collection</param>
+        public void AddRange(Row[] rows)
+        {
+            if (rows == null)
+            {
+                throw new System.ArgumentNullException("Row[] is null");
+            }
 
-			for (int i=0; i<rows.Length; i++)
-			{
-				this.Add(rows[i]);
-			}
-		}
-
-
-		/// <summary>
-		/// Removes the specified Row from the model
-		/// </summary>
-		/// <param name="row">The Row to remove</param>
-		public void Remove(Row row)
-		{
-			int rowIndex = this.IndexOf(row);
-
-			if (rowIndex != -1) 
-			{
-				this.RemoveAt(rowIndex);
-			}
-		}
+            for (var i = 0; i < rows.Length; i++)
+            {
+                Add(rows[i]);
+            }
+        }
 
 
-		/// <summary>
-		/// Removes an array of Row objects from the collection
-		/// </summary>
-		/// <param name="rows">An array of Row objects to remove 
-		/// from the collection</param>
-		public void RemoveRange(Row[] rows)
-		{
-			if (rows == null) 
-			{
-				throw new System.ArgumentNullException("Row[] is null");
-			}
+        /// <summary>
+        /// Removes the specified Row from the model
+        /// </summary>
+        /// <param name="row">The Row to remove</param>
+        public void Remove(Row row)
+        {
+            var rowIndex = IndexOf(row);
 
-			for (int i=0; i<rows.Length; i++)
-			{
-				this.Remove(rows[i]);
-			}
-		}
+            if (rowIndex != -1)
+            {
+                RemoveAt(rowIndex);
+            }
+        }
 
 
-		/// <summary>
-		/// Removes the Row at the specified index from the collection
-		/// </summary>
-		/// <param name="index">The index of the Row to remove</param>
-		public new void RemoveAt(int index)
-		{
-			if (index >= 0 && index < this.Count) 
-			{
-				Row row = this[index];
-			
-				RemoveControlIfRequired(index);
-				this.List.RemoveAt(index);
+        /// <summary>
+        /// Removes an array of Row objects from the collection
+        /// </summary>
+        /// <param name="rows">An array of Row objects to remove 
+        /// from the collection</param>
+        public void RemoveRange(Row[] rows)
+        {
+            if (rows == null)
+            {
+                throw new System.ArgumentNullException("Row[] is null");
+            }
+
+            for (var i = 0; i < rows.Length; i++)
+            {
+                Remove(rows[i]);
+            }
+        }
+
+
+        /// <summary>
+        /// Removes the Row at the specified index from the collection
+        /// </summary>
+        /// <param name="index">The index of the Row to remove</param>
+        public new void RemoveAt(int index)
+        {
+            if (index >= 0 && index < Count)
+            {
+                var row = this[index];
+
+                RemoveControlIfRequired(index);
+                List.RemoveAt(index);
 
                 if (owner != null)
-    				this.OnRowRemoved(new TableModelEventArgs(this.owner, row, index, index));
-
+                {
+                    OnRowRemoved(new TableModelEventArgs(owner, row, index, index));
+                }
                 else if (rowowner != null)
-                    this.OnRowRemoved(new RowEventArgs(row, RowEventType.SubRowRemoved, rowowner));
+                {
+                    OnRowRemoved(new RowEventArgs(row, RowEventType.SubRowRemoved, rowowner));
+                }
 
                 row.PropertyChanged -= propertyChangedEventHandler;
             }
-		}
+        }
 
         private void RemoveControlIfRequired(int index)
         {
-            for (int i = 0; i < this[index].Cells.Count; i++)
+            for (var i = 0; i < this[index].Cells.Count; i++)
             {
-                Cell cell = this[index].Cells[i];
+                var cell = this[index].Cells[i];
                 if (cell.RendererData is XPTable.Renderers.ControlRendererData)
                 {
                     if ((cell.RendererData as XPTable.Renderers.ControlRendererData).Control != null)
+                    {
                         cell.Row.TableModel.Table.Controls.Remove((cell.RendererData as XPTable.Renderers.ControlRendererData).Control);
+                    }
                 }
             }
         }
 
-		/// <summary>
-		/// Removes all Rows from the collection
-		/// </summary>
-		public new void Clear()
-		{
-			if (this.Count == 0)
-			{
-				return;
-			}
+        /// <summary>
+        /// Removes all Rows from the collection
+        /// </summary>
+        public new void Clear()
+        {
+            if (Count == 0)
+            {
+                return;
+            }
 
-			this[0].InternalTableModel.Table.ClearAllRowControls();
-			for (int i=0; i<this.Count; i++)
-			{
-				this[i].InternalTableModel = null;
-			}
+            this[0].InternalTableModel.Table.ClearAllRowControls();
+            for (var i = 0; i < Count; i++)
+            {
+                this[i].InternalTableModel = null;
+            }
 
-			base.Clear();
-			this.InnerList.Capacity = 0;
+            base.Clear();
+            InnerList.Capacity = 0;
 
             if (owner != null)
-                this.owner.OnRowRemoved(new TableModelEventArgs(this.owner, null, -1, -1));
-
+            {
+                owner.OnRowRemoved(new TableModelEventArgs(owner, null, -1, -1));
+            }
             else if (rowowner != null)
-                this.OnRowRemoved(new RowEventArgs(null, RowEventType.SubRowRemoved, rowowner));
+            {
+                OnRowRemoved(new RowEventArgs(null, RowEventType.SubRowRemoved, rowowner));
+            }
         }
 
-		/// <summary>
-		/// Inserts a Row into the collection at the specified index
-		/// </summary>
-		/// <param name="index">The zero-based index at which the Row 
-		/// should be inserted</param>
-		/// <param name="row">The Row to insert</param>
-		public void Insert(int index, Row row)
-		{
-			if (row == null)
-			{
-				return;
-			}
+        /// <summary>
+        /// Inserts a Row into the collection at the specified index
+        /// </summary>
+        /// <param name="index">The zero-based index at which the Row 
+        /// should be inserted</param>
+        /// <param name="row">The Row to insert</param>
+        public void Insert(int index, Row row)
+        {
+            if (row == null)
+            {
+                return;
+            }
 
-			if (index < 0)
-			{
-				throw new IndexOutOfRangeException();
-			}
-			
-			if (index >= this.Count)
-			{
-				this.Add(row);
-			}
-			else
-			{
-				base.List.Insert(index, row);
+            if (index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            if (index >= Count)
+            {
+                Add(row);
+            }
+            else
+            {
+                base.List.Insert(index, row);
 
                 if (owner != null)
-                    this.owner.OnRowAdded(new TableModelEventArgs(this.owner, row, index, index));
-
+                {
+                    owner.OnRowAdded(new TableModelEventArgs(owner, row, index, index));
+                }
                 else if (rowowner != null)
                 {
-                    RowEventArgs args = new RowEventArgs(row, RowEventType.SubRowAdded, rowowner);
+                    var args = new RowEventArgs(row, RowEventType.SubRowAdded, rowowner);
                     args.SetRowIndex(index);
-                    this.OnRowAdded(args);
+                    OnRowAdded(args);
                 }
             }
-		}
+        }
 
 
-		/// <summary>
-		/// Inserts an array of Rows into the collection at the specified 
-		/// index
-		/// </summary>
-		/// <param name="index">The zero-based index at which the rows 
-		/// should be inserted</param>
-		/// <param name="rows">The array of Rows to be inserted into 
-		/// the collection</param>
-		public void InsertRange(int index, Row[] rows)
-		{
-			if (rows == null) 
-			{
-				throw new System.ArgumentNullException("Row[] is null");
-			}
+        /// <summary>
+        /// Inserts an array of Rows into the collection at the specified 
+        /// index
+        /// </summary>
+        /// <param name="index">The zero-based index at which the rows 
+        /// should be inserted</param>
+        /// <param name="rows">The array of Rows to be inserted into 
+        /// the collection</param>
+        public void InsertRange(int index, Row[] rows)
+        {
+            if (rows == null)
+            {
+                throw new System.ArgumentNullException("Row[] is null");
+            }
 
-			if (index < 0)
-			{
-				throw new IndexOutOfRangeException();
-			}
+            if (index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
 
-			if (index >= this.Count)
-			{
-				this.AddRange(rows);
-			}
-			else
-			{
-				for (int i=rows.Length-1; i>=0; i--)
-				{
-					this.Insert(index, rows[i]);
-				}
-			}
-		}
-
-
-		/// <summary>
-		///	Returns the index of the specified Row in the model
-		/// </summary>
-		/// <param name="row">The Row to look for</param>
-		/// <returns>The index of the specified Row in the model</returns>
-		public int IndexOf(Row row)
-		{
-			for (int i=0; i<this.Count; i++)
-			{
-				if (this[i] == row)
-				{
-					return i;
-				}
-			}
-
-			return -1;
-		}
-
-		#endregion
+            if (index >= Count)
+            {
+                AddRange(rows);
+            }
+            else
+            {
+                for (var i = rows.Length - 1; i >= 0; i--)
+                {
+                    Insert(index, rows[i]);
+                }
+            }
+        }
 
 
-		#region Properties
+        /// <summary>
+        ///	Returns the index of the specified Row in the model
+        /// </summary>
+        /// <param name="row">The Row to look for</param>
+        /// <returns>The index of the specified Row in the model</returns>
+        public int IndexOf(Row row)
+        {
+            for (var i = 0; i < Count; i++)
+            {
+                if (this[i] == row)
+                {
+                    return i;
+                }
+            }
 
-		/// <summary>
-		/// Gets the Row at the specified index
-		/// </summary>
-		public Row this[int index]
-		{
-			get
-			{
-				if (index < 0 || index >= this.Count)
-				{
-					return null;
-				}
-					
-				return this.List[index] as Row;
-			}
-		}
+            return -1;
+        }
 
-
-		/// <summary>
-		/// Replaces the Row at the specified index to the specified Row
-		/// </summary>
-		/// <param name="index">The index of the Row to be replaced</param>
-		/// <param name="row">The Row to be placed at the specified index</param>
-		internal void SetRow(int index, Row row)
-		{
-			if (index < 0 || index >= this.Count)
-			{
-				throw new ArgumentOutOfRangeException("value");
-			}
-
-			if (row == null)
-			{
-				throw new ArgumentNullException("row cannot be null");
-			}
-					
-			this.List[index] = row;
-
-			row.InternalIndex = index;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Events
+        #region Properties
 
-		/// <summary>
-		/// Raises the RowAdded event
-		/// </summary>
-		/// <param name="e">A TableModelEventArgs that contains the event data</param>
-		protected virtual void OnRowAdded(TableModelEventArgs e)
-		{
-			this.owner.OnRowAdded(e);
-		}
+        /// <summary>
+        /// Gets the Row at the specified index
+        /// </summary>
+        public Row this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Count)
+                {
+                    return null;
+                }
 
-
-		/// <summary>
-		/// Raises the RowRemoved event
-		/// </summary>
-		/// <param name="e">A TableModelEventArgs that contains the event data</param>
-		protected virtual void OnRowRemoved(TableModelEventArgs e)
-		{
-			this.owner.OnRowRemoved(e);
-		}
-
-		/// <summary>
-		/// Raises the RowAdded event
-		/// </summary>
-		/// <param name="e">A TableModelEventArgs that contains the event data</param>
-		protected virtual void OnRowAdded(RowEventArgs e)
-		{
-			this.rowowner.OnSubRowAdded(e);
-		}
+                return List[index] as Row;
+            }
+        }
 
 
-		/// <summary>
-		/// Raises the RowRemoved event
-		/// </summary>
-		/// <param name="e">A TableModelEventArgs that contains the event data</param>
+        /// <summary>
+        /// Replaces the Row at the specified index to the specified Row
+        /// </summary>
+        /// <param name="index">The index of the Row to be replaced</param>
+        /// <param name="row">The Row to be placed at the specified index</param>
+        internal void SetRow(int index, Row row)
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException("value");
+            }
+
+            List[index] = row ?? throw new ArgumentNullException("row cannot be null");
+
+            row.InternalIndex = index;
+        }
+
+        #endregion
+
+
+        #region Events
+
+        /// <summary>
+        /// Raises the RowAdded event
+        /// </summary>
+        /// <param name="e">A TableModelEventArgs that contains the event data</param>
+        protected virtual void OnRowAdded(TableModelEventArgs e)
+        {
+            owner.OnRowAdded(e);
+        }
+
+
+        /// <summary>
+        /// Raises the RowRemoved event
+        /// </summary>
+        /// <param name="e">A TableModelEventArgs that contains the event data</param>
+        protected virtual void OnRowRemoved(TableModelEventArgs e)
+        {
+            owner.OnRowRemoved(e);
+        }
+
+        /// <summary>
+        /// Raises the RowAdded event
+        /// </summary>
+        /// <param name="e">A TableModelEventArgs that contains the event data</param>
+        protected virtual void OnRowAdded(RowEventArgs e)
+        {
+            rowowner.OnSubRowAdded(e);
+        }
+
+
+        /// <summary>
+        /// Raises the RowRemoved event
+        /// </summary>
+        /// <param name="e">A TableModelEventArgs that contains the event data</param>
         protected virtual void OnRowRemoved(RowEventArgs e)
-		{
-            this.rowowner.OnSubRowRemoved(e);
-		}
-		#endregion
-	}
+        {
+            rowowner.OnSubRowRemoved(e);
+        }
+        #endregion
+    }
 }

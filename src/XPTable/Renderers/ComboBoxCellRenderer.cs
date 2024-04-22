@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -44,14 +44,14 @@ namespace XPTable.Renderers
     public class ComboBoxCellRenderer : DropDownCellRenderer
     {
         #region Constructor
-        
+
         /// <summary>
         /// Initializes a new instance of the ComboBoxCellRenderer class with 
         /// default settings
         /// </summary>
         public ComboBoxCellRenderer() : base()
         {
-            
+
         }
 
         #endregion
@@ -75,10 +75,10 @@ namespace XPTable.Renderers
                 return;
             }
 
-            Rectangle buttonRect = this.CalcDropDownButtonBounds();
-            Rectangle textRect = this.ClientRectangle;
+            var buttonRect = CalcDropDownButtonBounds();
+            var textRect = ClientRectangle;
 
-            if (this.ShowDropDownButton)
+            if (ShowDropDownButton)
             {
                 textRect.Width -= buttonRect.Width - 1;
             }
@@ -88,37 +88,37 @@ namespace XPTable.Renderers
             {
                 if (e.Enabled)
                 {
-                    this.DrawString(e.Graphics, e.Cell.Text, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
+                    DrawString(e.Graphics, e.Cell.Text, Font, ForeBrush, textRect, e.Cell.WordWrap);
                 }
                 else
                 {
-                    this.DrawString(e.Graphics, e.Cell.Text, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
+                    DrawString(e.Graphics, e.Cell.Text, Font, GrayTextBrush, textRect, e.Cell.WordWrap);
                 }
 
                 if (e.Cell.WidthNotSet)
                 {
-                    SizeF size = e.Graphics.MeasureString(e.Cell.Text, this.Font);
-                    e.Cell.ContentWidth = (int)Math.Ceiling(size.Width) + (this.ShowDropDownButton ? buttonRect.Width : 0);
+                    var size = e.Graphics.MeasureString(e.Cell.Text, Font);
+                    e.Cell.ContentWidth = (int)Math.Ceiling(size.Width) + (ShowDropDownButton ? buttonRect.Width : 0);
                 }
             }
             else
             {
                 if (e.Cell.WidthNotSet)
                 {
-                    e.Cell.ContentWidth = this.ShowDropDownButton ? buttonRect.Width : 0;
+                    e.Cell.ContentWidth = ShowDropDownButton ? buttonRect.Width : 0;
                 }
             }
 
             // only if we want to show selection rectangle
             if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle)
             {
-                Rectangle focusRect = this.ClientRectangle;
+                var focusRect = ClientRectangle;
 
-                if (this.ShowDropDownButton)
+                if (ShowDropDownButton)
                 {
                     focusRect.Width -= buttonRect.Width;
                 }
-                
+
                 ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
             }
         }

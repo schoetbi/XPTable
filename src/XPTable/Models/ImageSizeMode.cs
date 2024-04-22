@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -28,30 +28,30 @@ using System;
 
 namespace XPTable.Models
 {
-	/// <summary>
-	/// Specifies how Images are sized within a Cell
-	/// </summary>
-	public enum ImageSizeMode
-	{
-		/// <summary>
-		/// The Image will be displayed normally
-		/// </summary>
-		Normal = 0,
+    /// <summary>
+    /// Specifies how Images are sized within a Cell
+    /// </summary>
+    public enum ImageSizeMode
+    {
+        /// <summary>
+        /// The Image will be displayed normally
+        /// </summary>
+        Normal = 0,
 
-		/// <summary>
-		/// The Image will be stretched/shrunken to fit the Cell. NOT IMPLEMENTED.
-		/// </summary>
+        /// <summary>
+        /// The Image will be stretched/shrunken to fit the Cell. NOT IMPLEMENTED.
+        /// </summary>
         [Obsolete("This is not implemented.", false)]
-		SizedToFit = 1,
+        SizedToFit = 1,
 
-		/// <summary>
-		/// The Image will be scaled to fit the Cell
-		/// </summary>
-		ScaledToFit = 2,
+        /// <summary>
+        /// The Image will be scaled to fit the Cell
+        /// </summary>
+        ScaledToFit = 2,
 
         /// <summary>
         /// The image is not scaled and is not clipped to the cell.
         /// </summary>
         NoClip = 3
-	}
+    }
 }

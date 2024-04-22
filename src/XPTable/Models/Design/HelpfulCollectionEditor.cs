@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -32,66 +32,62 @@ using System.Windows.Forms;
 
 namespace XPTable.Models.Design
 {
-	/// <summary>
-	/// A CollectionEditor that displays the help and command areas of its PropertyGrid
-	/// </summary>
-	public class HelpfulCollectionEditor : CollectionEditor
-	{
+    /// <summary>
+    /// A CollectionEditor that displays the help and command areas of its PropertyGrid
+    /// </summary>
+    public class HelpfulCollectionEditor : CollectionEditor
+    {
         private PropertyGrid propertyGrid;
 
-		/// <summary>
-		/// Initializes a new instance of the HelpfulCollectionEditor class using 
-		/// the specified collection type
-		/// </summary>
-		/// <param name="type">The type of the collection for this editor to edit</param>
+        /// <summary>
+        /// Initializes a new instance of the HelpfulCollectionEditor class using 
+        /// the specified collection type
+        /// </summary>
+        /// <param name="type">The type of the collection for this editor to edit</param>
         public HelpfulCollectionEditor(Type type)
             : base(type)
         {
         }
 
-		/// <summary>
-		/// If it can be found, the PropertyGrid is made available here, it's availability not guaranteed.
-		/// Inheritors should check that it is available before attempting to access its members.  It is 
-		/// discovered in the <see cref="HelpfulCollectionEditor.CreateCollectionForm"/> method, inheritors
-		/// who want to change the PropertyGrids properties would typically do so in an override of 
-		/// that method, after invoking the base method.
-		/// </summary>
-        public PropertyGrid PropertyGrid
+        /// <summary>
+        /// If it can be found, the PropertyGrid is made available here, it's availability not guaranteed.
+        /// Inheritors should check that it is available before attempting to access its members.  It is 
+        /// discovered in the <see cref="HelpfulCollectionEditor.CreateCollectionForm"/> method, inheritors
+        /// who want to change the PropertyGrids properties would typically do so in an override of 
+        /// that method, after invoking the base method.
+        /// </summary>
+        public PropertyGrid PropertyGrid => propertyGrid;
+
+        /// <summary>
+        /// Discovers the CollectionForm's property grid
+        /// </summary>
+        /// <returns>The CollectionEditor.CollectionForm returned from base method</returns>
+        protected override CollectionEditor.CollectionForm CreateCollectionForm()
         {
-            get { return this.propertyGrid; }
-//            private set { this.propertyGrid = value; }
+            var editor = base.CreateCollectionForm();
+
+            findPropertyGrid((Control)editor);
+
+            return editor;
         }
 
-		/// <summary>
-		/// Discovers the CollectionForm's property grid
-		/// </summary>
-		/// <returns>The CollectionEditor.CollectionForm returned from base method</returns>
-		protected override CollectionEditor.CollectionForm CreateCollectionForm()
-		{
-			CollectionEditor.CollectionForm editor = base.CreateCollectionForm();
+        private bool findPropertyGrid(Control control)
+        {
+            if (control is PropertyGrid)
+            {
+                propertyGrid = (PropertyGrid)control;
+                return true;
+            }
 
-			this.findPropertyGrid((Control) editor);
+            foreach (Control c in control.Controls)
+            {
+                if (findPropertyGrid(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-			return editor;
-		}
-
-		private bool findPropertyGrid(Control control)
-		{
-			if (control is PropertyGrid)
-			{
-				propertyGrid = (PropertyGrid) control;
-				return true;
-			}
-
-			foreach (Control c in control.Controls)
-			{
-				if (this.findPropertyGrid(c))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-	}
+    }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -38,7 +38,7 @@ namespace XPTable.Renderers
         public ControlCellRenderer()
             : base()
         {
-            this.controlSize = new Size(13, 13);
+            controlSize = new Size(13, 13);
         }
 
         #endregion
@@ -53,38 +53,38 @@ namespace XPTable.Renderers
         /// the control contained in the current Cell</returns>
         protected Rectangle CalcControlRect(RowAlignment rowAlignment, ColumnAlignment columnAlignment)
         {
-            Rectangle controlRect = new Rectangle(this.ClientRectangle.Location, this.ControlSize);
+            var controlRect = new Rectangle(ClientRectangle.Location, ControlSize);
 
-            if (controlRect.Height > this.ClientRectangle.Height)
+            if (controlRect.Height > ClientRectangle.Height)
             {
-                controlRect.Height = this.ClientRectangle.Height;
+                controlRect.Height = ClientRectangle.Height;
                 controlRect.Width = controlRect.Height;
             }
 
             switch (rowAlignment)
             {
                 case RowAlignment.Center:
-                    {
-                        controlRect.Y += (this.ClientRectangle.Height - controlRect.Height) / 2;
+                {
+                    controlRect.Y += (ClientRectangle.Height - controlRect.Height) / 2;
 
-                        break;
-                    }
+                    break;
+                }
 
                 case RowAlignment.Bottom:
-                    {
-                        controlRect.Y = this.ClientRectangle.Bottom - controlRect.Height;
+                {
+                    controlRect.Y = ClientRectangle.Bottom - controlRect.Height;
 
-                        break;
-                    }
+                    break;
+                }
             }
 
             if (columnAlignment == ColumnAlignment.Center)
             {
-                controlRect.X += (this.ClientRectangle.Width - controlRect.Width) / 2;
+                controlRect.X += (ClientRectangle.Width - controlRect.Width) / 2;
             }
             else if (columnAlignment == ColumnAlignment.Right)
             {
-                controlRect.X = this.ClientRectangle.Right - controlRect.Width;
+                controlRect.X = ClientRectangle.Right - controlRect.Width;
             }
 
             return controlRect;
@@ -98,32 +98,32 @@ namespace XPTable.Renderers
         /// <returns></returns>
         protected ControlRendererData GetControlRendererData(Cell cell)
         {
-            object rendererData = this.GetRendererData(cell);
+            var rendererData = GetRendererData(cell);
 
-            if (this.ControlFactory != null)
+            if (ControlFactory != null)
             {
-                if (rendererData == null || !(rendererData is ControlRendererData))
+                if (rendererData is null or not ControlRendererData)
                 {
                     // Never shown a control, so ask what we should do
-                    Control control = this.ControlFactory.GetControl(cell);
+                    var control = ControlFactory.GetControl(cell);
                     if (control != null)
                     {
                         cell.Row.TableModel.Table.Controls.Add(control);
                         control.BringToFront();
 
-                        ControlRendererData data = new ControlRendererData(control);
-                        this.SetRendererData(cell, data);
+                        var data = new ControlRendererData(control);
+                        SetRendererData(cell, data);
                         rendererData = data;
                     }
                 }
                 else
                 {
                     // Already got a control, but should we swap it for another
-                    ControlRendererData data = (ControlRendererData)rendererData;
-                    Control oldControl = data.Control;
+                    var data = (ControlRendererData)rendererData;
+                    var oldControl = data.Control;
                     // This next call allows the properties of the control to be updated, or to provide
                     // an entirely new control
-                    Control newControl = this.ControlFactory.UpdateControl(cell, data.Control);
+                    var newControl = ControlFactory.UpdateControl(cell, data.Control);
                     if (newControl != null)
                     {
                         // We need to take off the old control and wire up the new one
@@ -145,21 +145,15 @@ namespace XPTable.Renderers
         /// <summary>
         /// Gets the size of the control
         /// </summary>
-        protected Size ControlSize
-        {
-            get
-            {
-                return this.controlSize;
-            }
-        }
+        protected Size ControlSize => controlSize;
 
         /// <summary>
         /// Gets or sets the object that provides control instances for each cell.
         /// </summary>
         public ControlFactory ControlFactory
         {
-            get { return this.controlFactory; }
-            set { this.controlFactory = value; }
+            get => controlFactory;
+            set => controlFactory = value;
         }
 
         #endregion
@@ -172,16 +166,14 @@ namespace XPTable.Renderers
         /// <param name="e">A PaintCellEventArgs that contains the event data</param>
         public override void OnPaintCell(PaintCellEventArgs e)
         {
-            if (e.Table.ColumnModel.Columns[e.Column] is ControlColumn)
+            if (e.Table.ColumnModel.Columns[e.Column] is ControlColumn column)
             {
-                ControlColumn column = (ControlColumn)e.Table.ColumnModel.Columns[e.Column];
-
-                this.controlSize = column.ControlSize;
-                this.controlFactory = column.ControlFactory;
+                controlSize = column.ControlSize;
+                controlFactory = column.ControlFactory;
             }
             else
             {
-                this.controlSize = new Size(13, 13);
+                controlSize = new Size(13, 13);
             }
 
             base.OnPaintCell(e);
@@ -202,9 +194,9 @@ namespace XPTable.Renderers
                 return;
             }
 
-            Rectangle controlRect = this.CalcControlRect(this.LineAlignment, this.Alignment);
+            var controlRect = CalcControlRect(LineAlignment, Alignment);
 
-            ControlRendererData controlData = this.GetControlRendererData(e.Cell);
+            var controlData = GetControlRendererData(e.Cell);
 
             if (controlData != null && controlData.Control != null)
             {
@@ -213,7 +205,9 @@ namespace XPTable.Renderers
                 controlData.Control.BringToFront();
 
                 if (e.Cell.WidthNotSet)
+                {
                     e.Cell.ContentWidth = controlRect.Size.Width;
+                }
             }
         }
 

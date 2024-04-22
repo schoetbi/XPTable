@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -83,17 +83,19 @@ namespace XPTable.Renderers
         /// </summary>
         protected Renderer()
         {
-            this.bounds = Rectangle.Empty;
-            this.font = null;
+            bounds = Rectangle.Empty;
+            font = null;
 
-            this.stringFormat = new StringFormat();
-            this.stringFormat.LineAlignment = StringAlignment.Center;
-            this.stringFormat.Alignment = StringAlignment.Near;
-            //            this.stringFormat.FormatFlags = StringFormatFlags;   //NoWrap
-            this.stringFormat.Trimming = StringTrimming.EllipsisCharacter;
+            stringFormat = new StringFormat
+            {
+                LineAlignment = StringAlignment.Center,
+                Alignment = StringAlignment.Near,
+                //            this.stringFormat.FormatFlags = StringFormatFlags;   //NoWrap
+                Trimming = StringTrimming.EllipsisCharacter
+            };
 
-            this.backBrush = new SolidBrush(Color.Transparent);
-            this.foreBrush = new SolidBrush(Color.Black);
+            backBrush = new SolidBrush(Color.Transparent);
+            foreBrush = new SolidBrush(Color.Black);
         }
 
         #endregion
@@ -105,22 +107,22 @@ namespace XPTable.Renderers
         /// </summary>
         public virtual void Dispose()
         {
-            if (this.backBrush != null)
+            if (backBrush != null)
             {
-                this.backBrush.Dispose();
-                this.backBrush = null;
+                backBrush.Dispose();
+                backBrush = null;
             }
 
-            if (this.foreBrush != null)
+            if (foreBrush != null)
             {
-                this.foreBrush.Dispose();
-                this.foreBrush = null;
+                foreBrush.Dispose();
+                foreBrush = null;
             }
 
-            if (this.stringFormat != null)
+            if (stringFormat != null)
             {
-                this.stringFormat.Dispose();
-                this.stringFormat = null;
+                stringFormat.Dispose();
+                stringFormat = null;
             }
 
         }
@@ -131,8 +133,10 @@ namespace XPTable.Renderers
         /// <param name="color">The color of the brush</param>
         protected void SetBackBrushColor(Color color)
         {
-            if (this.BackBrush.Color != color)
-                this.BackBrush.Color = color;
+            if (BackBrush.Color != color)
+            {
+                BackBrush.Color = color;
+            }
         }
 
         /// <summary>
@@ -141,8 +145,10 @@ namespace XPTable.Renderers
         /// <param name="color">The color of the brush</param>
         protected void SetForeBrushColor(Color color)
         {
-            if (this.ForeBrush.Color != color)
-                this.ForeBrush.Color = color;
+            if (ForeBrush.Color != color)
+            {
+                ForeBrush.Color = color;
+            }
         }
 
         /// <summary>
@@ -153,10 +159,8 @@ namespace XPTable.Renderers
         /// <returns></returns>
         protected bool IsTextTrimmed(Graphics graphics, string text)
         {
-            int chars;
-            int lines;
 
-            graphics.MeasureString(text, this.Font, this.ClientRectangle.Size, this.StringFormat, out chars, out lines);
+            graphics.MeasureString(text, Font, ClientRectangle.Size, StringFormat, out var chars, out var lines);
 
             // kbomb987 - Fix for ToolTips not displaying on cut-off cell text 
             return (chars < text.Length) || (lines > 1);
@@ -181,15 +185,9 @@ namespace XPTable.Renderers
         [Browsable(false)]
         public Rectangle Bounds
         {
-            get
-            {
-                return this.bounds;
-            }
+            get => bounds;
 
-            set
-            {
-                this.bounds = value;
-            }
+            set => bounds = value;
         }
 
 
@@ -202,42 +200,27 @@ namespace XPTable.Renderers
         {
             get
             {
-                if (this.font == null)
+                if (font == null)
                 {
                     return Control.DefaultFont;
                 }
 
-                return this.font;
+                return font;
             }
 
-            set
-            {
-                this.font = value;
-            }
+            set => font = value;
         }
 
         /// <summary>
         /// Gets the brush used to draw the Renderers background
         /// </summary>
-        protected SolidBrush BackBrush
-        {
-            get
-            {
-                return this.backBrush;
-            }
-        }
+        protected SolidBrush BackBrush => backBrush;
 
 
         /// <summary>
         /// Gets the brush used to draw the Renderers foreground
         /// </summary>
-        protected SolidBrush ForeBrush
-        {
-            get
-            {
-                return this.foreBrush;
-            }
-        }
+        protected SolidBrush ForeBrush => foreBrush;
 
 
         /// <summary>
@@ -247,15 +230,9 @@ namespace XPTable.Renderers
         Description("The foreground color used to display text and graphics")]
         public Color ForeColor
         {
-            get
-            {
-                return this.ForeBrush.Color;
-            }
+            get => ForeBrush.Color;
 
-            set
-            {
-                this.SetForeBrushColor(value);
-            }
+            set => SetForeBrushColor(value);
         }
 
 
@@ -266,15 +243,9 @@ namespace XPTable.Renderers
         Description("The background color used to display text and graphics")]
         public Color BackColor
         {
-            get
-            {
-                return this.BackBrush.Color;
-            }
+            get => BackBrush.Color;
 
-            set
-            {
-                this.SetBackBrushColor(value);
-            }
+            set => SetBackBrushColor(value);
         }
 
 
@@ -284,15 +255,9 @@ namespace XPTable.Renderers
         /// </summary>
         protected StringFormat StringFormat
         {
-            get
-            {
-                return this.stringFormat;
-            }
+            get => stringFormat;
 
-            set
-            {
-                this.stringFormat = value;
-            }
+            set => stringFormat = value;
         }
 
 
@@ -304,15 +269,9 @@ namespace XPTable.Renderers
         [Browsable(false)]
         public StringTrimming Trimming
         {
-            get
-            {
-                return this.stringFormat.Trimming;
-            }
+            get => stringFormat.Trimming;
 
-            set
-            {
-                this.stringFormat.Trimming = value;
-            }
+            set => stringFormat.Trimming = value;
         }
 
 
@@ -322,37 +281,28 @@ namespace XPTable.Renderers
         [Browsable(false)]
         public ColumnAlignment Alignment
         {
-            get
+            get => stringFormat.Alignment switch
             {
-                switch (this.stringFormat.Alignment)
-                {
-                    case StringAlignment.Near:
-                        return ColumnAlignment.Left;
-
-                    case StringAlignment.Center:
-                        return ColumnAlignment.Center;
-
-                    case StringAlignment.Far:
-                        return ColumnAlignment.Right;
-                }
-
-                return ColumnAlignment.Left;
-            }
+                StringAlignment.Near => ColumnAlignment.Left,
+                StringAlignment.Center => ColumnAlignment.Center,
+                StringAlignment.Far => ColumnAlignment.Right,
+                _ => ColumnAlignment.Left,
+            };
 
             set
             {
                 switch (value)
                 {
                     case ColumnAlignment.Left:
-                        this.stringFormat.Alignment = StringAlignment.Near;
+                        stringFormat.Alignment = StringAlignment.Near;
                         break;
 
                     case ColumnAlignment.Center:
-                        this.stringFormat.Alignment = StringAlignment.Center;
+                        stringFormat.Alignment = StringAlignment.Center;
                         break;
 
                     case ColumnAlignment.Right:
-                        this.stringFormat.Alignment = StringAlignment.Far;
+                        stringFormat.Alignment = StringAlignment.Far;
                         break;
                 }
             }
@@ -365,37 +315,28 @@ namespace XPTable.Renderers
         [Browsable(false)]
         public RowAlignment LineAlignment
         {
-            get
+            get => stringFormat.LineAlignment switch
             {
-                switch (this.stringFormat.LineAlignment)
-                {
-                    case StringAlignment.Near:
-                        return RowAlignment.Top;
-
-                    case StringAlignment.Center:
-                        return RowAlignment.Center;
-
-                    case StringAlignment.Far:
-                        return RowAlignment.Bottom;
-                }
-
-                return RowAlignment.Center;
-            }
+                StringAlignment.Near => RowAlignment.Top,
+                StringAlignment.Center => RowAlignment.Center,
+                StringAlignment.Far => RowAlignment.Bottom,
+                _ => RowAlignment.Center,
+            };
 
             set
             {
                 switch (value)
                 {
                     case RowAlignment.Top:
-                        this.stringFormat.LineAlignment = StringAlignment.Near;
+                        stringFormat.LineAlignment = StringAlignment.Near;
                         break;
 
                     case RowAlignment.Center:
-                        this.stringFormat.LineAlignment = StringAlignment.Center;
+                        stringFormat.LineAlignment = StringAlignment.Center;
                         break;
 
                     case RowAlignment.Bottom:
-                        this.stringFormat.LineAlignment = StringAlignment.Far;
+                        stringFormat.LineAlignment = StringAlignment.Far;
                         break;
                 }
             }
@@ -405,13 +346,7 @@ namespace XPTable.Renderers
         /// <summary>
         /// Gets whether Visual Styles are enabled for the application
         /// </summary>
-        protected bool VisualStylesEnabled
-        {
-            get
-            {
-                return ThemeManager.VisualStylesEnabled;
-            }
-        }
+        protected bool VisualStylesEnabled => ThemeManager.VisualStylesEnabled;
 
         #endregion
     }

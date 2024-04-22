@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -32,130 +32,106 @@ using XPTable.Models;
 
 namespace XPTable.Events
 {
-	/// <summary>
-	/// Base class for classes containing Cell event data
-	/// </summary>
-	public class CellEventArgsBase : EventArgs
-	{
-		#region Class Data
-		
-		/// <summary>
-		/// The Cell that Raised the event
-		/// </summary>
-		private Cell source;
+    /// <summary>
+    /// Base class for classes containing Cell event data
+    /// </summary>
+    public class CellEventArgsBase : EventArgs
+    {
+        #region Class Data
 
-		/// <summary>
-		/// The Column index of the Cell
-		/// </summary>
-		private int column;
+        /// <summary>
+        /// The Cell that Raised the event
+        /// </summary>
+        private readonly Cell source;
 
-		/// <summary>
-		/// The Row index of the Cell
-		/// </summary>
-		private int row;
+        /// <summary>
+        /// The Column index of the Cell
+        /// </summary>
+        private int column;
 
-		#endregion
+        /// <summary>
+        /// The Row index of the Cell
+        /// </summary>
+        private int row;
 
-
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the CellEventArgs class with 
-		/// the specified Cell source and event type
-		/// </summary>
-		/// <param name="source">The Cell that Raised the event</param>
-		public CellEventArgsBase(Cell source) : this(source, -1, -1)
-		{
-			
-		}
-
-		
-		/// <summary>
-		/// Initializes a new instance of the CellEventArgs class with 
-		/// the specified Cell source, column index and row index
-		/// </summary>
-		/// <param name="source">The Cell that Raised the event</param>
-		/// <param name="column">The Column index of the Cell</param>
-		/// <param name="row">The Row index of the Cell</param>
-		public CellEventArgsBase(Cell source, int column, int row) : base()
-		{
-			this.source = source;
-			this.column = column;
-			this.row = row;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Properties
+        #region Constructor
 
-		/// <summary>
-		/// Returns the Cell that Raised the event
-		/// </summary>
-		public Cell Cell
-		{
-			get
-			{
-				return this.source;
-			}
-		}
+        /// <summary>
+        /// Initializes a new instance of the CellEventArgs class with 
+        /// the specified Cell source and event type
+        /// </summary>
+        /// <param name="source">The Cell that Raised the event</param>
+        public CellEventArgsBase(Cell source) : this(source, -1, -1)
+        {
 
-
-		/// <summary>
-		/// Gets the Column index of the Cell
-		/// </summary>
-		public int Column
-		{
-			get
-			{
-				return this.column;
-			}
-		}
+        }
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="column"></param>
-		internal void SetColumn(int column)
-		{
-			this.column = column;
-		}
+        /// <summary>
+        /// Initializes a new instance of the CellEventArgs class with 
+        /// the specified Cell source, column index and row index
+        /// </summary>
+        /// <param name="source">The Cell that Raised the event</param>
+        /// <param name="column">The Column index of the Cell</param>
+        /// <param name="row">The Row index of the Cell</param>
+        public CellEventArgsBase(Cell source, int column, int row) : base()
+        {
+            this.source = source;
+            this.column = column;
+            this.row = row;
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// Gets the Row index of the Cell
-		/// </summary>
-		public int Row
-		{
-			get
-			{
-				return this.row;
-			}
-		}
+        #region Properties
+
+        /// <summary>
+        /// Returns the Cell that Raised the event
+        /// </summary>
+        public Cell Cell => source;
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="row"></param>
-		internal void SetRow(int row)
-		{
-			this.row = row;
-		}
+        /// <summary>
+        /// Gets the Column index of the Cell
+        /// </summary>
+        public int Column => column;
 
 
-		/// <summary>
-		/// Gets the position of the Cell
-		/// </summary>
-		public CellPos CellPos
-		{
-			get
-			{
-				return new CellPos(this.Row, this.Column);
-			}
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="column"></param>
+        internal void SetColumn(int column)
+        {
+            this.column = column;
+        }
 
-		#endregion
-	}
+
+        /// <summary>
+        /// Gets the Row index of the Cell
+        /// </summary>
+        public int Row => row;
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="row"></param>
+        internal void SetRow(int row)
+        {
+            this.row = row;
+        }
+
+
+        /// <summary>
+        /// Gets the position of the Cell
+        /// </summary>
+        public CellPos CellPos => new CellPos(Row, Column);
+
+        #endregion
+    }
 }

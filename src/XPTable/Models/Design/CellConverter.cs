@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -37,58 +37,58 @@ using XPTable.Models;
 
 namespace XPTable.Models.Design
 {
-	/// <summary>
-	/// A custom TypeConverter used to help convert Cells from 
-	/// one Type to another
-	/// </summary>
-	public class CellConverter : TypeConverter
-	{
-		/// <summary>
-		/// Returns whether this converter can convert the object to the 
-		/// specified type, using the specified context
-		/// </summary>
-		/// <param name="context">An ITypeDescriptorContext that provides a 
-		/// format context</param>
-		/// <param name="destinationType">A Type that represents the type 
-		/// you want to convert to</param>
-		/// <returns>true if this converter can perform the conversion; o
-		/// therwise, false</returns>
-		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-		{
-			if (destinationType == typeof(InstanceDescriptor))
-			{
-				return true;
-			}
+    /// <summary>
+    /// A custom TypeConverter used to help convert Cells from 
+    /// one Type to another
+    /// </summary>
+    public class CellConverter : TypeConverter
+    {
+        /// <summary>
+        /// Returns whether this converter can convert the object to the 
+        /// specified type, using the specified context
+        /// </summary>
+        /// <param name="context">An ITypeDescriptorContext that provides a 
+        /// format context</param>
+        /// <param name="destinationType">A Type that represents the type 
+        /// you want to convert to</param>
+        /// <returns>true if this converter can perform the conversion; o
+        /// therwise, false</returns>
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            if (destinationType == typeof(InstanceDescriptor))
+            {
+                return true;
+            }
 
-			return base.CanConvertTo(context, destinationType);
-		}
+            return base.CanConvertTo(context, destinationType);
+        }
 
 
-		/// <summary>
-		/// Converts the given value object to the specified type, using 
-		/// the specified context and culture information
-		/// </summary>
-		/// <param name="context">An ITypeDescriptorContext that provides 
-		/// a format context</param>
-		/// <param name="culture">A CultureInfo object. If a null reference 
-		/// is passed, the current culture is assumed</param>
-		/// <param name="value">The Object to convert</param>
-		/// <param name="destinationType">The Type to convert the value 
-		/// parameter to</param>
-		/// <returns>An Object that represents the converted value</returns>
-		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-		{
-			if (destinationType == typeof(InstanceDescriptor) && value is Cell)
-			{
-				ConstructorInfo ci = typeof(Cell).GetConstructor(new Type[] {});
+        /// <summary>
+        /// Converts the given value object to the specified type, using 
+        /// the specified context and culture information
+        /// </summary>
+        /// <param name="context">An ITypeDescriptorContext that provides 
+        /// a format context</param>
+        /// <param name="culture">A CultureInfo object. If a null reference 
+        /// is passed, the current culture is assumed</param>
+        /// <param name="value">The Object to convert</param>
+        /// <param name="destinationType">The Type to convert the value 
+        /// parameter to</param>
+        /// <returns>An Object that represents the converted value</returns>
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(InstanceDescriptor) && value is Cell)
+            {
+                var ci = typeof(Cell).GetConstructor(new Type[] { });
 
-				if (ci != null)
-				{
-					return new InstanceDescriptor(ci, null, false);
-				}
-			}
+                if (ci != null)
+                {
+                    return new InstanceDescriptor(ci, null, false);
+                }
+            }
 
-			return base.ConvertTo(context, culture, value, destinationType);
-		}
-	}
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
 }

@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -35,116 +35,107 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// Contains information about the current state of a number Cell's 
-	/// up and down buttons
-	/// </summary>
-	public class NumberRendererData
-	{
-		#region Class Data
+    /// <summary>
+    /// Contains information about the current state of a number Cell's 
+    /// up and down buttons
+    /// </summary>
+    public class NumberRendererData
+    {
+        #region Class Data
 
-		/// <summary>
-		/// The current state of the up button
-		/// </summary>
-		private UpDownState upState;
+        /// <summary>
+        /// The current state of the up button
+        /// </summary>
+        private UpDownState upState;
 
-		/// <summary>
-		/// The current state of the down button
-		/// </summary>
-		private UpDownState downState;
-		
-		/// <summary>
-		/// The x coordinate of the last mouse click point
-		/// </summary>
-		private int clickX;
+        /// <summary>
+        /// The current state of the down button
+        /// </summary>
+        private UpDownState downState;
 
-		/// <summary>
-		/// The y coordinate of the last mouse click point
-		/// </summary>
-		private int clickY;
+        /// <summary>
+        /// The x coordinate of the last mouse click point
+        /// </summary>
+        private int clickX;
 
-		#endregion
+        /// <summary>
+        /// The y coordinate of the last mouse click point
+        /// </summary>
+        private int clickY;
 
-
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the NumberRendererData class
-		/// </summary>
-		public NumberRendererData()
-		{
-			this.upState = UpDownState.Normal;
-			this.downState = UpDownState.Normal;
-			this.clickX = -1;
-			this.clickY = -1;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Properties
+        #region Constructor
 
-		/// <summary>
-		/// Gets or sets the current state of the up button
-		/// </summary>
-		public UpDownState UpButtonState
-		{
-			get
-			{
-				return this.upState;
-			}
+        /// <summary>
+        /// Initializes a new instance of the NumberRendererData class
+        /// </summary>
+        public NumberRendererData()
+        {
+            upState = UpDownState.Normal;
+            downState = UpDownState.Normal;
+            clickX = -1;
+            clickY = -1;
+        }
 
-			set
-			{
-				if (!Enum.IsDefined(typeof(UpDownState), value)) 
-				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(UpDownState));
-				}
-					
-				this.upState = value;
-			}
-		}
+        #endregion
 
 
-		/// <summary>
-		/// Gets or sets the current state of the down button
-		/// </summary>
-		public UpDownState DownButtonState
-		{
-			get
-			{
-				return this.downState;
-			}
+        #region Properties
 
-			set
-			{
-				if (!Enum.IsDefined(typeof(UpDownState), value)) 
-				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(UpDownState));
-				}
-					
-				this.downState = value;
-			}
-		}
-		
+        /// <summary>
+        /// Gets or sets the current state of the up button
+        /// </summary>
+        public UpDownState UpButtonState
+        {
+            get => upState;
 
-		/// <summary>
-		/// Gets or sets the Point that the mouse was last clicked in a button
-		/// </summary>
-		public Point ClickPoint
-		{
-			get
-			{
-				return new Point(this.clickX, this.clickY);
-			}
+            set
+            {
+                if (!Enum.IsDefined(typeof(UpDownState), value))
+                {
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(UpDownState));
+                }
 
-			set
-			{
-				this.clickX = value.X;
-				this.clickY = value.Y;
-			}
-		}
+                upState = value;
+            }
+        }
 
-		#endregion
-	}
+
+        /// <summary>
+        /// Gets or sets the current state of the down button
+        /// </summary>
+        public UpDownState DownButtonState
+        {
+            get => downState;
+
+            set
+            {
+                if (!Enum.IsDefined(typeof(UpDownState), value))
+                {
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(UpDownState));
+                }
+
+                downState = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the Point that the mouse was last clicked in a button
+        /// </summary>
+        public Point ClickPoint
+        {
+            get => new Point(clickX, clickY);
+
+            set
+            {
+                clickX = value.X;
+                clickY = value.Y;
+            }
+        }
+
+        #endregion
+    }
 }

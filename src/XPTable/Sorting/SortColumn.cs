@@ -1,6 +1,6 @@
-using System;
-using System.Windows.Forms;
+﻿using System;
 using System.Text;
+using System.Windows.Forms;
 
 namespace XPTable.Sorting
 {
@@ -14,50 +14,38 @@ namespace XPTable.Sorting
         /// <summary>
         /// Specifies how the Column is to be sorted
         /// </summary>
-        private SortOrder sortOrder;
+        private readonly SortOrder sortOrder;
 
         /// <summary>
         /// The index of the Column to be sorted
         /// </summary>
-        private int column;
+        private readonly int column;
         #endregion
 
         #region Constructor
-		
-		/// <summary>
-        /// Initializes a new instance of the SortColumn class with the specified 
-		/// Column index and SortOrder
-		/// </summary>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-        public SortColumn(int column, SortOrder sortOrder)
-		{
-			this.column = column;
-			this.sortOrder = sortOrder;
-		}
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the SortColumn class with the specified 
+        /// Column index and SortOrder
+        /// </summary>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public SortColumn(int column, SortOrder sortOrder)
+        {
+            this.column = column;
+            this.sortOrder = sortOrder;
+        }
+
+        #endregion
 
         /// <summary>
         /// Gets the index of the Column to be sorted
         /// </summary>
-        public int SortColumnIndex
-        {
-            get
-            {
-                return this.column;
-            }
-        }
+        public int SortColumnIndex => column;
 
         /// <summary>
         /// Gets how the Column is to be sorted
         /// </summary>
-        public SortOrder SortOrder
-        {
-            get
-            {
-                return this.sortOrder;
-            }
-        }
+        public SortOrder SortOrder => sortOrder;
     }
 }

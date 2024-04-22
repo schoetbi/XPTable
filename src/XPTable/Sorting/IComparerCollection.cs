@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Text;
 
@@ -31,7 +31,7 @@ namespace XPTable.Sorting
                 throw new System.ArgumentNullException("comparer is null");
             }
 
-            int index = this.List.Add(comparer);
+            var index = List.Add(comparer);
 
             return index;
         }
@@ -45,12 +45,12 @@ namespace XPTable.Sorting
         {
             get
             {
-                if (index < 0 || index >= this.Count)
+                if (index < 0 || index >= Count)
                 {
                     return null;
                 }
 
-                return this.List[index] as IComparer;
+                return List[index] as IComparer;
             }
         }
         #endregion

@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+
 using XPTable.Events;
 using XPTable.Win32;
 
@@ -14,10 +15,10 @@ namespace XPTable.Models
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.Container components = null;
-			
+        private readonly System.ComponentModel.Container components = null;
+
         private ColumnModel model = null;
-			
+
         private Label label1;
         private Button upButton;
         private Button downButton;
@@ -48,43 +49,47 @@ namespace XPTable.Models
         {
             this.model = model;
 
-            CellStyle cellStyle = new CellStyle();
-            cellStyle.Padding = new CellPadding(6, 0, 0, 0);
-
-            this.columnTable.BeginUpdate();
-				
-            for (int i=0; i<model.Columns.Count; i++)
+            var cellStyle = new CellStyle
             {
-                Row row = new Row();
-				
-                Cell cell = new Cell(model.Columns[i].Text, model.Columns[i].Visible);
-                cell.Tag = model.Columns[i].Width;
-                cell.CellStyle = cellStyle;
-				
+                Padding = new CellPadding(6, 0, 0, 0)
+            };
+
+            columnTable.BeginUpdate();
+
+            for (var i = 0; i < model.Columns.Count; i++)
+            {
+                var row = new Row();
+
+                var cell = new Cell(model.Columns[i].Text, model.Columns[i].Visible)
+                {
+                    Tag = model.Columns[i].Width,
+                    CellStyle = cellStyle
+                };
+
                 row.Cells.Add(cell);
 
-                this.columnTable.TableModel.Rows.Add(row);
+                columnTable.TableModel.Rows.Add(row);
             }
 
-            this.columnTable.SelectionChanged += new Events.SelectionEventHandler(OnSelectionChanged);
-            this.columnTable.CellCheckChanged += new Events.CellCheckBoxEventHandler(OnCellCheckChanged);
+            columnTable.SelectionChanged += new Events.SelectionEventHandler(OnSelectionChanged);
+            columnTable.CellCheckChanged += new Events.CellCheckBoxEventHandler(OnCellCheckChanged);
 
-            if (this.columnTable.VScroll)
+            if (columnTable.VScroll)
             {
-                this.columnTable.ColumnModel.Columns[0].Width -= SystemInformation.VerticalScrollBarWidth;
+                columnTable.ColumnModel.Columns[0].Width -= SystemInformation.VerticalScrollBarWidth;
             }
 
-            if (this.columnTable.TableModel.Rows.Count > 0)
+            if (columnTable.TableModel.Rows.Count > 0)
             {
-                this.columnTable.TableModel.Selections.SelectCell(0, 0);
+                columnTable.TableModel.Selections.SelectCell(0, 0);
 
-                this.showButton.Enabled = !this.model.Columns[0].Visible;
-                this.hideButton.Enabled = this.model.Columns[0].Visible;
+                showButton.Enabled = !this.model.Columns[0].Visible;
+                hideButton.Enabled = this.model.Columns[0].Visible;
 
-                this.widthTextBox.Text = this.model.Columns[0].Width.ToString();
+                widthTextBox.Text = this.model.Columns[0].Width.ToString();
             }
 
-            this.columnTable.EndUpdate();
+            columnTable.EndUpdate();
         }
 
         /// <summary>
@@ -94,13 +99,13 @@ namespace XPTable.Models
         /// <param name="e"></param>
         private void OnShowClick(object sender, System.EventArgs e)
         {
-            int[] indicies = this.columnTable.SelectedIndicies;
-				
+            var indicies = columnTable.SelectedIndicies;
+
             if (indicies.Length > 0)
             {
-                this.columnTable.TableModel[indicies[0], 0].Checked = true;
+                columnTable.TableModel[indicies[0], 0].Checked = true;
 
-                this.hideButton.Focus();
+                hideButton.Focus();
             }
         }
 
@@ -112,13 +117,13 @@ namespace XPTable.Models
         /// <param name="e"></param>
         private void OnHideClick(object sender, System.EventArgs e)
         {
-            int[] indicies = this.columnTable.SelectedIndicies;
-				
+            var indicies = columnTable.SelectedIndicies;
+
             if (indicies.Length > 0)
             {
-                this.columnTable.TableModel[indicies[0], 0].Checked = false;
+                columnTable.TableModel[indicies[0], 0].Checked = false;
 
-                this.showButton.Focus();
+                showButton.Focus();
             }
         }
 
@@ -130,36 +135,29 @@ namespace XPTable.Models
         /// <param name="e"></param>
         private void OnOkClick(object sender, EventArgs e)
         {
-            int[] indicies = this.columnTable.SelectedIndicies;
-				
+            var indicies = columnTable.SelectedIndicies;
+
             if (indicies.Length > 0)
             {
-                if (this.widthTextBox.Text.Length == 0)
+                if (widthTextBox.Text.Length == 0)
                 {
-                    this.columnTable.TableModel[indicies[0], 0].Tag = Column.MinimumWidth;
+                    columnTable.TableModel[indicies[0], 0].Tag = Column.MinimumWidth;
                 }
                 else
                 {
-                    int width = Convert.ToInt32(this.widthTextBox.Text);
+                    var width = Convert.ToInt32(widthTextBox.Text);
 
-                    if (width < Column.MinimumWidth)
-                    {
-                        this.columnTable.TableModel[indicies[0], 0].Tag = Column.MinimumWidth;
-                    }
-                    else
-                    {
-                        this.columnTable.TableModel[indicies[0], 0].Tag = width;
-                    }
+                    columnTable.TableModel[indicies[0], 0].Tag = width < Column.MinimumWidth ? Column.MinimumWidth : (object)width;
                 }
             }
-				
-            for (int i=0; i<this.columnTable.TableModel.Rows.Count; i++)
+
+            for (var i = 0; i < columnTable.TableModel.Rows.Count; i++)
             {
-                this.model.Columns[i].Visible = this.columnTable.TableModel[i, 0].Checked;
-                this.model.Columns[i].Width = (int) this.columnTable.TableModel[i, 0].Tag;
+                model.Columns[i].Visible = columnTable.TableModel[i, 0].Checked;
+                model.Columns[i].Width = (int)columnTable.TableModel[i, 0].Tag;
             }
 
-            this.Close();
+            Close();
         }
 
 
@@ -172,42 +170,35 @@ namespace XPTable.Models
         {
             if (e.OldSelectedIndicies.Length > 0)
             {
-                if (this.widthTextBox.Text.Length == 0)
+                if (widthTextBox.Text.Length == 0)
                 {
-                    this.columnTable.TableModel[e.OldSelectedIndicies[0], 0].Tag = Column.MinimumWidth;
+                    columnTable.TableModel[e.OldSelectedIndicies[0], 0].Tag = Column.MinimumWidth;
                 }
                 else
                 {
-                    int width = Convert.ToInt32(this.widthTextBox.Text);
+                    var width = Convert.ToInt32(widthTextBox.Text);
 
-                    if (width < Column.MinimumWidth)
-                    {
-                        this.columnTable.TableModel[e.OldSelectedIndicies[0], 0].Tag = Column.MinimumWidth;
-                    }
-                    else
-                    {
-                        this.columnTable.TableModel[e.OldSelectedIndicies[0], 0].Tag = width;
-                    }
+                    columnTable.TableModel[e.OldSelectedIndicies[0], 0].Tag = width < Column.MinimumWidth ? Column.MinimumWidth : (object)width;
                 }
             }
-				
+
             if (e.NewSelectedIndicies.Length > 0)
             {
-                this.showButton.Enabled = !this.columnTable.TableModel[e.NewSelectedIndicies[0], 0].Checked;
-                this.hideButton.Enabled = this.columnTable.TableModel[e.NewSelectedIndicies[0], 0].Checked;
+                showButton.Enabled = !columnTable.TableModel[e.NewSelectedIndicies[0], 0].Checked;
+                hideButton.Enabled = columnTable.TableModel[e.NewSelectedIndicies[0], 0].Checked;
 
-                this.widthTextBox.Text = this.columnTable.TableModel[e.NewSelectedIndicies[0], 0].Tag.ToString();
+                widthTextBox.Text = columnTable.TableModel[e.NewSelectedIndicies[0], 0].Tag.ToString();
             }
             else
             {
-                this.showButton.Enabled = false;
-                this.hideButton.Enabled = false;
+                showButton.Enabled = false;
+                hideButton.Enabled = false;
 
-                this.widthTextBox.Text = "0";
+                widthTextBox.Text = "0";
             }
         }
 
-			
+
         /// <summary>
         /// 
         /// </summary>
@@ -215,8 +206,8 @@ namespace XPTable.Models
         /// <param name="e"></param>
         private void OnCellCheckChanged(object sender, CellCheckBoxEventArgs e)
         {
-            this.showButton.Enabled = !e.Cell.Checked;
-            this.hideButton.Enabled = e.Cell.Checked;
+            showButton.Enabled = !e.Cell.Checked;
+            hideButton.Enabled = e.Cell.Checked;
         }
 
 

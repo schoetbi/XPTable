@@ -1,7 +1,7 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

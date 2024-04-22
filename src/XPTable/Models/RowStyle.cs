@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,9 +25,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Collections.Generic;
 
 namespace XPTable.Models
 {
@@ -56,10 +56,9 @@ namespace XPTable.Models
         /// The alignment of the text in the Row
         /// </summary>
         private RowAlignment alignment;
+        private readonly Dictionary<AllProperties, bool> isPropertySet;
 
-        Dictionary<AllProperties, bool> isPropertySet;
-
-        enum AllProperties 
+        private enum AllProperties
         {
             BackColor,
             ForeColor,
@@ -74,11 +73,11 @@ namespace XPTable.Models
         /// </summary>
         public RowStyle()
         {
-            this.isPropertySet = new Dictionary<AllProperties, bool>();
-            this.backColor = Color.Empty;
-            this.foreColor = Color.Empty;
-            this.font = null;
-            this.alignment = RowAlignment.Center;
+            isPropertySet = new Dictionary<AllProperties, bool>();
+            backColor = Color.Empty;
+            foreColor = Color.Empty;
+            font = null;
+            alignment = RowAlignment.Center;
         }
         #endregion
 
@@ -90,10 +89,10 @@ namespace XPTable.Models
         Description("The font used to display text in the row")]
         public Font Font
         {
-            get { return this.font; }
+            get => font;
             set
             {
-                this.font = value;
+                font = value;
                 PropertyIsSet(AllProperties.Font);
             }
         }
@@ -105,10 +104,10 @@ namespace XPTable.Models
         Description("The background color used to display text and graphics in the row")]
         public Color BackColor
         {
-            get { return this.backColor; }
+            get => backColor;
             set
             {
-                this.backColor = value;
+                backColor = value;
                 PropertyIsSet(AllProperties.BackColor);
             }
         }
@@ -120,13 +119,13 @@ namespace XPTable.Models
         Description("The foreground color used to display text and graphics in the row")]
         public Color ForeColor
         {
-            get { return this.foreColor; }
+            get => foreColor;
             set
             {
-                this.foreColor = value;
+                foreColor = value;
                 PropertyIsSet(AllProperties.ForeColor);
             }
-    }
+        }
 
         /// <summary>
         /// Gets or sets the vertical alignment of the text displayed in the Row
@@ -136,10 +135,10 @@ namespace XPTable.Models
         Description("The vertical alignment of the objects displayed in the row")]
         public RowAlignment Alignment
         {
-            get { return this.alignment; }
+            get => alignment;
             set
             {
-                this.alignment = value;
+                alignment = value;
                 PropertyIsSet(AllProperties.RowAlignment);
             }
         }
@@ -148,37 +147,25 @@ namespace XPTable.Models
         /// Returns true if the BackColor property has been set.
         /// </summary>
         [Browsable(false)]
-        public bool IsBackColorSet
-        {
-            get { return IsPropertySet(AllProperties.BackColor); }
-        }
+        public bool IsBackColorSet => IsPropertySet(AllProperties.BackColor);
 
         /// <summary>
         /// Returns true if the Font property has been set.
         /// </summary>
         [Browsable(false)]
-        public bool IsFontSet
-        {
-            get { return IsPropertySet(AllProperties.Font); }
-        }
+        public bool IsFontSet => IsPropertySet(AllProperties.Font);
 
         /// <summary>
         /// Returns true if the ForeColor property has been set.
         /// </summary>
         [Browsable(false)]
-        public bool IsForeColorSet
-        {
-            get { return IsPropertySet(AllProperties.ForeColor); }
-        }
+        public bool IsForeColorSet => IsPropertySet(AllProperties.ForeColor);
 
         /// <summary>
         /// Returns true if the Alignment property has been set.
         /// </summary>
         [Browsable(false)]
-        public bool IsAlignmentSet
-        {
-            get { return IsPropertySet(AllProperties.RowAlignment); }
-        }
+        public bool IsAlignmentSet => IsPropertySet(AllProperties.RowAlignment);
         #endregion
 
         /// <summary>
@@ -186,20 +173,28 @@ namespace XPTable.Models
         /// </summary>
         /// <param name="propertyToCheck"></param>
         /// <returns></returns>
-        bool IsPropertySet(AllProperties propertyToCheck)
+        private bool IsPropertySet(AllProperties propertyToCheck)
         {
             if (isPropertySet.ContainsKey(propertyToCheck))
+            {
                 return isPropertySet[propertyToCheck];
+            }
             else
+            {
                 return false;
+            }
         }
 
-        void PropertyIsSet(AllProperties propertyToCheck)
+        private void PropertyIsSet(AllProperties propertyToCheck)
         {
             if (isPropertySet.ContainsKey(propertyToCheck))
+            {
                 isPropertySet[propertyToCheck] = true;
+            }
             else
+            {
                 isPropertySet.Add(propertyToCheck, true);
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace XPTable.Events
         public HandledHeaderMouseEventArgs(HeaderMouseEventArgs e)
             : base(e.Column, e.Table, e.Index, e.HeaderRect, e)
         {
-            this.Handled = false;
+            Handled = false;
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -37,110 +37,110 @@ using XPTable.Themes;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// A HeaderRenderer that draws Windows XP themed Column headers
-	/// </summary>
-	public class XPHeaderRenderer : HeaderRenderer
-	{
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the XPHeaderRenderer class 
-		/// with default settings
-		/// </summary>
-		public XPHeaderRenderer() : base()
-		{
-			
-		}
+    /// <summary>
+    /// A HeaderRenderer that draws Windows XP themed Column headers
+    /// </summary>
+    public class XPHeaderRenderer : HeaderRenderer
+    {
+        #region Constructor
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the XPHeaderRenderer class 
+        /// with default settings
+        /// </summary>
+        public XPHeaderRenderer() : base()
+        {
 
+        }
 
-		#region Events
-
-		#region Paint
-
-		/// <summary>
-		/// Raises the PaintBackground event
-		/// </summary>
-		/// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
-		protected override void OnPaintBackground(PaintHeaderEventArgs e)
-		{
-			base.OnPaintBackground(e);
-
-			if (e.Column == null)
-			{
-				ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, ColumnHeaderState.Normal);
-			}
-			else
-			{
-				ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, (ColumnHeaderState) e.Column.ColumnState);
-			}
-		}
+        #endregion
 
 
-		/// <summary>
-		/// Raises the Paint event
-		/// </summary>
-		/// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
-		protected override void OnPaint(PaintHeaderEventArgs e)
-		{
-			base.OnPaint(e);
+        #region Events
 
-			if (e.Column == null)
-			{
-				return;
-			}
+        #region Paint
 
-			Rectangle textRect = this.ClientRectangle;
+        /// <summary>
+        /// Raises the PaintBackground event
+        /// </summary>
+        /// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
+        protected override void OnPaintBackground(PaintHeaderEventArgs e)
+        {
+            base.OnPaintBackground(e);
 
-            int imageWidth = 0;
-            int arrowWidth = 0;
-            int textWidth = 0;
+            if (e.Column == null)
+            {
+                ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, ColumnHeaderState.Normal);
+            }
+            else
+            {
+                ThemeManager.DrawColumnHeader(e.Graphics, e.HeaderRect, (ColumnHeaderState)e.Column.ColumnState);
+            }
+        }
+
+
+        /// <summary>
+        /// Raises the Paint event
+        /// </summary>
+        /// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
+        protected override void OnPaint(PaintHeaderEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if (e.Column == null)
+            {
+                return;
+            }
+
+            var textRect = ClientRectangle;
+
+            var imageWidth = 0;
+            var arrowWidth = 0;
+            var textWidth = 0;
 
             if (e.Column.Filterable)
             {
-                Rectangle filterRect = this.CalcFilterRect();
+                var filterRect = CalcFilterRect();
 
                 textRect.Width -= filterRect.Width;
-                
+
                 ThemeManager.DrawComboBoxButton(e.Graphics, filterRect, ComboBoxState.Normal);
             }
-            
+
             if (e.Column.Image != null)
-			{
-                Rectangle imageRect = this.CalcImageRect();
+            {
+                var imageRect = CalcImageRect();
 
-				textRect.Width -= imageRect.Width;
-				textRect.X += imageRect.Width;
+                textRect.Width -= imageRect.Width;
+                textRect.X += imageRect.Width;
 
-				if (e.Column.ImageOnRight)
-				{
-					imageRect.X = this.ClientRectangle.Right - imageRect.Width;
-					textRect.X = this.ClientRectangle.X;
-				}
+                if (e.Column.ImageOnRight)
+                {
+                    imageRect.X = ClientRectangle.Right - imageRect.Width;
+                    textRect.X = ClientRectangle.X;
+                }
 
-				if (!ThemeManager.VisualStylesEnabled && e.Column.ColumnState == ColumnState.Pressed)
-				{
-					imageRect.X += 1;
-					imageRect.Y += 1;
-				}
+                if (!ThemeManager.VisualStylesEnabled && e.Column.ColumnState == ColumnState.Pressed)
+                {
+                    imageRect.X += 1;
+                    imageRect.Y += 1;
+                }
 
-				this.DrawColumnHeaderImage(e.Graphics, e.Column.Image, imageRect, e.Column.Enabled);
+                DrawColumnHeaderImage(e.Graphics, e.Column.Image, imageRect, e.Column.Enabled);
                 imageWidth = imageRect.Width;
-			}
+            }
 
-			if (!ThemeManager.VisualStylesEnabled && e.Column.ColumnState == ColumnState.Pressed)
-			{
-				textRect.X += 1;
-				textRect.Y += 1;
-			}
+            if (!ThemeManager.VisualStylesEnabled && e.Column.ColumnState == ColumnState.Pressed)
+            {
+                textRect.X += 1;
+                textRect.Y += 1;
+            }
 
-			if (e.Column.SortOrder != SortOrder.None)
-			{
-				Rectangle arrowRect = this.CalcSortArrowRect();
-				
-                if (this.Alignment == ColumnAlignment.Right)
+            if (e.Column.SortOrder != SortOrder.None)
+            {
+                var arrowRect = CalcSortArrowRect();
+
+                if (Alignment == ColumnAlignment.Right)
                 {
                     arrowRect.X = textRect.Left;
                     textRect.Width -= arrowRect.Width;
@@ -148,38 +148,36 @@ namespace XPTable.Renderers
                 }
                 else
                 {
-				    arrowRect.X = textRect.Right - arrowRect.Width;
-				    textRect.Width -= arrowRect.Width;
+                    arrowRect.X = textRect.Right - arrowRect.Width;
+                    textRect.Width -= arrowRect.Width;
                 }
 
-				this.DrawSortArrow(e.Graphics, arrowRect, e.Column.SortOrder, e.Column.Enabled);
+                DrawSortArrow(e.Graphics, arrowRect, e.Column.SortOrder, e.Column.Enabled);
                 arrowWidth = arrowRect.Width;
-			}
+            }
 
             if (e.Column.Text != null && e.Column.Text.Length > 0 && textRect.Width > 0)
             {
                 if (e.Column.Enabled)
                 {
-                    e.Graphics.DrawString(e.Column.Text, this.Font, this.ForeBrush, textRect, this.StringFormat);
+                    e.Graphics.DrawString(e.Column.Text, Font, ForeBrush, textRect, StringFormat);
                 }
                 else
                 {
-                    using (SolidBrush brush = new SolidBrush(SystemPens.GrayText.Color))
-                    {
-                        e.Graphics.DrawString(e.Column.Text, this.Font, brush, textRect, this.StringFormat);
-                    }
+                    using var brush = new SolidBrush(SystemPens.GrayText.Color);
+                    e.Graphics.DrawString(e.Column.Text, Font, brush, textRect, StringFormat);
                 }
 
                 if (e.Column.WidthNotSet)
                 {
-                    SizeF size = e.Graphics.MeasureString(e.Column.Text, this.Font);
+                    var size = e.Graphics.MeasureString(e.Column.Text, Font);
                     textWidth = (int)Math.Ceiling(size.Width);
                 }
 
                 // Also, determine whether we need a tooltip, if the text was truncated.
                 if (e.Table.EnableToolTips)
                 {
-                    e.Column.IsTextTrimmed = this.IsTextTrimmed(e.Graphics, e.Column.Text);
+                    e.Column.IsTextTrimmed = IsTextTrimmed(e.Graphics, e.Column.Text);
                 }
             }
 
@@ -187,7 +185,7 @@ namespace XPTable.Renderers
             {
                 e.Column.ContentWidth = imageWidth + arrowWidth + textWidth;
             }
-		}
+        }
 
         #endregion
 
@@ -201,14 +199,16 @@ namespace XPTable.Renderers
         /// <returns></returns>
         public override ColumnHeaderRegion HitTest(int x, int y)
         {
-            Rectangle filterRect = this.CalcFilterRect();
+            var filterRect = CalcFilterRect();
 
-            bool contains = filterRect.Contains(x, y);
+            var contains = filterRect.Contains(x, y);
 
             //Console.WriteLine("HitTest ({0}, {1}) = {2} [{3}]", x, y, contains, filterRect);
 
             if (contains)
+            {
                 return ColumnHeaderRegion.FilterButton;
+            }
 
             return ColumnHeaderRegion.ColumnTitle;
         }

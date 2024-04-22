@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -412,12 +412,12 @@ namespace XPTable.Models
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.Container components = null;
+        private readonly System.ComponentModel.Container components = null;
 
         /// <summary>
         /// Is false until the first Paint event has been processed
         /// </summary>
-        bool painted = false;
+        private bool painted = false;
 
         #region Border
 
@@ -595,7 +595,7 @@ namespace XPTable.Models
         /// <summary>
         /// The ContextMenu for the column headers
         /// </summary>
-        private HeaderContextMenu headerContextMenu;
+        private readonly HeaderContextMenu headerContextMenu;
 
         private bool includeHeaderInAutoWidth;
 
@@ -621,7 +621,7 @@ namespace XPTable.Models
         /// <summary>
         /// The Table's horizontal ScrollBar
         /// </summary>
-        private HScrollBar hScrollBar;
+        private readonly HScrollBar hScrollBar;
 
         /// <summary>
         /// The Table's vertical ScrollBar. The Value property of this scrollbar is not the index of the
@@ -731,7 +731,7 @@ namespace XPTable.Models
         /// <summary>
         /// The ToolTip used by the Table to display cell and column tooltips
         /// </summary>
-        private ToolTip toolTip;
+        private readonly ToolTip toolTip;
 
         /// <summary>
         /// The alternating row background color
@@ -789,7 +789,7 @@ namespace XPTable.Models
         /// <summary>
         /// Helper class that provides all drag drop functionality.
         /// </summary>
-        DragDropHelper _dragDropHelper;
+        private readonly DragDropHelper _dragDropHelper;
         private bool useBuiltInDragDrop = true;
         private bool externalDropRemovesRows = true;
 
@@ -802,115 +802,125 @@ namespace XPTable.Models
         public Table()
         {
             // starting setup
-            this.init = true;
+            init = true;
 
             // This call is required by the Windows.Forms Form Designer.
             components = new System.ComponentModel.Container();
 
             //
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.DoubleBuffer, true);
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-            this.SetStyle(ControlStyles.Selectable, true);
-            this.TabStop = true;
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.DoubleBuffer, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.Selectable, true);
+            TabStop = true;
 
-            this.Size = new Size(150, 150);
+            Size = new Size(150, 150);
 
-            this.BackColor = Color.White;
+            BackColor = Color.White;
 
             //
-            this.columnModel = null;
-            this.tableModel = null;
+            columnModel = null;
+            tableModel = null;
 
             // header
-            this.headerStyle = ColumnHeaderStyle.Clickable;
-            this.headerAlignWithColumn = false;
-            this.headerFont = this.Font;
-            this.headerRenderer = new XPHeaderRenderer();
-            //this.headerRenderer = new GradientHeaderRenderer();
-            //this.headerRenderer = new FlatHeaderRenderer();
-            this.headerRenderer.Font = this.headerFont;
-            this.headerContextMenu = new HeaderContextMenu();
-            this.includeHeaderInAutoWidth = true;
+            headerStyle = ColumnHeaderStyle.Clickable;
+            headerAlignWithColumn = false;
+            headerFont = Font;
+            headerRenderer = new XPHeaderRenderer
+            {
+                //this.headerRenderer = new GradientHeaderRenderer();
+                //this.headerRenderer = new FlatHeaderRenderer();
+                Font = headerFont
+            };
+            headerContextMenu = new HeaderContextMenu();
+            includeHeaderInAutoWidth = true;
 
-            this.columnResizing = true;
-            this.resizingColumnIndex = -1;
-            this.resizingColumnWidth = -1;
-            this.hotColumn = -1;
-            this.pressedColumn = -1;
-            this.lastSortedColumn = -1;
-            this.sortedColumnBackColor = Color.WhiteSmoke;
+            columnResizing = true;
+            resizingColumnIndex = -1;
+            resizingColumnWidth = -1;
+            hotColumn = -1;
+            pressedColumn = -1;
+            lastSortedColumn = -1;
+            sortedColumnBackColor = Color.WhiteSmoke;
 
             // borders
-            this.borderStyle = BorderStyle.Fixed3D;
-            this.borderColor = Color.Black;
-            this.unfocusedBorderColor = Color.Black;
+            borderStyle = BorderStyle.Fixed3D;
+            borderColor = Color.Black;
+            unfocusedBorderColor = Color.Black;
 
             // scrolling
-            this.scrollable = true;
+            scrollable = true;
 
-            this.hScrollBar = new HScrollBar();
-            this.hScrollBar.Visible = false;
-            this.hScrollBar.Location = new Point(this.BorderWidth, this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight);
-            this.hScrollBar.Width = this.Width - (this.BorderWidth * 2) - SystemInformation.VerticalScrollBarWidth;
-            this.hScrollBar.Scroll += new ScrollEventHandler(this.OnHorizontalScroll);
-            this.Controls.Add(this.hScrollBar);
+            hScrollBar = new HScrollBar
+            {
+                Visible = false,
+                Location = new Point(BorderWidth, Height - BorderWidth - SystemInformation.HorizontalScrollBarHeight),
+                Width = Width - (BorderWidth * 2) - SystemInformation.VerticalScrollBarWidth
+            };
+            hScrollBar.Scroll += new ScrollEventHandler(OnHorizontalScroll);
+            Controls.Add(hScrollBar);
 
-            this.vScrollBar = new VScrollBar();
-            this.vScrollBar.Visible = false;
-            this.vScrollBar.Location = new Point(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth, this.BorderWidth);
-            this.vScrollBar.Height = this.Height - (this.BorderWidth * 2) - SystemInformation.HorizontalScrollBarHeight;
-            this.vScrollBar.Scroll += new ScrollEventHandler(this.OnVerticalScroll);
-            this.vScrollBar.ValueChanged += new EventHandler(vScrollBar_ValueChanged);
-            this.Controls.Add(this.vScrollBar);
+            vScrollBar = new VScrollBar
+            {
+                Visible = false,
+                Location = new Point(Width - BorderWidth - SystemInformation.VerticalScrollBarWidth, BorderWidth),
+                Height = Height - (BorderWidth * 2) - SystemInformation.HorizontalScrollBarHeight
+            };
+            vScrollBar.Scroll += new ScrollEventHandler(OnVerticalScroll);
+            vScrollBar.ValueChanged += new EventHandler(vScrollBar_ValueChanged);
+            Controls.Add(vScrollBar);
 
             //
-            this.gridLines = GridLines.None; ;
-            this.gridColor = SystemColors.Control;
-            this.gridLineStyle = GridLineStyle.Solid;
+            gridLines = GridLines.None; ;
+            gridColor = SystemColors.Control;
+            gridLineStyle = GridLineStyle.Solid;
 
-            this.allowSelection = true;
-            this.allowRMBSelection = false;
-            this.multiSelect = false;
-            this.fullRowSelect = false;
-            this.hideSelection = false;
-            this.selectionBackColor = SystemColors.Highlight;
-            this.selectionForeColor = SystemColors.HighlightText;
-            this.unfocusedSelectionBackColor = SystemColors.Control;
-            this.unfocusedSelectionForeColor = SystemColors.ControlText;
-            this.selectionStyle = SelectionStyle.ListView;
-            this.alternatingRowColor = Color.Transparent;
-            this.alternatingRowSpan = 1;
+            allowSelection = true;
+            allowRMBSelection = false;
+            multiSelect = false;
+            fullRowSelect = false;
+            hideSelection = false;
+            selectionBackColor = SystemColors.Highlight;
+            selectionForeColor = SystemColors.HighlightText;
+            unfocusedSelectionBackColor = SystemColors.Control;
+            unfocusedSelectionForeColor = SystemColors.ControlText;
+            selectionStyle = SelectionStyle.ListView;
+            alternatingRowColor = Color.Transparent;
+            alternatingRowSpan = 1;
 
             // current table state
-            this.tableState = TableState.Normal;
+            tableState = TableState.Normal;
 
-            this.lastMouseCell = new CellPos(-1, -1);
-            this.lastMouseDownCell = new CellPos(-1, -1);
-            this.focusedCell = new CellPos(-1, -1);
-            this.hoverTime = 1000;
-            this.trackMouseEvent = null;
-            this.ResetMouseEventArgs();
+            lastMouseCell = new CellPos(-1, -1);
+            lastMouseDownCell = new CellPos(-1, -1);
+            focusedCell = new CellPos(-1, -1);
+            hoverTime = 1000;
+            trackMouseEvent = null;
+            ResetMouseEventArgs();
 
-            this.toolTip = new ToolTip(this.components);
-            this.toolTip.Active = false;
-            this.toolTip.InitialDelay = 1000;
+            toolTip = new ToolTip(components)
+            {
+                Active = false,
+                InitialDelay = 1000
+            };
 
-            this.noItemsText = "There are no items in this view";
+            noItemsText = "There are no items in this view";
 
-            this.editingCell = new CellPos(-1, -1);
-            this.curentCellEditor = null;
-            this.editStartAction = EditStartAction.DoubleClick;
-            this.customEditKey = Keys.F5;
+            editingCell = new CellPos(-1, -1);
+            curentCellEditor = null;
+            editStartAction = EditStartAction.DoubleClick;
+            customEditKey = Keys.F5;
             //this.tabMovesEditor = true;
 
             // showSelectionRectangle defaults to true
-            this.showSelectionRectangle = true;
+            showSelectionRectangle = true;
 
             // drang and drop
-            _dragDropHelper = new DragDropHelper(this);
-            _dragDropHelper.DragDropRenderer = new DragDropRenderer();
+            _dragDropHelper = new DragDropHelper(this)
+            {
+                DragDropRenderer = new DragDropRenderer()
+            };
 
             // for data binding
             listChangedHandler = new ListChangedEventHandler(dataManager_ListChanged);
@@ -918,9 +928,9 @@ namespace XPTable.Models
             dataSourceColumnBinder = new DataSourceColumnBinder();
 
             // finished setting up
-            this.beginUpdateCount = 0;
-            this.init = false;
-            this.preview = false;
+            beginUpdateCount = 0;
+            init = false;
+            preview = false;
         }
         #endregion
 
@@ -936,13 +946,13 @@ namespace XPTable.Models
         {
             int yOffset;
             // This adds on the total height we can't see
-            if (this.EnableWordWrap)
+            if (EnableWordWrap)
             {
-                yOffset = this.RowY(this.TopIndex);
+                yOffset = RowY(TopIndex);
             }
-            else if (this.TopIndex >= 0)
+            else if (TopIndex >= 0)
             {
-                yOffset = this.TopIndex * this.RowHeight;
+                yOffset = TopIndex * RowHeight;
             }
             else
             {
@@ -964,15 +974,19 @@ namespace XPTable.Models
         /// relative to the display rectangle</returns>
         public Point ClientToDisplayRect(int x, int y)
         {
-            int xPos = x - this.BorderWidth;
+            var xPos = x - BorderWidth;
 
-            if (this.HScroll)
-                xPos += this.hScrollBar.Value;
+            if (HScroll)
+            {
+                xPos += hScrollBar.Value;
+            }
 
-            int yPos = y - this.BorderWidth;
+            var yPos = y - BorderWidth;
 
-            if (this.VScroll)
-                yPos += this.VScrollOffset();
+            if (VScroll)
+            {
+                yPos += VScrollOffset();
+            }
 
             return new Point(xPos, yPos);
         }
@@ -985,10 +999,12 @@ namespace XPTable.Models
         /// <returns></returns>
         public int ClientXToDisplayRectX(int x)
         {
-            int xPos = x - this.BorderWidth;
+            var xPos = x - BorderWidth;
 
-            if (this.HScroll)
-                xPos += this.hScrollBar.Value;
+            if (HScroll)
+            {
+                xPos += hScrollBar.Value;
+            }
 
             return xPos;
         }
@@ -1002,7 +1018,7 @@ namespace XPTable.Models
         /// relative to the display rectangle</returns>
         public Point ClientToDisplayRect(Point p)
         {
-            return this.ClientToDisplayRect(p.X, p.Y);
+            return ClientToDisplayRect(p.X, p.Y);
         }
 
 
@@ -1016,7 +1032,7 @@ namespace XPTable.Models
         /// relative to the display rectangle</returns>
         public Rectangle ClientToDisplayRect(Rectangle rect)
         {
-            return new Rectangle(this.ClientToDisplayRect(rect.Location), rect.Size);
+            return new Rectangle(ClientToDisplayRect(rect.Location), rect.Size);
         }
         #endregion
 
@@ -1031,15 +1047,19 @@ namespace XPTable.Models
         /// the display rectangle in client coordinates</returns>
         public Point DisplayRectToClient(int x, int y)
         {
-            int xPos = x + this.BorderWidth;
+            var xPos = x + BorderWidth;
 
-            if (this.HScroll)
-                xPos -= this.hScrollBar.Value;
+            if (HScroll)
+            {
+                xPos -= hScrollBar.Value;
+            }
 
-            int yPos = y + this.BorderWidth;
+            var yPos = y + BorderWidth;
 
-            if (this.VScroll)
-                yPos -= this.VScrollOffset();
+            if (VScroll)
+            {
+                yPos -= VScrollOffset();
+            }
 
             return new Point(xPos, yPos);
         }
@@ -1054,7 +1074,7 @@ namespace XPTable.Models
         /// the display rectangle, p, in client coordinates</returns>
         public Point DisplayRectToClient(Point p)
         {
-            return this.DisplayRectToClient(p.X, p.Y);
+            return DisplayRectToClient(p.X, p.Y);
         }
 
 
@@ -1068,7 +1088,7 @@ namespace XPTable.Models
         /// the display rectangle, rect, in client coordinates</returns>
         public Rectangle DisplayRectToClient(Rectangle rect)
         {
-            return new Rectangle(this.DisplayRectToClient(rect.Location), rect.Size);
+            return new Rectangle(DisplayRectToClient(rect.Location), rect.Size);
         }
         #endregion
 
@@ -1082,14 +1102,16 @@ namespace XPTable.Models
         /// null if it does not exist</returns>
         public Cell CellAt(int x, int y)
         {
-            int row = this.RowIndexAt(x, y);
-            int column = this.ColumnIndexAt(x, y);
+            var row = RowIndexAt(x, y);
+            var column = ColumnIndexAt(x, y);
 
             // return null if the row or column don't exist
-            if (row == -1 || row >= this.TableModel.Rows.Count || column == -1 || column >= this.TableModel.Rows[row].Cells.Count)
+            if (row == -1 || row >= TableModel.Rows.Count || column == -1 || column >= TableModel.Rows[row].Cells.Count)
+            {
                 return null;
+            }
 
-            return this.TableModel[row, column];
+            return TableModel[row, column];
         }
 
         /// <summary>
@@ -1100,7 +1122,7 @@ namespace XPTable.Models
         /// or null if not found</returns>
         public Cell CellAt(Point p)
         {
-            return this.CellAt(p.X, p.Y);
+            return CellAt(p.X, p.Y);
         }
 
         /// <summary>
@@ -1114,24 +1136,30 @@ namespace XPTable.Models
         public Rectangle CellRect(int row, int column)
         {
             // return null if the row or column don't exist
-            if (row == -1 || row >= this.TableModel.Rows.Count || column == -1 || column >= this.TableModel.Rows[row].Cells.Count)
+            if (row == -1 || row >= TableModel.Rows.Count || column == -1 || column >= TableModel.Rows[row].Cells.Count)
+            {
                 return Rectangle.Empty;
+            }
 
-            Rectangle columnRect = this.ColumnHeaderRect(column); // Only the Width and X are used - we don't need to work out the Height or Y
+            var columnRect = ColumnHeaderRect(column); // Only the Width and X are used - we don't need to work out the Height or Y
 
             if (columnRect == Rectangle.Empty)
+            {
                 return columnRect;
+            }
 
-            Rectangle rowRect = this.RowRect(row);
+            var rowRect = RowRect(row);
 
             if (rowRect == Rectangle.Empty)
+            {
                 return rowRect;
+            }
 
-            int width = columnRect.Width;
-            Cell thisCell = this.TableModel[row, column];
+            var width = columnRect.Width;
+            var thisCell = TableModel[row, column];
             if (thisCell != null && thisCell.ColSpan > 1)
             {
-                width = this.GetColumnWidth(column, thisCell);
+                width = GetColumnWidth(column, thisCell);
             }
 
             return new Rectangle(columnRect.X, rowRect.Y, width, rowRect.Height);
@@ -1146,7 +1174,7 @@ namespace XPTable.Models
         /// the specified cell position in client coordinates</returns>
         public Rectangle CellRect(CellPos cellPos)
         {
-            return this.CellRect(cellPos.Row, cellPos.Column);
+            return CellRect(cellPos.Row, cellPos.Column);
         }
 
 
@@ -1160,15 +1188,19 @@ namespace XPTable.Models
         public Rectangle CellRect(Cell cell)
         {
             if (cell == null || cell.Row == null || cell.InternalIndex == -1)
+            {
                 return Rectangle.Empty;
+            }
 
-            if (this.TableModel == null || this.ColumnModel == null)
+            if (TableModel == null || ColumnModel == null)
+            {
                 return Rectangle.Empty;
+            }
 
-            int row = this.TableModel.Rows.IndexOf(cell.Row);
-            int col = cell.InternalIndex;
+            var row = TableModel.Rows.IndexOf(cell.Row);
+            var col = cell.InternalIndex;
 
-            return this.CellRect(row, col);
+            return CellRect(row, col);
         }
 
         /// <summary>
@@ -1181,11 +1213,18 @@ namespace XPTable.Models
         {
             Row r = null;
             if (cellPos.Row > -1)
-                r = this.TableModel.Rows[cellPos.Row];
+            {
+                r = TableModel.Rows[cellPos.Row];
+            }
+
             if (r == null)
+            {
                 return cellPos;
+            }
             else
+            {
                 return new CellPos(cellPos.Row, r.GetRenderedCellIndex(cellPos.Column));
+            }
         }
 
         /// <summary>
@@ -1198,13 +1237,13 @@ namespace XPTable.Models
         /// is not null, otherwise false</returns>
         protected internal bool IsValidCell(int row, int column)
         {
-            if (this.TableModel != null && this.ColumnModel != null)
+            if (TableModel != null && ColumnModel != null)
             {
-                if (row >= 0 && row < this.TableModel.Rows.Count)
+                if (row >= 0 && row < TableModel.Rows.Count)
                 {
-                    if (column >= 0 && column < this.ColumnModel.Columns.Count)
+                    if (column >= 0 && column < ColumnModel.Columns.Count)
                     {
-                        return (this.TableModel.Rows[row].Cells[column] != null);
+                        return TableModel.Rows[row].Cells[column] != null;
                     }
                 }
             }
@@ -1221,7 +1260,7 @@ namespace XPTable.Models
         /// null, otherwise false</returns>
         protected internal bool IsValidCell(CellPos cellPos)
         {
-            return this.IsValidCell(cellPos.Row, cellPos.Column);
+            return IsValidCell(cellPos.Row, cellPos.Column);
         }
 
 
@@ -1247,23 +1286,23 @@ namespace XPTable.Models
         /// </returns>
         protected CellPos FindNextVisibleCell(CellPos start, bool wrap, bool forward, bool includeStart, bool checkOtherCellsInRow, bool includeDisabledCells)
         {
-            if (this.ColumnCount == 0 || this.RowCount == 0)
+            if (ColumnCount == 0 || RowCount == 0)
             {
                 return CellPos.Empty;
             }
 
-            int startRow = start.Row != -1 ? start.Row : 0;
-            int startCol = start.Column != -1 ? start.Column : 0;
+            var startRow = start.Row != -1 ? start.Row : 0;
+            var startCol = start.Column != -1 ? start.Column : 0;
 
-            bool first = true;
+            var first = true;
 
             if (forward)
             {
-                for (int i = startRow; i < this.RowCount; i++)
+                for (var i = startRow; i < RowCount; i++)
                 {
-                    int j = (first || !checkOtherCellsInRow ? startCol : 0);
+                    var j = first || !checkOtherCellsInRow ? startCol : 0;
 
-                    for (; j < this.TableModel.Rows[i].Cells.Count; j++)
+                    for (; j < TableModel.Rows[i].Cells.Count; j++)
                     {
                         if (i == startRow && j == startCol)
                         {
@@ -1298,7 +1337,7 @@ namespace XPTable.Models
 
                     if (wrap)
                     {
-                        if (i + 1 == this.TableModel.Rows.Count)
+                        if (i + 1 == TableModel.Rows.Count)
                         {
                             i = -1;
                         }
@@ -1311,9 +1350,9 @@ namespace XPTable.Models
             }
             else
             {
-                for (int i = startRow; i >= 0; i--)
+                for (var i = startRow; i >= 0; i--)
                 {
-                    int j = (first || !checkOtherCellsInRow ? startCol : this.TableModel.Rows[i].Cells.Count);
+                    var j = first || !checkOtherCellsInRow ? startCol : TableModel.Rows[i].Cells.Count;
 
                     for (; j >= 0; j--)
                     {
@@ -1352,7 +1391,7 @@ namespace XPTable.Models
                     {
                         if (i - 1 == -1)
                         {
-                            i = this.TableModel.Rows.Count;
+                            i = TableModel.Rows.Count;
                         }
                     }
                     else
@@ -1368,16 +1407,16 @@ namespace XPTable.Models
 
         private bool IsCellVisible(int row, int column, bool includeDisabledCells)
         {
-            bool ok = (this.IsValidCell(row, column) &&
-                this.IsValidColumn(column) &&
-                (this.TableModel[row, column].Enabled || includeDisabledCells) &&
-                this.ColumnModel.Columns[column].Enabled &&
-                this.ColumnModel.Columns[column].Visible);
+            var ok = IsValidCell(row, column) &&
+                IsValidColumn(column) &&
+                (TableModel[row, column].Enabled || includeDisabledCells) &&
+                ColumnModel.Columns[column].Enabled &&
+                ColumnModel.Columns[column].Visible;
 
             if (ok)
             {
                 // If this cell belongs to a row that is in fact a sub row, and this subrow is hidden, then return false.
-                Cell cell = this.TableModel[row, column];
+                var cell = TableModel[row, column];
                 if (cell.Row.Parent != null)
                 {
                     ok = cell.Row.Parent.ExpandSubRows;
@@ -1403,23 +1442,23 @@ namespace XPTable.Models
         /// be edited, or CellPos.Empty if there are no Cells that editable</returns>
         protected CellPos FindNextEditableCell(CellPos start, bool wrap, bool forward, bool includeStart)
         {
-            if (this.ColumnCount == 0 || this.RowCount == 0)
+            if (ColumnCount == 0 || RowCount == 0)
             {
                 return CellPos.Empty;
             }
 
-            int startRow = start.Row != -1 ? start.Row : 0;
-            int startCol = start.Column != -1 ? start.Column : 0;
+            var startRow = start.Row != -1 ? start.Row : 0;
+            var startCol = start.Column != -1 ? start.Column : 0;
 
-            bool first = true;
+            var first = true;
 
             if (forward)
             {
-                for (int i = startRow; i < this.RowCount; i++)
+                for (var i = startRow; i < RowCount; i++)
                 {
-                    int j = (first ? startCol : 0);
+                    var j = first ? startCol : 0;
 
-                    for (; j < this.TableModel.Rows[i].Cells.Count; j++)
+                    for (; j < TableModel.Rows[i].Cells.Count; j++)
                     {
                         if (i == startRow && j == startCol)
                         {
@@ -1436,7 +1475,7 @@ namespace XPTable.Models
                             }
                         }
 
-                        if (this.IsValidCell(i, j) && this.IsValidColumn(j) && this.TableModel[i, j].Editable && this.ColumnModel.Columns[j].Editable)
+                        if (IsValidCell(i, j) && IsValidColumn(j) && TableModel[i, j].Editable && ColumnModel.Columns[j].Editable)
                         {
                             return new CellPos(i, j);
                         }
@@ -1444,7 +1483,7 @@ namespace XPTable.Models
 
                     if (wrap)
                     {
-                        if (i + 1 == this.TableModel.Rows.Count)
+                        if (i + 1 == TableModel.Rows.Count)
                         {
                             i = -1;
                         }
@@ -1457,9 +1496,9 @@ namespace XPTable.Models
             }
             else
             {
-                for (int i = startRow; i >= 0; i--)
+                for (var i = startRow; i >= 0; i--)
                 {
-                    int j = (first ? startCol : this.TableModel.Rows[i].Cells.Count);
+                    var j = first ? startCol : TableModel.Rows[i].Cells.Count;
 
                     for (; j >= 0; j--)
                     {
@@ -1478,7 +1517,7 @@ namespace XPTable.Models
                             }
                         }
 
-                        if (this.IsValidCell(i, j) && this.IsValidColumn(j) && this.TableModel[i, j].Editable && this.ColumnModel.Columns[j].Editable)
+                        if (IsValidCell(i, j) && IsValidColumn(j) && TableModel[i, j].Editable && ColumnModel.Columns[j].Editable)
                         {
                             return new CellPos(i, j);
                         }
@@ -1488,7 +1527,7 @@ namespace XPTable.Models
                     {
                         if (i - 1 == -1)
                         {
-                            i = this.TableModel.Rows.Count;
+                            i = TableModel.Rows.Count;
                         }
                     }
                     else
@@ -1514,14 +1553,14 @@ namespace XPTable.Models
         /// -1 if it does not exist</returns>
         public int ColumnIndexAt(int x, int y)
         {
-            if (this.ColumnModel == null)
+            if (ColumnModel == null)
             {
                 return -1;
             }
 
             // convert to DisplayRect coordinates before 
             // sending to the ColumnModel
-            return this.ColumnModel.ColumnIndexAtX(this.hScrollBar.Value + x - this.BorderWidth);
+            return ColumnModel.ColumnIndexAtX(hScrollBar.Value + x - BorderWidth);
         }
 
 
@@ -1533,7 +1572,7 @@ namespace XPTable.Models
         /// -1 if it does not exist</returns>
         public int ColumnIndexAt(Point p)
         {
-            return this.ColumnIndexAt(p.X, p.Y);
+            return ColumnIndexAt(p.X, p.Y);
         }
 
 
@@ -1546,20 +1585,20 @@ namespace XPTable.Models
         /// column's header</returns>
         public Rectangle ColumnHeaderRect(int column)
         {
-            if (this.ColumnModel == null)
+            if (ColumnModel == null)
             {
                 return Rectangle.Empty;
             }
 
-            Rectangle rect = this.ColumnModel.ColumnHeaderRect(column);
+            var rect = ColumnModel.ColumnHeaderRect(column);
 
             if (rect == Rectangle.Empty)
             {
                 return rect;
             }
 
-            rect.X -= this.hScrollBar.Value - this.BorderWidth;
-            rect.Y = this.BorderWidth;
+            rect.X -= hScrollBar.Value - BorderWidth;
+            rect.Y = BorderWidth;
 
             return rect;
         }
@@ -1574,12 +1613,12 @@ namespace XPTable.Models
         /// column's header</returns>
         public Rectangle ColumnHeaderRect(Column column)
         {
-            if (this.ColumnModel == null)
+            if (ColumnModel == null)
             {
                 return Rectangle.Empty;
             }
 
-            return this.ColumnHeaderRect(this.ColumnModel.Columns.IndexOf(column));
+            return ColumnHeaderRect(ColumnModel.Columns.IndexOf(column));
         }
 
 
@@ -1592,20 +1631,20 @@ namespace XPTable.Models
         /// specified index</returns>
         public Rectangle ColumnRect(int column)
         {
-            if (this.ColumnModel == null)
+            if (ColumnModel == null)
             {
                 return Rectangle.Empty;
             }
 
-            Rectangle rect = this.ColumnHeaderRect(column);
+            var rect = ColumnHeaderRect(column);
 
             if (rect == Rectangle.Empty)
             {
                 return rect;
             }
 
-            rect.Y += this.HeaderHeight;
-            rect.Height = this.TotalRowHeight;
+            rect.Y += HeaderHeight;
+            rect.Height = TotalRowHeight;
 
             return rect;
         }
@@ -1620,12 +1659,12 @@ namespace XPTable.Models
         /// column</returns>
         public Rectangle ColumnRect(Column column)
         {
-            if (this.ColumnModel == null)
+            if (ColumnModel == null)
             {
                 return Rectangle.Empty;
             }
 
-            return this.ColumnRect(this.ColumnModel.Columns.IndexOf(column));
+            return ColumnRect(ColumnModel.Columns.IndexOf(column));
         }
 
         /// <summary>
@@ -1637,15 +1676,15 @@ namespace XPTable.Models
         /// <returns></returns>
         private int GetColumnWidth(int column, Cell cell)
         {
-            ColumnCollection columns = this.ColumnModel.Columns;
-            int width = columns[column].Width;
+            var columns = ColumnModel.Columns;
+            var width = columns[column].Width;
 
             if (cell.ColSpan > 1)
             {
                 // Just in case the colspan goes over the end of the table
-                int maxcolindex = Math.Min(cell.ColSpan + column - 1, columns.Count - 1);
+                var maxcolindex = Math.Min(cell.ColSpan + column - 1, columns.Count - 1);
 
-                for (int i = column + 1; i <= maxcolindex; i++)
+                for (var i = column + 1; i <= maxcolindex; i++)
                 {
                     width += columns[i].Width;
                 }
@@ -1661,7 +1700,7 @@ namespace XPTable.Models
         /// <returns></returns>
         private int GetColumnLeft(int column)
         {
-            return this.ColumnHeaderRect(column).Left;
+            return ColumnHeaderRect(column).Left;
         }
 
         /// <summary>
@@ -1669,10 +1708,10 @@ namespace XPTable.Models
         /// </summary>
         public void AutoResizeColumnWidths()
         {
-            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            for (var i = 0; i < ColumnModel.Columns.Count; i++)
             {
-                Column c = this.ColumnModel.Columns[i];
-                ColumnEventArgs args = new ColumnEventArgs(c, i, ColumnEventType.WidthChanged, c.Width);
+                var c = ColumnModel.Columns[i];
+                var args = new ColumnEventArgs(c, i, ColumnEventType.WidthChanged, c.Width);
                 OnColumnAutoResize(args);
             }
         }
@@ -1685,28 +1724,30 @@ namespace XPTable.Models
         /// <returns></returns>
         private int GetAutoColumnWidth(int column)
         {
-            RowCollection rows = this.TableModel.Rows;
-            int maxwidth = 0;
-            Column c = this.ColumnModel.Columns[column];
+            var rows = TableModel.Rows;
+            var maxwidth = 0;
+            var c = ColumnModel.Columns[column];
 
-            if (this.includeHeaderInAutoWidth)
+            if (includeHeaderInAutoWidth)
             {
                 maxwidth = c.ContentWidth;
             }
 
-            for (int i = 0; i < rows.Count; i++)
+            for (var i = 0; i < rows.Count; i++)
             {
                 // Don't count this row if it is currently a hidden subrow
-                Row row = rows[i];
+                var row = rows[i];
                 if ((row.Parent == null || row.Parent.ExpandSubRows) && (row.Cells.Count > column))
                 {
-                    int w = row.Cells[column].ContentWidth;
+                    var w = row.Cells[column].ContentWidth;
                     if (w > maxwidth)
+                    {
                         maxwidth = w;
+                    }
                 }
             }
 
-            int changedMax = GetAutoColumnWidthWithMode(c, maxwidth);
+            var changedMax = GetAutoColumnWidthWithMode(c, maxwidth);
             return changedMax;
         }
 
@@ -1717,10 +1758,10 @@ namespace XPTable.Models
         /// <param name="column"></param>
         /// <param name="maxwidth"></param>
         /// <returns></returns>
-        int GetAutoColumnWidthWithMode(Column column, int maxwidth)
+        private int GetAutoColumnWidthWithMode(Column column, int maxwidth)
         {
-            int changedWidth = 0;
-            int oldwidth = column.Width;
+            var changedWidth = 0;
+            var oldwidth = column.Width;
 
             switch (column.AutoResizeMode)
             {
@@ -1731,12 +1772,18 @@ namespace XPTable.Models
                 case ColumnAutoResizeMode.Shrink:
                     // Only allowed if the new width is smaller
                     if (maxwidth < oldwidth)
+                    {
                         changedWidth = maxwidth;
+                    }
+
                     break;
                 case ColumnAutoResizeMode.Grow:
                     // Only allowed if the new width is greater
                     if (maxwidth > oldwidth)
+                    {
                         changedWidth = maxwidth;
+                    }
+
                     break;
             }
 
@@ -1754,29 +1801,29 @@ namespace XPTable.Models
         /// -1 if it does not exist</returns>
         public int RowIndexAt(int x, int y)
         {
-            if (this.TableModel == null)
+            if (TableModel == null)
             {
                 return -1;
             }
 
-            if (this.HeaderStyle != ColumnHeaderStyle.None)
+            if (HeaderStyle != ColumnHeaderStyle.None)
             {
-                y -= this.HeaderHeight;
+                y -= HeaderHeight;
             }
 
-            y -= this.BorderWidth;
+            y -= BorderWidth;
 
             if (y < 0)
             {
                 return -1;
             }
 
-            if (this.VScroll)
+            if (VScroll)
             {
-                y += this.VScrollOffset();
+                y += VScrollOffset();
             }
 
-            return this.TableModel.RowIndexAt(y);
+            return TableModel.RowIndexAt(y);
         }
 
         /// <summary>
@@ -1787,7 +1834,7 @@ namespace XPTable.Models
         /// -1 if it does not exist</returns>
         public int RowIndexAt(Point p)
         {
-            return this.RowIndexAt(p.X, p.Y);
+            return RowIndexAt(p.X, p.Y);
         }
 
 
@@ -1800,28 +1847,33 @@ namespace XPTable.Models
         /// specified index</returns>
         public Rectangle RowRect(int row)
         {
-            if (this.TableModel == null || this.ColumnModel == null || row == -1 || row > this.TableModel.Rows.Count)
-                return Rectangle.Empty;
-
-            Rectangle rect = new Rectangle();
-
-            rect.X = this.DisplayRectangleLeft;
-
-            if (this.EnableWordWrap)
+            if (TableModel == null || ColumnModel == null || row == -1 || row > TableModel.Rows.Count)
             {
-                rect.Y = this.BorderWidth + RowIndexToClient(row);
-                rect.Height = this.TableModel.Rows[row].Height;
+                return Rectangle.Empty;
+            }
+
+            var rect = new Rectangle
+            {
+                X = DisplayRectangleLeft
+            };
+
+            if (EnableWordWrap)
+            {
+                rect.Y = BorderWidth + RowIndexToClient(row);
+                rect.Height = TableModel.Rows[row].Height;
             }
             else
             {
-                rect.Y = this.BorderWidth + ((row - this.TopIndex) * this.RowHeight);
-                rect.Height = this.RowHeight;
+                rect.Y = BorderWidth + ((row - TopIndex) * RowHeight);
+                rect.Height = RowHeight;
             }
 
-            rect.Width = this.ColumnModel.VisibleColumnsWidth;
+            rect.Width = ColumnModel.VisibleColumnsWidth;
 
-            if (this.HeaderStyle != ColumnHeaderStyle.None)
-                rect.Y += this.HeaderHeight;
+            if (HeaderStyle != ColumnHeaderStyle.None)
+            {
+                rect.Y += HeaderHeight;
+            }
 
             return rect;
         }
@@ -1835,10 +1887,12 @@ namespace XPTable.Models
         /// row</returns>
         public Rectangle RowRect(Row row)
         {
-            if (this.TableModel == null)
+            if (TableModel == null)
+            {
                 return Rectangle.Empty;
+            }
 
-            return this.RowRect(this.TableModel.Rows.IndexOf(row));
+            return RowRect(TableModel.Rows.IndexOf(row));
         }
 
         /// <summary>
@@ -1848,7 +1902,7 @@ namespace XPTable.Models
         /// <returns></returns>
         private int RowIndexToClient(int row)
         {
-            int y = RowYDifference(this.TopIndex, row);
+            var y = RowYDifference(TopIndex, row);
             return y;
         }
 
@@ -1872,27 +1926,35 @@ namespace XPTable.Models
         public int RowYDifference(int row1, int row2)
         {
             if (row1 == row2)
+            {
                 return 0;
+            }
 
-            if (this.TableModel == null || this.TableModel.Rows == null)
+            if (TableModel == null || TableModel.Rows == null)
+            {
                 return 0;
+            }
 
-            int r1 = Math.Min(row1, row2);
-            int r2 = Math.Max(row1, row2);
+            var r1 = Math.Min(row1, row2);
+            var r2 = Math.Max(row1, row2);
 
-            if (r2 > this.TableModel.Rows.Count)
-                r2 = this.TableModel.Rows.Count;
+            if (r2 > TableModel.Rows.Count)
+            {
+                r2 = TableModel.Rows.Count;
+            }
 
-            int ydiff = 0;
-            RowCollection rows = this.TableModel.Rows;
-            for (int i = r1; i < r2; i++)
+            var ydiff = 0;
+            var rows = TableModel.Rows;
+            for (var i = r1; i < r2; i++)
             {
                 // Don't count this row if it is currently a hidden subrow
-                Row row = rows[i];
+                var row = rows[i];
                 if (row != null)
                 {
                     if (row.Parent == null || row.Parent.ExpandSubRows)
+                    {
                         ydiff += row.Height;
+                    }
                 }
             }
 
@@ -1915,14 +1977,14 @@ namespace XPTable.Models
         /// <returns></returns>
         private int VisibleRowCountExact()
         {
-            int ydiff = 0;
-            RowCollection rows = this.TableModel.Rows;
-            int visibleHeight = this.CellDataRect.Height;
-            int count = 0;
-            for (int i = this.TopIndex; i < rows.Count; i++)
+            var ydiff = 0;
+            var rows = TableModel.Rows;
+            var visibleHeight = CellDataRect.Height;
+            var count = 0;
+            for (var i = TopIndex; i < rows.Count; i++)
             {
                 // Don't count this row if it is currently a hidden subrow
-                Row row = rows[i];
+                var row = rows[i];
                 if (row != null && (row.Parent == null || row.Parent.ExpandSubRows))
                 {
                     ydiff += row.Height;
@@ -1946,16 +2008,14 @@ namespace XPTable.Models
         /// </summary>
         public void CalculateAllRowHeights()
         {
-            using (Graphics g = this.CreateGraphics())
+            using var g = CreateGraphics();
+            for (var i = 0; i < TableModel.Rows.Count; i++)
             {
-                for (int i = 0; i < this.TableModel.Rows.Count; i++)
+                var row = TableModel.Rows[i];
+                if (row != null)
                 {
-                    Row row = this.TableModel.Rows[i];
-                    if (row != null)
-                    {
-                        int h = GetRenderedRowHeight(g, row);
-                        row.InternalHeight = h;
-                    }
+                    var h = GetRenderedRowHeight(g, row);
+                    row.InternalHeight = h;
                 }
             }
         }
@@ -1967,36 +2027,35 @@ namespace XPTable.Models
         /// <param name="g"></param>
         /// <param name="row"></param>
         /// <returns></returns>
-        int GetRenderedRowHeight(Graphics g, Row row)
+        private int GetRenderedRowHeight(Graphics g, Row row)
         {
             if (!row.HasWordWrapCell)
+            {
                 return row.Height;
+            }
 
-            int height = row.TableModel.RowHeight;  // if we have word wrapping, we ignore the current row height, but start at the default row height and make it taller if need be
+            var height = row.TableModel.RowHeight;  // if we have word wrapping, we ignore the current row height, but start at the default row height and make it taller if need be
 
-            ColumnCollection columns = this.ColumnModel.Columns;
+            var columns = ColumnModel.Columns;
             foreach (Cell varCell in row.Cells)
             {
-                int column = varCell.InternalIndex;
+                var column = varCell.InternalIndex;
                 if (varCell.WordWrap)
                 {
                     // get the renderer for the cells column
-                    ICellRenderer renderer = columns[column].Renderer;
-                    if (renderer == null)
-                    {
-                        // get the default renderer for the column
-                        renderer = this.ColumnModel.GetCellRenderer(columns[column].GetDefaultRendererName());
-                    }
+                    var renderer = columns[column].Renderer ?? ColumnModel.GetCellRenderer(columns[column].GetDefaultRendererName());
 
                     // When calling renderer.GetCellHeight(), only the width of the bounds is used.
-                    int w = this.GetColumnWidth(column, varCell);
-                    renderer.Bounds = new Rectangle(this.GetColumnLeft(column), 0, w, 0);
+                    var w = GetColumnWidth(column, varCell);
+                    renderer.Bounds = new Rectangle(GetColumnLeft(column), 0, w, 0);
 
                     // If this comes back zero then we have to go with the default
-                    int cellHeight = renderer.GetCellHeight(g, varCell);
+                    var cellHeight = renderer.GetCellHeight(g, varCell);
                     //Console.WriteLine("    GetRenderedRowHeight colwidth={0} rowheight={1}", w, newheight);
                     if (cellHeight == 0)
+                    {
                         cellHeight = row.TableModel.RowHeight;
+                    }
 
                     height = Math.Max(cellHeight, height);
                 }
@@ -2018,15 +2077,15 @@ namespace XPTable.Models
         /// the specified client coordinates</returns>
         public TableRegion HitTest(int x, int y)
         {
-            if (this.HeaderStyle != ColumnHeaderStyle.None && this.HeaderRectangle.Contains(x, y))
+            if (HeaderStyle != ColumnHeaderStyle.None && HeaderRectangle.Contains(x, y))
             {
                 return TableRegion.ColumnHeader;
             }
-            else if (this.CellDataRect.Contains(x, y))
+            else if (CellDataRect.Contains(x, y))
             {
                 return TableRegion.Cells;
             }
-            else if (!this.Bounds.Contains(x, y))
+            else if (!Bounds.Contains(x, y))
             {
                 return TableRegion.NoWhere;
             }
@@ -2044,7 +2103,7 @@ namespace XPTable.Models
         /// the specified client point</returns>
         public TableRegion HitTest(Point p)
         {
-            return this.HitTest(p.X, p.Y);
+            return HitTest(p.X, p.Y);
         }
 
         #endregion
@@ -2063,8 +2122,7 @@ namespace XPTable.Models
         {
             if (disposing)
             {
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
 
             base.Dispose(disposing);
@@ -2075,8 +2133,7 @@ namespace XPTable.Models
         /// </summary>
         public void ClearAllData()
         {
-            if (this.TableModel != null)
-                this.TableModel.Rows.Clear();
+            TableModel?.Rows.Clear();
         }
 
         /// <summary>
@@ -2084,11 +2141,15 @@ namespace XPTable.Models
         /// </summary>
         public void Clear()
         {
-            if (this.ColumnModel != null)
-                this.ColumnModel = null;
+            if (ColumnModel != null)
+            {
+                ColumnModel = null;
+            }
 
-            if (this.TableModel != null)
-                this.TableModel = null;
+            if (TableModel != null)
+            {
+                TableModel = null;
+            }
 
             ClearAllRowControls();
         }
@@ -2098,13 +2159,17 @@ namespace XPTable.Models
         /// </summary>
         public void ClearAllRowControls()
         {
-            int i = 0;
-            while (i < this.Controls.Count)
+            var i = 0;
+            while (i < Controls.Count)
             {
-                if ((this.Controls[i] == this.hScrollBar) || (this.Controls[i] == this.vScrollBar))
+                if ((Controls[i] == hScrollBar) || (Controls[i] == vScrollBar))
+                {
                     i++;
+                }
                 else
-                    this.Controls.RemoveAt(i);
+                {
+                    Controls.RemoveAt(i);
+                }
             }
         }
 
@@ -2120,7 +2185,7 @@ namespace XPTable.Models
         /// <param name="editor">The ICellEditor used to edit the Cell</param>
         private void SetEditingCell(Cell cell, ICellEditor editor)
         {
-            this.SetEditingCell(new CellPos(cell.Row.InternalIndex, cell.InternalIndex), editor);
+            SetEditingCell(new CellPos(cell.Row.InternalIndex, cell.InternalIndex), editor);
         }
 
 
@@ -2132,8 +2197,8 @@ namespace XPTable.Models
         /// <param name="editor">The ICellEditor used to edit the Cell</param>
         private void SetEditingCell(CellPos cellPos, ICellEditor editor)
         {
-            this.editingCell = cellPos;
-            this.curentCellEditor = editor;
+            editingCell = cellPos;
+            curentCellEditor = editor;
         }
 
 
@@ -2144,7 +2209,7 @@ namespace XPTable.Models
         /// <param name="column">The column index of the Cell to be edited</param>
         public void EditCell(int row, int column)
         {
-            this.EditCell(new CellPos(row, column));
+            EditCell(new CellPos(row, column));
         }
 
         /// <summary>
@@ -2155,38 +2220,48 @@ namespace XPTable.Models
         {
             // don't bother if the cell doesn't exists or the cell's
             // column is not visible or the cell is not editable
-            if (!this.IsValidCell(cellPos) || !this.ColumnModel.Columns[cellPos.Column].Visible || !this.IsCellEditable(cellPos))
+            if (!IsValidCell(cellPos) || !ColumnModel.Columns[cellPos.Column].Visible || !IsCellEditable(cellPos))
+            {
                 return;
+            }
 
             // check if we're currently editing a cell
-            if (this.EditingCell != CellPos.Empty)
+            if (EditingCell != CellPos.Empty)
             {
                 // don't bother if we're already editing the cell.  
                 // if we're editing a different cell stop editing
-                if (this.EditingCell == cellPos)
+                if (EditingCell == cellPos)
+                {
                     return;
+                }
                 else
-                    this.EditingCellEditor.StopEditing();
+                {
+                    EditingCellEditor.StopEditing();
+                }
             }
 
-            Cell cell = this.TableModel[cellPos];
-            ICellEditor editor = this.ColumnModel.GetCellEditor(cellPos.Column);
+            var cell = TableModel[cellPos];
+            var editor = ColumnModel.GetCellEditor(cellPos.Column);
 
             // make sure we have an editor and that the cell 
             // and the cell's column are editable
-            if (editor == null || !cell.Editable || !this.ColumnModel.Columns[cellPos.Column].Editable)
+            if (editor == null || !cell.Editable || !ColumnModel.Columns[cellPos.Column].Editable)
+            {
                 return;
+            }
 
-            if (this.EnsureVisible(cellPos))
-                this.Refresh();
+            if (EnsureVisible(cellPos))
+            {
+                Refresh();
+            }
 
-            Rectangle cellRect = this.CellRect(cellPos);
+            var cellRect = CellRect(cellPos);
 
             // give anyone subscribed to the table's BeginEditing
             // event the first chance to cancel editing
-            CellEditEventArgs e = new CellEditEventArgs(cell, editor, this, cellPos.Row, cellPos.Column, cellRect);
+            var e = new CellEditEventArgs(cell, editor, this, cellPos.Row, cellPos.Column, cellRect);
 
-            this.OnBeginEditing(e);
+            OnBeginEditing(e);
 
             //
             if (!e.Cancel)
@@ -2195,12 +2270,14 @@ namespace XPTable.Models
                 // returns false, someone who subscribed to the editors 
                 // BeginEdit event has cancelled editing
                 if (!editor.PrepareForEditing(cell, this, cellPos, cellRect, e.Handled))
+                {
                     return;
+                }
 
                 // keep track of the editing cell and editor 
                 // and start editing
-                this.editingCell = cellPos;
-                this.curentCellEditor = editor;
+                editingCell = cellPos;
+                curentCellEditor = editor;
 
                 editor.StartEditing();
             }
@@ -2235,17 +2312,17 @@ namespace XPTable.Models
         public void StopEditing()
         {
             // don't bother if we're not editing
-            if (this.EditingCell == CellPos.Empty)
+            if (EditingCell == CellPos.Empty)
             {
                 return;
             }
 
-            this.EditingCellEditor.StopEditing();
+            EditingCellEditor.StopEditing();
 
-            this.Invalidate(this.RowRect(this.editingCell.Row));
+            Invalidate(RowRect(editingCell.Row));
 
-            this.editingCell = CellPos.Empty;
-            this.curentCellEditor = null;
+            editingCell = CellPos.Empty;
+            curentCellEditor = null;
         }
 
 
@@ -2255,15 +2332,15 @@ namespace XPTable.Models
         public void CancelEditing()
         {
             // don't bother if we're not editing
-            if (this.EditingCell == CellPos.Empty)
+            if (EditingCell == CellPos.Empty)
             {
                 return;
             }
 
-            this.EditingCellEditor.CancelEditing();
+            EditingCellEditor.CancelEditing();
 
-            this.editingCell = CellPos.Empty;
-            this.curentCellEditor = null;
+            editingCell = CellPos.Empty;
+            curentCellEditor = null;
         }
 
 
@@ -2277,7 +2354,7 @@ namespace XPTable.Models
         /// to be edited by the user, false otherwise</returns>
         public bool IsCellEditable(int row, int column)
         {
-            return this.IsCellEditable(new CellPos(row, column));
+            return IsCellEditable(new CellPos(row, column));
         }
 
 
@@ -2292,13 +2369,13 @@ namespace XPTable.Models
         {
             // don't bother if the cell doesn't exists or the cell's
             // column is not visible
-            if (!this.IsValidCell(cellpos) || !this.ColumnModel.Columns[cellpos.Column].Visible)
+            if (!IsValidCell(cellpos) || !ColumnModel.Columns[cellpos.Column].Visible)
             {
                 return false;
             }
 
-            return (this.TableModel[cellpos].Editable &&
-                this.ColumnModel.Columns[cellpos.Column].Editable);
+            return TableModel[cellpos].Editable &&
+                ColumnModel.Columns[cellpos.Column].Editable;
         }
 
 
@@ -2312,7 +2389,7 @@ namespace XPTable.Models
         /// to respond to user interaction, false otherwise</returns>
         public bool IsCellEnabled(int row, int column)
         {
-            return this.IsCellEnabled(new CellPos(row, column));
+            return IsCellEnabled(new CellPos(row, column));
         }
 
 
@@ -2327,13 +2404,13 @@ namespace XPTable.Models
         {
             // don't bother if the cell doesn't exists or the cell's
             // column is not visible
-            if (!this.IsValidCell(cellpos) || !this.ColumnModel.Columns[cellpos.Column].Visible)
+            if (!IsValidCell(cellpos) || !ColumnModel.Columns[cellpos.Column].Visible)
             {
                 return false;
             }
 
-            return (this.TableModel[cellpos].Enabled &&
-                this.ColumnModel.Columns[cellpos.Column].Enabled);
+            return TableModel[cellpos].Enabled &&
+                ColumnModel.Columns[cellpos.Column].Enabled;
         }
 
         #endregion
@@ -2346,7 +2423,7 @@ namespace XPTable.Models
         /// <param name="cell">The Cell to be invalidated</param>
         public void InvalidateCell(Cell cell)
         {
-            this.InvalidateCell(cell.Row.Index, cell.Index);
+            InvalidateCell(cell.Row.Index, cell.Index);
         }
 
 
@@ -2357,16 +2434,16 @@ namespace XPTable.Models
         /// <param name="column">The column index of the Cell to be invalidated</param>
         public void InvalidateCell(int row, int column)
         {
-            Rectangle cellRect = this.CellRect(row, column);
+            var cellRect = CellRect(row, column);
 
             if (cellRect == Rectangle.Empty)
             {
                 return;
             }
 
-            if (cellRect.IntersectsWith(this.CellDataRect))
+            if (cellRect.IntersectsWith(CellDataRect))
             {
-                this.Invalidate(Rectangle.Intersect(this.CellDataRect, cellRect), false);
+                Invalidate(Rectangle.Intersect(CellDataRect, cellRect), false);
             }
         }
 
@@ -2377,7 +2454,7 @@ namespace XPTable.Models
         /// <param name="cellPos">A CellPos that specifies the Cell to be invalidated</param>
         public void InvalidateCell(CellPos cellPos)
         {
-            this.InvalidateCell(cellPos.Row, cellPos.Column);
+            InvalidateCell(cellPos.Row, cellPos.Column);
         }
 
 
@@ -2387,7 +2464,7 @@ namespace XPTable.Models
         /// <param name="row">The Row to be invalidated</param>
         public void InvalidateRow(Row row)
         {
-            this.InvalidateRow(row.Index);
+            InvalidateRow(row.Index);
         }
 
 
@@ -2397,16 +2474,16 @@ namespace XPTable.Models
         /// <param name="row">The row index of the Row to be invalidated</param>
         public void InvalidateRow(int row)
         {
-            Rectangle rowRect = this.RowRect(row);
+            var rowRect = RowRect(row);
 
             if (rowRect == Rectangle.Empty)
             {
                 return;
             }
 
-            if (rowRect.IntersectsWith(this.CellDataRect))
+            if (rowRect.IntersectsWith(CellDataRect))
             {
-                this.Invalidate(Rectangle.Intersect(this.CellDataRect, rowRect), false);
+                Invalidate(Rectangle.Intersect(CellDataRect, rowRect), false);
             }
         }
 
@@ -2417,7 +2494,7 @@ namespace XPTable.Models
         /// <param name="cellPos">A CellPos that specifies the Row to be invalidated</param>
         public void InvalidateRow(CellPos cellPos)
         {
-            this.InvalidateRow(cellPos.Row);
+            InvalidateRow(cellPos.Row);
         }
 
         /// <summary>
@@ -2426,7 +2503,7 @@ namespace XPTable.Models
         /// <param name="rect"></param>
         public void InvalidateRect(Rectangle rect)
         {
-            this.Invalidate(rect);
+            Invalidate(rect);
         }
         #endregion
 
@@ -2442,17 +2519,17 @@ namespace XPTable.Models
         {
             if ((key & Keys.Alt) != Keys.Alt)
             {
-                Keys k = key & Keys.KeyCode;
+                var k = key & Keys.KeyCode;
 
-                return (k == Keys.Up ||
-                    k == Keys.Down ||
-                    k == Keys.Left ||
-                    k == Keys.Right ||
-                    k == Keys.PageUp ||
-                    k == Keys.PageDown ||
-                    k == Keys.Home ||
-                    k == Keys.End ||
-                    k == Keys.Tab);
+                return k is Keys.Up or
+                    Keys.Down or
+                    Keys.Left or
+                    Keys.Right or
+                    Keys.PageUp or
+                    Keys.PageDown or
+                    Keys.Home or
+                    Keys.End or
+                    Keys.Tab;
             }
 
             return false;
@@ -2469,7 +2546,7 @@ namespace XPTable.Models
         {
             if ((keyData & Keys.Alt) != Keys.Alt)
             {
-                Keys key = keyData & Keys.KeyCode;
+                var key = keyData & Keys.KeyCode;
 
                 switch (key)
                 {
@@ -2481,9 +2558,9 @@ namespace XPTable.Models
                     case Keys.Next:
                     case Keys.End:
                     case Keys.Home:
-                        {
-                            return true;
-                        }
+                    {
+                        return true;
+                    }
                 }
 
                 if (base.IsInputKey(keyData))
@@ -2503,12 +2580,14 @@ namespace XPTable.Models
         /// </summary>
         public void BeginUpdate()
         {
-            if (this.IsHandleCreated)
+            if (IsHandleCreated)
             {
-                if (this.beginUpdateCount == 0)
-                    NativeMethods.SendMessage(this.Handle, 11, IntPtr.Zero, IntPtr.Zero);
+                if (beginUpdateCount == 0)
+                {
+                    NativeMethods.SendMessage(Handle, 11, IntPtr.Zero, IntPtr.Zero);
+                }
 
-                this.beginUpdateCount++;
+                beginUpdateCount++;
             }
         }
 
@@ -2518,27 +2597,32 @@ namespace XPTable.Models
         /// </summary>
         public void EndUpdate()
         {
-            if (this.beginUpdateCount <= 0)
-                return;
-
-            this.beginUpdateCount--;
-
-            if (this.beginUpdateCount == 0)
+            if (beginUpdateCount <= 0)
             {
-                NativeMethods.SendMessage(this.Handle, 11, new IntPtr(-1), IntPtr.Zero);
+                return;
+            }
 
-                this.PerformLayout();
+            beginUpdateCount--;
 
-                this.ColumnModel.Columns.RecalcWidthCache();
+            if (beginUpdateCount == 0)
+            {
+                NativeMethods.SendMessage(Handle, 11, new IntPtr(-1), IntPtr.Zero);
 
-                if (this.EnableWordWrap)
+                PerformLayout();
+
+                ColumnModel.Columns.RecalcWidthCache();
+
+                if (EnableWordWrap)
                 {
                     if (autoCalculateRowHeights)
-                        this.CalculateAllRowHeights();
-                    this.UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
+                    {
+                        CalculateAllRowHeights();
+                    }
+
+                    UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
                 }
 
-                this.Invalidate(true);
+                Invalidate(true);
             }
         }
 
@@ -2547,7 +2631,7 @@ namespace XPTable.Models
         /// </summary>
         public void BeginInit()
         {
-            this.init = true;
+            init = true;
         }
 
         /// <summary>
@@ -2555,18 +2639,15 @@ namespace XPTable.Models
         /// </summary>
         public void EndInit()
         {
-            this.init = false;
-            this.PerformLayout();
+            init = false;
+            PerformLayout();
         }
 
         /// <summary>
         /// Gets whether the Table is currently initializing
         /// </summary>
         [Browsable(false)]
-        public bool Initializing
-        {
-            get { return this.init; }
-        }
+        public bool Initializing => init;
         #endregion
 
         #region Mouse
@@ -2577,16 +2658,15 @@ namespace XPTable.Models
         /// </summary>
         public new void ResetMouseEventArgs()
         {
-            if (this.trackMouseEvent == null)
+            trackMouseEvent ??= new TRACKMOUSEEVENT
             {
-                this.trackMouseEvent = new TRACKMOUSEEVENT();
-                this.trackMouseEvent.dwFlags = 3;
-                this.trackMouseEvent.hwndTrack = base.Handle;
-            }
+                dwFlags = 3,
+                hwndTrack = base.Handle
+            };
 
-            this.trackMouseEvent.dwHoverTime = this.HoverTime;
+            trackMouseEvent.dwHoverTime = HoverTime;
 
-            NativeMethods.TrackMouseEvent(this.trackMouseEvent);
+            NativeMethods.TrackMouseEvent(trackMouseEvent);
         }
 
         #endregion
@@ -2598,14 +2678,11 @@ namespace XPTable.Models
         /// </summary>
         public ScrollPosition ScrollPosition
         {
-            get
-            {
-                return new ScrollPosition(this.hScrollBar.Value, this.vScrollBar.Value);
-            }
+            get => new ScrollPosition(hScrollBar.Value, vScrollBar.Value);
             set
             {
-                this.hScrollBar.Value = value.HorizontalValue;
-                this.vScrollBar.Value = value.VerticalValue;
+                hScrollBar.Value = value.HorizontalValue;
+                vScrollBar.Value = value.VerticalValue;
             }
         }
 
@@ -2619,21 +2696,25 @@ namespace XPTable.Models
             //      Portia4ever (kangxj@126.com)
             //      13/09/2005
             //      v1.0.1
-            if (!this.Scrollable || this.ColumnModel == null || this.Width == 0 || this.Height == 0)
+            if (!Scrollable || ColumnModel == null || Width == 0 || Height == 0)
+            {
                 return;
+            }
 
-            bool hscroll = (this.ColumnModel.VisibleColumnsWidth > this.Width - (this.BorderWidth * 2));
-            bool vscroll = this.TotalRowAndHeaderHeight > (this.Height - (this.BorderWidth * 2) - (hscroll ? SystemInformation.HorizontalScrollBarHeight : 0));
+            var hscroll = ColumnModel.VisibleColumnsWidth > Width - (BorderWidth * 2);
+            var vscroll = TotalRowAndHeaderHeight > (Height - (BorderWidth * 2) - (hscroll ? SystemInformation.HorizontalScrollBarHeight : 0));
 
             if (vscroll)
-                hscroll = (this.ColumnModel.VisibleColumnsWidth > this.Width - (this.BorderWidth * 2) - SystemInformation.VerticalScrollBarWidth);
+            {
+                hscroll = ColumnModel.VisibleColumnsWidth > Width - (BorderWidth * 2) - SystemInformation.VerticalScrollBarWidth;
+            }
 
             if (hscroll)
             {
                 #region Set up the horizontal scrollbar
-                Rectangle hscrollBounds = new Rectangle(this.BorderWidth,
-                    this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight,
-                    this.Width - (this.BorderWidth * 2),
+                var hscrollBounds = new Rectangle(BorderWidth,
+                    Height - BorderWidth - SystemInformation.HorizontalScrollBarHeight,
+                    Width - (BorderWidth * 2),
                     SystemInformation.HorizontalScrollBarHeight);
 
                 if (vscroll)
@@ -2641,53 +2722,57 @@ namespace XPTable.Models
                     hscrollBounds.Width -= SystemInformation.VerticalScrollBarWidth;
                 }
 
-                this.hScrollBar.Visible = true;
-                this.hScrollBar.Bounds = hscrollBounds;
-                this.hScrollBar.Minimum = 0;
-                this.hScrollBar.Maximum = this.ColumnModel.VisibleColumnsWidth;
+                hScrollBar.Visible = true;
+                hScrollBar.Bounds = hscrollBounds;
+                hScrollBar.Minimum = 0;
+                hScrollBar.Maximum = ColumnModel.VisibleColumnsWidth;
                 // netus fix by Kosmokrat Hismoom  - added check for property Maximum
                 // as otherwise resizing could lead to a crash 12/01/06
-                this.hScrollBar.Maximum = (this.hScrollBar.Maximum <= 0) ? 0 : this.hScrollBar.Maximum;
-                this.hScrollBar.SmallChange = Column.MinimumWidth;
+                hScrollBar.Maximum = (hScrollBar.Maximum <= 0) ? 0 : hScrollBar.Maximum;
+                hScrollBar.SmallChange = Column.MinimumWidth;
                 // fixed by Kosmokrat Hismoom on 7 jan 2006
-                this.hScrollBar.LargeChange = (hscrollBounds.Width <= 0) ? 0 : (hscrollBounds.Width - 1);
+                hScrollBar.LargeChange = (hscrollBounds.Width <= 0) ? 0 : (hscrollBounds.Width - 1);
 
-                if (this.hScrollBar.Value > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
-                    this.hScrollBar.Value = this.hScrollBar.Maximum - this.hScrollBar.LargeChange;
+                if (hScrollBar.Value > hScrollBar.Maximum - hScrollBar.LargeChange)
+                {
+                    hScrollBar.Value = hScrollBar.Maximum - hScrollBar.LargeChange;
+                }
                 #endregion
             }
             else
             {
-                this.hScrollBar.Visible = false;
-                this.hScrollBar.Value = 0;
+                hScrollBar.Visible = false;
+                hScrollBar.Value = 0;
             }
 
             if (vscroll)
             {
-                Rectangle vscrollBounds = new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
-                    this.BorderWidth,
+                var vscrollBounds = new Rectangle(Width - BorderWidth - SystemInformation.VerticalScrollBarWidth,
+                    BorderWidth,
                     SystemInformation.VerticalScrollBarWidth,
-                    this.Height - (this.BorderWidth * 2));
+                    Height - (BorderWidth * 2));
 
                 if (hscroll)
+                {
                     vscrollBounds.Height -= SystemInformation.HorizontalScrollBarHeight;
+                }
 
-                this.vScrollBar.Visible = true;
-                this.vScrollBar.Bounds = vscrollBounds;
-                this.vScrollBar.Minimum = 0;
-                this.vScrollBar.SmallChange = 1;
+                vScrollBar.Visible = true;
+                vScrollBar.Bounds = vscrollBounds;
+                vScrollBar.Minimum = 0;
+                vScrollBar.SmallChange = 1;
 
-                int rowcount = this.RowCount - this.TableModel.Rows.HiddenSubRows;
+                var rowcount = RowCount - TableModel.Rows.HiddenSubRows;
                 rowcount = rowcount < 0 ? 0 : rowcount;
                 vScrollBar.Maximum = rowcount;
 
-                int visibleRowCount = this.GetVisibleRowCount(hscroll, true);
+                var visibleRowCount = GetVisibleRowCount(hscroll, true);
                 vScrollBar.LargeChange = visibleRowCount < 0 ? 0 : visibleRowCount + 1;
             }
             else
             {
-                this.vScrollBar.Visible = false;
-                this.vScrollBar.Value = 0;
+                vScrollBar.Visible = false;
+                vScrollBar.Value = 0;
             }
         }
 
@@ -2702,19 +2787,19 @@ namespace XPTable.Models
         /// <returns>The index of the row that should be used to set the .Value property of the scrollbar.</returns>
         protected int GetNewTopRowIndex(int previousTopRowIndex, int howMany)
         {
-            int visibleRows = this.vScrollBar.LargeChange - 1;
-            bool down = (howMany > 0);
+            var visibleRows = vScrollBar.LargeChange - 1;
+            var down = howMany > 0;
 
-            int max = Math.Abs(howMany);
+            var max = Math.Abs(howMany);
 
-            int column = this.ColumnModel.NextVisibleColumn(-1);
-            CellPos newCell = new CellPos(previousTopRowIndex, column);  // The row currently at the top
+            var column = ColumnModel.NextVisibleColumn(-1);
+            var newCell = new CellPos(previousTopRowIndex, column);  // The row currently at the top
 
-            for (int i = 0; i < max; i++)
+            for (var i = 0; i < max; i++)
             {
                 // The first cell on the row we are going to (if all is well)
                 // Changed to fix scrolling bug (ID - 2848790) reported by Tom Nolan ( lordicarus )
-                newCell = this.FindNextVisibleCell(newCell, true, down, false, false, true);
+                newCell = FindNextVisibleCell(newCell, true, down, false, false, true);
             }
 
             return newCell.Row;
@@ -2728,18 +2813,18 @@ namespace XPTable.Models
         /// <returns></returns>
         private int EnsureSafeVScrollValue(int newValue)
         {
-            int newTopRowIndex = newValue;
-            int visibleRows = this.vScrollBar.LargeChange - 1;
+            var newTopRowIndex = newValue;
+            var visibleRows = vScrollBar.LargeChange - 1;
 
             if (newTopRowIndex < 0)
             {
                 // Can get here with the mousewheel going up
                 newTopRowIndex = 0;
             }
-            else if (newTopRowIndex > this.vScrollBar.Maximum - visibleRows)
+            else if (newTopRowIndex > vScrollBar.Maximum - visibleRows)
             {
                 // Can get here with the mousewheel going down
-                newTopRowIndex = this.vScrollBar.Maximum - visibleRows;
+                newTopRowIndex = vScrollBar.Maximum - visibleRows;
             }
             return newTopRowIndex;
         }
@@ -2750,26 +2835,28 @@ namespace XPTable.Models
         /// <param name="value">The value to scroll to</param>
         protected void HorizontalScroll(int value)
         {
-            int scrollVal = this.hScrollBar.Value - value;
+            var scrollVal = hScrollBar.Value - value;
 
             if (scrollVal != 0)
             {
-                RECT scrollRect = RECT.FromRectangle(this.PseudoClientRect);
-                Rectangle invalidateRect = scrollRect.ToRectangle();
+                var scrollRect = RECT.FromRectangle(PseudoClientRect);
+                var invalidateRect = scrollRect.ToRectangle();
 
-                NativeMethods.ScrollWindow(this.Handle, scrollVal, 0, ref scrollRect, ref scrollRect);
+                NativeMethods.ScrollWindow(Handle, scrollVal, 0, ref scrollRect, ref scrollRect);
 
                 if (scrollVal < 0)
+                {
                     invalidateRect.X = invalidateRect.Right + scrollVal;
+                }
 
                 invalidateRect.Width = Math.Abs(scrollVal);
 
-                this.Invalidate(invalidateRect, false);
+                Invalidate(invalidateRect, false);
 
-                if (this.VScroll)
+                if (VScroll)
                 {
-                    this.Invalidate(new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
-                        this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight,
+                    Invalidate(new Rectangle(Width - BorderWidth - SystemInformation.VerticalScrollBarWidth,
+                        Height - BorderWidth - SystemInformation.HorizontalScrollBarHeight,
                         SystemInformation.VerticalScrollBarWidth,
                         SystemInformation.HorizontalScrollBarHeight),
                         false);
@@ -2787,74 +2874,62 @@ namespace XPTable.Models
         /// and column, false otherwise</returns>
         public bool EnsureVisible(int row, int column)
         {
-            if (!this.Scrollable || (!this.HScroll && !this.VScroll) || row == -1)
+            if (!Scrollable || (!HScroll && !VScroll) || row == -1)
             {
                 return false;
             }
 
             if (column == -1)
             {
-                if (this.FocusedCell.Column != -1)
-                {
-                    column = this.FocusedCell.Column;
-                }
-                else
-                {
-                    column = 0;
-                }
+                column = FocusedCell.Column != -1 ? FocusedCell.Column : 0;
             }
 
-            int hscrollVal = this.hScrollBar.Value;
-            int vscrollVal = this.vScrollBar.Value;
-            if (this.HScroll)
+            var hscrollVal = hScrollBar.Value;
+            var vscrollVal = vScrollBar.Value;
+            if (HScroll)
             {
                 if (column < 0)
                 {
                     column = 0;
                 }
-                else if (column >= this.ColumnCount)
+                else if (column >= ColumnCount)
                 {
-                    column = this.ColumnCount - 1;
+                    column = ColumnCount - 1;
                 }
 
-                if (this.ColumnModel.Columns[column].Visible)
+                if (ColumnModel.Columns[column].Visible)
                 {
-                    if (this.ColumnModel.Columns[column].Left < this.hScrollBar.Value)
+                    if (ColumnModel.Columns[column].Left < hScrollBar.Value)
                     {
-                        hscrollVal = this.ColumnModel.Columns[column].Left;
+                        hscrollVal = ColumnModel.Columns[column].Left;
                     }
-                    else if (this.ColumnModel.Columns[column].Right > this.hScrollBar.Value + this.CellDataRect.Width)
+                    else if (ColumnModel.Columns[column].Right > hScrollBar.Value + CellDataRect.Width)
                     {
-                        if (this.ColumnModel.Columns[column].Width > this.CellDataRect.Width)
-                        {
-                            hscrollVal = this.ColumnModel.Columns[column].Left;
-                        }
-                        else
-                        {
-                            hscrollVal = this.ColumnModel.Columns[column].Right - this.CellDataRect.Width;
-                        }
+                        hscrollVal = ColumnModel.Columns[column].Width > CellDataRect.Width
+                            ? ColumnModel.Columns[column].Left
+                            : ColumnModel.Columns[column].Right - CellDataRect.Width;
                     }
 
-                    if (hscrollVal > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
+                    if (hscrollVal > hScrollBar.Maximum - hScrollBar.LargeChange)
                     {
-                        hscrollVal = this.hScrollBar.Maximum - this.hScrollBar.LargeChange;
+                        hscrollVal = hScrollBar.Maximum - hScrollBar.LargeChange;
                     }
                 }
             }
 
-            if (this.VScroll)
+            if (VScroll)
             {
                 if (row < 0)
                 {
                     vscrollVal = 0;
                 }
-                else if (row >= this.RowCount)
+                else if (row >= RowCount)
                 {
-                    vscrollVal = this.RowCount - 1;
+                    vscrollVal = RowCount - 1;
                 }
                 else
                 {
-                    int hidden = this.tableModel.Rows.HiddenRowCountBefore(row);
+                    var hidden = tableModel.Rows.HiddenRowCountBefore(row);
 
                     if (row < vscrollVal)
                     {
@@ -2863,7 +2938,7 @@ namespace XPTable.Models
                     }
                     else
                     {
-                        var visibleRowCount = this.GetVisibleRowCount();
+                        var visibleRowCount = GetVisibleRowCount();
                         if (row - hidden > vscrollVal + visibleRowCount)
                         {
                             vscrollVal = row - visibleRowCount;
@@ -2871,24 +2946,24 @@ namespace XPTable.Models
                     }
                 }
 
-                if (vscrollVal > this.vScrollBar.Maximum - this.vScrollBar.LargeChange)
+                if (vscrollVal > vScrollBar.Maximum - vScrollBar.LargeChange)
                 {
-                    vscrollVal = (this.vScrollBar.Maximum - this.vScrollBar.LargeChange) + 1;
+                    vscrollVal = vScrollBar.Maximum - vScrollBar.LargeChange + 1;
                 }
             }
 
-            if (this.RowRect(row).Bottom > this.CellDataRect.Bottom)
+            if (RowRect(row).Bottom > CellDataRect.Bottom)
             {
                 vscrollVal++;
             }
 
             var moved =
-                  SetScrollValue(this.hScrollBar, hscrollVal)
-                | SetScrollValue(this.vScrollBar, vscrollVal);
+                  SetScrollValue(hScrollBar, hscrollVal)
+                | SetScrollValue(vScrollBar, vscrollVal);
 
             if (moved)
             {
-                this.Invalidate(this.PseudoClientRect);
+                Invalidate(PseudoClientRect);
             }
 
             return moved;
@@ -2916,7 +2991,7 @@ namespace XPTable.Models
         /// <returns></returns>
         public bool EnsureVisible(CellPos cellPos)
         {
-            return this.EnsureVisible(cellPos.Row, cellPos.Column);
+            return EnsureVisible(cellPos.Row, cellPos.Column);
         }
 
 
@@ -2928,12 +3003,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.ColumnModel == null || this.ColumnModel.VisibleColumnCount == 0)
+                if (ColumnModel == null || ColumnModel.VisibleColumnCount == 0)
                 {
                     return -1;
                 }
 
-                return this.ColumnModel.ColumnIndexAtX(this.hScrollBar.Value);
+                return ColumnModel.ColumnIndexAtX(hScrollBar.Value);
             }
         }
 
@@ -2946,20 +3021,28 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.ColumnModel == null || this.ColumnModel.VisibleColumnCount == 0)
+                if (ColumnModel == null || ColumnModel.VisibleColumnCount == 0)
+                {
                     return -1;
+                }
 
-                int rightEdge = this.hScrollBar.Value + this.PseudoClientRect.Right;
+                var rightEdge = hScrollBar.Value + PseudoClientRect.Right;
 
-                if (this.VScroll)
-                    rightEdge -= this.vScrollBar.Width;
+                if (VScroll)
+                {
+                    rightEdge -= vScrollBar.Width;
+                }
 
-                int col = this.ColumnModel.ColumnIndexAtX(rightEdge);
+                var col = ColumnModel.ColumnIndexAtX(rightEdge);
 
                 if (col == -1)
-                    return this.ColumnModel.PreviousVisibleColumn(this.ColumnModel.Columns.Count);
-                else if (!this.ColumnModel.Columns[col].Visible)
-                    return this.ColumnModel.PreviousVisibleColumn(col);
+                {
+                    return ColumnModel.PreviousVisibleColumn(ColumnModel.Columns.Count);
+                }
+                else if (!ColumnModel.Columns[col].Visible)
+                {
+                    return ColumnModel.PreviousVisibleColumn(col);
+                }
 
                 return col;
             }
@@ -2976,7 +3059,7 @@ namespace XPTable.Models
         /// </summary>
         public void Sort()
         {
-            this.Sort(true);
+            Sort(true);
         }
 
 
@@ -2991,41 +3074,41 @@ namespace XPTable.Models
         {
             // don't allow sorting if we're being used as a 
             // preview table in a ColumnModel editor
-            if (this.Preview)
+            if (Preview)
             {
                 return;
             }
 
             // if we don't have a sorted column already, check if 
             // we can use the column of the cell that has focus
-            if (!this.IsValidColumn(this.lastSortedColumn))
+            if (!IsValidColumn(lastSortedColumn))
             {
-                if (this.IsValidColumn(this.focusedCell.Column))
+                if (IsValidColumn(focusedCell.Column))
                 {
-                    this.lastSortedColumn = this.focusedCell.Column;
+                    lastSortedColumn = focusedCell.Column;
                 }
             }
 
             // make sure the last sorted column exists
-            if (this.IsValidColumn(this.lastSortedColumn))
+            if (IsValidColumn(lastSortedColumn))
             {
                 // don't bother if the column won't let us sort
-                if (!this.ColumnModel.Columns[this.lastSortedColumn].Sortable)
+                if (!ColumnModel.Columns[lastSortedColumn].Sortable)
                 {
                     return;
                 }
 
                 // work out which direction we should sort
-                SortOrder newOrder = SortOrder.Ascending;
+                var newOrder = SortOrder.Ascending;
 
-                Column column = this.ColumnModel.Columns[this.lastSortedColumn];
+                var column = ColumnModel.Columns[lastSortedColumn];
 
                 if (column.SortOrder == SortOrder.Ascending)
                 {
                     newOrder = SortOrder.Descending;
                 }
 
-                this.Sort(this.lastSortedColumn, column, newOrder, stable);
+                Sort(lastSortedColumn, column, newOrder, stable);
             }
         }
 
@@ -3037,7 +3120,7 @@ namespace XPTable.Models
         /// <param name="column">The index of the column to sort</param>
         public void Sort(int column)
         {
-            this.Sort(column, true);
+            Sort(column, true);
         }
 
 
@@ -3052,43 +3135,43 @@ namespace XPTable.Models
         {
             // don't allow sorting if we're being used as a 
             // preview table in a ColumnModel editor
-            if (this.Preview)
+            if (Preview)
             {
                 return;
             }
 
             // make sure the column exists
-            if (this.IsValidColumn(column))
+            if (IsValidColumn(column))
             {
                 // don't bother if the column won't let us sort
-                if (!this.ColumnModel.Columns[column].Sortable)
+                if (!ColumnModel.Columns[column].Sortable)
                 {
                     return;
                 }
 
                 // if we already have a different sorted column, set 
                 // its sort order to none
-                if (column != this.lastSortedColumn)
+                if (column != lastSortedColumn)
                 {
-                    if (this.IsValidColumn(this.lastSortedColumn))
+                    if (IsValidColumn(lastSortedColumn))
                     {
-                        this.ColumnModel.Columns[this.lastSortedColumn].InternalSortOrder = SortOrder.None;
+                        ColumnModel.Columns[lastSortedColumn].InternalSortOrder = SortOrder.None;
                     }
                 }
 
-                this.lastSortedColumn = column;
+                lastSortedColumn = column;
 
                 // work out which direction we should sort
-                SortOrder newOrder = SortOrder.Ascending;
+                var newOrder = SortOrder.Ascending;
 
-                Column col = this.ColumnModel.Columns[column];
+                var col = ColumnModel.Columns[column];
 
                 if (col.SortOrder == SortOrder.Ascending)
                 {
                     newOrder = SortOrder.Descending;
                 }
 
-                this.Sort(column, col, newOrder, stable);
+                Sort(column, col, newOrder, stable);
             }
         }
 
@@ -3100,7 +3183,7 @@ namespace XPTable.Models
         /// <param name="sortOrder">The direction the column is to be sorted</param>
         public void Sort(int column, SortOrder sortOrder)
         {
-            this.Sort(column, sortOrder, true);
+            Sort(column, sortOrder, true);
         }
 
 
@@ -3115,33 +3198,33 @@ namespace XPTable.Models
         {
             // don't allow sorting if we're being used as a 
             // preview table in a ColumnModel editor
-            if (this.Preview)
+            if (Preview)
             {
                 return;
             }
 
             // make sure the column exists
-            if (this.IsValidColumn(column))
+            if (IsValidColumn(column))
             {
                 // don't bother if the column won't let us sort
-                if (!this.ColumnModel.Columns[column].Sortable)
+                if (!ColumnModel.Columns[column].Sortable)
                 {
                     return;
                 }
 
                 // if we already have a different sorted column, set 
                 // its sort order to none
-                if (column != this.lastSortedColumn)
+                if (column != lastSortedColumn)
                 {
-                    if (this.IsValidColumn(this.lastSortedColumn))
+                    if (IsValidColumn(lastSortedColumn))
                     {
-                        this.ColumnModel.Columns[this.lastSortedColumn].InternalSortOrder = SortOrder.None;
+                        ColumnModel.Columns[lastSortedColumn].InternalSortOrder = SortOrder.None;
                     }
                 }
 
-                this.lastSortedColumn = column;
+                lastSortedColumn = column;
 
-                this.Sort(column, this.ColumnModel.Columns[column], sortOrder, stable);
+                Sort(column, ColumnModel.Columns[column], sortOrder, stable);
             }
         }
 
@@ -3156,7 +3239,7 @@ namespace XPTable.Models
         /// should be used to sort the column</param>
         private void Sort(int index, Column column, SortOrder sortOrder, bool stable)
         {
-            if (this.TableModel == null)
+            if (TableModel == null)
             {
                 return;
             }
@@ -3166,11 +3249,11 @@ namespace XPTable.Models
 
             if (column.Comparer != null)
             {
-                comparer = (ComparerBase)Activator.CreateInstance(column.Comparer, new object[] { this.TableModel, index, sortOrder });
+                comparer = (ComparerBase)Activator.CreateInstance(column.Comparer, new object[] { TableModel, index, sortOrder });
             }
             else if (column.DefaultComparerType != null)
             {
-                comparer = (ComparerBase)Activator.CreateInstance(column.DefaultComparerType, new object[] { this.TableModel, index, sortOrder });
+                comparer = (ComparerBase)Activator.CreateInstance(column.DefaultComparerType, new object[] { TableModel, index, sortOrder });
             }
             else
             {
@@ -3190,79 +3273,55 @@ namespace XPTable.Models
             //   on large lists
             // so we choose based on the size of the list and
             // whether the user wants a stable sort
-            if (this.SortType == SortType.AutoSort)
+            if (SortType == SortType.AutoSort)
             {
-                if (this.TableModel.Rows.Count < 1000)
-                {
-                    if (this.StableSort)
-                    {
-                        sorter = new InsertionSorter(this.TableModel, index, comparer, sortOrder);
-                    }
-                    else
-                    {
-                        sorter = new ShellSorter(this.TableModel, index, comparer, sortOrder);
-                    }
-                }
-                else
-                {
-                    if (this.StableSort)
-                    {
-                        sorter = new MergeSorter(this.TableModel, index, comparer, sortOrder);
-                    }
-                    else
-                    {
-                        sorter = new HeapSorter(this.TableModel, index, comparer, sortOrder);
-                    }
-                }
+                sorter = TableModel.Rows.Count < 1000
+                    ? StableSort
+                        ? new InsertionSorter(TableModel, index, comparer, sortOrder)
+                        : new ShellSorter(TableModel, index, comparer, sortOrder)
+                    : StableSort ? new MergeSorter(TableModel, index, comparer, sortOrder) : new HeapSorter(TableModel, index, comparer, sortOrder);
             }
             else
             {
-                switch (this.SortType)
+                sorter = SortType switch
                 {
-                    case SortType.HeapSort:
-                        sorter = new HeapSorter(this.TableModel, index, comparer, sortOrder);
-                        break;
-                    case SortType.InsertionSort:
-                        sorter = new InsertionSorter(this.TableModel, index, comparer, sortOrder);
-                        break;
-                    case SortType.MergeSort:
-                        sorter = new MergeSorter(this.TableModel, index, comparer, sortOrder);
-                        break;
-                    case SortType.ShellSort:
-                        sorter = new ShellSorter(this.TableModel, index, comparer, sortOrder);
-                        break;
-                    default:
-                        throw new ApplicationException("Invalid Sort Type - " + this.SortType.ToString());
-                }
+                    SortType.HeapSort => new HeapSorter(TableModel, index, comparer, sortOrder),
+                    SortType.InsertionSort => new InsertionSorter(TableModel, index, comparer, sortOrder),
+                    SortType.MergeSort => new MergeSorter(TableModel, index, comparer, sortOrder),
+                    SortType.ShellSort => new ShellSorter(TableModel, index, comparer, sortOrder),
+                    _ => throw new ApplicationException("Invalid Sort Type - " + SortType.ToString()),
+                };
             }
 
-            sorter.SecondarySortOrders = this.ColumnModel.SecondarySortOrders;
-            sorter.SecondaryComparers = this.GetSecondaryComparers(this.ColumnModel.SecondarySortOrders);
+            sorter.SecondarySortOrders = ColumnModel.SecondarySortOrders;
+            sorter.SecondaryComparers = GetSecondaryComparers(ColumnModel.SecondarySortOrders);
 
             // don't let the table redraw
-            this.BeginUpdate();
+            BeginUpdate();
 
-            this.OnBeginSort(new ColumnEventArgs(column, index, ColumnEventType.Sorting, null));
+            OnBeginSort(new ColumnEventArgs(column, index, ColumnEventType.Sorting, null));
 
             // Added by -= Micronn =- on 22 dec 2005
             Row focusedRow = null;
 
-            if (this.FocusedCell != CellPos.Empty)
-                focusedRow = this.tableModel.Rows[this.FocusedCell.Row];
+            if (FocusedCell != CellPos.Empty)
+            {
+                focusedRow = tableModel.Rows[FocusedCell.Row];
+            }
 
             sorter.Sort();
 
             // Added by -= Micronn =- on 22 dec 2005
             if (focusedRow != null)
             {
-                this.FocusedCell = new CellPos(focusedRow.Index, this.FocusedCell.Column);
-                this.EnsureVisible(this.FocusedCell);
+                FocusedCell = new CellPos(focusedRow.Index, FocusedCell.Column);
+                EnsureVisible(FocusedCell);
             }
 
-            this.OnEndSort(new ColumnEventArgs(column, index, ColumnEventType.Sorting, null));
+            OnEndSort(new ColumnEventArgs(column, index, ColumnEventType.Sorting, null));
 
             // redraw any changes
-            this.EndUpdate();
+            EndUpdate();
         }
 
         /// <summary>
@@ -3272,23 +3331,25 @@ namespace XPTable.Models
         /// <returns></returns>
         private IComparerCollection GetSecondaryComparers(SortColumnCollection secondarySortOrders)
         {
-            IComparerCollection comparers = new IComparerCollection();
+            var comparers = new IComparerCollection();
 
             foreach (SortColumn sort in secondarySortOrders)
             {
                 ComparerBase comparer = null;
-                Column column = this.ColumnModel.Columns[sort.SortColumnIndex];
+                var column = ColumnModel.Columns[sort.SortColumnIndex];
 
                 if (column.Comparer != null)
                 {
-                    comparer = (ComparerBase)Activator.CreateInstance(column.Comparer, new object[] { this.TableModel, sort.SortColumnIndex, sort.SortOrder });
+                    comparer = (ComparerBase)Activator.CreateInstance(column.Comparer, new object[] { TableModel, sort.SortColumnIndex, sort.SortOrder });
                 }
                 else if (column.DefaultComparerType != null)
                 {
-                    comparer = (ComparerBase)Activator.CreateInstance(column.DefaultComparerType, new object[] { this.TableModel, sort.SortColumnIndex, sort.SortOrder });
+                    comparer = (ComparerBase)Activator.CreateInstance(column.DefaultComparerType, new object[] { TableModel, sort.SortColumnIndex, sort.SortOrder });
                 }
                 if (comparer != null)
+                {
                     comparers.Add(comparer);
+                }
             }
 
             return comparers;
@@ -3303,12 +3364,12 @@ namespace XPTable.Models
         /// Table's ColumnModel, false otherwise</returns>
         public bool IsValidColumn(int column)
         {
-            if (this.ColumnModel == null)
+            if (ColumnModel == null)
             {
                 return false;
             }
 
-            return (column >= 0 && column < this.ColumnModel.Columns.Count);
+            return column >= 0 && column < ColumnModel.Columns.Count;
         }
 
         #endregion
@@ -3324,17 +3385,19 @@ namespace XPTable.Models
         public Cell GetContainingCell(Control control)
         {
             if (control.Parent != this)
+            {
                 throw new ArgumentException("Control is not part of this table.", "control");
+            }
 
-            Point p = control.Location;
-            CellPos cellPos = new CellPos(this.RowIndexAt(p), this.ColumnIndexAt(p));
+            var p = control.Location;
+            var cellPos = new CellPos(RowIndexAt(p), ColumnIndexAt(p));
 
-            if (this.IsValidCell(cellPos))
+            if (IsValidCell(cellPos))
             {
                 // Adjust this to take colspan into account
                 // LastMouseCell may be a cell that is 'under' a colspan cell
-                CellPos realCell = this.ResolveColspan(cellPos);
-                Cell cell = tableModel[realCell];
+                var realCell = ResolveColspan(cellPos);
+                var cell = tableModel[realCell];
                 return cell;
             }
             return null;
@@ -3345,27 +3408,28 @@ namespace XPTable.Models
         internal DragDropEffects DragDropExternalTypeEffectSelector(object sender, DragEventArgs drgevent)
         {
             if (DragDropExternalTypeEffect != null)
+            {
                 return DragDropExternalTypeEffect(sender, drgevent);
+            }
             else
+            {
                 return DragDropEffects.None;
+            }
         }
 
         internal void DragDropExternalType(object sender, DragEventArgs drgevent)
         {
-            if (DragDropExternalTypeEvent != null)
-                DragDropExternalTypeEvent(sender, drgevent);
+            DragDropExternalTypeEvent?.Invoke(sender, drgevent);
         }
 
         internal void DragDropRowInsertedAt(int destIndex)
         {
-            if (DragDropRowInsertedAtEvent != null)
-                DragDropRowInsertedAtEvent(destIndex);
+            DragDropRowInsertedAtEvent?.Invoke(destIndex);
         }
 
         internal void DragDropRowMoved(int srcIndex, int destIndex)
         {
-            if (DragDropRowMovedEvent != null)
-                DragDropRowMovedEvent(srcIndex, destIndex);
+            DragDropRowMovedEvent?.Invoke(srcIndex, destIndex);
         }
         #endregion
 
@@ -3383,10 +3447,7 @@ namespace XPTable.Models
         Description("Indicates the border style for the Table")]
         public BorderStyle BorderStyle
         {
-            get
-            {
-                return this.borderStyle;
-            }
+            get => borderStyle;
 
             set
             {
@@ -3397,9 +3458,9 @@ namespace XPTable.Models
 
                 if (borderStyle != value)
                 {
-                    this.borderStyle = value;
+                    borderStyle = value;
 
-                    this.Invalidate(true);
+                    Invalidate(true);
                 }
             }
         }
@@ -3411,14 +3472,14 @@ namespace XPTable.Models
         Description("The background color of the table")]
         public Color BorderColor
         {
-            get { return this.borderColor; }
+            get => borderColor;
             set
             {
-                if (this.borderColor != value)
+                if (borderColor != value)
                 {
-                    this.borderColor = value;
+                    borderColor = value;
 
-                    this.Invalidate(true);
+                    Invalidate(true);
                 }
             }
         }
@@ -3430,15 +3491,17 @@ namespace XPTable.Models
         Description("The background color of the table")]
         public Color UnfocusedBorderColor
         {
-            get { return this.unfocusedBorderColor; }
+            get => unfocusedBorderColor;
             set
             {
-                if (this.unfocusedBorderColor != value)
+                if (unfocusedBorderColor != value)
                 {
-                    this.unfocusedBorderColor = value;
+                    unfocusedBorderColor = value;
 
-                    if (!this.Focused)
-                        this.Invalidate(true);
+                    if (!Focused)
+                    {
+                        Invalidate(true);
+                    }
                 }
             }
         }
@@ -3450,11 +3513,11 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.BorderStyle == BorderStyle.Fixed3D)
+                if (BorderStyle == BorderStyle.Fixed3D)
                 {
                     return SystemInformation.Border3DSize.Width;
                 }
-                else if (this.BorderStyle == BorderStyle.FixedSingle)
+                else if (BorderStyle == BorderStyle.FixedSingle)
                 {
                     return 1;
                 }
@@ -3471,13 +3534,7 @@ namespace XPTable.Models
         /// Gets the last known cell position that the mouse was over
         /// </summary>
         [Browsable(false)]
-        public CellPos LastMouseCell
-        {
-            get
-            {
-                return this.lastMouseCell;
-            }
-        }
+        public CellPos LastMouseCell => lastMouseCell;
 
 
         /// <summary>
@@ -3485,13 +3542,7 @@ namespace XPTable.Models
         /// button was pressed in
         /// </summary>
         [Browsable(false)]
-        public CellPos LastMouseDownCell
-        {
-            get
-            {
-                return this.lastMouseDownCell;
-            }
-        }
+        public CellPos LastMouseDownCell => lastMouseDownCell;
 
 
         /// <summary>
@@ -3501,37 +3552,34 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public CellPos FocusedCell
         {
-            get
-            {
-                return this.focusedCell;
-            }
+            get => focusedCell;
 
             set
             {
-                if (!this.IsValidCell(value))
+                if (!IsValidCell(value))
                 {
                     return;
                 }
 
-                if (!this.TableModel[value].Enabled)
+                if (!TableModel[value].Enabled)
                 {
                     return;
                 }
 
-                if (this.focusedCell != value)
+                if (focusedCell != value)
                 {
-                    if (!this.focusedCell.IsEmpty)
+                    if (!focusedCell.IsEmpty)
                     {
-                        this.RaiseCellLostFocus(this.focusedCell);
+                        RaiseCellLostFocus(focusedCell);
                     }
 
-                    this.focusedCell = value;
+                    focusedCell = value;
 
                     if (!value.IsEmpty)
                     {
-                        this.EnsureVisible(value);
+                        EnsureVisible(value);
 
-                        this.RaiseCellGotFocus(value);
+                        RaiseCellGotFocus(value);
                     }
                 }
             }
@@ -3548,10 +3596,7 @@ namespace XPTable.Models
         Description("The amount of time (in milliseconds) that that the mouse pointer must hover over a Cell or Column Header before a MouseHover event is raised")]
         public int HoverTime
         {
-            get
-            {
-                return this.hoverTime;
-            }
+            get => hoverTime;
 
             set
             {
@@ -3560,11 +3605,11 @@ namespace XPTable.Models
                     throw new ArgumentException("HoverTime cannot be less than 100", "value");
                 }
 
-                if (this.hoverTime != value)
+                if (hoverTime != value)
                 {
-                    this.hoverTime = value;
+                    hoverTime = value;
 
-                    this.ResetMouseEventArgs();
+                    ResetMouseEventArgs();
                 }
             }
         }
@@ -3577,16 +3622,13 @@ namespace XPTable.Models
         Description("Stop the beep when Enter or Escape keys are pressed when editing")]
         public bool SuppressEditorTerminatorBeep
         {
-            get
-            {
-                return this.suppressEditorTerminatorBeep;
-            }
+            get => suppressEditorTerminatorBeep;
 
             set
             {
-                if (this.suppressEditorTerminatorBeep != value)
+                if (suppressEditorTerminatorBeep != value)
                 {
-                    this.suppressEditorTerminatorBeep = value;
+                    suppressEditorTerminatorBeep = value;
                 }
             }
         }
@@ -3604,14 +3646,14 @@ namespace XPTable.Models
         {
             get
             {
-                Rectangle clientRect = this.InternalBorderRect;
+                var clientRect = InternalBorderRect;
 
-                if (this.HScroll)
+                if (HScroll)
                 {
                     clientRect.Height -= SystemInformation.HorizontalScrollBarHeight;
                 }
 
-                if (this.VScroll)
+                if (VScroll)
                 {
                     clientRect.Width -= SystemInformation.VerticalScrollBarWidth;
                 }
@@ -3630,12 +3672,12 @@ namespace XPTable.Models
         {
             get
             {
-                Rectangle clientRect = this.PseudoClientRect;
+                var clientRect = PseudoClientRect;
 
-                if (this.HeaderStyle != ColumnHeaderStyle.None && this.ColumnCount > 0)
+                if (HeaderStyle != ColumnHeaderStyle.None && ColumnCount > 0)
                 {
-                    clientRect.Y += this.HeaderHeight;
-                    clientRect.Height -= this.HeaderHeight;
+                    clientRect.Y += HeaderHeight;
+                    clientRect.Height -= HeaderHeight;
                 }
 
                 return clientRect;
@@ -3646,17 +3688,11 @@ namespace XPTable.Models
         /// <summary>
         /// 
         /// </summary>
-        private Rectangle InternalBorderRect
-        {
-            get
-            {
-                return new Rectangle(
-                    this.BorderWidth,
-                    this.BorderWidth,
-                    this.Width - (this.BorderWidth * 2),
-                    this.Height - (this.BorderWidth * 2));
-            }
-        }
+        private Rectangle InternalBorderRect => new Rectangle(
+                    BorderWidth,
+                    BorderWidth,
+                    Width - (BorderWidth * 2),
+                    Height - (BorderWidth * 2));
 
         #endregion
 
@@ -3670,22 +3706,26 @@ namespace XPTable.Models
         Description("Specifies the ColumnModel that contains all the Columns displayed in the Table")]
         public ColumnModel ColumnModel
         {
-            get { return this.columnModel; }
+            get => columnModel;
             set
             {
-                if (this.columnModel != value)
+                if (columnModel != value)
                 {
-                    if (this.columnModel != null && this.columnModel.Table == this)
-                        this.columnModel.InternalTable = null;
+                    if (columnModel != null && columnModel.Table == this)
+                    {
+                        columnModel.InternalTable = null;
+                    }
 
-                    ColumnModel oldValue = this.columnModel;
+                    var oldValue = columnModel;
 
-                    this.columnModel = value;
+                    columnModel = value;
 
                     if (value != null)
+                    {
                         value.InternalTable = this;
+                    }
 
-                    this.OnColumnModelChanged(new TableEventArgs(this, TableEventType.ColumnModelChanged, oldValue)); // PJD TEA change
+                    OnColumnModelChanged(new TableEventArgs(this, TableEventType.ColumnModelChanged, oldValue)); // PJD TEA change
                 }
             }
         }
@@ -3698,11 +3738,13 @@ namespace XPTable.Models
         Description("Specifies whether the Table allows users to resize Column widths")]
         public bool ColumnResizing
         {
-            get { return this.columnResizing; }
+            get => columnResizing;
             set
             {
-                if (this.columnResizing != value)
-                    this.columnResizing = value;
+                if (columnResizing != value)
+                {
+                    columnResizing = value;
+                }
             }
         }
 
@@ -3715,9 +3757,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.ColumnModel == null)
+                if (ColumnModel == null)
+                {
                     return -1;
-                return this.ColumnModel.Columns.Count;
+                }
+
+                return ColumnModel.Columns.Count;
             }
         }
 
@@ -3726,10 +3771,7 @@ namespace XPTable.Models
         /// </summary>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public int SortingColumn
-        {
-            get { return this.lastSortedColumn; }
-        }
+        public int SortingColumn => lastSortedColumn;
 
         /// <summary>
         /// Gets or sets the background Color for the currently sorted column
@@ -3738,20 +3780,22 @@ namespace XPTable.Models
         Description("The background Color for a sorted Column")]
         public Color SortedColumnBackColor
         {
-            get { return this.sortedColumnBackColor; }
+            get => sortedColumnBackColor;
 
             set
             {
-                if (this.sortedColumnBackColor != value)
+                if (sortedColumnBackColor != value)
                 {
-                    this.sortedColumnBackColor = value;
+                    sortedColumnBackColor = value;
 
-                    if (this.IsValidColumn(this.lastSortedColumn))
+                    if (IsValidColumn(lastSortedColumn))
                     {
-                        Rectangle columnRect = this.ColumnRect(this.lastSortedColumn);
+                        var columnRect = ColumnRect(lastSortedColumn);
 
-                        if (this.PseudoClientRect.IntersectsWith(columnRect))
-                            this.Invalidate(Rectangle.Intersect(this.PseudoClientRect, columnRect));
+                        if (PseudoClientRect.IntersectsWith(columnRect))
+                        {
+                            Invalidate(Rectangle.Intersect(PseudoClientRect, columnRect));
+                        }
                     }
                 }
             }
@@ -3765,7 +3809,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeSortedColumnBackColor()
         {
-            return this.sortedColumnBackColor != Color.WhiteSmoke;
+            return sortedColumnBackColor != Color.WhiteSmoke;
         }
         #endregion
 
@@ -3777,11 +3821,11 @@ namespace XPTable.Models
         {
             get
             {
-                int left = this.CellDataRect.Left;
+                var left = CellDataRect.Left;
 
-                if (!this.init)
+                if (!init)
                 {
-                    left -= this.hScrollBar.Value;
+                    left -= hScrollBar.Value;
                 }
 
                 return left;
@@ -3797,31 +3841,27 @@ namespace XPTable.Models
         {
             get
             {
-                Rectangle displayRect = this.CellDataRect;
+                var displayRect = CellDataRect;
 
-                if (!this.init)
+                if (!init)
                 {
-                    displayRect.X -= this.hScrollBar.Value;
-                    displayRect.Y -= this.vScrollBar.Value;
+                    displayRect.X -= hScrollBar.Value;
+                    displayRect.Y -= vScrollBar.Value;
                 }
 
-                if (this.ColumnModel == null)
+                if (ColumnModel == null)
+                {
                     return displayRect;
+                }
 
-                Rectangle myCellDataRect = this.CellDataRect;
+                var myCellDataRect = CellDataRect;
 
                 //by netus 2006-02-07
-                if (this.ColumnModel.VisibleColumnsWidth <= myCellDataRect.Width)
-                    displayRect.Width = myCellDataRect.Width;
-                else
-                    displayRect.Width = this.ColumnModel.VisibleColumnsWidth;
+                displayRect.Width = ColumnModel.VisibleColumnsWidth <= myCellDataRect.Width ? myCellDataRect.Width : ColumnModel.VisibleColumnsWidth;
 
-                int myTotalRowHeight = this.TotalRowHeight;
+                var myTotalRowHeight = TotalRowHeight;
 
-                if (myTotalRowHeight <= myCellDataRect.Height)
-                    displayRect.Height = myCellDataRect.Height;
-                else
-                    displayRect.Height = myTotalRowHeight;
+                displayRect.Height = myTotalRowHeight <= myCellDataRect.Height ? myCellDataRect.Height : myTotalRowHeight;
 
                 return displayRect;
             }
@@ -3833,29 +3873,20 @@ namespace XPTable.Models
         /// Gets whether the Table is currently editing a Cell
         /// </summary>
         [Browsable(false)]
-        public bool IsEditing
-        {
-            get { return !this.EditingCell.IsEmpty; }
-        }
+        public bool IsEditing => !EditingCell.IsEmpty;
 
         /// <summary>
         /// Gets a CellPos that specifies the position of the Cell that 
         /// is currently being edited
         /// </summary>
         [Browsable(false)]
-        public CellPos EditingCell
-        {
-            get { return this.editingCell; }
-        }
+        public CellPos EditingCell => editingCell;
 
         /// <summary>
         /// Gets the ICellEditor that is currently being used to edit a Cell
         /// </summary>
         [Browsable(false)]
-        public ICellEditor EditingCellEditor
-        {
-            get { return this.curentCellEditor; }
-        }
+        public ICellEditor EditingCellEditor => curentCellEditor;
 
         /// <summary>
         /// Gets or sets the action that causes editing to be initiated
@@ -3865,14 +3896,18 @@ namespace XPTable.Models
         Description("The action that causes editing to be initiated")]
         public EditStartAction EditStartAction
         {
-            get { return this.editStartAction; }
+            get => editStartAction;
             set
             {
                 if (!Enum.IsDefined(typeof(EditStartAction), value))
+                {
                     throw new InvalidEnumArgumentException("value", (int)value, typeof(EditStartAction));
+                }
 
-                if (this.editStartAction != value)
-                    this.editStartAction = value;
+                if (editStartAction != value)
+                {
+                    editStartAction = value;
+                }
             }
         }
 
@@ -3884,18 +3919,20 @@ namespace XPTable.Models
         Description("The custom key used to initiate Cell editing")]
         public Keys CustomEditKey
         {
-            get { return this.customEditKey; }
+            get => customEditKey;
             set
             {
-                if (this.IsReservedKey(value))
+                if (IsReservedKey(value))
                 {
                     throw new ArgumentException("CustomEditKey cannot be one of the Table's reserved keys " +
                         "(Up arrow, Down arrow, Left arrow, Right arrow, PageUp, " +
                         "PageDown, Home, End, Tab)", "value");
                 }
 
-                if (this.customEditKey != value)
-                    this.customEditKey = value;
+                if (customEditKey != value)
+                {
+                    customEditKey = value;
+                }
             }
         }
         #endregion
@@ -3909,16 +3946,18 @@ namespace XPTable.Models
         Description("Determines how grid lines are displayed around rows and columns")]
         public GridLines GridLines
         {
-            get { return this.gridLines; }
+            get => gridLines;
             set
             {
                 if (!Enum.IsDefined(typeof(GridLines), value))
-                    throw new InvalidEnumArgumentException("value", (int)value, typeof(GridLines));
-
-                if (this.gridLines != value)
                 {
-                    this.gridLines = value;
-                    this.Invalidate(this.PseudoClientRect, false);
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(GridLines));
+                }
+
+                if (gridLines != value)
+                {
+                    gridLines = value;
+                    Invalidate(PseudoClientRect, false);
                 }
             }
         }
@@ -3931,18 +3970,22 @@ namespace XPTable.Models
         Description("The style of the lines used to draw the grid")]
         public GridLineStyle GridLineStyle
         {
-            get { return this.gridLineStyle; }
+            get => gridLineStyle;
             set
             {
                 if (!Enum.IsDefined(typeof(GridLineStyle), value))
-                    throw new InvalidEnumArgumentException("value", (int)value, typeof(GridLineStyle));
-
-                if (this.gridLineStyle != value)
                 {
-                    this.gridLineStyle = value;
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(GridLineStyle));
+                }
 
-                    if (this.GridLines != GridLines.None)
-                        this.Invalidate(this.PseudoClientRect, false);
+                if (gridLineStyle != value)
+                {
+                    gridLineStyle = value;
+
+                    if (GridLines != GridLines.None)
+                    {
+                        Invalidate(PseudoClientRect, false);
+                    }
                 }
             }
         }
@@ -3950,7 +3993,7 @@ namespace XPTable.Models
         /// <summary>
         /// Indicates whether the grid lines should extend beyond the cells that have data.
         /// </summary>
-        bool gridLinesContrainedToData = false;
+        private bool gridLinesContrainedToData = false;
 
         /// <summary>
         /// Gets or sets whether the grid lines should extend beyond the cells that have data.
@@ -3960,13 +4003,13 @@ namespace XPTable.Models
         Description("Indicates whether the grid lines should extend beyond the cells that have data")]
         public bool GridLinesContrainedToData
         {
-            get { return this.gridLinesContrainedToData; }
+            get => gridLinesContrainedToData;
             set
             {
-                if (this.gridLinesContrainedToData != value)
+                if (gridLinesContrainedToData != value)
                 {
-                    this.gridLinesContrainedToData = value;
-                    this.Invalidate(this.PseudoClientRect, false);
+                    gridLinesContrainedToData = value;
+                    Invalidate(PseudoClientRect, false);
                 }
             }
         }
@@ -3978,15 +4021,17 @@ namespace XPTable.Models
         Description("The color of the grid lines")]
         public Color GridColor
         {
-            get { return this.gridColor; }
+            get => gridColor;
             set
             {
-                if (this.gridColor != value)
+                if (gridColor != value)
                 {
-                    this.gridColor = value;
+                    gridColor = value;
 
-                    if (this.GridLines != GridLines.None)
-                        this.Invalidate(this.PseudoClientRect, false);
+                    if (GridLines != GridLines.None)
+                    {
+                        Invalidate(PseudoClientRect, false);
+                    }
                 }
             }
         }
@@ -3999,7 +4044,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeGridColor()
         {
-            return (this.GridColor != SystemColors.Control);
+            return GridColor != SystemColors.Control;
         }
 
         /// <summary>
@@ -4007,8 +4052,8 @@ namespace XPTable.Models
         /// </summary>
         public override Color BackColor
         {
-            get { return base.BackColor; }
-            set { base.BackColor = value; }
+            get => base.BackColor;
+            set => base.BackColor = value;
         }
 
         /// <summary>
@@ -4019,7 +4064,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeBackColor()
         {
-            return (this.BackColor != Color.White);
+            return BackColor != Color.White;
         }
         #endregion
 
@@ -4033,10 +4078,7 @@ namespace XPTable.Models
         Description("The style of the column headers")]
         public ColumnHeaderStyle HeaderStyle
         {
-            get
-            {
-                return this.headerStyle;
-            }
+            get => headerStyle;
 
             set
             {
@@ -4045,14 +4087,14 @@ namespace XPTable.Models
                     throw new InvalidEnumArgumentException("value", (int)value, typeof(ColumnHeaderStyle));
                 }
 
-                if (this.headerStyle != value)
+                if (headerStyle != value)
                 {
-                    this.headerStyle = value;
+                    headerStyle = value;
 
-                    this.pressedColumn = -1;
-                    this.hotColumn = -1;
+                    pressedColumn = -1;
+                    hotColumn = -1;
 
-                    this.Invalidate();
+                    Invalidate();
                 }
             }
         }
@@ -4065,16 +4107,13 @@ namespace XPTable.Models
         Description("Defines whether the header text uses the column alignment")]
         public bool HeaderAlignWithColumn
         {
-            get
-            {
-                return this.headerAlignWithColumn;
-            }
+            get => headerAlignWithColumn;
 
             set
             {
-                if (this.headerAlignWithColumn != value)
+                if (headerAlignWithColumn != value)
                 {
-                    this.headerAlignWithColumn = value;
+                    headerAlignWithColumn = value;
                 }
             }
         }
@@ -4087,12 +4126,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.ColumnModel == null || this.HeaderStyle == ColumnHeaderStyle.None)
+                if (ColumnModel == null || HeaderStyle == ColumnHeaderStyle.None)
                 {
                     return 0;
                 }
 
-                return this.ColumnModel.HeaderHeight;
+                return ColumnModel.HeaderHeight;
             }
         }
 
@@ -4103,13 +4142,7 @@ namespace XPTable.Models
         /// </summary>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Rectangle HeaderRectangle
-        {
-            get
-            {
-                return new Rectangle(this.BorderWidth, this.BorderWidth, this.PseudoClientRect.Width, this.HeaderHeight);
-            }
-        }
+        public Rectangle HeaderRectangle => new Rectangle(BorderWidth, BorderWidth, PseudoClientRect.Width, HeaderHeight);
 
 
         /// <summary>
@@ -4119,10 +4152,7 @@ namespace XPTable.Models
         Description("The font used to draw the text in the column headers")]
         public Font HeaderFont
         {
-            get
-            {
-                return this.headerFont;
-            }
+            get => headerFont;
 
             set
             {
@@ -4131,13 +4161,13 @@ namespace XPTable.Models
                     throw new ArgumentNullException("HeaderFont cannot be null");
                 }
 
-                if (this.headerFont != value)
+                if (headerFont != value)
                 {
-                    this.headerFont = value;
+                    headerFont = value;
 
-                    this.HeaderRenderer.Font = value;
+                    HeaderRenderer.Font = value;
 
-                    this.Invalidate(this.HeaderRectangle, false);
+                    Invalidate(HeaderRectangle, false);
                 }
             }
         }
@@ -4151,7 +4181,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeHeaderFont()
         {
-            return this.HeaderFont != this.Font;
+            return HeaderFont != Font;
         }
 
 
@@ -4164,12 +4194,9 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.headerRenderer == null)
-                {
-                    this.headerRenderer = new XPHeaderRenderer();
-                }
+                headerRenderer ??= new XPHeaderRenderer();
 
-                return this.headerRenderer;
+                return headerRenderer;
             }
 
             set
@@ -4179,12 +4206,12 @@ namespace XPTable.Models
                     throw new ArgumentNullException("HeaderRenderer cannot be null");
                 }
 
-                if (this.headerRenderer != value)
+                if (headerRenderer != value)
                 {
-                    this.headerRenderer = value;
-                    this.headerRenderer.Font = this.HeaderFont;
+                    headerRenderer = value;
+                    headerRenderer.Font = HeaderFont;
 
-                    this.Invalidate(this.HeaderRectangle, false);
+                    Invalidate(HeaderRectangle, false);
                 }
             }
         }
@@ -4194,13 +4221,7 @@ namespace XPTable.Models
         /// Gets the ContextMenu used for Column Headers
         /// </summary>
         [Browsable(false)]
-        public HeaderContextMenu HeaderContextMenu
-        {
-            get
-            {
-                return this.headerContextMenu;
-            }
-        }
+        public HeaderContextMenu HeaderContextMenu => headerContextMenu;
 
 
         /// <summary>
@@ -4212,15 +4233,9 @@ namespace XPTable.Models
         Description("Indicates whether the HeaderContextMenu is able to be displayed when the user right clicks on a Column Header")]
         public bool EnableHeaderContextMenu
         {
-            get
-            {
-                return this.HeaderContextMenu.Enabled;
-            }
+            get => HeaderContextMenu.Enabled;
 
-            set
-            {
-                this.HeaderContextMenu.Enabled = value;
-            }
+            set => HeaderContextMenu.Enabled = value;
         }
 
         /// <summary>
@@ -4231,8 +4246,8 @@ namespace XPTable.Models
         Description("Indicates whether the Column Headers are included when determining the minimim width of a column")]
         public bool IncludeHeaderInAutoWidth
         {
-            get { return this.includeHeaderInAutoWidth; }
-            set { this.includeHeaderInAutoWidth = value; }
+            get => includeHeaderInAutoWidth;
+            set => includeHeaderInAutoWidth = value;
         }
         #endregion
 
@@ -4241,10 +4256,7 @@ namespace XPTable.Models
         /// Gets or sets the height of each row
         /// </summary>
         [Browsable(false)]
-        public int RowHeight
-        {
-            get { return this.TableModel == null ? 0 : this.TableModel.RowHeight; }
-        }
+        public int RowHeight => TableModel == null ? 0 : TableModel.RowHeight;
 
         /// <summary>
         /// Gets the combined height of all the rows in the Table
@@ -4255,12 +4267,18 @@ namespace XPTable.Models
             get
             {
                 // v1.1.1 fix (jover) - used to error if no rows were added
-                if (this.TableModel == null || this.TableModel.Rows.Count == 0)
+                if (TableModel == null || TableModel.Rows.Count == 0)
+                {
                     return 0;
-                else if (this.EnableWordWrap)
-                    return this.RowY(this.TableModel.Rows.Count);
+                }
+                else if (EnableWordWrap)
+                {
+                    return RowY(TableModel.Rows.Count);
+                }
                 else
-                    return this.TableModel.Rows.Count * this.RowHeight;
+                {
+                    return TableModel.Rows.Count * RowHeight;
+                }
             }
         }
 
@@ -4269,29 +4287,20 @@ namespace XPTable.Models
         /// plus the height of the column headers
         /// </summary>
         [Browsable(false)]
-        public int TotalRowAndHeaderHeight
-        {
-            get { return this.TotalRowHeight + this.HeaderHeight; }
-        }
+        public int TotalRowAndHeaderHeight => TotalRowHeight + HeaderHeight;
 
         /// <summary>
         /// Gets the combined height of all the rows in the Table 
         /// plus the height of the column headers and the borders (if there are any).
         /// </summary>
         [Browsable(false)]
-        public int TotalHeight
-        {
-            get { return this.TotalRowHeight + this.HeaderHeight + (2 * this.BorderWidth); }
-        }
+        public int TotalHeight => TotalRowHeight + HeaderHeight + (2 * BorderWidth);
 
         /// <summary>
         /// Returns the number of Rows in the Table
         /// </summary>
         [Browsable(false)]
-        public int RowCount
-        {
-            get { return this.TableModel == null ? 0 : this.TableModel.Rows.Count; }
-        }
+        public int RowCount => TableModel == null ? 0 : TableModel.Rows.Count;
 
         /// <summary>
         /// Gets the number of whole rows that are visible in the Table
@@ -4299,7 +4308,7 @@ namespace XPTable.Models
         [Browsable(false)]
         public int GetVisibleRowCount()
         {
-            return this.GetVisibleRowCount(this.HScroll, this.VScroll);
+            return GetVisibleRowCount(HScroll, VScroll);
         }
 
         /// <summary>
@@ -4311,13 +4320,13 @@ namespace XPTable.Models
         private int GetVisibleRowCount(bool hScroll, bool vScroll)
         {
             int count;
-            if (this.EnableWordWrap)
+            if (EnableWordWrap)
             {
-                count = this.VisibleRowCountExact();
+                count = VisibleRowCountExact();
             }
             else
             {
-                Rectangle clientRect = this.InternalBorderRect;
+                var clientRect = InternalBorderRect;
 
                 if (hScroll)
                 {
@@ -4329,13 +4338,13 @@ namespace XPTable.Models
                     clientRect.Width -= SystemInformation.VerticalScrollBarWidth;
                 }
 
-                if (this.HeaderStyle != ColumnHeaderStyle.None && this.ColumnCount > 0)
+                if (HeaderStyle != ColumnHeaderStyle.None && ColumnCount > 0)
                 {
-                    clientRect.Y += this.HeaderHeight;
-                    clientRect.Height -= this.HeaderHeight;
+                    clientRect.Y += HeaderHeight;
+                    clientRect.Height -= HeaderHeight;
                 }
 
-                count = clientRect.Height / this.RowHeight;
+                count = clientRect.Height / RowHeight;
             }
 
             return count;
@@ -4349,11 +4358,15 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.TableModel == null || this.TableModel.Rows.Count == 0)
+                if (TableModel == null || TableModel.Rows.Count == 0)
+                {
                     return -1;
+                }
 
-                if (this.VScroll)
+                if (VScroll)
+                {
                     return topIndex;
+                }
 
                 return 0;
             }
@@ -4367,10 +4380,14 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.TableModel == null || this.TableModel.Rows.Count == 0)
+                if (TableModel == null || TableModel.Rows.Count == 0)
+                {
                     return null;
+                }
                 else
-                    return this.TableModel.Rows[this.TopIndex];
+                {
+                    return TableModel.Rows[TopIndex];
+                }
             }
         }
 
@@ -4382,13 +4399,13 @@ namespace XPTable.Models
         Description("The background color of odd-numbered rows in the Table")]
         public Color AlternatingRowColor
         {
-            get { return this.alternatingRowColor; }
+            get => alternatingRowColor;
             set
             {
-                if (this.alternatingRowColor != value)
+                if (alternatingRowColor != value)
                 {
-                    this.alternatingRowColor = value;
-                    this.Invalidate(this.CellDataRect, false);
+                    alternatingRowColor = value;
+                    Invalidate(CellDataRect, false);
                 }
             }
         }
@@ -4403,13 +4420,13 @@ namespace XPTable.Models
         Description("The span of alternate rows in the Table")]
         public int AlternatingRowSpan
         {
-            get { return this.alternatingRowSpan; }
+            get => alternatingRowSpan;
             set
             {
-                if (this.alternatingRowSpan != value)
+                if (alternatingRowSpan != value)
                 {
-                    this.alternatingRowSpan = value >= 1 ? value : 1;
-                    this.Invalidate(this.CellDataRect, false);
+                    alternatingRowSpan = value >= 1 ? value : 1;
+                    Invalidate(CellDataRect, false);
                 }
             }
         }
@@ -4423,8 +4440,8 @@ namespace XPTable.Models
         [Description("Indicates whether all row heights are recalculated after an EndUpdate (only used if Word Wrapping is on).")]
         public bool AutoCalculateRowHeights
         {
-            get { return this.autoCalculateRowHeights; }
-            set { this.autoCalculateRowHeights = value; }
+            get => autoCalculateRowHeights;
+            set => autoCalculateRowHeights = value;
         }
         #endregion
 
@@ -4439,13 +4456,13 @@ namespace XPTable.Models
         Description("Indicates whether the Table will display scroll bars if it contains more items than can fit in the client area")]
         public bool Scrollable
         {
-            get { return this.scrollable; }
+            get => scrollable;
             set
             {
-                if (this.scrollable != value)
+                if (scrollable != value)
                 {
-                    this.scrollable = value;
-                    this.PerformLayout();
+                    scrollable = value;
+                    PerformLayout();
                 }
             }
         }
@@ -4456,10 +4473,7 @@ namespace XPTable.Models
         /// </summary>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool HScroll
-        {
-            get { return this.hScrollBar == null ? false : this.hScrollBar.Visible; }
-        }
+        public bool HScroll => hScrollBar != null && hScrollBar.Visible;
 
         /// <summary>
         /// Gets a value indicating whether the vertical 
@@ -4467,10 +4481,7 @@ namespace XPTable.Models
         /// </summary>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool VScroll
-        {
-            get { return this.vScrollBar == null ? false : this.vScrollBar.Visible; }
-        }
+        public bool VScroll => vScrollBar != null && vScrollBar.Visible;
 
         /// <summary>
         /// Gets the vertical scroll bar
@@ -4479,8 +4490,8 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public VScrollBar VerticalScrollBar
         {
-            get { return vScrollBar; }
-            set { vScrollBar = value; }
+            get => vScrollBar;
+            set => vScrollBar = value;
         }
         #endregion
 
@@ -4494,20 +4505,17 @@ namespace XPTable.Models
         Description("Specifies whether cells are allowed to be selected")]
         public bool AllowSelection
         {
-            get
-            {
-                return this.allowSelection;
-            }
+            get => allowSelection;
 
             set
             {
-                if (this.allowSelection != value)
+                if (allowSelection != value)
                 {
-                    this.allowSelection = value;
+                    allowSelection = value;
 
-                    if (!value && this.TableModel != null)
+                    if (!value && TableModel != null)
                     {
-                        this.TableModel.Selections.Clear();
+                        TableModel.Selections.Clear();
                     }
                 }
             }
@@ -4522,20 +4530,17 @@ namespace XPTable.Models
         Description("Specifies whether cells are allowed to be selected by RMB")]
         public bool AllowRMBSelection
         {
-            get
-            {
-                return this.allowRMBSelection;
-            }
+            get => allowRMBSelection;
 
             set
             {
-                if (this.allowRMBSelection != value)
+                if (allowRMBSelection != value)
                 {
-                    this.allowRMBSelection = value;
+                    allowRMBSelection = value;
 
-                    if (!value && this.TableModel != null)
+                    if (!value && TableModel != null)
                     {
-                        this.TableModel.Selections.Clear();
+                        TableModel.Selections.Clear();
                     }
                 }
             }
@@ -4550,10 +4555,7 @@ namespace XPTable.Models
         Description("Determines how selected Cells are drawn by a Table")]
         public SelectionStyle SelectionStyle
         {
-            get
-            {
-                return this.selectionStyle;
-            }
+            get => selectionStyle;
 
             set
             {
@@ -4562,14 +4564,14 @@ namespace XPTable.Models
                     throw new InvalidEnumArgumentException("value", (int)value, typeof(SelectionStyle));
                 }
 
-                if (this.selectionStyle != value)
+                if (selectionStyle != value)
                 {
-                    this.selectionStyle = value;
+                    selectionStyle = value;
 
-                    if (this.TableModel != null)
+                    if (TableModel != null)
                     {
                         //this.Invalidate(Rectangle.Intersect(this.CellDataRect, this.TableModel.Selections.SelectionBounds), false);
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4584,16 +4586,13 @@ namespace XPTable.Models
         Description("Specifies whether multiple cells are allowed to be selected")]
         public bool MultiSelect
         {
-            get
-            {
-                return this.multiSelect;
-            }
+            get => multiSelect;
 
             set
             {
-                if (this.multiSelect != value)
+                if (multiSelect != value)
                 {
-                    this.multiSelect = value;
+                    multiSelect = value;
                 }
             }
         }
@@ -4608,15 +4607,14 @@ namespace XPTable.Models
         Description("Specifies whether all rows in the family are selected (i.e. parent, children and siblings)")]
         public bool FamilyRowSelect
         {
-            get
-            {
-                return this.familyRowSelect;
-            }
+            get => familyRowSelect;
 
             set
             {
-                if (this.familyRowSelect != value)
-                    this.familyRowSelect = value;
+                if (familyRowSelect != value)
+                {
+                    familyRowSelect = value;
+                }
             }
         }
 
@@ -4629,21 +4627,18 @@ namespace XPTable.Models
         Description("Specifies whether all other cells in the row are highlighted when a cell is selected")]
         public bool FullRowSelect
         {
-            get
-            {
-                return this.fullRowSelect;
-            }
+            get => fullRowSelect;
 
             set
             {
-                if (this.fullRowSelect != value)
+                if (fullRowSelect != value)
                 {
-                    this.fullRowSelect = value;
+                    fullRowSelect = value;
 
-                    if (this.TableModel != null)
+                    if (TableModel != null)
                     {
                         //this.Invalidate(Rectangle.Intersect(this.CellDataRect, this.TableModel.Selections.SelectionBounds), false);
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4659,21 +4654,18 @@ namespace XPTable.Models
         Description("Specifies whether highlighting is removed from the selected cells when the Table loses focus")]
         public bool HideSelection
         {
-            get
-            {
-                return this.hideSelection;
-            }
+            get => hideSelection;
 
             set
             {
-                if (this.hideSelection != value)
+                if (hideSelection != value)
                 {
-                    this.hideSelection = value;
+                    hideSelection = value;
 
-                    if (!this.Focused && this.TableModel != null)
+                    if (!Focused && TableModel != null)
                     {
                         //this.Invalidate(Rectangle.Intersect(this.CellDataRect, this.TableModel.Selections.SelectionBounds), false);
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4688,20 +4680,17 @@ namespace XPTable.Models
         Description("Specifies whether highlighting rectangle is shown in grid")]
         public bool ShowSelectionRectangle
         {
-            get
-            {
-                return this.showSelectionRectangle;
-            }
+            get => showSelectionRectangle;
 
             set
             {
-                if (this.showSelectionRectangle != value)
+                if (showSelectionRectangle != value)
                 {
-                    this.showSelectionRectangle = value;
+                    showSelectionRectangle = value;
 
-                    if (this.TableModel != null)
+                    if (TableModel != null)
                     {
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4715,21 +4704,18 @@ namespace XPTable.Models
         Description("The background color of a selected cell")]
         public Color SelectionBackColor
         {
-            get
-            {
-                return this.selectionBackColor;
-            }
+            get => selectionBackColor;
 
             set
             {
-                if (this.selectionBackColor != value)
+                if (selectionBackColor != value)
                 {
-                    this.selectionBackColor = value;
+                    selectionBackColor = value;
 
-                    if (this.TableModel != null)
+                    if (TableModel != null)
                     {
                         //this.Invalidate(Rectangle.Intersect(this.CellDataRect, this.TableModel.Selections.SelectionBounds), false);
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4744,7 +4730,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeSelectionBackColor()
         {
-            return (this.selectionBackColor != SystemColors.Highlight);
+            return selectionBackColor != SystemColors.Highlight;
         }
 
 
@@ -4755,21 +4741,18 @@ namespace XPTable.Models
         Description("The foreground color of a selected cell")]
         public Color SelectionForeColor
         {
-            get
-            {
-                return this.selectionForeColor;
-            }
+            get => selectionForeColor;
 
             set
             {
-                if (this.selectionForeColor != value)
+                if (selectionForeColor != value)
                 {
-                    this.selectionForeColor = value;
+                    selectionForeColor = value;
 
-                    if (this.TableModel != null)
+                    if (TableModel != null)
                     {
                         //this.Invalidate(Rectangle.Intersect(this.CellDataRect, this.TableModel.Selections.SelectionBounds), false);
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4784,7 +4767,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeSelectionForeColor()
         {
-            return (this.selectionForeColor != SystemColors.HighlightText);
+            return selectionForeColor != SystemColors.HighlightText;
         }
 
 
@@ -4796,21 +4779,18 @@ namespace XPTable.Models
         Description("The background color of a selected cell when the Table doesn't have the focus")]
         public Color UnfocusedSelectionBackColor
         {
-            get
-            {
-                return this.unfocusedSelectionBackColor;
-            }
+            get => unfocusedSelectionBackColor;
 
             set
             {
-                if (this.unfocusedSelectionBackColor != value)
+                if (unfocusedSelectionBackColor != value)
                 {
-                    this.unfocusedSelectionBackColor = value;
+                    unfocusedSelectionBackColor = value;
 
-                    if (!this.Focused && !this.HideSelection && this.TableModel != null)
+                    if (!Focused && !HideSelection && TableModel != null)
                     {
                         //this.Invalidate(Rectangle.Intersect(this.CellDataRect, this.TableModel.Selections.SelectionBounds), false);
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4825,7 +4805,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeUnfocusedSelectionBackColor()
         {
-            return (this.unfocusedSelectionBackColor != SystemColors.Control);
+            return unfocusedSelectionBackColor != SystemColors.Control;
         }
 
 
@@ -4837,21 +4817,18 @@ namespace XPTable.Models
         Description("The foreground color of a selected cell when the Table doesn't have the focus")]
         public Color UnfocusedSelectionForeColor
         {
-            get
-            {
-                return this.unfocusedSelectionForeColor;
-            }
+            get => unfocusedSelectionForeColor;
 
             set
             {
-                if (this.unfocusedSelectionForeColor != value)
+                if (unfocusedSelectionForeColor != value)
                 {
-                    this.unfocusedSelectionForeColor = value;
+                    unfocusedSelectionForeColor = value;
 
-                    if (!this.Focused && !this.HideSelection && this.TableModel != null)
+                    if (!Focused && !HideSelection && TableModel != null)
                     {
                         //this.Invalidate(Rectangle.Intersect(this.CellDataRect, this.TableModel.Selections.SelectionBounds), false);
-                        this.Invalidate(this.CellDataRect, false);
+                        Invalidate(CellDataRect, false);
                     }
                 }
             }
@@ -4866,7 +4843,7 @@ namespace XPTable.Models
         /// serialized, False otherwise</returns>
         private bool ShouldSerializeUnfocusedSelectionForeColor()
         {
-            return (this.unfocusedSelectionForeColor != SystemColors.ControlText);
+            return unfocusedSelectionForeColor != SystemColors.ControlText;
         }
 
 
@@ -4878,12 +4855,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.TableModel == null)
+                if (TableModel == null)
                 {
                     return new Row[0];
                 }
 
-                return this.TableModel.Selections.SelectedItems;
+                return TableModel.Selections.SelectedItems;
             }
         }
 
@@ -4896,12 +4873,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.TableModel == null)
+                if (TableModel == null)
                 {
                     return new int[0];
                 }
 
-                return this.TableModel.Selections.SelectedIndicies;
+                return TableModel.Selections.SelectedIndicies;
             }
         }
         #endregion
@@ -4917,8 +4894,8 @@ namespace XPTable.Models
         [Description("Select the type of sort to be used - use AutoSort to have system determine based on number of rows and whether or not a stable sort is required")]
         public SortType SortType
         {
-            get { return this.theSortType; }
-            set { this.theSortType = value; }
+            get => theSortType;
+            set => theSortType = value;
         }
 
         /// <summary>
@@ -4931,8 +4908,8 @@ namespace XPTable.Models
         [Description("Only relevant if AutoSort is specified, determines whether or not the system uses a stable sorting alogorithm")]
         public bool StableSort
         {
-            get { return this.theStableSort; }
-            set { this.theStableSort = value; }
+            get => theStableSort;
+            set => theStableSort = value;
         }
         #endregion
 
@@ -4947,36 +4924,33 @@ namespace XPTable.Models
         Description("Specifies the TableModel that contains all the Rows and Cells displayed in the Table")]
         public TableModel TableModel
         {
-            get
-            {
-                return this.tableModel;
-            }
+            get => tableModel;
 
             set
             {
-                if (this.tableModel != value)
+                if (tableModel != value)
                 {
-                    if (this.tableModel != null && this.tableModel.Table == this)
+                    if (tableModel != null && tableModel.Table == this)
                     {
-                        this.tableModel.InternalTable = null;
+                        tableModel.InternalTable = null;
                     }
 
-                    TableModel oldValue = this.tableModel;// PJD TEA add
+                    var oldValue = tableModel;// PJD TEA add
 
-                    this.tableModel = value;
+                    tableModel = value;
 
                     if (value != null)
                     {
                         value.InternalTable = this;
 
-                        if (this.lastVScrollValue > this.tableModel.Rows.Count)
+                        if (lastVScrollValue > tableModel.Rows.Count)
                         {
-                            this.lastVScrollValue = this.topIndex = 0;
-                            this.vScrollBar.Value = 0;
+                            lastVScrollValue = topIndex = 0;
+                            vScrollBar.Value = 0;
                         }
                     }
 
-                    this.OnTableModelChanged(new TableEventArgs(this, TableEventType.TableModelChanged, oldValue));// PJD TEA change
+                    OnTableModelChanged(new TableEventArgs(this, TableEventType.TableModelChanged, oldValue));// PJD TEA change
                 }
             }
         }
@@ -4992,20 +4966,17 @@ namespace XPTable.Models
         Localizable(true)]
         public string NoItemsText
         {
-            get
-            {
-                return this.noItemsText;
-            }
+            get => noItemsText;
 
             set
             {
-                if (!this.noItemsText.Equals(value))
+                if (!noItemsText.Equals(value))
                 {
-                    this.noItemsText = value;
+                    noItemsText = value;
 
-                    if (this.ColumnModel == null || this.TableModel == null || this.TableModel.Rows.Count == 0)
+                    if (ColumnModel == null || TableModel == null || TableModel.Rows.Count == 0)
                     {
-                        this.Invalidate(this.PseudoClientRect);
+                        Invalidate(PseudoClientRect);
                     }
                 }
             }
@@ -5020,8 +4991,8 @@ namespace XPTable.Models
         /// </summary>
         protected TableState TableState
         {
-            get { return this.tableState; }
-            set { this.tableState = value; }
+            get => tableState;
+            set => tableState = value;
         }
 
         /// <summary>
@@ -5032,33 +5003,33 @@ namespace XPTable.Models
         /// <param name="y">The client y coordinate</param>
         protected void CalcTableState(int x, int y)
         {
-            TableRegion region = this.HitTest(x, y);
+            var region = HitTest(x, y);
 
             // are we in the header
             if (region == TableRegion.ColumnHeader)
             {
-                int column = this.ColumnIndexAt(x, y);
+                var column = ColumnIndexAt(x, y);
 
                 // get out of here if we aren't in a column
                 if (column == -1)
                 {
-                    this.TableState = TableState.Normal;
+                    TableState = TableState.Normal;
 
                     return;
                 }
 
                 // get the bounding rectangle for the column's header
-                Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                x = this.ClientXToDisplayRectX(x);
+                var columnRect = ColumnModel.ColumnHeaderRect(column);
+                x = ClientXToDisplayRectX(x);
 
                 // are we in a resizing section on the left
                 if (x < columnRect.Left + Column.ResizePadding)
                 {
-                    this.TableState = TableState.ColumnResizing;
+                    TableState = TableState.ColumnResizing;
 
                     while (column != 0)
                     {
-                        if (this.ColumnModel.Columns[column - 1].Visible)
+                        if (ColumnModel.Columns[column - 1].Visible)
                         {
                             break;
                         }
@@ -5069,47 +5040,39 @@ namespace XPTable.Models
                     // if we are in the first visible column or the next column 
                     // to the left is disabled, then we should be potentialy 
                     // selecting instead of resizing
-                    if (column == 0 || !this.ColumnModel.Columns[column - 1].Enabled)
+                    if (column == 0 || !ColumnModel.Columns[column - 1].Enabled)
                     {
-                        this.TableState = TableState.ColumnSelecting;
+                        TableState = TableState.ColumnSelecting;
                     }
 
                     // Mateusz [PEYN] Adamus (peyn@tlen.pl)
                     // If next column to the left has RESIZABLE set to false
                     // then we can't resize it
                     if ((column != 0)
-                        && (!this.ColumnModel.Columns[column - 1].Resizable))
+                        && (!ColumnModel.Columns[column - 1].Resizable))
                     {
-                        this.TableState = TableState.ColumnSelecting;
+                        TableState = TableState.ColumnSelecting;
                     }
                 }
                 // or a resizing section on the right
-                else if ((x > columnRect.Right - Column.ResizePadding)
-                    // Mateusz [PEYN] Adamus (peyn@tlen.pl)
-                    // but only if column can be resized
-                    && (this.ColumnModel.Columns[column].Resizable))
-                {
-                    this.TableState = TableState.ColumnResizing;
-                }
-                // looks like we're somewhere in the middle of 
-                // the column header
                 else
                 {
-                    this.TableState = TableState.ColumnSelecting;
+                    TableState = (x > columnRect.Right - Column.ResizePadding)
+                                        // Mateusz [PEYN] Adamus (peyn@tlen.pl)
+                                        // but only if column can be resized
+                                        && ColumnModel.Columns[column].Resizable
+                        ? TableState.ColumnResizing
+                        : TableState.ColumnSelecting;
                 }
-            }
-            else if (region == TableRegion.Cells)
-            {
-                this.TableState = TableState.Selecting;
             }
             else
             {
-                this.TableState = TableState.Normal;
+                TableState = region == TableRegion.Cells ? TableState.Selecting : TableState.Normal;
             }
 
-            if (this.TableState == TableState.ColumnResizing && !this.ColumnResizing)
+            if (TableState == TableState.ColumnResizing && !ColumnResizing)
             {
-                this.TableState = TableState.ColumnSelecting;
+                TableState = TableState.ColumnSelecting;
             }
         }
 
@@ -5117,18 +5080,12 @@ namespace XPTable.Models
         /// <summary>
         /// Gets whether the Table is able to raise events
         /// </summary>
-        protected override bool CanRaiseEvents
-        {
-            get { return (this.IsHandleCreated && this.beginUpdateCount == 0); }
-        }
+        protected override bool CanRaiseEvents => IsHandleCreated && beginUpdateCount == 0;
 
         /// <summary>
         /// Gets the value for CanRaiseEvents.
         /// </summary>
-        protected internal bool CanRaiseEventsInternal
-        {
-            get { return this.CanRaiseEvents; }
-        }
+        protected internal bool CanRaiseEventsInternal => CanRaiseEvents;
 
         /// <summary>
         /// Gets or sets whether the Table is being used as a preview Table in 
@@ -5136,8 +5093,8 @@ namespace XPTable.Models
         /// </summary>
         internal bool Preview
         {
-            get { return this.preview; }
-            set { this.preview = value; }
+            get => preview;
+            set => preview = value;
         }
         #endregion
 
@@ -5150,8 +5107,8 @@ namespace XPTable.Models
         Description("Specifies whether any cells are allowed to word-wrap.")]
         public bool EnableWordWrap
         {
-            get { return enableWordWrap; }
-            set { enableWordWrap = value; }
+            get => enableWordWrap;
+            set => enableWordWrap = value;
         }
         #endregion
 
@@ -5163,18 +5120,15 @@ namespace XPTable.Models
         Description("Specifies whether any columns can show filters.")]
         public bool EnableFilters
         {
-            get { return enableFilters; }
-            set { enableFilters = value; }
+            get => enableFilters;
+            set => enableFilters = value;
         }
 
         #region ToolTips
         /// <summary>
         /// Gets the internal tooltip component
         /// </summary>
-        internal ToolTip ToolTip
-        {
-            get { return this.toolTip; }
-        }
+        internal ToolTip ToolTip => toolTip;
 
         /// <summary>
         /// Gets or sets whether ToolTips are currently enabled for the Table
@@ -5184,8 +5138,8 @@ namespace XPTable.Models
         Description("Specifies whether ToolTips are enabled for the Table.")]
         public bool EnableToolTips
         {
-            get { return this.toolTip.Active; }
-            set { this.toolTip.Active = value; }
+            get => toolTip.Active;
+            set => toolTip.Active = value;
         }
 
         /// <summary>
@@ -5196,11 +5150,13 @@ namespace XPTable.Models
         Description("Specifies the automatic delay for the Table's ToolTip.")]
         public int ToolTipAutomaticDelay
         {
-            get { return this.toolTip.AutomaticDelay; }
+            get => toolTip.AutomaticDelay;
             set
             {
-                if (value > 0 && this.toolTip.AutomaticDelay != value)
-                    this.toolTip.AutomaticDelay = value;
+                if (value > 0 && toolTip.AutomaticDelay != value)
+                {
+                    toolTip.AutomaticDelay = value;
+                }
             }
         }
 
@@ -5213,11 +5169,13 @@ namespace XPTable.Models
         Description("Specifies the period of time the Table's ToolTip remains visible if the mouse pointer is stationary within a cell with specified ToolTip text.")]
         public int ToolTipAutoPopDelay
         {
-            get { return this.toolTip.AutoPopDelay; }
+            get => toolTip.AutoPopDelay;
             set
             {
-                if (value > 0 && this.toolTip.AutoPopDelay != value)
-                    this.toolTip.AutoPopDelay = value;
+                if (value > 0 && toolTip.AutoPopDelay != value)
+                {
+                    toolTip.AutoPopDelay = value;
+                }
             }
         }
 
@@ -5229,11 +5187,13 @@ namespace XPTable.Models
         Description("Specifies the time that passes before the Table's ToolTip appears.")]
         public int ToolTipInitialDelay
         {
-            get { return this.toolTip.InitialDelay; }
+            get => toolTip.InitialDelay;
             set
             {
-                if (value > 0 && this.toolTip.InitialDelay != value)
-                    this.toolTip.InitialDelay = value;
+                if (value > 0 && toolTip.InitialDelay != value)
+                {
+                    toolTip.InitialDelay = value;
+                }
             }
         }
 
@@ -5246,11 +5206,13 @@ namespace XPTable.Models
         Description("Specifies whether the Table's ToolTip window is displayed even when its parent control is not active.")]
         public bool ToolTipShowAlways
         {
-            get { return this.toolTip.ShowAlways; }
+            get => toolTip.ShowAlways;
             set
             {
-                if (this.toolTip.ShowAlways != value)
-                    this.toolTip.ShowAlways = value;
+                if (toolTip.ShowAlways != value)
+                {
+                    toolTip.ShowAlways = value;
+                }
             }
         }
 
@@ -5259,17 +5221,21 @@ namespace XPTable.Models
         /// </summary>
         private void ResetToolTip()
         {
-            bool tooltipActive = this.ToolTip.Active;
+            var tooltipActive = ToolTip.Active;
 
             if (tooltipActive)
-                this.ToolTip.Active = false;
+            {
+                ToolTip.Active = false;
+            }
 
-            this.ResetMouseEventArgs();
+            ResetMouseEventArgs();
 
-            this.ToolTip.SetToolTip(this, null);
+            ToolTip.SetToolTip(this, null);
 
             if (tooltipActive)
-                this.ToolTip.Active = true;
+            {
+                ToolTip.Active = true;
+            }
         }
         #endregion
 
@@ -5279,8 +5245,8 @@ namespace XPTable.Models
         /// </summary>
         public IDragDropRenderer DragDropRenderer
         {
-            get { return _dragDropHelper.DragDropRenderer; }
-            set { _dragDropHelper.DragDropRenderer = value; }
+            get => _dragDropHelper.DragDropRenderer;
+            set => _dragDropHelper.DragDropRenderer = value;
         }
 
         /// <summary>
@@ -5297,8 +5263,8 @@ namespace XPTable.Models
         Description("Use the built in drag/drop functionality")]
         public bool UseBuiltInDragDrop
         {
-            get { return useBuiltInDragDrop; }
-            set { useBuiltInDragDrop = value; }
+            get => useBuiltInDragDrop;
+            set => useBuiltInDragDrop = value;
         }
 
         /// <summary>
@@ -5314,8 +5280,8 @@ namespace XPTable.Models
         Description("If true drag/drop between 2 tables is a move operation")]
         public bool ExternalDropRemovesRows
         {
-            get { return externalDropRemovesRows; }
-            set { externalDropRemovesRows = value; }
+            get => externalDropRemovesRows;
+            set => externalDropRemovesRows = value;
         }
         #endregion
 
@@ -5331,18 +5297,15 @@ namespace XPTable.Models
         /// <param name="e">A CellEventArgs that contains the event data</param>
         protected internal virtual void OnCellPropertyChanged(CellEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.InvalidateCell(e.Row, e.Column);
+                InvalidateCell(e.Row, e.Column);
 
-                if (CellPropertyChanged != null)
-                {
-                    CellPropertyChanged(this, e);
-                }
+                CellPropertyChanged?.Invoke(this, e);
 
                 if (e.EventType == CellEventType.CheckStateChanged)
                 {
-                    this.OnCellCheckChanged(new CellCheckBoxEventArgs(e.Cell, e.Column, e.Row));
+                    OnCellCheckChanged(new CellCheckBoxEventArgs(e.Cell, e.Column, e.Row));
                 }
             }
         }
@@ -5355,7 +5318,7 @@ namespace XPTable.Models
         /// <param name="e">A CellEventArgs that contains the event data</param>
         private void cell_PropertyChanged(object sender, CellEventArgs e)
         {
-            this.OnCellPropertyChanged(e);
+            OnCellPropertyChanged(e);
         }
 
 
@@ -5367,12 +5330,9 @@ namespace XPTable.Models
         /// <param name="e">A CellButtonEventArgs that contains the event data</param>
         protected internal virtual void OnCellButtonClicked(CellButtonEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (CellButtonClicked != null)
-                {
-                    CellButtonClicked(this, e);
-                }
+                CellButtonClicked?.Invoke(this, e);
             }
         }
 
@@ -5386,12 +5346,9 @@ namespace XPTable.Models
         /// <param name="e">A CellCheckChanged that contains the event data</param>
         protected internal virtual void OnCellCheckChanged(CellCheckBoxEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (CellCheckChanged != null)
-                {
-                    CellCheckChanged(this, e);
-                }
+                CellCheckChanged?.Invoke(this, e);
             }
         }
 
@@ -5405,19 +5362,13 @@ namespace XPTable.Models
         /// <param name="e">A CellFocusEventArgs that contains the event data</param>
         protected virtual void OnCellGotFocus(CellFocusEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnGotFocus(e);
-                }
+                renderer?.OnGotFocus(e);
 
-                if (CellGotFocus != null)
-                {
-                    CellGotFocus(this, e);
-                }
+                CellGotFocus?.Invoke(this, e);
             }
         }
 
@@ -5428,25 +5379,25 @@ namespace XPTable.Models
         /// <param name="cellPos">The position of the Cell that gained focus</param>
         protected void RaiseCellGotFocus(CellPos cellPos)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            ICellRenderer renderer = this.ColumnModel.GetCellRenderer(cellPos.Column);
+            var renderer = ColumnModel.GetCellRenderer(cellPos.Column);
 
             if (renderer != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellFocusEventArgs cfea = new CellFocusEventArgs(cell, this, cellPos.Row, cellPos.Column, this.CellRect(cellPos.Row, cellPos.Column));
+                var cfea = new CellFocusEventArgs(cell, this, cellPos.Row, cellPos.Column, CellRect(cellPos.Row, cellPos.Column));
 
-                this.OnCellGotFocus(cfea);
+                OnCellGotFocus(cfea);
             }
         }
 
@@ -5457,19 +5408,13 @@ namespace XPTable.Models
         /// <param name="e">A CellFocusEventArgs that contains the event data</param>
         protected virtual void OnCellLostFocus(CellFocusEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnLostFocus(e);
-                }
+                renderer?.OnLostFocus(e);
 
-                if (CellLostFocus != null)
-                {
-                    CellLostFocus(this, e);
-                }
+                CellLostFocus?.Invoke(this, e);
             }
         }
 
@@ -5480,25 +5425,25 @@ namespace XPTable.Models
         /// <param name="cellPos">The position of the Cell that lost focus</param>
         protected void RaiseCellLostFocus(CellPos cellPos)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            ICellRenderer renderer = this.ColumnModel.GetCellRenderer(cellPos.Column);
+            var renderer = ColumnModel.GetCellRenderer(cellPos.Column);
 
             if (renderer != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel[cellPos.Row, cellPos.Column];
+                    cell = TableModel[cellPos.Row, cellPos.Column];
                 }
 
-                CellFocusEventArgs cfea = new CellFocusEventArgs(cell, this, cellPos.Row, cellPos.Column, this.CellRect(cellPos.Row, cellPos.Column));
+                var cfea = new CellFocusEventArgs(cell, this, cellPos.Row, cellPos.Column, CellRect(cellPos.Row, cellPos.Column));
 
-                this.OnCellLostFocus(cfea);
+                OnCellLostFocus(cfea);
             }
         }
 
@@ -5512,19 +5457,13 @@ namespace XPTable.Models
         /// <param name="e">A CellKeyEventArgs that contains the event data</param>
         protected virtual void OnCellKeyDown(CellKeyEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnKeyDown(e);
-                }
+                renderer?.OnKeyDown(e);
 
-                if (CellKeyDown != null)
-                {
-                    CellKeyDown(e.Cell, e);
-                }
+                CellKeyDown?.Invoke(e.Cell, e);
             }
         }
 
@@ -5536,28 +5475,28 @@ namespace XPTable.Models
         /// <param name="e">A KeyEventArgs that contains the event data</param>
         protected void RaiseCellKeyDown(CellPos cellPos, KeyEventArgs e)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            if (!this.TableModel[cellPos].Enabled)
+            if (!TableModel[cellPos].Enabled)
             {
                 return;
             }
 
-            if (this.ColumnModel.GetCellRenderer(cellPos.Column) != null)
+            if (ColumnModel.GetCellRenderer(cellPos.Column) != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellKeyEventArgs ckea = new CellKeyEventArgs(cell, this, cellPos, this.CellRect(cellPos.Row, cellPos.Column), e);
+                var ckea = new CellKeyEventArgs(cell, this, cellPos, CellRect(cellPos.Row, cellPos.Column), e);
 
-                this.OnCellKeyDown(ckea);
+                OnCellKeyDown(ckea);
             }
         }
 
@@ -5568,19 +5507,13 @@ namespace XPTable.Models
         /// <param name="e">A CellKeyEventArgs that contains the event data</param>
         protected virtual void OnCellKeyUp(CellKeyEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnKeyUp(e);
-                }
+                renderer?.OnKeyUp(e);
 
-                if (CellKeyUp != null)
-                {
-                    CellKeyUp(e.Cell, e);
-                }
+                CellKeyUp?.Invoke(e.Cell, e);
             }
         }
 
@@ -5592,28 +5525,28 @@ namespace XPTable.Models
         /// <param name="e">A KeyEventArgs that contains the event data</param>
         protected void RaiseCellKeyUp(CellPos cellPos, KeyEventArgs e)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            if (!this.TableModel[cellPos].Enabled)
+            if (!TableModel[cellPos].Enabled)
             {
                 return;
             }
 
-            if (this.ColumnModel.GetCellRenderer(cellPos.Column) != null)
+            if (ColumnModel.GetCellRenderer(cellPos.Column) != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellKeyEventArgs ckea = new CellKeyEventArgs(cell, this, cellPos, this.CellRect(cellPos.Row, cellPos.Column), e);
+                var ckea = new CellKeyEventArgs(cell, this, cellPos, CellRect(cellPos.Row, cellPos.Column), e);
 
-                this.OnCellKeyUp(ckea);
+                OnCellKeyUp(ckea);
             }
         }
 
@@ -5629,19 +5562,13 @@ namespace XPTable.Models
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         protected virtual void OnCellMouseEnter(CellMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnMouseEnter(e);
-                }
+                renderer?.OnMouseEnter(e);
 
-                if (CellMouseEnter != null)
-                {
-                    CellMouseEnter(e.Cell, e);
-                }
+                CellMouseEnter?.Invoke(e.Cell, e);
             }
         }
 
@@ -5652,23 +5579,23 @@ namespace XPTable.Models
         /// <param name="cellPos">The position of the Cell</param>
         protected void RaiseCellMouseEnter(CellPos cellPos)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            if (this.ColumnModel.GetCellRenderer(cellPos.Column) != null)
+            if (ColumnModel.GetCellRenderer(cellPos.Column) != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellMouseEventArgs mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, this.CellRect(cellPos.Row, cellPos.Column));
+                var mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, CellRect(cellPos.Row, cellPos.Column));
 
-                this.OnCellMouseEnter(mcea);
+                OnCellMouseEnter(mcea);
             }
         }
 
@@ -5682,19 +5609,13 @@ namespace XPTable.Models
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         protected virtual void OnCellMouseLeave(CellMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnMouseLeave(e);
-                }
+                renderer?.OnMouseLeave(e);
 
-                if (CellMouseLeave != null)
-                {
-                    CellMouseLeave(e.Cell, e);
-                }
+                CellMouseLeave?.Invoke(e.Cell, e);
             }
         }
 
@@ -5705,23 +5626,23 @@ namespace XPTable.Models
         /// <param name="cellPos">The position of the Cell</param>
         protected internal void RaiseCellMouseLeave(CellPos cellPos)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            if (this.ColumnModel.GetCellRenderer(cellPos.Column) != null)
+            if (ColumnModel.GetCellRenderer(cellPos.Column) != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellMouseEventArgs mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, this.CellRect(cellPos.Row, cellPos.Column));
+                var mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, CellRect(cellPos.Row, cellPos.Column));
 
-                this.OnCellMouseLeave(mcea);
+                OnCellMouseLeave(mcea);
             }
         }
 
@@ -5735,19 +5656,13 @@ namespace XPTable.Models
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         protected virtual void OnCellMouseUp(CellMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnMouseUp(e);
-                }
+                renderer?.OnMouseUp(e);
 
-                if (CellMouseUp != null)
-                {
-                    CellMouseUp(e.Cell, e);
-                }
+                CellMouseUp?.Invoke(e.Cell, e);
             }
         }
 
@@ -5759,28 +5674,28 @@ namespace XPTable.Models
         /// <param name="e">A MouseEventArgs that contains the event data</param>
         protected void RaiseCellMouseUp(CellPos cellPos, MouseEventArgs e)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            if (!this.TableModel[cellPos].Enabled)
+            if (!TableModel[cellPos].Enabled)
             {
                 return;
             }
 
-            if (this.ColumnModel.GetCellRenderer(cellPos.Column) != null)
+            if (ColumnModel.GetCellRenderer(cellPos.Column) != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellMouseEventArgs mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, this.CellRect(cellPos.Row, cellPos.Column), e);
+                var mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, CellRect(cellPos.Row, cellPos.Column), e);
 
-                this.OnCellMouseUp(mcea);
+                OnCellMouseUp(mcea);
             }
         }
 
@@ -5794,19 +5709,13 @@ namespace XPTable.Models
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         protected virtual void OnCellMouseDown(CellMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnMouseDown(e);
-                }
+                renderer?.OnMouseDown(e);
 
-                if (CellMouseDown != null)
-                {
-                    CellMouseDown(e.Cell, e);
-                }
+                CellMouseDown?.Invoke(e.Cell, e);
             }
         }
 
@@ -5818,28 +5727,28 @@ namespace XPTable.Models
         /// <param name="e">A MouseEventArgs that contains the event data</param>
         protected void RaiseCellMouseDown(CellPos cellPos, MouseEventArgs e)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            if (!this.TableModel[cellPos].Enabled)
+            if (!TableModel[cellPos].Enabled)
             {
                 return;
             }
 
-            if (this.ColumnModel.GetCellRenderer(cellPos.Column) != null)
+            if (ColumnModel.GetCellRenderer(cellPos.Column) != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellMouseEventArgs mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, this.CellRect(cellPos.Row, cellPos.Column), e);
+                var mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, CellRect(cellPos.Row, cellPos.Column), e);
 
-                this.OnCellMouseDown(mcea);
+                OnCellMouseDown(mcea);
             }
         }
 
@@ -5853,19 +5762,13 @@ namespace XPTable.Models
         /// <param name="e">A CellMouseEventArgs that contains the event data</param>
         protected virtual void OnCellMouseMove(CellMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(e.Column);
+                var renderer = ColumnModel.GetCellRenderer(e.Column);
 
-                if (renderer != null)
-                {
-                    renderer.OnMouseMove(e);
-                }
+                renderer?.OnMouseMove(e);
 
-                if (CellMouseMove != null)
-                {
-                    CellMouseMove(e.Cell, e);
-                }
+                CellMouseMove?.Invoke(e.Cell, e);
             }
         }
 
@@ -5877,23 +5780,23 @@ namespace XPTable.Models
         /// <param name="e">A MouseEventArgs that contains the event data</param>
         protected void RaiseCellMouseMove(CellPos cellPos, MouseEventArgs e)
         {
-            if (!this.IsValidCell(cellPos))
+            if (!IsValidCell(cellPos))
             {
                 return;
             }
 
-            if (this.ColumnModel.GetCellRenderer(cellPos.Column) != null)
+            if (ColumnModel.GetCellRenderer(cellPos.Column) != null)
             {
                 Cell cell = null;
 
-                if (cellPos.Column < this.TableModel.Rows[cellPos.Row].Cells.Count)
+                if (cellPos.Column < TableModel.Rows[cellPos.Row].Cells.Count)
                 {
-                    cell = this.TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
+                    cell = TableModel.Rows[cellPos.Row].Cells[cellPos.Column];
                 }
 
-                CellMouseEventArgs mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, this.CellRect(cellPos.Row, cellPos.Column), e);
+                var mcea = new CellMouseEventArgs(cell, this, cellPos.Row, cellPos.Column, CellRect(cellPos.Row, cellPos.Column), e);
 
-                this.OnCellMouseMove(mcea);
+                OnCellMouseMove(mcea);
             }
         }
 
@@ -5903,14 +5806,14 @@ namespace XPTable.Models
         /// </summary>
         internal void ResetLastMouseCell()
         {
-            if (!this.lastMouseCell.IsEmpty)
+            if (!lastMouseCell.IsEmpty)
             {
-                this.ResetMouseEventArgs();
+                ResetMouseEventArgs();
 
-                CellPos oldLastMouseCell = this.lastMouseCell;
-                this.lastMouseCell = CellPos.Empty;
+                var oldLastMouseCell = lastMouseCell;
+                lastMouseCell = CellPos.Empty;
 
-                this.RaiseCellMouseLeave(oldLastMouseCell);
+                RaiseCellMouseLeave(oldLastMouseCell);
             }
         }
 
@@ -5924,12 +5827,9 @@ namespace XPTable.Models
         /// <param name="e">A CellEventArgs that contains the event data</param>
         protected virtual void OnCellMouseHover(CellMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (CellMouseHover != null)
-                {
-                    CellMouseHover(e.Cell, e);
-                }
+                CellMouseHover?.Invoke(e.Cell, e);
             }
         }
 
@@ -5942,18 +5842,18 @@ namespace XPTable.Models
         /// <param name="e">A CellEventArgs that contains the event data</param>
         protected virtual void OnCellClick(CellMouseEventArgs e)
         {
-            if (!this.IsCellEnabled(e.CellPos))
-                return;
-
-            if (this.CanRaiseEvents)
+            if (!IsCellEnabled(e.CellPos))
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(this.LastMouseCell.Column);
+                return;
+            }
 
-                if (renderer != null)
-                    renderer.OnClick(e);
+            if (CanRaiseEvents)
+            {
+                var renderer = ColumnModel.GetCellRenderer(LastMouseCell.Column);
 
-                if (CellClick != null)
-                    CellClick(e.Cell, e);
+                renderer?.OnClick(e);
+
+                CellClick?.Invoke(e.Cell, e);
             }
         }
 
@@ -5963,18 +5863,18 @@ namespace XPTable.Models
         /// <param name="e">A CellEventArgs that contains the event data</param>
         protected virtual void OnCellDoubleClick(CellMouseEventArgs e)
         {
-            if (!this.IsCellEnabled(e.CellPos))
-                return;
-
-            if (this.CanRaiseEvents)
+            if (!IsCellEnabled(e.CellPos))
             {
-                ICellRenderer renderer = this.ColumnModel.GetCellRenderer(this.LastMouseCell.Column);
+                return;
+            }
 
-                if (renderer != null)
-                    renderer.OnDoubleClick(e);
+            if (CanRaiseEvents)
+            {
+                var renderer = ColumnModel.GetCellRenderer(LastMouseCell.Column);
 
-                if (CellDoubleClick != null)
-                    CellDoubleClick(e.Cell, e);
+                renderer?.OnDoubleClick(e);
+
+                CellDoubleClick?.Invoke(e.Cell, e);
             }
         }
         #endregion
@@ -5991,109 +5891,89 @@ namespace XPTable.Models
         /// <param name="e">A ColumnEventArgs that contains the event data</param>
         protected internal virtual void OnColumnPropertyChanged(ColumnEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                Rectangle columnHeaderRect;
-
-                if (e.Index != -1)
-                {
-                    columnHeaderRect = this.ColumnHeaderRect(e.Index);
-                }
-                else
-                {
-                    columnHeaderRect = this.ColumnHeaderRect(e.Column);
-                }
-
+                var columnHeaderRect = e.Index != -1 ? ColumnHeaderRect(e.Index) : ColumnHeaderRect(e.Column);
                 switch (e.EventType)
                 {
                     case ColumnEventType.VisibleChanged:
                     case ColumnEventType.WidthChanged:
+                    {
+                        if (e.EventType == ColumnEventType.VisibleChanged)
                         {
-                            if (e.EventType == ColumnEventType.VisibleChanged)
+                            if (e.Column.Visible && e.Index != lastSortedColumn)
                             {
-                                if (e.Column.Visible && e.Index != this.lastSortedColumn)
+                                e.Column.InternalSortOrder = SortOrder.None;
+                            }
+
+                            if (e.Index == FocusedCell.Column && !e.Column.Visible)
+                            {
+                                var index = ColumnModel.NextVisibleColumn(e.Index);
+
+                                if (index == -1)
                                 {
-                                    e.Column.InternalSortOrder = SortOrder.None;
+                                    index = ColumnModel.PreviousVisibleColumn(e.Index);
                                 }
 
-                                if (e.Index == this.FocusedCell.Column && !e.Column.Visible)
-                                {
-                                    int index = this.ColumnModel.NextVisibleColumn(e.Index);
-
-                                    if (index == -1)
-                                    {
-                                        index = this.ColumnModel.PreviousVisibleColumn(e.Index);
-                                    }
-
-                                    if (index != -1)
-                                    {
-                                        this.FocusedCell = new CellPos(this.FocusedCell.Row, index);
-                                    }
-                                    else
-                                    {
-                                        this.FocusedCell = CellPos.Empty;
-                                    }
-                                }
+                                FocusedCell = index != -1 ? new CellPos(FocusedCell.Row, index) : CellPos.Empty;
                             }
-
-                            if (columnHeaderRect.X <= 0)
-                            {
-                                this.Invalidate(this.PseudoClientRect);
-                            }
-                            else if (columnHeaderRect.Left <= this.PseudoClientRect.Right)
-                            {
-                                this.Invalidate(new Rectangle(columnHeaderRect.X,
-                                    this.PseudoClientRect.Top,
-                                    this.PseudoClientRect.Right - columnHeaderRect.X,
-                                    this.PseudoClientRect.Height));
-                            }
-
-                            this.UpdateScrollBars();
-
-                            break;
                         }
+
+                        if (columnHeaderRect.X <= 0)
+                        {
+                            Invalidate(PseudoClientRect);
+                        }
+                        else if (columnHeaderRect.Left <= PseudoClientRect.Right)
+                        {
+                            Invalidate(new Rectangle(columnHeaderRect.X,
+                                PseudoClientRect.Top,
+                                PseudoClientRect.Right - columnHeaderRect.X,
+                                PseudoClientRect.Height));
+                        }
+
+                        UpdateScrollBars();
+
+                        break;
+                    }
 
                     case ColumnEventType.TextChanged:
                     case ColumnEventType.StateChanged:
                     case ColumnEventType.ImageChanged:
                     case ColumnEventType.HeaderAlignmentChanged:
+                    {
+                        if (columnHeaderRect.IntersectsWith(HeaderRectangle))
                         {
-                            if (columnHeaderRect.IntersectsWith(this.HeaderRectangle))
-                            {
-                                this.Invalidate(columnHeaderRect);
-                            }
-
-                            break;
+                            Invalidate(columnHeaderRect);
                         }
+
+                        break;
+                    }
 
                     case ColumnEventType.AlignmentChanged:
                     case ColumnEventType.RendererChanged:
                     case ColumnEventType.EnabledChanged:
+                    {
+                        if (e.EventType == ColumnEventType.EnabledChanged)
                         {
-                            if (e.EventType == ColumnEventType.EnabledChanged)
+                            if (e.Index == FocusedCell.Column)
                             {
-                                if (e.Index == this.FocusedCell.Column)
-                                {
-                                    this.FocusedCell = CellPos.Empty;
-                                }
+                                FocusedCell = CellPos.Empty;
                             }
-
-                            if (columnHeaderRect.IntersectsWith(this.HeaderRectangle))
-                            {
-                                this.Invalidate(new Rectangle(columnHeaderRect.X,
-                                    this.PseudoClientRect.Top,
-                                    columnHeaderRect.Width,
-                                    this.PseudoClientRect.Height));
-                            }
-
-                            break;
                         }
+
+                        if (columnHeaderRect.IntersectsWith(HeaderRectangle))
+                        {
+                            Invalidate(new Rectangle(columnHeaderRect.X,
+                                PseudoClientRect.Top,
+                                columnHeaderRect.Width,
+                                PseudoClientRect.Height));
+                        }
+
+                        break;
+                    }
                 }
 
-                if (ColumnPropertyChanged != null)
-                {
-                    ColumnPropertyChanged(e.Column, e);
-                }
+                ColumnPropertyChanged?.Invoke(e.Column, e);
             }
         }
 
@@ -6103,18 +5983,20 @@ namespace XPTable.Models
         /// <param name="e"></param>
         protected internal virtual void OnColumnAutoResize(ColumnEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                int w = GetAutoColumnWidth(e.Index);
+                var w = GetAutoColumnWidth(e.Index);
                 if (w > 0)
                 {
                     if (e.Column.Width != w + 5)
-                        this.Invalidate();
+                    {
+                        Invalidate();
+                    }
+
                     e.Column.Width = w + 5;
                 }
 
-                if (ColumnAutoResize != null)
-                    ColumnAutoResize(e.Column, e);
+                ColumnAutoResize?.Invoke(e.Column, e);
             }
         }
 
@@ -6130,17 +6012,11 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderMouseEnter(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.HeaderRenderer != null)
-                {
-                    this.HeaderRenderer.OnMouseEnter(e);
-                }
+                HeaderRenderer?.OnMouseEnter(e);
 
-                if (HeaderMouseEnter != null)
-                {
-                    HeaderMouseEnter(e.Column, e);
-                }
+                HeaderMouseEnter?.Invoke(e.Column, e);
             }
         }
 
@@ -6152,18 +6028,18 @@ namespace XPTable.Models
         /// <param name="index">The index of the column to recieve the event</param>
         protected void RaiseHeaderMouseEnter(int index)
         {
-            if (index < 0 || this.ColumnModel == null || index >= this.ColumnModel.Columns.Count)
+            if (index < 0 || ColumnModel == null || index >= ColumnModel.Columns.Count)
             {
                 return;
             }
 
-            if (this.HeaderRenderer != null)
+            if (HeaderRenderer != null)
             {
-                Column column = this.ColumnModel.Columns[index];
+                var column = ColumnModel.Columns[index];
 
-                HeaderMouseEventArgs mhea = new HeaderMouseEventArgs(column, this, index, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(index)));
+                var mhea = new HeaderMouseEventArgs(column, this, index, DisplayRectToClient(ColumnModel.ColumnHeaderRect(index)));
 
-                this.OnHeaderMouseEnter(mhea);
+                OnHeaderMouseEnter(mhea);
             }
         }
 
@@ -6177,17 +6053,11 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderMouseLeave(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.HeaderRenderer != null)
-                {
-                    this.HeaderRenderer.OnMouseLeave(e);
-                }
+                HeaderRenderer?.OnMouseLeave(e);
 
-                if (HeaderMouseLeave != null)
-                {
-                    HeaderMouseLeave(e.Column, e);
-                }
+                HeaderMouseLeave?.Invoke(e.Column, e);
             }
         }
 
@@ -6199,18 +6069,18 @@ namespace XPTable.Models
         /// <param name="index">The index of the column to recieve the event</param>
         protected void RaiseHeaderMouseLeave(int index)
         {
-            if (index < 0 || this.ColumnModel == null || index >= this.ColumnModel.Columns.Count)
+            if (index < 0 || ColumnModel == null || index >= ColumnModel.Columns.Count)
             {
                 return;
             }
 
-            if (this.HeaderRenderer != null)
+            if (HeaderRenderer != null)
             {
-                Column column = this.ColumnModel.Columns[index];
+                var column = ColumnModel.Columns[index];
 
-                HeaderMouseEventArgs mhea = new HeaderMouseEventArgs(column, this, index, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(index)));
+                var mhea = new HeaderMouseEventArgs(column, this, index, DisplayRectToClient(ColumnModel.ColumnHeaderRect(index)));
 
-                this.OnHeaderMouseLeave(mhea);
+                OnHeaderMouseLeave(mhea);
             }
         }
 
@@ -6224,17 +6094,11 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderMouseUp(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.HeaderRenderer != null)
-                {
-                    this.HeaderRenderer.OnMouseUp(e);
-                }
+                HeaderRenderer?.OnMouseUp(e);
 
-                if (HeaderMouseUp != null)
-                {
-                    HeaderMouseUp(e.Column, e);
-                }
+                HeaderMouseUp?.Invoke(e.Column, e);
             }
         }
 
@@ -6247,18 +6111,18 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected void RaiseHeaderMouseUp(int index, MouseEventArgs e)
         {
-            if (index < 0 || this.ColumnModel == null || index >= this.ColumnModel.Columns.Count)
+            if (index < 0 || ColumnModel == null || index >= ColumnModel.Columns.Count)
             {
                 return;
             }
 
-            if (this.HeaderRenderer != null)
+            if (HeaderRenderer != null)
             {
-                Column column = this.ColumnModel.Columns[index];
+                var column = ColumnModel.Columns[index];
 
-                HeaderMouseEventArgs mhea = new HeaderMouseEventArgs(column, this, index, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(index)), e);
+                var mhea = new HeaderMouseEventArgs(column, this, index, DisplayRectToClient(ColumnModel.ColumnHeaderRect(index)), e);
 
-                this.OnHeaderMouseUp(mhea);
+                OnHeaderMouseUp(mhea);
             }
         }
 
@@ -6272,17 +6136,11 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderMouseDown(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.HeaderRenderer != null)
-                {
-                    this.HeaderRenderer.OnMouseDown(e);
-                }
+                HeaderRenderer?.OnMouseDown(e);
 
-                if (HeaderMouseDown != null)
-                {
-                    HeaderMouseDown(e.Column, e);
-                }
+                HeaderMouseDown?.Invoke(e.Column, e);
             }
         }
 
@@ -6295,18 +6153,18 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected void RaiseHeaderMouseDown(int index, MouseEventArgs e)
         {
-            if (index < 0 || this.ColumnModel == null || index >= this.ColumnModel.Columns.Count)
+            if (index < 0 || ColumnModel == null || index >= ColumnModel.Columns.Count)
             {
                 return;
             }
 
-            if (this.HeaderRenderer != null)
+            if (HeaderRenderer != null)
             {
-                Column column = this.ColumnModel.Columns[index];
+                var column = ColumnModel.Columns[index];
 
-                HeaderMouseEventArgs mhea = new HeaderMouseEventArgs(column, this, index, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(index)), e);
+                var mhea = new HeaderMouseEventArgs(column, this, index, DisplayRectToClient(ColumnModel.ColumnHeaderRect(index)), e);
 
-                this.OnHeaderMouseDown(mhea);
+                OnHeaderMouseDown(mhea);
             }
         }
 
@@ -6320,17 +6178,11 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderMouseMove(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.HeaderRenderer != null)
-                {
-                    this.HeaderRenderer.OnMouseMove(e);
-                }
+                HeaderRenderer?.OnMouseMove(e);
 
-                if (HeaderMouseMove != null)
-                {
-                    HeaderMouseMove(e.Column, e);
-                }
+                HeaderMouseMove?.Invoke(e.Column, e);
             }
         }
 
@@ -6343,18 +6195,18 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected void RaiseHeaderMouseMove(int index, MouseEventArgs e)
         {
-            if (index < 0 || this.ColumnModel == null || index >= this.ColumnModel.Columns.Count)
+            if (index < 0 || ColumnModel == null || index >= ColumnModel.Columns.Count)
             {
                 return;
             }
 
-            if (this.HeaderRenderer != null)
+            if (HeaderRenderer != null)
             {
-                Column column = this.ColumnModel.Columns[index];
+                var column = ColumnModel.Columns[index];
 
-                HeaderMouseEventArgs mhea = new HeaderMouseEventArgs(column, this, index, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(index)), e);
+                var mhea = new HeaderMouseEventArgs(column, this, index, DisplayRectToClient(ColumnModel.ColumnHeaderRect(index)), e);
 
-                this.OnHeaderMouseMove(mhea);
+                OnHeaderMouseMove(mhea);
             }
         }
 
@@ -6364,14 +6216,14 @@ namespace XPTable.Models
         /// </summary>
         internal void ResetHotColumn()
         {
-            if (this.hotColumn != -1)
+            if (hotColumn != -1)
             {
-                this.ResetMouseEventArgs();
+                ResetMouseEventArgs();
 
-                int oldHotColumn = this.hotColumn;
-                this.hotColumn = -1;
+                var oldHotColumn = hotColumn;
+                hotColumn = -1;
 
-                this.RaiseHeaderMouseLeave(oldHotColumn);
+                RaiseHeaderMouseLeave(oldHotColumn);
             }
         }
 
@@ -6385,12 +6237,9 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderMouseHover(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (HeaderMouseHover != null)
-                {
-                    HeaderMouseHover(e.Column, e);
-                }
+                HeaderMouseHover?.Invoke(e.Column, e);
             }
         }
 
@@ -6404,17 +6253,11 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderClick(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.HeaderRenderer != null)
-                {
-                    this.HeaderRenderer.OnClick(e);
-                }
+                HeaderRenderer?.OnClick(e);
 
-                if (HeaderClick != null)
-                {
-                    HeaderClick(e.Column, e);
-                }
+                HeaderClick?.Invoke(e.Column, e);
             }
         }
 
@@ -6424,21 +6267,15 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderFilterClick(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
                 var args = new HandledHeaderMouseEventArgs(e);
 
-                if (HeaderFilterClick != null)
-                {
-                    HeaderFilterClick(e.Column, args);
-                }
+                HeaderFilterClick?.Invoke(e.Column, args);
 
                 if (!args.Handled)
                 {
-                    if (e.Column.Filter != null)
-                    {
-                        e.Column.Filter.OnHeaderFilterClick(e);
-                    }
+                    e.Column.Filter?.OnHeaderFilterClick(e);
                 }
             }
         }
@@ -6449,14 +6286,11 @@ namespace XPTable.Models
         /// <param name="e"></param>
         public virtual void OnHeaderFilterChanged(EventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.InvalidateRect(this.PseudoClientRect);
+                InvalidateRect(PseudoClientRect);
 
-                if (HeaderFilterChanged != null)
-                {
-                    HeaderFilterChanged(this, e);
-                }
+                HeaderFilterChanged?.Invoke(this, e);
             }
         }
 
@@ -6466,17 +6300,11 @@ namespace XPTable.Models
         /// <param name="e">A HeaderMouseEventArgs that contains the event data</param>
         protected virtual void OnHeaderDoubleClick(HeaderMouseEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.HeaderRenderer != null)
-                {
-                    this.HeaderRenderer.OnDoubleClick(e);
-                }
+                HeaderRenderer?.OnDoubleClick(e);
 
-                if (HeaderDoubleClick != null)
-                {
-                    HeaderDoubleClick(e.Column, e);
-                }
+                HeaderDoubleClick?.Invoke(e.Column, e);
             }
         }
 
@@ -6492,15 +6320,12 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected virtual void OnColumnModelChanged(TableEventArgs e)	// PJD TEA change
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                this.Invalidate();
+                PerformLayout();
+                Invalidate();
 
-                if (ColumnModelChanged != null)
-                {
-                    ColumnModelChanged(this, e);
-                }
+                ColumnModelChanged?.Invoke(this, e);
             }
         }
 
@@ -6511,15 +6336,12 @@ namespace XPTable.Models
         /// <param name="e">A ColumnModelEventArgs that contains the event data</param>
         protected internal virtual void OnColumnAdded(ColumnModelEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                this.Invalidate();
+                PerformLayout();
+                Invalidate();
 
-                if (ColumnAdded != null)
-                {
-                    ColumnAdded(this, e);
-                }
+                ColumnAdded?.Invoke(this, e);
             }
         }
 
@@ -6530,15 +6352,12 @@ namespace XPTable.Models
         /// <param name="e">A ColumnModelEventArgs that contains the event data</param>
         protected internal virtual void OnColumnRemoved(ColumnModelEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                this.Invalidate();
+                PerformLayout();
+                Invalidate();
 
-                if (ColumnRemoved != null)
-                {
-                    ColumnRemoved(this, e);
-                }
+                ColumnRemoved?.Invoke(this, e);
             }
         }
 
@@ -6549,15 +6368,12 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected internal virtual void OnHeaderHeightChanged(EventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                this.Invalidate();
+                PerformLayout();
+                Invalidate();
 
-                if (HeaderHeightChanged != null)
-                {
-                    HeaderHeightChanged(this, e);
-                }
+                HeaderHeightChanged?.Invoke(this, e);
             }
         }
 
@@ -6571,12 +6387,9 @@ namespace XPTable.Models
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
         protected internal virtual void OnBeginEditing(CellEditEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (BeginEditing != null)
-                {
-                    BeginEditing(e.Cell, e);
-                }
+                BeginEditing?.Invoke(e.Cell, e);
             }
         }
 
@@ -6587,12 +6400,9 @@ namespace XPTable.Models
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
         protected internal virtual void OnEditingStopping(CellEditEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (EditingStopping != null)
-                {
-                    EditingStopping(e.Cell, e);
-                }
+                EditingStopping?.Invoke(e.Cell, e);
             }
         }
 
@@ -6603,12 +6413,9 @@ namespace XPTable.Models
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
         protected internal virtual void OnEditingStopped(CellEditEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (EditingStopped != null)
-                {
-                    EditingStopped(e.Cell, e);
-                }
+                EditingStopped?.Invoke(e.Cell, e);
             }
         }
 
@@ -6619,12 +6426,9 @@ namespace XPTable.Models
         /// <param name="e">A CellEditEventArgs that contains the event data</param>
         protected internal virtual void OnEditingCancelled(CellEditEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (EditingCancelled != null)
-                {
-                    EditingCancelled(e.Cell, e);
-                }
+                EditingCancelled?.Invoke(e.Cell, e);
             }
         }
 
@@ -6638,27 +6442,29 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected override void OnGotFocus(EventArgs e)
         {
-            if (this.FocusedCell.IsEmpty)
+            if (FocusedCell.IsEmpty)
             {
-                CellPos p = this.FindNextVisibleCell(this.FocusedCell, true, true, true, true, true);
+                var p = FindNextVisibleCell(FocusedCell, true, true, true, true, true);
 
-                if (this.IsValidCell(p))
+                if (IsValidCell(p))
                 {
-                    this.FocusedCell = p;
+                    FocusedCell = p;
                 }
             }
             else
             {
-                this.RaiseCellGotFocus(this.FocusedCell);
+                RaiseCellGotFocus(FocusedCell);
             }
 
-            if (this.SelectedIndicies.Length > 0)
+            if (SelectedIndicies.Length > 0)
             {
-                this.Invalidate(this.CellDataRect);
+                Invalidate(CellDataRect);
             }
 
-            if (this.BorderColor != this.UnfocusedBorderColor)
-                this.Invalidate(false);
+            if (BorderColor != UnfocusedBorderColor)
+            {
+                Invalidate(false);
+            }
 
             base.OnGotFocus(e);
         }
@@ -6670,18 +6476,20 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected override void OnLostFocus(EventArgs e)
         {
-            if (!this.FocusedCell.IsEmpty)
+            if (!FocusedCell.IsEmpty)
             {
-                this.RaiseCellLostFocus(this.FocusedCell);
+                RaiseCellLostFocus(FocusedCell);
             }
 
-            if (this.SelectedIndicies.Length > 0)
+            if (SelectedIndicies.Length > 0)
             {
-                this.Invalidate(this.CellDataRect);
+                Invalidate(CellDataRect);
             }
 
-            if (this.BorderColor != this.UnfocusedBorderColor)
-                this.Invalidate(false);
+            if (BorderColor != UnfocusedBorderColor)
+            {
+                Invalidate(false);
+            }
 
             base.OnLostFocus(e);
         }
@@ -6700,46 +6508,42 @@ namespace XPTable.Models
         {
             base.OnKeyDown(e);
 
-            if (this.IsValidCell(this.FocusedCell))
+            if (IsValidCell(FocusedCell))
             {
-                if (this.IsReservedKey(e.KeyData))
+                if (IsReservedKey(e.KeyData))
                 {
-                    Keys key = e.KeyData & Keys.KeyCode;
+                    var key = e.KeyData & Keys.KeyCode;
 
-                    if (key == Keys.Up || key == Keys.Down || key == Keys.Left || key == Keys.Right)
+                    if (key is Keys.Up or Keys.Down or Keys.Left or Keys.Right)
                     {
                         #region Arrow keys
                         CellPos nextCell;
 
                         if (key == Keys.Up)
                         {
-                            nextCell = this.FindNextVisibleCell(this.FocusedCell, this.FocusedCell.Row > 0, false, false, false, true);
-                        }
-                        else if (key == Keys.Down)
-                        {
-                            nextCell = this.FindNextVisibleCell(this.FocusedCell, this.FocusedCell.Row < this.RowCount - 1, true, false, false, true);
-                        }
-                        else if (key == Keys.Left)
-                        {
-                            nextCell = this.FindNextVisibleCell(this.FocusedCell, false, false, false, true, true);
+                            nextCell = FindNextVisibleCell(FocusedCell, FocusedCell.Row > 0, false, false, false, true);
                         }
                         else
                         {
-                            nextCell = this.FindNextVisibleCell(this.FocusedCell, false, true, false, true, true);
+                            nextCell = key == Keys.Down
+                                ? FindNextVisibleCell(FocusedCell, FocusedCell.Row < RowCount - 1, true, false, false, true)
+                                : key == Keys.Left
+                                                            ? FindNextVisibleCell(FocusedCell, false, false, false, true, true)
+                                                            : FindNextVisibleCell(FocusedCell, false, true, false, true, true);
                         }
 
                         if (nextCell != CellPos.Empty)
                         {
                             nextCell = ResolveColspan(nextCell);
-                            this.FocusedCell = nextCell;
+                            FocusedCell = nextCell;
 
-                            if ((e.KeyData & Keys.Modifiers) == Keys.Shift && this.MultiSelect)
+                            if ((e.KeyData & Keys.Modifiers) == Keys.Shift && MultiSelect)
                             {
-                                this.TableModel.Selections.AddShiftSelectedCell(this.FocusedCell);
+                                TableModel.Selections.AddShiftSelectedCell(FocusedCell);
                             }
                             else
                             {
-                                this.TableModel.Selections.SelectCell(this.FocusedCell);
+                                TableModel.Selections.SelectCell(FocusedCell);
                             }
                         }
                         #endregion
@@ -6747,16 +6551,16 @@ namespace XPTable.Models
                     else if (e.KeyData == Keys.PageUp)
                     {
                         #region Page Up
-                        if (this.RowCount > 0)
+                        if (RowCount > 0)
                         {
-                            int i = GetNewIndexFromPageUp(); ;
-                            CellPos temp = new CellPos(i, this.FocusedCell.Column); ;
-                            CellPos nextCell = this.FindNextVisibleCell(temp, true, false, true, false, true);
+                            var i = GetNewIndexFromPageUp(); ;
+                            var temp = new CellPos(i, FocusedCell.Column); ;
+                            var nextCell = FindNextVisibleCell(temp, true, false, true, false, true);
 
                             if (nextCell != CellPos.Empty)
                             {
-                                this.FocusedCell = nextCell;
-                                this.TableModel.Selections.SelectCell(this.FocusedCell);
+                                FocusedCell = nextCell;
+                                TableModel.Selections.SelectCell(FocusedCell);
                             }
                         }
                         #endregion
@@ -6764,41 +6568,33 @@ namespace XPTable.Models
                     else if (e.KeyData == Keys.PageDown)
                     {
                         #region Page Down
-                        if (this.RowCount > 0)
+                        if (RowCount > 0)
                         {
-                            int i = GetNewIndexFromPageDown(); ;
-                            CellPos temp = new CellPos(i, this.FocusedCell.Column);
-                            CellPos nextCell = this.FindNextVisibleCell(temp, true, false, true, false, true);
+                            var i = GetNewIndexFromPageDown(); ;
+                            var temp = new CellPos(i, FocusedCell.Column);
+                            var nextCell = FindNextVisibleCell(temp, true, false, true, false, true);
 
                             if (nextCell != CellPos.Empty)
                             {
-                                this.FocusedCell = nextCell;
-                                this.TableModel.Selections.SelectCell(this.FocusedCell);
+                                FocusedCell = nextCell;
+                                TableModel.Selections.SelectCell(FocusedCell);
                             }
                         }
                         #endregion
                     }
-                    else if (e.KeyData == Keys.Home || e.KeyData == Keys.End)
+                    else if (e.KeyData is Keys.Home or Keys.End)
                     {
                         #region Home, End
-                        if (this.RowCount > 0)
+                        if (RowCount > 0)
                         {
-                            CellPos nextCell;
-
-                            if (e.KeyData == Keys.Home)
-                            {
-                                nextCell = this.FindNextVisibleCell(CellPos.Empty, true, true, true, true, true);
-                            }
-                            else
-                            {
-                                nextCell = this.FindNextVisibleCell(new CellPos(this.RowCount - 1, this.TableModel.Rows[this.RowCount - 1].Cells.Count), true, false, true, true, true);
-                            }
-
+                            var nextCell = e.KeyData == Keys.Home
+                                ? FindNextVisibleCell(CellPos.Empty, true, true, true, true, true)
+                                : FindNextVisibleCell(new CellPos(RowCount - 1, TableModel.Rows[RowCount - 1].Cells.Count), true, false, true, true, true);
                             if (nextCell != CellPos.Empty)
                             {
-                                this.FocusedCell = nextCell;
+                                FocusedCell = nextCell;
 
-                                this.TableModel.Selections.SelectCell(this.FocusedCell);
+                                TableModel.Selections.SelectCell(FocusedCell);
                             }
                         }
                         #endregion
@@ -6807,52 +6603,44 @@ namespace XPTable.Models
                 else
                 {
                     // check if we can start editing with the custom edit key
-                    if (e.KeyData == this.CustomEditKey &&
-                        ((this.EditStartAction & EditStartAction.CustomKey) == EditStartAction.CustomKey))
+                    if (e.KeyData == CustomEditKey &&
+                        ((EditStartAction & EditStartAction.CustomKey) == EditStartAction.CustomKey))
                     {
-                        this.EditCell(this.FocusedCell);
+                        EditCell(FocusedCell);
 
                         return;
                     }
 
                     // send all other key events to the cell's renderer
                     // for further processing
-                    this.RaiseCellKeyDown(this.FocusedCell, e);
+                    RaiseCellKeyDown(FocusedCell, e);
                 }
             }
             else
             {
-                if (this.FocusedCell == CellPos.Empty)
+                if (FocusedCell == CellPos.Empty)
                 {
                     #region Cell is Empty
-                    Keys key = e.KeyData & Keys.KeyCode;
+                    var key = e.KeyData & Keys.KeyCode;
 
-                    if (this.IsReservedKey(e.KeyData))
+                    if (IsReservedKey(e.KeyData))
                     {
-                        if (key == Keys.Down || key == Keys.Right)
+                        if (key is Keys.Down or Keys.Right)
                         {
-                            CellPos nextCell;
-
-                            if (key == Keys.Down)
-                            {
-                                nextCell = this.FindNextVisibleCell(this.FocusedCell, true, true, true, false, true);
-                            }
-                            else
-                            {
-                                nextCell = this.FindNextVisibleCell(this.FocusedCell, false, true, true, true, true);
-                            }
-
+                            var nextCell = key == Keys.Down
+                                ? FindNextVisibleCell(FocusedCell, true, true, true, false, true)
+                                : FindNextVisibleCell(FocusedCell, false, true, true, true, true);
                             if (nextCell != CellPos.Empty)
                             {
-                                this.FocusedCell = nextCell;
+                                FocusedCell = nextCell;
 
-                                if ((e.KeyData & Keys.Modifiers) == Keys.Shift && this.MultiSelect)
+                                if ((e.KeyData & Keys.Modifiers) == Keys.Shift && MultiSelect)
                                 {
-                                    this.TableModel.Selections.AddShiftSelectedCell(this.FocusedCell);
+                                    TableModel.Selections.AddShiftSelectedCell(FocusedCell);
                                 }
                                 else
                                 {
-                                    this.TableModel.Selections.SelectCell(this.FocusedCell);
+                                    TableModel.Selections.SelectCell(FocusedCell);
                                 }
                             }
                         }
@@ -6865,17 +6653,17 @@ namespace XPTable.Models
         private int GetNewIndexFromPageUp()
         {
             int i;
-            if (!this.VScroll)
+            if (!VScroll)
             {
                 // Not enough data to scroll, so go to the top row
                 i = 0;
             }
             else
             {
-                int x = topIndex;
-                int y = this.vScrollBar.Value - (this.vScrollBar.LargeChange - 1);
+                var x = topIndex;
+                var y = vScrollBar.Value - (vScrollBar.LargeChange - 1);
 
-                if (this.FocusedCell.Row > topIndex && this.TableModel[topIndex, this.FocusedCell.Column].Enabled)
+                if (FocusedCell.Row > topIndex && TableModel[topIndex, FocusedCell.Column].Enabled)
                 {
                     // Focus is not on the topmost visible row, so without scrolling, put focus on the topmost row
                     i = topIndex;
@@ -6883,7 +6671,7 @@ namespace XPTable.Models
                 else
                 {
                     // We are already on the topmost visible row, so scroll up by a page
-                    i = Math.Max(-1, this.vScrollBar.Value - (this.vScrollBar.LargeChange - 1));
+                    i = Math.Max(-1, vScrollBar.Value - (vScrollBar.LargeChange - 1));
                 }
             }
             return i;
@@ -6892,23 +6680,16 @@ namespace XPTable.Models
         private int GetNewIndexFromPageDown()
         {
             int i;
-            if (!this.VScroll)
+            if (!VScroll)
             {
                 // Not enough data to scroll, so go to the bottom row
-                i = this.RowCount - 1;
+                i = RowCount - 1;
             }
             else
             {
-                int currentRow = this.FocusedCell.Row;
-                int bottomRow = topIndex + vScrollBar.LargeChange - 2;
-                if (currentRow < bottomRow)
-                {
-                    i = bottomRow;
-                }
-                else
-                {
-                    i = Math.Min(this.RowCount - 1, currentRow - 2 + this.vScrollBar.LargeChange);
-                }
+                var currentRow = FocusedCell.Row;
+                var bottomRow = topIndex + vScrollBar.LargeChange - 2;
+                i = currentRow < bottomRow ? bottomRow : Math.Min(RowCount - 1, currentRow - 2 + vScrollBar.LargeChange);
             }
             return i;
         }
@@ -6924,18 +6705,18 @@ namespace XPTable.Models
         {
             base.OnKeyUp(e);
 
-            if (!this.IsReservedKey(e.KeyData))
+            if (!IsReservedKey(e.KeyData))
             {
                 // 
-                if (e.KeyData == this.CustomEditKey &&
-                    ((this.EditStartAction & EditStartAction.CustomKey) == EditStartAction.CustomKey))
+                if (e.KeyData == CustomEditKey &&
+                    ((EditStartAction & EditStartAction.CustomKey) == EditStartAction.CustomKey))
                 {
                     return;
                 }
 
                 // send all other key events to the cell's renderer
                 // for further processing
-                this.RaiseCellKeyUp(this.FocusedCell, e);
+                RaiseCellKeyUp(FocusedCell, e);
             }
         }
 
@@ -6951,24 +6732,24 @@ namespace XPTable.Models
             base.OnKeyPress(e);
 
             // Auto-Edit Mode upon ascii key press.
-            if (this.IsValidCell(this.FocusedCell))
+            if (IsValidCell(FocusedCell))
             {
                 // Verify a valid ascii character was pressed.
-                if ((this.EditStartAction & EditStartAction.KeyPress) == EditStartAction.KeyPress && e.KeyChar >= 32 && e.KeyChar <= 126)
+                if ((EditStartAction & EditStartAction.KeyPress) == EditStartAction.KeyPress && e.KeyChar >= 32 && e.KeyChar <= 126)
                 {
                     // Get the cell editor type and verify it's valid for auto-editing.
-                    ICellEditor cellEditor = this.ColumnModel.GetCellEditor(this.FocusedCell.Column);
+                    var cellEditor = ColumnModel.GetCellEditor(FocusedCell.Column);
                     if (cellEditor != null && (cellEditor.GetType() == typeof(TextCellEditor) || cellEditor.GetType() == typeof(ComboBoxCellEditor)))
                     {
                         // Get the active cell.
-                        Cell cell = this.TableModel.Rows[this.FocusedCell.Row].Cells[this.FocusedCell.Column];
+                        var cell = TableModel.Rows[FocusedCell.Row].Cells[FocusedCell.Column];
 
                         // If the cell is in a sub-row, determine its starting column including ColSpan.
                         if (cell.Row.SubRows.Count == 0)
                         {
                             // This is a sub-row. Get the actual cell start index (in case it spans multiple columns).
-                            int originatingColumn = cell.Row.GetRenderedCellIndex(this.FocusedCell.Column);
-                            if (originatingColumn != this.FocusedCell.Column)
+                            var originatingColumn = cell.Row.GetRenderedCellIndex(FocusedCell.Column);
+                            if (originatingColumn != FocusedCell.Column)
                             {
                                 // Focus is on a non-visible cell within the ColSpan of a cell (do not allow editing).
                                 // If you prefer to allow editing of the originating cell, use: cell = this.TableModel.Rows[this.FocusedCell.Row].Cells[originatingColumn];
@@ -6979,7 +6760,7 @@ namespace XPTable.Models
                         if (cell != null && cell.Editable)
                         {
                             // Start editing upon key press.
-                            this.EditCell(this.FocusedCell);
+                            EditCell(FocusedCell);
 
                             // Re-send the key code press so it appears in the editor.
                             NativeMethods.PressKey(e.KeyChar);
@@ -7000,12 +6781,12 @@ namespace XPTable.Models
         /// <param name="levent">A LayoutEventArgs that contains the event data</param>
         protected override void OnLayout(LayoutEventArgs levent)
         {
-            if (this.IsHandleCreated && !this.init)
+            if (IsHandleCreated && !init)
             {
                 base.OnLayout(levent);
             }
 
-            this.UpdateScrollBars();
+            UpdateScrollBars();
         }
 
         #endregion
@@ -7021,43 +6802,47 @@ namespace XPTable.Models
         {
             base.OnMouseUp(e);
 
-            if (!this.CanRaiseEvents)
+            if (!CanRaiseEvents)
+            {
                 return;
+            }
 
             // work out the current state of  play
-            this.CalcTableState(e.X, e.Y);
+            CalcTableState(e.X, e.Y);
 
-            TableRegion region = this.HitTest(e.X, e.Y);
+            var region = HitTest(e.X, e.Y);
 
             if (e.Button == MouseButtons.Left)
             {
                 // if the left mouse button was down for a cell, 
                 // Raise a mouse up for that cell
-                if (!this.LastMouseDownCell.IsEmpty)
+                if (!LastMouseDownCell.IsEmpty)
                 {
-                    if (this.IsValidCell(this.LastMouseDownCell))
-                        this.RaiseCellMouseUp(this.LastMouseDownCell, e);
+                    if (IsValidCell(LastMouseDownCell))
+                    {
+                        RaiseCellMouseUp(LastMouseDownCell, e);
+                    }
 
                     // reset the lastMouseDownCell
-                    this.lastMouseDownCell = CellPos.Empty;
+                    lastMouseDownCell = CellPos.Empty;
                 }
 
                 #region Finish column resizing
                 // if we have just finished resizing, it might
                 // be a good idea to relayout the table
-                if (this.resizingColumnIndex != -1)
+                if (resizingColumnIndex != -1)
                 {
-                    if (this.resizingColumnWidth != -1)
+                    if (resizingColumnWidth != -1)
                     {
-                        this.DrawReversibleLine(this.ColumnRect(this.resizingColumnIndex).Left + this.resizingColumnWidth);
-                        this.ColumnModel.Columns[this.resizingColumnIndex].Width = this.resizingColumnWidth;
+                        DrawReversibleLine(ColumnRect(resizingColumnIndex).Left + resizingColumnWidth);
+                        ColumnModel.Columns[resizingColumnIndex].Width = resizingColumnWidth;
                     }
 
-                    this.resizingColumnIndex = -1;
-                    this.resizingColumnWidth = -1;
+                    resizingColumnIndex = -1;
+                    resizingColumnWidth = -1;
 
-                    this.UpdateScrollBars();
-                    this.Invalidate(this.PseudoClientRect, true);
+                    UpdateScrollBars();
+                    Invalidate(PseudoClientRect, true);
                 }
                 #endregion
 
@@ -7065,32 +6850,34 @@ namespace XPTable.Models
                 if (region == TableRegion.ColumnHeader)
                 {
                     #region In column header
-                    int column = this.ColumnIndexAt(e.X, e.Y);
+                    var column = ColumnIndexAt(e.X, e.Y);
 
                     // if we are in the header, check if we are in the pressed column
-                    if (this.pressedColumn != -1)
+                    if (pressedColumn != -1)
                     {
-                        if (this.pressedColumn == column)
+                        if (pressedColumn == column)
                         {
-                            if (this.hotColumn != column)
+                            if (hotColumn != column)
                             {
-                                this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
+                                SetInternalColumnState(hotColumn, ColumnState.Normal);
                             }
 
-                            this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Hot;
-                            this.RaiseHeaderMouseUp(column, e);
+                            ColumnModel.Columns[pressedColumn].InternalColumnState = ColumnState.Hot;
+                            RaiseHeaderMouseUp(column, e);
                         }
 
-                        this.pressedColumn = -1;
+                        pressedColumn = -1;
 
                         // only sort the column if we have rows to sort
-                        if ((this.IsValidColumn(column)) && (this.ColumnModel.Columns[column].Sortable))
+                        if (IsValidColumn(column) && ColumnModel.Columns[column].Sortable)
                         {
-                            if (this.TableModel != null && this.TableModel.Rows.Count > 0)
-                                this.Sort(column);
+                            if (TableModel != null && TableModel.Rows.Count > 0)
+                            {
+                                Sort(column);
+                            }
                         }
 
-                        this.Invalidate(this.HeaderRectangle, false);
+                        Invalidate(HeaderRectangle, false);
                     }
 
                     return;
@@ -7099,10 +6886,10 @@ namespace XPTable.Models
 
                 // the mouse wasn't released in a column header, so if we 
                 // have a pressed column then we need to make it unpressed
-                if (this.pressedColumn != -1)
+                if (pressedColumn != -1)
                 {
-                    this.pressedColumn = -1;
-                    this.Invalidate(this.HeaderRectangle, false);
+                    pressedColumn = -1;
+                    Invalidate(HeaderRectangle, false);
                 }
 
                 _dragDropHelper.MouseUp();
@@ -7120,23 +6907,27 @@ namespace XPTable.Models
         {
             base.OnMouseDown(e);
 
-            if (!this.CanRaiseEvents)
-                return;
-
-            this.CalcTableState(e.X, e.Y);
-            TableRegion region = this.HitTest(e.X, e.Y);
-
-            int row = this.RowIndexAt(e.X, e.Y);
-            int column = this.ColumnIndexAt(e.X, e.Y);
-
-            if (this.IsEditing)
+            if (!CanRaiseEvents)
             {
-                if (this.EditingCell.Row != row || this.EditingCell.Column != column)
+                return;
+            }
+
+            CalcTableState(e.X, e.Y);
+            var region = HitTest(e.X, e.Y);
+
+            var row = RowIndexAt(e.X, e.Y);
+            var column = ColumnIndexAt(e.X, e.Y);
+
+            if (IsEditing)
+            {
+                if (EditingCell.Row != row || EditingCell.Column != column)
                 {
-                    this.Focus();
+                    Focus();
 
                     if (region == TableRegion.ColumnHeader && e.Button != MouseButtons.Right)
+                    {
                         return;
+                    }
                 }
             }
 
@@ -7144,21 +6935,21 @@ namespace XPTable.Models
 
             if (region == TableRegion.ColumnHeader)
             {
-                if (e.Button == MouseButtons.Right && this.HeaderContextMenu.Enabled)
+                if (e.Button == MouseButtons.Right && HeaderContextMenu.Enabled)
                 {
-                    this.HeaderContextMenu.Show(this, new Point(e.X, e.Y));
+                    HeaderContextMenu.Show(this, new Point(e.X, e.Y));
 
                     return;
                 }
 
-                if (column == -1 || !this.ColumnModel.Columns[column].Enabled)
+                if (column == -1 || !ColumnModel.Columns[column].Enabled)
                 {
                     return;
                 }
 
                 if (e.Button == MouseButtons.Left)
                 {
-                    this.FocusedCell = new CellPos(-1, -1);
+                    FocusedCell = new CellPos(-1, -1);
 
                     // don't bother going any further if the user 
                     // double clicked
@@ -7168,9 +6959,9 @@ namespace XPTable.Models
                     }
 
                     // If the mouse is over the filter button then do nothing here - filter buttons are handled in the click event
-                    if (this.EnableFilters && this.ColumnModel.Columns[column].Filterable)
+                    if (EnableFilters && ColumnModel.Columns[column].Filterable)
                     {
-                        ColumnHeaderRegion colRegion = this.HeaderRenderer.HitTest(e.X, e.Y);
+                        var colRegion = HeaderRenderer.HitTest(e.X, e.Y);
 
                         if (colRegion == ColumnHeaderRegion.FilterButton)
                         {
@@ -7178,30 +6969,30 @@ namespace XPTable.Models
                         }
                     }
 
-                    this.RaiseHeaderMouseDown(column, e);
+                    RaiseHeaderMouseDown(column, e);
 
-                    if (this.TableState == TableState.ColumnResizing)
+                    if (TableState == TableState.ColumnResizing)
                     {
-                        Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                        int x = this.ClientXToDisplayRectX(e.X);
+                        var columnRect = ColumnModel.ColumnHeaderRect(column);
+                        var x = ClientXToDisplayRectX(e.X);
 
                         if (x <= columnRect.Left + Column.ResizePadding)
                         {
                             //column--;
-                            column = this.ColumnModel.PreviousVisibleColumn(column);
+                            column = ColumnModel.PreviousVisibleColumn(column);
                         }
 
-                        this.resizingColumnIndex = column;
+                        resizingColumnIndex = column;
 
-                        if (this.resizingColumnIndex != -1)
+                        if (resizingColumnIndex != -1)
                         {
-                            this.resizingColumnAnchor = this.ColumnModel.ColumnHeaderRect(column).Left;
-                            this.resizingColumnOffset = x - (this.resizingColumnAnchor + this.ColumnModel.Columns[column].Width);
+                            resizingColumnAnchor = ColumnModel.ColumnHeaderRect(column).Left;
+                            resizingColumnOffset = x - (resizingColumnAnchor + ColumnModel.Columns[column].Width);
                         }
                     }
                     else
                     {
-                        if (this.HeaderStyle != ColumnHeaderStyle.Clickable || !this.ColumnModel.Columns[column].Sortable)
+                        if (HeaderStyle != ColumnHeaderStyle.Clickable || !ColumnModel.Columns[column].Sortable)
                         {
                             return;
                         }
@@ -7211,13 +7002,13 @@ namespace XPTable.Models
                             return;
                         }
 
-                        if (this.pressedColumn != -1)
+                        if (pressedColumn != -1)
                         {
-                            this.ColumnModel.Columns[this.pressedColumn].InternalColumnState = ColumnState.Normal;
+                            ColumnModel.Columns[pressedColumn].InternalColumnState = ColumnState.Normal;
                         }
 
-                        this.pressedColumn = column;
-                        this.ColumnModel.Columns[column].InternalColumnState = ColumnState.Pressed;
+                        pressedColumn = column;
+                        ColumnModel.Columns[column].InternalColumnState = ColumnState.Pressed;
                     }
 
                     return;
@@ -7230,72 +7021,80 @@ namespace XPTable.Models
             if (region == TableRegion.Cells)
             {
                 #region Checks
-                if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right)
+                if (e.Button is not MouseButtons.Left and not MouseButtons.Right)
+                {
                     return;
+                }
 
-                if ((!this.AllowRMBSelection) && (e.Button == MouseButtons.Right))
+                if ((!AllowRMBSelection) && (e.Button == MouseButtons.Right))
+                {
                     return;
+                }
 
-                if ((!this.IsValidCell(row, column) || !this.IsCellEnabled(row, column)) && (this.tableModel != null))
+                if ((!IsValidCell(row, column) || !IsCellEnabled(row, column)) && (tableModel != null))
                 {
                     // clear selections
-                    this.TableModel.Selections.Clear();
+                    TableModel.Selections.Clear();
                     return;
                 }
                 #endregion
 
-                if (this.tableModel != null)
+                if (tableModel != null)
                 {
-                    Row r = this.tableModel.Rows[row];
-                    int realCol = r.GetRenderedCellIndex(column);
+                    var r = tableModel.Rows[row];
+                    var realCol = r.GetRenderedCellIndex(column);
                     column = realCol;
 
-                    this.FocusedCell = new CellPos(row, column);
+                    FocusedCell = new CellPos(row, column);
 
                     // don't bother going any further if the user 
                     // double clicked or we're not allowed to select
-                    if (e.Clicks > 1 || !this.AllowSelection)
+                    if (e.Clicks > 1 || !AllowSelection)
                     {
                         // We need to allow 'double clicks' through to the editors so the number change buttons can be used rapidly
-                        if (!this.IsEditing)
+                        if (!IsEditing)
+                        {
                             return;
+                        }
                     }
 
-                    this.lastMouseDownCell.Row = row;
-                    this.lastMouseDownCell.Column = column;
+                    lastMouseDownCell.Row = row;
+                    lastMouseDownCell.Column = column;
 
                     //
-                    this.RaiseCellMouseDown(new CellPos(row, column), e);
+                    RaiseCellMouseDown(new CellPos(row, column), e);
 
-                    if (!this.ColumnModel.Columns[column].Selectable)
+                    if (!ColumnModel.Columns[column].Selectable)
+                    {
                         return;
+                    }
 
                     //
 
                     #region Multiselect - shift
-                    if ((ModifierKeys & Keys.Shift) == Keys.Shift && this.MultiSelect)
+                    if ((ModifierKeys & Keys.Shift) == Keys.Shift && MultiSelect)
                     {
                         if ((e.Button == MouseButtons.Right)
                             // Mateusz [PEYN] Adamus (peyn@tlen.pl)
                             // and RMB is not allowed to select cells
-                            && (!this.AllowRMBSelection))
+                            && (!AllowRMBSelection))
                         {
                             return;
                         }
 
-                        this.TableModel.Selections.AddShiftSelectedCell(row, column);
+                        TableModel.Selections.AddShiftSelectedCell(row, column);
 
                         return;
                     }
                     #endregion
 
                     #region Multiselect - control
-                    if ((ModifierKeys & Keys.Control) == Keys.Control && this.MultiSelect)
+                    if ((ModifierKeys & Keys.Control) == Keys.Control && MultiSelect)
                     {
                         if ((e.Button == MouseButtons.Right)
                             // Mateusz [PEYN] Adamus (peyn@tlen.pl)
                             // and RMB is not allowed to select cells
-                            && (!this.AllowRMBSelection))
+                            && (!AllowRMBSelection))
                         {
                             return;
                         }
@@ -7304,11 +7103,11 @@ namespace XPTable.Models
                         // If selection selects full rows
                         // we have to find exactly which cell is selected in a row
                         // to deselect it
-                        if (this.FullRowSelect)
+                        if (FullRowSelect)
                         {
-                            if (this.TableModel.Selections.IsRowSelected(row))
+                            if (TableModel.Selections.IsRowSelected(row))
                             {
-                                this.TableModel.Selections.RemoveRow(row);
+                                TableModel.Selections.RemoveRow(row);
                                 return;
                             }
                         }
@@ -7316,30 +7115,34 @@ namespace XPTable.Models
                         // Mateusz [PEYN] Adamus (peyn@tlen.pl)
                         // if Table is in ListView style and FullRowSelect = false
                         // clicking on any cell should deselect Row
-                        if (this.SelectionStyle == SelectionStyle.ListView)
+                        if (SelectionStyle == SelectionStyle.ListView)
                         {
                             // if Row we clicked on is selected
-                            if (this.TableModel.Selections.IsRowSelected(row))
+                            if (TableModel.Selections.IsRowSelected(row))
                             {
                                 // we deselect it
-                                this.TableModel.Selections.RemoveRow(row);
+                                TableModel.Selections.RemoveRow(row);
                                 return;
                             }
                         }
 
-                        if (this.TableModel.Selections.IsCellSelected(row, column))
-                            this.TableModel.Selections.RemoveCell(row, column);
+                        if (TableModel.Selections.IsCellSelected(row, column))
+                        {
+                            TableModel.Selections.RemoveCell(row, column);
+                        }
                         else
-                            this.TableModel.Selections.AddCell(row, column);
+                        {
+                            TableModel.Selections.AddCell(row, column);
+                        }
 
                         return;
                     }
                     #endregion
 
-                    if (!this.TableModel.Selections.IsCellSelected(row, column))
+                    if (!TableModel.Selections.IsCellSelected(row, column))
                     {
                         #region Change the selection
-                        if (this.familyRowSelect && this.fullRowSelect)
+                        if (familyRowSelect && fullRowSelect)
                         {
                             // family select is where we select all the rows either:
                             // under the clicked (parent) row, or
@@ -7347,35 +7150,37 @@ namespace XPTable.Models
                             if (r.Parent != null)
                             {
                                 // this is a child so select all the siblings
-                                this.TableModel.Selections.SelectCells(r.Parent.Index, column, r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column);
+                                TableModel.Selections.SelectCells(r.Parent.Index, column, r.Parent.SubRows[r.Parent.SubRows.Count - 1].Index, column);
                             }
                             else
                             {
                                 // this is not a child, so if it is a parent, select all children
                                 if (r.SubRows.Count == 0)
                                 {
-                                    this.TableModel.Selections.SelectCell(row, column);
+                                    TableModel.Selections.SelectCell(row, column);
                                 }
                                 else
                                 {
-                                    this.TableModel.Selections.SelectCells(row, column, r.SubRows[r.SubRows.Count - 1].Index, column);
+                                    TableModel.Selections.SelectCells(row, column, r.SubRows[r.SubRows.Count - 1].Index, column);
                                 }
                             }
                         }
                         else
                         {
                             // 'normal' secletion mode - just select what was clicked
-                            this.TableModel.Selections.SelectCell(row, column);
+                            TableModel.Selections.SelectCell(row, column);
                         }
                         #endregion
                     }
                 }
 
                 // Drag & Drop Code Added - by tankun
-                if ((this.AllowDrop) && useBuiltInDragDrop && (e.Button == MouseButtons.Left))
+                if (AllowDrop && useBuiltInDragDrop && (e.Button == MouseButtons.Left))
                 {
                     if (row > -1)
+                    {
                         _dragDropHelper.MouseDown(row);
+                    }
                 }
             } //region == TableRegion.Cells
             #endregion
@@ -7392,8 +7197,10 @@ namespace XPTable.Models
             base.OnMouseMove(e);
 
             // don't go any further if the table is editing
-            if (this.TableState == TableState.Editing)
+            if (TableState == TableState.Editing)
+            {
                 return;
+            }
 
             #region Left mouse button
 
@@ -7407,11 +7214,11 @@ namespace XPTable.Models
             {
                 _dragDropHelper.MouseMove(e);
 
-                if (!this.LastMouseDownCell.IsEmpty)
+                if (!LastMouseDownCell.IsEmpty)
                 {
-                    if (this.IsValidCell(this.LastMouseDownCell))
+                    if (IsValidCell(LastMouseDownCell))
                     {
-                        this.RaiseCellMouseMove(this.LastMouseDownCell, e);
+                        RaiseCellMouseMove(LastMouseDownCell, e);
                         return;
                     }
                 }
@@ -7422,15 +7229,15 @@ namespace XPTable.Models
             #region Column resizing
 
             // are we resizing a column?
-            if (this.resizingColumnIndex != -1)
+            if (resizingColumnIndex != -1)
             {
-                if (this.resizingColumnWidth != -1)
+                if (resizingColumnWidth != -1)
                 {
-                    this.DrawReversibleLine(this.ColumnRect(this.resizingColumnIndex).Left + this.resizingColumnWidth);
+                    DrawReversibleLine(ColumnRect(resizingColumnIndex).Left + resizingColumnWidth);
                 }
 
                 // calculate the new width for the column
-                int width = this.ClientXToDisplayRectX(e.X) - this.resizingColumnAnchor - this.resizingColumnOffset;
+                var width = ClientXToDisplayRectX(e.X) - resizingColumnAnchor - resizingColumnOffset;
 
                 // make sure the new width isn't smaller than the minimum allowed
                 // column width, or larger than the maximum allowed column width
@@ -7443,10 +7250,10 @@ namespace XPTable.Models
                     width = Column.MaximumWidth;
                 }
 
-                this.resizingColumnWidth = width;
+                resizingColumnWidth = width;
 
                 //this.ColumnModel.Columns[this.resizingColumnIndex].Width = width;
-                this.DrawReversibleLine(this.ColumnRect(this.resizingColumnIndex).Left + this.resizingColumnWidth);
+                DrawReversibleLine(ColumnRect(resizingColumnIndex).Left + resizingColumnWidth);
 
                 return;
             }
@@ -7454,9 +7261,9 @@ namespace XPTable.Models
             #endregion
 
             // work out the potential state of play
-            this.CalcTableState(e.X, e.Y);
+            CalcTableState(e.X, e.Y);
 
-            TableRegion hitTest = this.HitTest(e.X, e.Y);
+            var hitTest = HitTest(e.X, e.Y);
 
             #region ColumnHeader
 
@@ -7467,65 +7274,65 @@ namespace XPTable.Models
                 // (so we have the same behaviour as a themed ListView
                 // in Windows XP)
 
-                int column = this.ColumnIndexAt(e.X, e.Y);
+                var column = ColumnIndexAt(e.X, e.Y);
 
                 // if this isn't the current hot column, reset the
                 // hot columns state to normal and set this column
                 // to be the hot column
-                if (this.hotColumn != column)
+                if (hotColumn != column)
                 {
-                    if (this.hotColumn != -1)
+                    if (hotColumn != -1)
                     {
-                        this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-                        this.RaiseHeaderMouseLeave(this.hotColumn);
+                        SetInternalColumnState(hotColumn, ColumnState.Normal);
+                        RaiseHeaderMouseLeave(hotColumn);
                     }
 
-                    if (this.TableState != TableState.ColumnResizing)
+                    if (TableState != TableState.ColumnResizing)
                     {
-                        this.hotColumn = column;
+                        hotColumn = column;
 
-                        if (this.hotColumn != -1 && this.ColumnModel.Columns[column].Enabled)
+                        if (hotColumn != -1 && ColumnModel.Columns[column].Enabled)
                         {
-                            this.SetInternalColumnState(column, ColumnState.Hot);
-                            this.RaiseHeaderMouseEnter(column);
+                            SetInternalColumnState(column, ColumnState.Hot);
+                            RaiseHeaderMouseEnter(column);
                         }
                     }
                 }
                 else
                 {
-                    if (column != -1 && this.ColumnModel.Columns[column].Enabled)
+                    if (column != -1 && ColumnModel.Columns[column].Enabled)
                     {
-                        this.RaiseHeaderMouseMove(column, e);
+                        RaiseHeaderMouseMove(column, e);
                     }
                 }
 
                 // if this isn't the pressed column, then the pressed columns
                 // state should be set back to normal
-                if (this.pressedColumn != column)
+                if (pressedColumn != column)
                 {
-                    this.SetInternalColumnState(this.pressedColumn, ColumnState.Normal);
+                    SetInternalColumnState(pressedColumn, ColumnState.Normal);
                 }
                 // else if this is the pressed column and its state is not
                 // pressed, then we had better set it
-                else if (column != -1 && this.pressedColumn == column &&
-                         this.ColumnModel.Columns[this.pressedColumn].ColumnState != ColumnState.Pressed)
+                else if (column != -1 && pressedColumn == column &&
+                         ColumnModel.Columns[pressedColumn].ColumnState != ColumnState.Pressed)
                 {
-                    this.SetInternalColumnState(this.pressedColumn, ColumnState.Pressed);
+                    SetInternalColumnState(pressedColumn, ColumnState.Pressed);
                 }
 
                 // set the cursor to a resizing cursor if necesary
-                if (this.TableState == TableState.ColumnResizing)
+                if (TableState == TableState.ColumnResizing)
                 {
-                    Rectangle columnRect = this.ColumnModel.ColumnHeaderRect(column);
-                    int x = this.ClientXToDisplayRectX(e.X);
+                    var columnRect = ColumnModel.ColumnHeaderRect(column);
+                    var x = ClientXToDisplayRectX(e.X);
 
-                    this.Cursor = Cursors.VSplit;
+                    Cursor = Cursors.VSplit;
 
                     // if the left mouse button is down, we don't want
                     // the resizing cursor so set it back to the default
                     if (e.Button == MouseButtons.Left)
                     {
-                        this.Cursor = Cursors.Default;
+                        Cursor = Cursors.Default;
                     }
 
                     // if the mouse is in the left side of the column, 
@@ -7535,13 +7342,13 @@ namespace XPTable.Models
                     // to take place
                     if (x < columnRect.Left + Column.ResizePadding)
                     {
-                        int col = column;
+                        var col = column;
 
                         while (col != 0)
                         {
                             col--;
 
-                            if (this.ColumnModel.Columns[col].Visible)
+                            if (ColumnModel.Columns[col].Visible)
                             {
                                 break;
                             }
@@ -7549,32 +7356,32 @@ namespace XPTable.Models
 
                         if (col != -1)
                         {
-                            if (this.ColumnModel.Columns[col].Enabled)
+                            if (ColumnModel.Columns[col].Enabled)
                             {
-                                this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-                                this.hotColumn = col;
-                                this.SetInternalColumnState(this.hotColumn, ColumnState.Hot);
+                                SetInternalColumnState(hotColumn, ColumnState.Normal);
+                                hotColumn = col;
+                                SetInternalColumnState(hotColumn, ColumnState.Hot);
 
-                                this.RaiseHeaderMouseEnter(col);
+                                RaiseHeaderMouseEnter(col);
                             }
                             else
                             {
-                                this.Cursor = Cursors.Default;
+                                Cursor = Cursors.Default;
                             }
                         }
                     }
                     else
                     {
-                        if (this.ColumnModel.Columns[column].Enabled)
+                        if (ColumnModel.Columns[column].Enabled)
                         {
                             // this mouse is in the right side of the column, 
                             // so this column needs to be dsiplayed hot
-                            this.hotColumn = column;
-                            this.SetInternalColumnState(this.hotColumn, ColumnState.Hot);
+                            hotColumn = column;
+                            SetInternalColumnState(hotColumn, ColumnState.Hot);
                         }
                         else
                         {
-                            this.Cursor = Cursors.Default;
+                            Cursor = Cursors.Default;
                         }
                     }
                 }
@@ -7583,11 +7390,11 @@ namespace XPTable.Models
                     // we're not in a resizing area, so make sure the cursor
                     // is the default cursor (we may have just come from a
                     // resizing area)
-                    this.Cursor = Cursors.Default;
+                    Cursor = Cursors.Default;
                 }
 
                 // reset the last cell the mouse was over
-                this.ResetLastMouseCell();
+                ResetLastMouseCell();
 
                 return;
             }
@@ -7596,84 +7403,92 @@ namespace XPTable.Models
 
             // we're outside of the header, so if there is a hot column,
             // it need to be reset
-            if (this.hotColumn != -1)
+            if (hotColumn != -1)
             {
-                this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-                this.Cursor = Cursors.Default;
-                this.ResetHotColumn();
+                SetInternalColumnState(hotColumn, ColumnState.Normal);
+                Cursor = Cursors.Default;
+                ResetHotColumn();
             }
 
             // if there is a pressed column, its state need to beset to normal
-            this.SetInternalColumnState(this.pressedColumn, ColumnState.Normal);
+            SetInternalColumnState(pressedColumn, ColumnState.Normal);
 
             #region Cells
 
             if (hitTest == TableRegion.Cells)
             {
                 // find the cell the mouse is over
-                CellPos cellPos = new CellPos(this.RowIndexAt(e.X, e.Y), this.ColumnIndexAt(e.X, e.Y));
+                var cellPos = new CellPos(RowIndexAt(e.X, e.Y), ColumnIndexAt(e.X, e.Y));
 
                 cellPos = ResolveColspan(cellPos);
 
                 if (!cellPos.IsEmpty)
                 {
-                    if (cellPos != this.lastMouseCell)
+                    if (cellPos != lastMouseCell)
                     {
                         // check if the cell exists (ie is not null)
-                        if (this.IsValidCell(cellPos))
+                        if (IsValidCell(cellPos))
                         {
-                            CellPos oldLastMouseCell = this.lastMouseCell;
+                            var oldLastMouseCell = lastMouseCell;
 
                             if (!oldLastMouseCell.IsEmpty)
-                                this.ResetLastMouseCell();
+                            {
+                                ResetLastMouseCell();
+                            }
 
-                            this.lastMouseCell = cellPos;
+                            lastMouseCell = cellPos;
 
-                            this.RaiseCellMouseEnter(cellPos);
+                            RaiseCellMouseEnter(cellPos);
                         }
                         else
                         {
-                            this.ResetLastMouseCell();
+                            ResetLastMouseCell();
 
                             // make sure the cursor is the default cursor 
                             // (we may have just come from a resizing area in the header)
-                            this.Cursor = Cursors.Default;
+                            Cursor = Cursors.Default;
                         }
                     }
                     else
                     {
-                        this.RaiseCellMouseMove(cellPos, e);
+                        RaiseCellMouseMove(cellPos, e);
 
-                        this.Cursor = Cursors.Default;
+                        Cursor = Cursors.Default;
                     }
                 }
                 else
                 {
-                    this.ResetLastMouseCell();
+                    ResetLastMouseCell();
 
-                    if (this.TableModel == null)
-                        this.ResetToolTip();
+                    if (TableModel == null)
+                    {
+                        ResetToolTip();
+                    }
                 }
 
                 // netus - fix by Kosmokrat Hismoom on 2006-01-29
                 // make sure the cursor is the default cursor 
                 // (we may have just come from a resizing area in the header)
-                this.Cursor = Cursors.Default;
+                Cursor = Cursors.Default;
                 return;
             }
             else
             {
-                this.ResetLastMouseCell();
+                ResetLastMouseCell();
 
-                if (!this.lastMouseDownCell.IsEmpty)
-                    this.RaiseCellMouseLeave(this.lastMouseDownCell);
+                if (!lastMouseDownCell.IsEmpty)
+                {
+                    RaiseCellMouseLeave(lastMouseDownCell);
+                }
 
-                if (this.TableModel == null)
-                    this.ResetToolTip();
+                if (TableModel == null)
+                {
+                    ResetToolTip();
+                }
 
                 // make sure the cursor is the default cursor 
                 // (we may have just come from a resizing area in the header)
-                this.Cursor = Cursors.Default;
+                Cursor = Cursors.Default;
             }
 
             #endregion
@@ -7681,14 +7496,14 @@ namespace XPTable.Models
 
         private void SetInternalColumnState(int columnIndex, ColumnState state)
         {
-            if (this.ColumnModel == null)
+            if (ColumnModel == null)
             {
                 return;
             }
 
-            if (columnIndex >= 0 && columnIndex < this.ColumnModel.Columns.Count)
+            if (columnIndex >= 0 && columnIndex < ColumnModel.Columns.Count)
             {
-                var column = this.ColumnModel.Columns[columnIndex];
+                var column = ColumnModel.Columns[columnIndex];
                 column.InternalColumnState = state;
             }
         }
@@ -7708,11 +7523,11 @@ namespace XPTable.Models
             // we're outside of the header, so if there is a hot column,
             // it needs to be reset (this shouldn't happen, but better 
             // safe than sorry ;)
-            if (this.hotColumn != -1)
+            if (hotColumn != -1)
             {
-                this.SetInternalColumnState(this.hotColumn, ColumnState.Normal);
-            
-                this.ResetHotColumn();
+                SetInternalColumnState(hotColumn, ColumnState.Normal);
+
+                ResetHotColumn();
             }
         }
 
@@ -7728,32 +7543,32 @@ namespace XPTable.Models
         {
             base.OnMouseWheel(e);
 
-            if (!this.Scrollable || (!this.HScroll && !this.VScroll))
+            if (!Scrollable || (!HScroll && !VScroll))
             {
                 return;
             }
 
-            if (this.VScroll)
+            if (VScroll)
             {
-                int newVal = this.vScrollBar.Value - ((e.Delta / 120) * SystemInformation.MouseWheelScrollLines);
+                var newVal = vScrollBar.Value - (e.Delta / 120 * SystemInformation.MouseWheelScrollLines);
 
-                this.vScrollBar.Value = this.EnsureSafeVScrollValue(newVal);
+                vScrollBar.Value = EnsureSafeVScrollValue(newVal);
             }
-            else if (this.HScroll)
+            else if (HScroll)
             {
-                int newVal = this.hScrollBar.Value - ((e.Delta / 120) * Column.MinimumWidth);
+                var newVal = hScrollBar.Value - (e.Delta / 120 * Column.MinimumWidth);
 
                 if (newVal < 0)
                 {
                     newVal = 0;
                 }
-                else if (newVal > this.hScrollBar.Maximum - this.hScrollBar.LargeChange)
+                else if (newVal > hScrollBar.Maximum - hScrollBar.LargeChange)
                 {
-                    newVal = this.hScrollBar.Maximum - this.hScrollBar.LargeChange;
+                    newVal = hScrollBar.Maximum - hScrollBar.LargeChange;
                 }
 
-                this.HorizontalScroll(newVal);
-                this.hScrollBar.Value = newVal;
+                HorizontalScroll(newVal);
+                hScrollBar.Value = newVal;
             }
         }
 
@@ -7769,20 +7584,19 @@ namespace XPTable.Models
         {
             base.OnMouseHover(e);
 
-            if (this.IsValidCell(this.LastMouseCell))
+            if (IsValidCell(LastMouseCell))
             {
-                var cell = this.TableModel[this.LastMouseCell];
-                var cellRect = this.CellRect(this.LastMouseCell);
-                var mouseEventArgs = e as MouseEventArgs;
-                var cellMouseEventArgs = mouseEventArgs != null
-                    ? new CellMouseEventArgs(cell, this, this.LastMouseCell, cellRect, mouseEventArgs)
-                    : new CellMouseEventArgs(cell, this, this.LastMouseCell, cellRect);
+                var cell = TableModel[LastMouseCell];
+                var cellRect = CellRect(LastMouseCell);
+                var cellMouseEventArgs = e is MouseEventArgs mouseEventArgs
+                    ? new CellMouseEventArgs(cell, this, LastMouseCell, cellRect, mouseEventArgs)
+                    : new CellMouseEventArgs(cell, this, LastMouseCell, cellRect);
 
-                this.OnCellMouseHover(cellMouseEventArgs);
+                OnCellMouseHover(cellMouseEventArgs);
             }
-            else if (this.hotColumn != -1)
+            else if (hotColumn != -1)
             {
-                this.OnHeaderMouseHover(new HeaderMouseEventArgs(this.ColumnModel.Columns[this.hotColumn], this, this.hotColumn, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(this.hotColumn))));
+                OnHeaderMouseHover(new HeaderMouseEventArgs(ColumnModel.Columns[hotColumn], this, hotColumn, DisplayRectToClient(ColumnModel.ColumnHeaderRect(hotColumn))));
             }
         }
 
@@ -7797,57 +7611,57 @@ namespace XPTable.Models
         {
             base.OnMouseClick(e);
 
-            if (this.IsValidCell(this.LastMouseCell))
+            if (IsValidCell(LastMouseCell))
             {
                 // Adjust this to take colspan into account
                 // LastMouseCell may be a cell that is 'under' a colspan cell
-                CellPos realCell = this.ResolveColspan(this.LastMouseCell);
+                var realCell = ResolveColspan(LastMouseCell);
 
                 var cellMouseEventArgs = new CellMouseEventArgs(
-                    this.TableModel[realCell],
+                    TableModel[realCell],
                     this,
                     realCell,
-                    this.CellRect(realCell),
+                    CellRect(realCell),
                     e);
-                this.OnCellClick(cellMouseEventArgs);
+                OnCellClick(cellMouseEventArgs);
             }
-            else if (this.hotColumn != -1)
+            else if (hotColumn != -1)
             {
-                var columnHeaderRect = this.ColumnModel.ColumnHeaderRect(this.hotColumn);
-                var headerRect = this.DisplayRectToClient(columnHeaderRect);
+                var columnHeaderRect = ColumnModel.ColumnHeaderRect(hotColumn);
+                var headerRect = DisplayRectToClient(columnHeaderRect);
 
-                bool handled = false;
+                var handled = false;
 
                 // Column filters
-                if (this.EnableFilters && this.ColumnModel.Columns[hotColumn].Filterable)
+                if (EnableFilters && ColumnModel.Columns[hotColumn].Filterable)
                 {
-                    Point client = this.DisplayRectToClient(e.X, e.Y);
-                    ColumnHeaderRegion region = this.HeaderRenderer.HitTest(client.X, client.Y);
+                    var client = DisplayRectToClient(e.X, e.Y);
+                    var region = HeaderRenderer.HitTest(client.X, client.Y);
 
                     if (region == ColumnHeaderRegion.FilterButton)
                     {
                         handled = true;
 
                         var mouseEventArgs = new HeaderMouseEventArgs(
-                            this.ColumnModel.Columns[this.hotColumn],
+                            ColumnModel.Columns[hotColumn],
                             this,
-                            this.hotColumn,
+                            hotColumn,
                             headerRect,
                             e);
 
-                        this.OnHeaderFilterClick(mouseEventArgs);
+                        OnHeaderFilterClick(mouseEventArgs);
                     }
                 }
 
                 if (!handled)
                 {
                     var mouseEventArgs = new HeaderMouseEventArgs(
-                        this.ColumnModel.Columns[this.hotColumn],
+                        ColumnModel.Columns[hotColumn],
                         this,
-                        this.hotColumn,
+                        hotColumn,
                         headerRect,
                         e);
-                    this.OnHeaderClick(mouseEventArgs);
+                    OnHeaderClick(mouseEventArgs);
                 }
             }
         }
@@ -7860,31 +7674,31 @@ namespace XPTable.Models
         {
             base.OnDoubleClick(e);
 
-            if (this.IsValidCell(this.LastMouseCell))
+            if (IsValidCell(LastMouseCell))
             {
                 // Adjust this to take colspan into account
                 // LastMouseCell may be a cell that is 'under' a colspan cell
-                CellPos realCell = this.ResolveColspan(this.LastMouseCell);
+                var realCell = ResolveColspan(LastMouseCell);
 
                 if (e is MouseEventArgs)
                 {
-                    this.OnCellDoubleClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell), e as MouseEventArgs));
+                    OnCellDoubleClick(new CellMouseEventArgs(TableModel[realCell], this, realCell, CellRect(realCell), e as MouseEventArgs));
                 }
                 else
                 {
-                    this.OnCellDoubleClick(new CellMouseEventArgs(this.TableModel[realCell], this, realCell, this.CellRect(realCell)));
+                    OnCellDoubleClick(new CellMouseEventArgs(TableModel[realCell], this, realCell, CellRect(realCell)));
                 }
             }
-            else if (this.hotColumn != -1)
+            else if (hotColumn != -1)
             {
-                if (this.TableState == TableState.ColumnResizing)
+                if (TableState == TableState.ColumnResizing)
                 {
-                    Column column = this.ColumnModel.Columns[this.hotColumn];
-                    this.OnColumnAutoResize(new ColumnEventArgs(column, this.hotColumn, ColumnEventType.WidthChanged, column.Width));
+                    var column = ColumnModel.Columns[hotColumn];
+                    OnColumnAutoResize(new ColumnEventArgs(column, hotColumn, ColumnEventType.WidthChanged, column.Width));
                 }
                 else
                 {
-                    this.OnHeaderDoubleClick(new HeaderMouseEventArgs(this.ColumnModel.Columns[this.hotColumn], this, this.hotColumn, this.DisplayRectToClient(this.ColumnModel.ColumnHeaderRect(this.hotColumn))));
+                    OnHeaderDoubleClick(new HeaderMouseEventArgs(ColumnModel.Columns[hotColumn], this, hotColumn, DisplayRectToClient(ColumnModel.ColumnHeaderRect(hotColumn))));
                 }
             }
         }
@@ -7913,38 +7727,44 @@ namespace XPTable.Models
             base.OnPaint(e);
 
             // check if we actually need to paint
-            if (this.Width == 0 || this.Height == 0)
+            if (Width == 0 || Height == 0)
+            {
                 return;
+            }
 
-            if (this.ColumnModel != null)
+            if (ColumnModel != null)
             {
                 // keep a record of the current clip region
-                Region clip = e.Graphics.Clip;
+                var clip = e.Graphics.Clip;
 
-                if (this.TableModel != null && this.TableModel.Rows.Count > 0)
+                if (TableModel != null && TableModel.Rows.Count > 0)
                 {
-                    this.OnPaintRows(e);
+                    OnPaintRows(e);
 
                     // reset the clipping region
                     e.Graphics.Clip = clip;
                 }
 
-                if (this.GridLines != GridLines.None)
-                    this.OnPaintGrid(e);
-
-                if (this.HeaderStyle != ColumnHeaderStyle.None && this.ColumnModel.Columns.Count > 0)
+                if (GridLines != GridLines.None)
                 {
-                    if (this.HeaderRectangle.IntersectsWith(e.ClipRectangle))
-                        this.OnPaintHeader(e);
+                    OnPaintGrid(e);
+                }
+
+                if (HeaderStyle != ColumnHeaderStyle.None && ColumnModel.Columns.Count > 0)
+                {
+                    if (HeaderRectangle.IntersectsWith(e.ClipRectangle))
+                    {
+                        OnPaintHeader(e);
+                    }
                 }
 
                 // reset the clipping region
                 e.Graphics.Clip = clip;
             }
 
-            this.OnPaintEmptyTableText(e);
+            OnPaintEmptyTableText(e);
 
-            this.OnPaintBorder(e);
+            OnPaintBorder(e);
 
             if (!painted)
             {
@@ -7959,11 +7779,14 @@ namespace XPTable.Models
             OnAfterFirstPaint(EventArgs.Empty);
 
             // Do this so that scrollbars are evaluated whilst the actual row heights are known
-            if (this.EnableWordWrap)
+            if (EnableWordWrap)
             {
                 if (autoCalculateRowHeights)
-                    this.CalculateAllRowHeights();
-                this.UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
+                {
+                    CalculateAllRowHeights();
+                }
+
+                UpdateScrollBars();   // without this the scolling will have been set up assuming all rows have the default height
             }
         }
 
@@ -7975,9 +7798,9 @@ namespace XPTable.Models
         /// to be drawn</param>
         private void DrawReversibleLine(int x)
         {
-            Point start = this.PointToScreen(new Point(x, this.PseudoClientRect.Top));
+            var start = PointToScreen(new Point(x, PseudoClientRect.Top));
 
-            ControlPaint.DrawReversibleLine(start, new Point(start.X, start.Y + this.PseudoClientRect.Height), this.BackColor);
+            ControlPaint.DrawReversibleLine(start, new Point(start.X, start.Y + PseudoClientRect.Height), BackColor);
         }
 
         #region Border
@@ -7990,63 +7813,61 @@ namespace XPTable.Models
         {
             //e.Graphics.SetClip(e.ClipRectangle);
 
-            if (this.BorderStyle == BorderStyle.Fixed3D)
+            if (BorderStyle == BorderStyle.Fixed3D)
             {
                 if (ThemeManager.VisualStylesEnabled)
                 {
-                    TextBoxState state = TextBoxState.Normal;
-                    if (!this.Enabled)
+                    var state = TextBoxState.Normal;
+                    if (!Enabled)
                     {
                         state = TextBoxState.Disabled;
                     }
 
                     // draw the left border
-                    Rectangle clipRect = new Rectangle(0, 0, SystemInformation.Border3DSize.Width, this.Height);
+                    var clipRect = new Rectangle(0, 0, SystemInformation.Border3DSize.Width, Height);
                     if (clipRect.IntersectsWith(e.ClipRectangle))
                     {
-                        ThemeManager.DrawTextBox(e.Graphics, this.ClientRectangle, clipRect, state);
+                        ThemeManager.DrawTextBox(e.Graphics, ClientRectangle, clipRect, state);
                     }
 
                     // draw the top border
-                    clipRect = new Rectangle(0, 0, this.Width, SystemInformation.Border3DSize.Height);
+                    clipRect = new Rectangle(0, 0, Width, SystemInformation.Border3DSize.Height);
                     if (clipRect.IntersectsWith(e.ClipRectangle))
                     {
-                        ThemeManager.DrawTextBox(e.Graphics, this.ClientRectangle, clipRect, state);
+                        ThemeManager.DrawTextBox(e.Graphics, ClientRectangle, clipRect, state);
                     }
 
                     // draw the right border
-                    clipRect = new Rectangle(this.Width - SystemInformation.Border3DSize.Width, 0, this.Width, this.Height);
+                    clipRect = new Rectangle(Width - SystemInformation.Border3DSize.Width, 0, Width, Height);
                     if (clipRect.IntersectsWith(e.ClipRectangle))
                     {
-                        ThemeManager.DrawTextBox(e.Graphics, this.ClientRectangle, clipRect, state);
+                        ThemeManager.DrawTextBox(e.Graphics, ClientRectangle, clipRect, state);
                     }
 
                     // draw the bottom border
-                    clipRect = new Rectangle(0, this.Height - SystemInformation.Border3DSize.Height, this.Width, SystemInformation.Border3DSize.Height);
+                    clipRect = new Rectangle(0, Height - SystemInformation.Border3DSize.Height, Width, SystemInformation.Border3DSize.Height);
                     if (clipRect.IntersectsWith(e.ClipRectangle))
                     {
-                        ThemeManager.DrawTextBox(e.Graphics, this.ClientRectangle, clipRect, state);
+                        ThemeManager.DrawTextBox(e.Graphics, ClientRectangle, clipRect, state);
                     }
                 }
                 else
                 {
-                    ControlPaint.DrawBorder3D(e.Graphics, 0, 0, this.Width, this.Height, Border3DStyle.Sunken);
+                    ControlPaint.DrawBorder3D(e.Graphics, 0, 0, Width, Height, Border3DStyle.Sunken);
                 }
             }
-            else if (this.BorderStyle == BorderStyle.FixedSingle)
+            else if (BorderStyle == BorderStyle.FixedSingle)
             {
-                Color color = this.Focused ? color = this.BorderColor : color = this.UnfocusedBorderColor;
+                Color color = Focused ? color = BorderColor : color = UnfocusedBorderColor;
 
-                using (Pen borderPen = new Pen(color))
-                {
-                    e.Graphics.DrawRectangle(borderPen, 0, 0, this.Width - 1, this.Height - 1);
-                }
+                using var borderPen = new Pen(color);
+                e.Graphics.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1);
             }
 
-            if (this.HScroll && this.VScroll)
+            if (HScroll && VScroll)
             {
-                Rectangle rect = new Rectangle(this.Width - this.BorderWidth - SystemInformation.VerticalScrollBarWidth,
-                    this.Height - this.BorderWidth - SystemInformation.HorizontalScrollBarHeight,
+                var rect = new Rectangle(Width - BorderWidth - SystemInformation.VerticalScrollBarWidth,
+                    Height - BorderWidth - SystemInformation.HorizontalScrollBarHeight,
                     SystemInformation.VerticalScrollBarWidth,
                     SystemInformation.HorizontalScrollBarHeight);
 
@@ -8070,14 +7891,14 @@ namespace XPTable.Models
         /// <param name="cellRect">The bounding Rectangle of the Cell</param>
         protected void OnPaintCell(PaintEventArgs e, int row, int column, Rectangle cellRect)
         {
-            if (this.TableModel == null || this.ColumnModel == null)
+            if (TableModel == null || ColumnModel == null)
             {
                 return;
             }
 
-            var currentCell = this.TableModel[row, column];
-            var currentRow = this.TableModel.Rows[row];
-            var currentColumn = this.ColumnModel.Columns[column];
+            var currentCell = TableModel[row, column];
+            var currentRow = TableModel.Rows[row];
+            var currentColumn = ColumnModel.Columns[column];
 
             if (currentColumn == null)
             {
@@ -8085,12 +7906,7 @@ namespace XPTable.Models
             }
 
             // get the renderer for the cells column
-            ICellRenderer renderer = currentColumn.Renderer;
-            if (renderer == null)
-            {
-                // get the default renderer for the column
-                renderer = this.ColumnModel.GetCellRenderer(currentColumn.GetDefaultRendererName());
-            }
+            var renderer = currentColumn.Renderer ?? ColumnModel.GetCellRenderer(currentColumn.GetDefaultRendererName());
 
             // if the renderer is still null (which it shouldn't)
             // the get out of here
@@ -8101,11 +7917,11 @@ namespace XPTable.Models
 
             ////////////
             // Adjust the rectangle for this cell to include any cells that it colspans over
-            Rectangle realRect = cellRect;
+            var realRect = cellRect;
             var pcea = new PaintCellEventArgs(e.Graphics, realRect);
 
-            bool isEnabled = false;
-            bool isEditable = false;
+            var isEnabled = false;
+            var isEditable = false;
             if (currentCell != null)
             {
                 isEditable = currentCell.Editable && currentRow.Editable && currentColumn.Editable;
@@ -8113,7 +7929,7 @@ namespace XPTable.Models
 
                 if (currentCell.ColSpan > 1)
                 {
-                    int width = this.GetColumnWidth(column, currentCell);
+                    var width = GetColumnWidth(column, currentCell);
                     realRect = new Rectangle(cellRect.X, cellRect.Y, width, cellRect.Height);
                 }
 
@@ -8130,24 +7946,24 @@ namespace XPTable.Models
             if (column < currentRow.Cells.Count)
             {
                 // is the cell selected
-                bool isSelected = false;
+                var isSelected = false;
 
-                if (this.FullRowSelect)
+                if (FullRowSelect)
                 {
-                    isSelected = this.TableModel.Selections.IsRowSelected(row);
+                    isSelected = TableModel.Selections.IsRowSelected(row);
                 }
                 else
                 {
-                    if (this.SelectionStyle == SelectionStyle.ListView)
+                    if (SelectionStyle == SelectionStyle.ListView)
                     {
-                        if (this.TableModel.Selections.IsRowSelected(row) && this.ColumnModel.PreviousVisibleColumn(column) == -1)
+                        if (TableModel.Selections.IsRowSelected(row) && ColumnModel.PreviousVisibleColumn(column) == -1)
                         {
                             isSelected = true;
                         }
                     }
-                    else if (this.SelectionStyle == SelectionStyle.Grid)
+                    else if (SelectionStyle == SelectionStyle.Grid)
                     {
-                        if (this.TableModel.Selections.IsCellSelected(row, column))
+                        if (TableModel.Selections.IsCellSelected(row, column))
                         {
                             isSelected = true;
                         }
@@ -8160,8 +7976,8 @@ namespace XPTable.Models
                 pcea.SetColumn(column);
                 pcea.SetTable(this);
                 pcea.SetSelected(isSelected);
-                pcea.SetFocused(this.Focused && this.FocusedCell.Row == row && this.FocusedCell.Column == column);
-                pcea.SetSorted(column == this.lastSortedColumn);
+                pcea.SetFocused(Focused && FocusedCell.Row == row && FocusedCell.Column == column);
+                pcea.SetSorted(column == lastSortedColumn);
                 pcea.SetEditable(isEditable);
                 pcea.SetEnabled(isEnabled);
                 pcea.SetCellRect(realRect);
@@ -8184,7 +8000,7 @@ namespace XPTable.Models
             }
 
             // let the user get the first crack at painting the cell
-            this.OnBeforePaintCell(pcea);
+            OnBeforePaintCell(pcea);
 
             // only send to the renderer if the user hasn't 
             // set the handled property
@@ -8194,7 +8010,7 @@ namespace XPTable.Models
             }
 
             // let the user have another go
-            this.OnAfterPaintCell(pcea);
+            OnAfterPaintCell(pcea);
         }
 
 
@@ -8204,10 +8020,7 @@ namespace XPTable.Models
         /// <param name="e">A PaintCellEventArgs that contains the event data</param>
         protected virtual void OnBeforePaintCell(PaintCellEventArgs e)
         {
-            if (BeforePaintCell != null)
-            {
-                BeforePaintCell(this, e);
-            }
+            BeforePaintCell?.Invoke(this, e);
         }
 
 
@@ -8217,10 +8030,7 @@ namespace XPTable.Models
         /// <param name="e">A PaintCellEventArgs that contains the event data</param>
         protected virtual void OnAfterPaintCell(PaintCellEventArgs e)
         {
-            if (AfterPaintCell != null)
-            {
-                AfterPaintCell(this, e);
-            }
+            AfterPaintCell?.Invoke(this, e);
         }
 
         /// <summary>
@@ -8229,10 +8039,7 @@ namespace XPTable.Models
         /// <param name="e"></param>
         protected virtual void OnAfterFirstPaint(EventArgs e)
         {
-            if (AfterFirstPaint != null)
-            {
-                AfterFirstPaint(this, e);
-            }
+            AfterFirstPaint?.Invoke(this, e);
         }
 
         #endregion
@@ -8244,77 +8051,79 @@ namespace XPTable.Models
         /// <param name="e">A PaintEventArgs that contains the event data</param>
         protected void OnPaintGrid(PaintEventArgs e)
         {
-            if (this.GridLines == GridLines.None)
-                return;
-
-            if (this.ColumnModel == null || this.ColumnModel.Columns.Count == 0)
-                return;
-
-            if (this.ColumnModel != null)
+            if (GridLines == GridLines.None)
             {
-                using (Pen gridPen = new Pen(this.GridColor))
+                return;
+            }
+
+            if (ColumnModel == null || ColumnModel.Columns.Count == 0)
+            {
+                return;
+            }
+
+            if (ColumnModel != null)
+            {
+                using var gridPen = new Pen(GridColor);
+                gridPen.DashStyle = (DashStyle)GridLineStyle;
+
+                // check if we can draw column lines
+                // kbomb987 - Fix for painting grid lines on parent rows and columns
+                if (GridLines is GridLines.Columns or GridLines.Both)
                 {
-                    gridPen.DashStyle = (DashStyle)this.GridLineStyle;
+                    PaintGridColumns(e, gridPen);
+                }
 
-                    // check if we can draw column lines
-                    // kbomb987 - Fix for painting grid lines on parent rows and columns
-                    if (this.GridLines == GridLines.Columns || this.GridLines == GridLines.Both)
+                if (TableModel != null)
+                {
+                    switch (GridLines)
                     {
-                        this.PaintGridColumns(e, gridPen);
-                    }
-
-                    if (this.TableModel != null)
-                    {
-                        switch (this.GridLines)
-                        {
-                            case GridLines.RowsOnlyParent:
-                                PaintGridRowsOnlyParent(e, gridPen);
-                                break;
-                            case GridLines.RowsColumnsOnlyParent:
-                                // kbomb987 - Fix for painting grid lines on parent rows and columns
-                                PaintGridRowsColumnsOnlyParent(e, gridPen);
-                                break;
-                            case GridLines.Both:
-                            case GridLines.Rows:
-                                PaintGridAllRows(e, gridPen);
-                                break;
-                            case GridLines.None:
-                            case GridLines.Columns:
-                                break;
-                        }
+                        case GridLines.RowsOnlyParent:
+                            PaintGridRowsOnlyParent(e, gridPen);
+                            break;
+                        case GridLines.RowsColumnsOnlyParent:
+                            // kbomb987 - Fix for painting grid lines on parent rows and columns
+                            PaintGridRowsColumnsOnlyParent(e, gridPen);
+                            break;
+                        case GridLines.Both:
+                        case GridLines.Rows:
+                            PaintGridAllRows(e, gridPen);
+                            break;
+                        case GridLines.None:
+                        case GridLines.Columns:
+                            break;
                     }
                 }
             }
         }
 
-        void PaintGridRowsColumnsOnlyParent(PaintEventArgs e, Pen gridPen)
+        private void PaintGridRowsColumnsOnlyParent(PaintEventArgs e, Pen gridPen)
         {
-            if (this.TopIndex <= -1)
+            if (TopIndex <= -1)
             {
                 return;
             }
 
-            int yline = this.CellDataRect.Y - 1;
-            int rowright = this.GetGridlineYMax(e);
+            var yline = CellDataRect.Y - 1;
+            var rowright = GetGridlineYMax(e);
 
-            int displayRectangleX = this.DisplayRectangleLeft;
-            ColumnCollection columns = this.ColumnModel.Columns;
-            RowCollection rows = this.TableModel.Rows;
+            var displayRectangleX = DisplayRectangleLeft;
+            var columns = ColumnModel.Columns;
+            var rows = TableModel.Rows;
 
             // Need to draw each row grid at its correct height
-            for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+            for (var irow = TopIndex; irow < TableModel.Rows.Count; irow++)
             {
                 if (yline > e.ClipRectangle.Bottom)
                 {
                     break;
                 }
 
-                if (yline >= this.CellDataRect.Top)
+                if (yline >= CellDataRect.Top)
                 {
                     e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
                 }
 
-                Row row = rows[irow];
+                var row = rows[irow];
 
                 yline += row.Height;
 
@@ -8324,11 +8133,11 @@ namespace XPTable.Models
                     continue;
                 }
 
-                int right = displayRectangleX;
+                var right = displayRectangleX;
 
                 // Draw columns
-                int columnCount = columns.Count;
-                for (int i = 0; i < columnCount; i++)
+                var columnCount = columns.Count;
+                for (var i = 0; i < columnCount; i++)
                 {
                     if (!columns[i].Visible)
                     {
@@ -8358,110 +8167,121 @@ namespace XPTable.Models
             }
         }
 
-        int GetGridlineYMax(PaintEventArgs e)
+        private int GetGridlineYMax(PaintEventArgs e)
         {
-            int rightOfLastCol = this.ColumnModel.ColumnHeaderRect(this.ColumnCount - 1).Right;
-            int right;
-            if (this.GridLinesContrainedToData && (e.ClipRectangle.Right > rightOfLastCol))
-            {
-                right = rightOfLastCol;
-            }
-            else
-            {
-                right = e.ClipRectangle.Right;
-            }
-
+            var rightOfLastCol = ColumnModel.ColumnHeaderRect(ColumnCount - 1).Right;
+            var right = GridLinesContrainedToData && (e.ClipRectangle.Right > rightOfLastCol) ? rightOfLastCol : e.ClipRectangle.Right;
             return right;
         }
 
-        int GetGridlineXMax(PaintEventArgs e)
+        private int GetGridlineXMax(PaintEventArgs e)
         {
-            int bottomRow = RowIndexAt(0, this.CellDataRect.Bottom);
-            Rectangle rect = RowRect(bottomRow);
-            int bottom = e.ClipRectangle.Bottom;
-            if (this.GridLinesContrainedToData && (e.ClipRectangle.Bottom > rect.Bottom))
+            var bottomRow = RowIndexAt(0, CellDataRect.Bottom);
+            var rect = RowRect(bottomRow);
+            var bottom = e.ClipRectangle.Bottom;
+            if (GridLinesContrainedToData && (e.ClipRectangle.Bottom > rect.Bottom))
+            {
                 bottom = rect.Bottom - 1;
+            }
+
             return bottom;
         }
 
-        void PaintGridRowsOnlyParent(PaintEventArgs e, Pen gridPen)
+        private void PaintGridRowsOnlyParent(PaintEventArgs e, Pen gridPen)
         {
-            if (this.TopIndex > -1)
+            if (TopIndex > -1)
             {
-                int yline = this.CellDataRect.Y - 1;
+                var yline = CellDataRect.Y - 1;
 
-                int rowright = GetGridlineYMax(e);
+                var rowright = GetGridlineYMax(e);
 
                 // Need to draw each row grid at its correct height
-                for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+                for (var irow = TopIndex; irow < TableModel.Rows.Count; irow++)
                 {
-                    if (!(this.tableModel.Rows[irow].Parent != null))
+                    if (!(tableModel.Rows[irow].Parent != null))
                     {
                         //if row is not a subrow:drawline and increment yline
                         if (yline > e.ClipRectangle.Bottom)
+                        {
                             break;
-                        if (yline >= this.CellDataRect.Top)
-                            e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
+                        }
 
-                        yline += this.TableModel.Rows[irow].Height;
+                        if (yline >= CellDataRect.Top)
+                        {
+                            e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
+                        }
+
+                        yline += TableModel.Rows[irow].Height;
                     }
                     else
                     {
                         // if row is a subrow,if is visible then increment yline	
-                        if (this.tableModel.Rows[irow].Parent.ExpandSubRows)
-                            yline += this.TableModel.Rows[irow].Height;
+                        if (tableModel.Rows[irow].Parent.ExpandSubRows)
+                        {
+                            yline += TableModel.Rows[irow].Height;
+                        }
                     }
                     //	e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, e.ClipRectangle.Right, yline);	
                 }
                 // Now draw the final gridline under the last row (if visible)
                 // TODO Make this option selectable via a parameter?
                 if (yline < e.ClipRectangle.Bottom)
+                {
                     e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, rowright, yline);
+                }
             }
         }
 
-        void PaintGridAllRows(PaintEventArgs e, Pen gridPen)
+        private void PaintGridAllRows(PaintEventArgs e, Pen gridPen)
         {
-            if (this.TopIndex > -1)
+            if (TopIndex > -1)
             {
-                int yline = this.CellDataRect.Y - 1;
+                var yline = CellDataRect.Y - 1;
 
-                int right = GetGridlineYMax(e);
+                var right = GetGridlineYMax(e);
 
                 // Need to draw each row grid at its correct height
-                for (int irow = this.TopIndex; irow < this.TableModel.Rows.Count; irow++)
+                for (var irow = TopIndex; irow < TableModel.Rows.Count; irow++)
                 {
                     if (yline > e.ClipRectangle.Bottom)
+                    {
                         break;
-                    if (yline >= this.CellDataRect.Top)
+                    }
+
+                    if (yline >= CellDataRect.Top)
+                    {
                         e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, right, yline);
-                    yline += this.TableModel.Rows[irow].Height;
+                    }
+
+                    yline += TableModel.Rows[irow].Height;
                 }
                 // Now draw the final gridline under the last row (if visible)
                 // TODO Make this option selectable via a parameter?
                 if (yline < e.ClipRectangle.Bottom)
+                {
                     e.Graphics.DrawLine(gridPen, e.ClipRectangle.Left, yline, right, yline);
+                }
             }
         }
 
-        void PaintGridColumns(PaintEventArgs e, Pen gridPen)
+        private void PaintGridColumns(PaintEventArgs e, Pen gridPen)
         {
-            int right = this.DisplayRectangleLeft;
+            var right = DisplayRectangleLeft;
 
-            int columns = this.ColumnModel.Columns.Count;
+            var columns = ColumnModel.Columns.Count;
 
-            List<bool> wholeLineFlags = this.GetWholeLineFlags(columns);
+            var wholeLineFlags = GetWholeLineFlags(columns);
 
-            int bottom = this.GetGridlineXMax(e);
+            var bottom = GetGridlineXMax(e);
 
-            for (int i = 0; i < columns; i++)
+            for (var i = 0; i < columns; i++)
             {
-                if (!this.ColumnModel.Columns[i].Visible)
+                if (!ColumnModel.Columns[i].Visible)
                 {
                     continue;
                 }
 
-                right += this.ColumnModel.Columns[i].Width;
+                right += ColumnModel.Columns[i].Width;
 
                 // We only draw a single, full-height line if the flags tell us there are no colspans or if it is the 
                 // right hand edge of the last column.
@@ -8480,7 +8300,7 @@ namespace XPTable.Models
                 else
                 {
                     // We need to draw the vertical line for each row separately to cope with colspans
-                    this.PaintBrokenGridColumn(e, gridPen, i, right);
+                    PaintBrokenGridColumn(e, gridPen, i, right);
                 }
             }
         }
@@ -8492,29 +8312,29 @@ namespace XPTable.Models
         /// <param name="gridPen"></param>
         /// <param name="column"></param>
         /// <param name="x"></param>
-        void PaintBrokenGridColumn(PaintEventArgs e, Pen gridPen, int column, int x)
+        private void PaintBrokenGridColumn(PaintEventArgs e, Pen gridPen, int column, int x)
         {
             if (x < e.ClipRectangle.Left || x > e.ClipRectangle.Right)
             {
                 return;
             }
 
-            int topRow = this.TopIndex;
-            int bottom = this.CellDataRect.Bottom;
-            int bottomRow = this.RowIndexAt(0, bottom) + 1;
+            var topRow = TopIndex;
+            var bottom = CellDataRect.Bottom;
+            var bottomRow = RowIndexAt(0, bottom) + 1;
 
             // Go through each row, and see if it has any colspans that mean we can't draw 
             // the vertical gridline as one long line
-            int lastRowBottom = 0;
-            for (int irow = topRow; irow < bottomRow; irow++)
+            var lastRowBottom = 0;
+            for (var irow = topRow; irow < bottomRow; irow++)
             {
-                Row row = this.TableModel.Rows[irow];
+                var row = TableModel.Rows[irow];
                 if (row == null)
                 {
                     continue;
                 }
 
-                Rectangle rect = this.RowRect(irow);
+                var rect = RowRect(irow);
                 var flags = row.InternalGridLineFlags;
                 if (flags != null)
                 {
@@ -8528,7 +8348,7 @@ namespace XPTable.Models
             }
 
             // The column line underneath the data cells
-            if (!this.GridLinesContrainedToData && (e.ClipRectangle.Bottom > lastRowBottom))
+            if (!GridLinesContrainedToData && (e.ClipRectangle.Bottom > lastRowBottom))
             {
                 e.Graphics.DrawLine(gridPen, x - 1, lastRowBottom, x - 1, e.ClipRectangle.Bottom - 1);
             }
@@ -8543,17 +8363,17 @@ namespace XPTable.Models
         private List<bool> GetWholeLineFlags(int columns)
         {
             // For each column, can we show the entire vertical gridline?
-            List<bool> wholeLineFlags = CreateNewBoolList(columns);
+            var wholeLineFlags = CreateNewBoolList(columns);
 
-            int topRow = TopIndex;
+            var topRow = TopIndex;
             if (topRow < 0)
             {
                 topRow = 0;
             }
 
-            int bottomRow = this.RowIndexAt(0, this.CellDataRect.Bottom);
+            var bottomRow = RowIndexAt(0, CellDataRect.Bottom);
 
-            var maxRowIndex = this.TableModel.Rows.Count - 1;
+            var maxRowIndex = TableModel.Rows.Count - 1;
             if (bottomRow > maxRowIndex)
             {
                 bottomRow = maxRowIndex;
@@ -8561,9 +8381,9 @@ namespace XPTable.Models
 
             // Go through each row, and see if it has any colspans that mean we can't draw 
             // the vertical gridline as one long line
-            for (int irow = topRow; irow < bottomRow; irow++)
+            for (var irow = topRow; irow < bottomRow; irow++)
             {
-                Row row = this.TableModel.Rows[irow];
+                var row = TableModel.Rows[irow];
                 if (row == null)
                 {
                     continue;
@@ -8576,8 +8396,8 @@ namespace XPTable.Models
                 }
 
                 // Fix by schoetbi: [PATCH 3/6] Fixed index out of range exception
-                int loopTo = Math.Min(flags.Length, columns);
-                for (int col = 0; col < loopTo; col++)
+                var loopTo = Math.Min(flags.Length, columns);
+                for (var col = 0; col < loopTo; col++)
                 {
                     if (!flags[col])
                     {
@@ -8593,10 +8413,10 @@ namespace XPTable.Models
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        static List<bool> CreateNewBoolList(int count)
+        private static List<bool> CreateNewBoolList(int count)
         {
             var wholeLineFlags = new List<bool>();
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 wholeLineFlags.Add(true);
             }
@@ -8614,56 +8434,56 @@ namespace XPTable.Models
         protected void OnPaintHeader(PaintEventArgs e)
         {
             // only bother if we actually get to paint something
-            if (!this.HeaderRectangle.IntersectsWith(e.ClipRectangle))
+            if (!HeaderRectangle.IntersectsWith(e.ClipRectangle))
             {
                 return;
             }
 
-            int xPos = this.DisplayRectangleLeft;
-            bool needDummyHeader = true;
+            var xPos = DisplayRectangleLeft;
+            var needDummyHeader = true;
 
             //
-            PaintHeaderEventArgs phea = new PaintHeaderEventArgs(e.Graphics, e.ClipRectangle);
+            var phea = new PaintHeaderEventArgs(e.Graphics, e.ClipRectangle);
 
-            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            for (var i = 0; i < ColumnModel.Columns.Count; i++)
             {
                 // check that the column isn't hidden
-                if (this.ColumnModel.Columns[i].Visible)
+                if (ColumnModel.Columns[i].Visible)
                 {
-                    Rectangle colHeaderRect = new Rectangle(xPos, this.BorderWidth, this.ColumnModel.Columns[i].Width, this.HeaderHeight);
+                    var colHeaderRect = new Rectangle(xPos, BorderWidth, ColumnModel.Columns[i].Width, HeaderHeight);
 
                     // check that the column intersects with the clipping rect
                     if (e.ClipRectangle.IntersectsWith(colHeaderRect))
                     {
                         // move and resize the headerRenderer
-                        this.headerRenderer.Bounds = new Rectangle(xPos, this.BorderWidth, this.ColumnModel.Columns[i].Width, this.HeaderHeight);
+                        headerRenderer.Bounds = new Rectangle(xPos, BorderWidth, ColumnModel.Columns[i].Width, HeaderHeight);
 
                         // set the clipping area to the header renderers bounds
-                        phea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, this.headerRenderer.Bounds));
+                        phea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, headerRenderer.Bounds));
 
                         // draw the column header
-                        phea.SetColumn(this.ColumnModel.Columns[i]);
+                        phea.SetColumn(ColumnModel.Columns[i]);
                         phea.SetColumnIndex(i);
                         phea.SetTable(this);
-                        phea.SetHeaderStyle(this.HeaderStyle);
-                        phea.SetHeaderRect(this.headerRenderer.Bounds);
+                        phea.SetHeaderStyle(HeaderStyle);
+                        phea.SetHeaderRect(headerRenderer.Bounds);
 
                         // let the user get the first crack at painting the header
-                        this.OnBeforePaintHeader(phea);
+                        OnBeforePaintHeader(phea);
 
                         // only send to the renderer if the user hasn't 
                         // set the handled property
                         if (!phea.Handled)
                         {
-                            this.headerRenderer.OnPaintHeader(phea);
+                            headerRenderer.OnPaintHeader(phea);
                         }
 
                         // let the user have another go
-                        this.OnAfterPaintHeader(phea);
+                        OnAfterPaintHeader(phea);
                     }
 
                     // set the next column start position
-                    xPos += this.ColumnModel.Columns[i].Width;
+                    xPos += ColumnModel.Columns[i].Width;
 
                     // if the next start poition is past the right edge
                     // of the clipping rectangle then we don't need to
@@ -8676,7 +8496,7 @@ namespace XPTable.Models
                     // check is the next column position is past the
                     // right edge of the table.  if it is, get out of
                     // here as we don't need to draw anymore columns
-                    if (xPos >= this.ClientRectangle.Width)
+                    if (xPos >= ClientRectangle.Width)
                     {
                         needDummyHeader = false;
 
@@ -8688,28 +8508,28 @@ namespace XPTable.Models
             if (needDummyHeader)
             {
                 // move and resize the headerRenderer
-                this.headerRenderer.Bounds = new Rectangle(xPos, this.BorderWidth, this.ClientRectangle.Width - xPos + 2, this.HeaderHeight);
+                headerRenderer.Bounds = new Rectangle(xPos, BorderWidth, ClientRectangle.Width - xPos + 2, HeaderHeight);
 
-                phea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, this.headerRenderer.Bounds));
+                phea.Graphics.SetClip(Rectangle.Intersect(e.ClipRectangle, headerRenderer.Bounds));
 
                 phea.SetColumn(null);
                 phea.SetColumnIndex(-1);
                 phea.SetTable(this);
-                phea.SetHeaderStyle(this.HeaderStyle);
-                phea.SetHeaderRect(this.headerRenderer.Bounds);
+                phea.SetHeaderStyle(HeaderStyle);
+                phea.SetHeaderRect(headerRenderer.Bounds);
 
                 // let the user get the first crack at painting the header
-                this.OnBeforePaintHeader(phea);
+                OnBeforePaintHeader(phea);
 
                 // only send to the renderer if the user hasn't 
                 // set the handled property
                 if (!phea.Handled)
                 {
-                    this.headerRenderer.OnPaintHeader(phea);
+                    headerRenderer.OnPaintHeader(phea);
                 }
 
                 // let the user have another go
-                this.OnAfterPaintHeader(phea);
+                OnAfterPaintHeader(phea);
             }
         }
 
@@ -8720,10 +8540,7 @@ namespace XPTable.Models
         /// <param name="e">A PaintCellEventArgs that contains the event data</param>
         protected virtual void OnBeforePaintHeader(PaintHeaderEventArgs e)
         {
-            if (BeforePaintHeader != null)
-            {
-                BeforePaintHeader(this, e);
-            }
+            BeforePaintHeader?.Invoke(this, e);
         }
 
 
@@ -8733,10 +8550,7 @@ namespace XPTable.Models
         /// <param name="e">A PaintHeaderEventArgs that contains the event data</param>
         protected virtual void OnAfterPaintHeader(PaintHeaderEventArgs e)
         {
-            if (AfterPaintHeader != null)
-            {
-                AfterPaintHeader(this, e);
-            }
+            AfterPaintHeader?.Invoke(this, e);
         }
 
         #endregion
@@ -8749,23 +8563,23 @@ namespace XPTable.Models
         /// <param name="e">A PaintEventArgs that contains the event data</param>
         protected void OnPaintRows(PaintEventArgs e)
         {
-            int xPos = this.DisplayRectangleLeft;
-            int yPos = this.PseudoClientRect.Top;
+            var xPos = DisplayRectangleLeft;
+            var yPos = PseudoClientRect.Top;
 
-            if (this.HeaderStyle != ColumnHeaderStyle.None)
+            if (HeaderStyle != ColumnHeaderStyle.None)
             {
-                yPos += this.HeaderHeight;
+                yPos += HeaderHeight;
             }
 
-            bool wordWrapOn = this.EnableWordWrap;
+            var wordWrapOn = EnableWordWrap;
 
-            Rectangle rowRect = new Rectangle(xPos, yPos, this.ColumnModel.TotalColumnWidth, this.RowHeight);
+            var rowRect = new Rectangle(xPos, yPos, ColumnModel.TotalColumnWidth, RowHeight);
 
-            IRowFilter rowFilter = this.GetRowFilter();
+            var rowFilter = GetRowFilter();
 
-            for (int i = this.TopIndex; i < this.TableModel.Rows.Count; i++)
+            for (var i = TopIndex; i < TableModel.Rows.Count; i++)
             {
-                Row row = this.TableModel.Rows[i];
+                var row = TableModel.Rows[i];
                 if (row == null)
                 {
                     continue;
@@ -8785,13 +8599,13 @@ namespace XPTable.Models
 
                 if (wordWrapOn)
                 {
-                    rowRect.Height = this.GetRenderedRowHeight(e.Graphics, row);
+                    rowRect.Height = GetRenderedRowHeight(e.Graphics, row);
                     row.InternalHeight = rowRect.Height;
                 }
 
                 if (rowRect.IntersectsWith(e.ClipRectangle))
                 {
-                    this.OnPaintRow(e, i, rowRect);
+                    OnPaintRow(e, i, rowRect);
                 }
                 else if (rowRect.Top > e.ClipRectangle.Bottom)
                 {
@@ -8803,13 +8617,13 @@ namespace XPTable.Models
             }
 
             #region Set the background colour of the sorted column
-            if (this.IsValidColumn(this.lastSortedColumn))
+            if (IsValidColumn(lastSortedColumn))
             {
-                if (rowRect.Y < this.PseudoClientRect.Bottom)
+                if (rowRect.Y < PseudoClientRect.Bottom)
                 {
-                    Rectangle columnRect = this.ColumnRect(this.lastSortedColumn);
+                    var columnRect = ColumnRect(lastSortedColumn);
                     columnRect.Y = rowRect.Y;
-                    columnRect.Height = this.PseudoClientRect.Bottom - rowRect.Y;
+                    columnRect.Height = PseudoClientRect.Bottom - rowRect.Y;
 
                     if (columnRect.IntersectsWith(e.ClipRectangle))
                     {
@@ -8817,26 +8631,26 @@ namespace XPTable.Models
 
                         e.Graphics.SetClip(columnRect);
 
-                        using (SolidBrush brush = new SolidBrush(this.SortedColumnBackColor))
-                        {
-                            e.Graphics.FillRectangle(brush, columnRect);
-                        }
+                        using var brush = new SolidBrush(SortedColumnBackColor);
+                        e.Graphics.FillRectangle(brush, columnRect);
                     }
                 }
             }
             #endregion
         }
 
-        IRowFilter GetRowFilter()
+        private IRowFilter GetRowFilter()
         {
-            if (!this.EnableFilters)
+            if (!EnableFilters)
+            {
                 return null;
+            }
 
             var filters = new Dictionary<int, IColumnFilter>();
 
-            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            for (var i = 0; i < ColumnModel.Columns.Count; i++)
             {
-                Column column = this.ColumnModel.Columns[i];
+                var column = ColumnModel.Columns[i];
 
                 if (column.Filter != null && column.Filter.IsFilterActive)
                 {
@@ -8845,7 +8659,9 @@ namespace XPTable.Models
             }
 
             if (filters.Count == 0)
+            {
                 return null;
+            }
 
             return new RowFilter(filters);
         }
@@ -8858,38 +8674,35 @@ namespace XPTable.Models
         /// <param name="rowRect">The bounding Rectangle of the Row to be painted</param>
         protected void OnPaintRow(PaintEventArgs e, int row, Rectangle rowRect)
         {
-            Rectangle cellRect = new Rectangle(rowRect.X, rowRect.Y, 0, rowRect.Height);
+            var cellRect = new Rectangle(rowRect.X, rowRect.Y, 0, rowRect.Height);
 
-            int colsToIgnore = 0;       // Used to skip cells that are ignored because of a colspan
+            var colsToIgnore = 0;       // Used to skip cells that are ignored because of a colspan
 
-            var nColumns = this.ColumnModel.Columns.Count;
+            var nColumns = ColumnModel.Columns.Count;
             var gridLineFlags = new bool[nColumns];
 
-            for (int i = 0; i < nColumns; i++)
+            for (var i = 0; i < nColumns; i++)
             {
-                if (!this.ColumnModel.Columns[i].Visible)
+                if (!ColumnModel.Columns[i].Visible)
                 {
                     continue;
                 }
 
-                Cell cell = this.TableModel[row, i];
+                var cell = TableModel[row, i];
                 if (colsToIgnore == 0)
                 {
-                    cellRect.Width = this.ColumnModel.Columns[i].Width;
+                    cellRect.Width = ColumnModel.Columns[i].Width;
 
                     // Cope with missing cells in a row
-                    if (cell == null)
-                    {
-                        cell = new Cell();
-                    }
+                    cell ??= new Cell();
 
                     // If this cell spans other columns, then the width (above) needs to take into account
                     // the spanned columns too.
                     if (cell.ColSpan > 1)
                     {
-                        for (int span = 1; span < cell.ColSpan; span++)
+                        for (var span = 1; span < cell.ColSpan; span++)
                         {
-                            cellRect.Width += this.ColumnModel.Columns[i + span].Width;
+                            cellRect.Width += ColumnModel.Columns[i + span].Width;
                         }
                     }
 
@@ -8897,7 +8710,7 @@ namespace XPTable.Models
                     {
                         try
                         {
-                            this.OnPaintCell(e, row, i, cellRect);
+                            OnPaintCell(e, row, i, cellRect);
                         }
                         catch (Exception exception)
                         {
@@ -8925,14 +8738,11 @@ namespace XPTable.Models
 
                 gridLineFlags[i] = colsToIgnore < 1;
 
-                cellRect.X += this.ColumnModel.Columns[i].Width;
+                cellRect.X += ColumnModel.Columns[i].Width;
             }
 
-            Row r = this.TableModel.Rows[row];
-            if (r.InternalGridLineFlags == null)
-            {
-                r.InternalGridLineFlags = gridLineFlags;
-            }
+            var r = TableModel.Rows[row];
+            r.InternalGridLineFlags ??= gridLineFlags;
         }
 
         #endregion
@@ -8946,56 +8756,49 @@ namespace XPTable.Models
         /// <param name="e">A PaintEventArgs that contains the event data</param>
         protected void OnPaintEmptyTableText(PaintEventArgs e)
         {
-            if (this.ColumnModel == null || this.RowCount == 0)
+            if (ColumnModel == null || RowCount == 0)
             {
-                Rectangle client = this.CellDataRect;
+                var client = CellDataRect;
 
                 client.Y += 10;
                 client.Height -= 10;
 
-                StringFormat format = new StringFormat();
-                format.Alignment = StringAlignment.Center;
-
-                using (SolidBrush brush = new SolidBrush(this.ForeColor))
+                var format = new StringFormat
                 {
-                    if (this.DesignMode)
+                    Alignment = StringAlignment.Center
+                };
+
+                using var brush = new SolidBrush(ForeColor);
+                if (DesignMode)
+                {
+                    if (ColumnModel == null || TableModel == null)
                     {
-                        if (this.ColumnModel == null || this.TableModel == null)
+                        string text = null;
+
+                        if (ColumnModel == null)
                         {
-                            string text = null;
-
-                            if (this.ColumnModel == null)
-                            {
-                                if (this.TableModel == null)
-                                {
-                                    text = "Table does not have a ColumnModel or TableModel";
-                                }
-                                else
-                                {
-                                    text = "Table does not have a ColumnModel";
-                                }
-                            }
-                            else if (this.TableModel == null)
-                            {
-                                text = "Table does not have a TableModel";
-                            }
-
-                            e.Graphics.DrawString(text, this.Font, brush, client, format);
+                            text = TableModel == null ? "Table does not have a ColumnModel or TableModel" : "Table does not have a ColumnModel";
                         }
-                        else if (this.TableModel != null && this.TableModel.Rows.Count == 0)
+                        else if (TableModel == null)
                         {
-                            if (this.NoItemsText != null && this.NoItemsText.Length > 0)
-                            {
-                                e.Graphics.DrawString(this.NoItemsText, this.Font, brush, client, format);
-                            }
+                            text = "Table does not have a TableModel";
+                        }
+
+                        e.Graphics.DrawString(text, Font, brush, client, format);
+                    }
+                    else if (TableModel != null && TableModel.Rows.Count == 0)
+                    {
+                        if (NoItemsText != null && NoItemsText.Length > 0)
+                        {
+                            e.Graphics.DrawString(NoItemsText, Font, brush, client, format);
                         }
                     }
-                    else
+                }
+                else
+                {
+                    if (NoItemsText != null && NoItemsText.Length > 0)
                     {
-                        if (this.NoItemsText != null && this.NoItemsText.Length > 0)
-                        {
-                            e.Graphics.DrawString(this.NoItemsText, this.Font, brush, client, format);
-                        }
+                        e.Graphics.DrawString(NoItemsText, Font, brush, client, format);
                     }
                 }
             }
@@ -9013,24 +8816,21 @@ namespace XPTable.Models
         /// <param name="e">A RowEventArgs that contains the event data</param>
         protected internal virtual void OnRowPropertyChanged(RowEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
                 if (e.EventType == RowEventType.ExpandSubRowsChanged)
                 {
                     // This changes the whole table
-                    this.Invalidate();
+                    Invalidate();
 
                     UpdateScrollBars();
                 }
                 else
                 {
                     // These events just change the row itself
-                    this.InvalidateRow(e.Index);
+                    InvalidateRow(e.Index);
 
-                    if (RowPropertyChanged != null)
-                    {
-                        RowPropertyChanged(e.Row, e);
-                    }
+                    RowPropertyChanged?.Invoke(e.Row, e);
                 }
             }
         }
@@ -9042,14 +8842,11 @@ namespace XPTable.Models
         /// <param name="e">A RowEventArgs that contains the event data</param>
         protected internal virtual void OnCellAdded(RowEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.InvalidateRow(e.Index);
+                InvalidateRow(e.Index);
 
-                if (CellAdded != null)
-                {
-                    CellAdded(e.Row, e);
-                }
+                CellAdded?.Invoke(e.Row, e);
             }
         }
 
@@ -9060,29 +8857,26 @@ namespace XPTable.Models
         /// <param name="e">A RowEventArgs that contains the event data</param>
         protected internal virtual void OnCellRemoved(RowEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.InvalidateRow(e.Index);
+                InvalidateRow(e.Index);
 
-                if (CellRemoved != null)
-                {
-                    CellRemoved(this, e);
-                }
+                CellRemoved?.Invoke(this, e);
 
                 if (e.CellFromIndex == -1 && e.CellToIndex == -1)
                 {
-                    if (this.FocusedCell.Row == e.Index)
+                    if (FocusedCell.Row == e.Index)
                     {
-                        this.focusedCell = CellPos.Empty;
+                        focusedCell = CellPos.Empty;
                     }
                 }
                 else
                 {
-                    for (int i = e.CellFromIndex; i <= e.CellToIndex; i++)
+                    for (var i = e.CellFromIndex; i <= e.CellToIndex; i++)
                     {
-                        if (this.FocusedCell.Row == e.Index && this.FocusedCell.Column == i)
+                        if (FocusedCell.Row == e.Index && FocusedCell.Column == i)
                         {
-                            this.focusedCell = CellPos.Empty;
+                            focusedCell = CellPos.Empty;
 
                             break;
                         }
@@ -9104,35 +8898,35 @@ namespace XPTable.Models
         {
             // stop editing as the editor doesn't move while 
             // the table scrolls
-            if (this.IsEditing)
+            if (IsEditing)
             {
-                this.StopEditing();
+                StopEditing();
             }
 
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
                 // non-solid row lines develop artifacts while scrolling 
                 // with the thumb so we invalidate the table once thumb 
                 // scrolling has finished to make them look nice again
                 if (e.Type == ScrollEventType.ThumbPosition)
                 {
-                    if (this.GridLineStyle != GridLineStyle.Solid)
+                    if (GridLineStyle != GridLineStyle.Solid)
                     {
-                        if (this.GridLines == GridLines.Rows || this.GridLines == GridLines.Both)
+                        if (GridLines is GridLines.Rows or GridLines.Both)
                         {
-                            this.Invalidate(this.CellDataRect, false);
+                            Invalidate(CellDataRect, false);
                         }
                     }
 
                     // same with the focus rect
-                    if (this.FocusedCell != CellPos.Empty)
+                    if (FocusedCell != CellPos.Empty)
                     {
-                        this.Invalidate(this.CellRect(this.FocusedCell), false);
+                        Invalidate(CellRect(FocusedCell), false);
                     }
                 }
                 else
                 {
-                    this.HorizontalScroll(e.NewValue);
+                    HorizontalScroll(e.NewValue);
                 }
             }
         }
@@ -9147,16 +8941,18 @@ namespace XPTable.Models
         {
             // stop editing as the editor doesn't move while 
             // the table scrolls
-            if (this.IsEditing)
-                this.StopEditing();
-
-            if (this.CanRaiseEvents)
+            if (IsEditing)
             {
-                if (e.Type == ScrollEventType.EndScroll
-                    || e.Type == ScrollEventType.SmallIncrement
-                    || e.Type == ScrollEventType.SmallDecrement)
+                StopEditing();
+            }
+
+            if (CanRaiseEvents)
+            {
+                if (e.Type is ScrollEventType.EndScroll
+                    or ScrollEventType.SmallIncrement
+                    or ScrollEventType.SmallDecrement)
                 {
-                    int i = EnsureSafeVScrollValue(e.NewValue);
+                    var i = EnsureSafeVScrollValue(e.NewValue);
                     e.NewValue = i;
                 }
             }
@@ -9165,14 +8961,16 @@ namespace XPTable.Models
 
         private void vScrollBar_ValueChanged(object sender, EventArgs e)
         {
-            int newtopIndex = GetNewTopRowIndex(topIndex, vScrollBar.Value - lastVScrollValue);
+            var newtopIndex = GetNewTopRowIndex(topIndex, vScrollBar.Value - lastVScrollValue);
 
             topIndex = newtopIndex;
 
-            this.Invalidate();
+            Invalidate();
 
-            if (this.EnableWordWrap)
+            if (EnableWordWrap)
+            {
                 UpdateScrollBars();
+            }
 
             lastVScrollValue = vScrollBar.Value;
         }
@@ -9186,7 +8984,7 @@ namespace XPTable.Models
         {
             // don't let the scrollbars have focus 
             // (appears to slow scroll speed otherwise)
-            this.Focus();
+            Focus();
         }
 
         #endregion
@@ -9199,10 +8997,7 @@ namespace XPTable.Models
         /// <param name="e">A ColumnEventArgs that contains the event data</param>
         protected virtual void OnBeginSort(ColumnEventArgs e)
         {
-            if (BeginSort != null)
-            {
-                BeginSort(this, e);
-            }
+            BeginSort?.Invoke(this, e);
         }
 
 
@@ -9212,10 +9007,7 @@ namespace XPTable.Models
         /// <param name="e">A ColumnEventArgs that contains the event data</param>
         protected virtual void OnEndSort(ColumnEventArgs e)
         {
-            if (EndSort != null)
-            {
-                EndSort(this, e);
-            }
+            EndSort?.Invoke(this, e);
         }
 
         #endregion
@@ -9228,15 +9020,12 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected internal virtual void OnTableModelChanged(TableEventArgs e) // PJD TEA change
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                this.Invalidate();
+                PerformLayout();
+                Invalidate();
 
-                if (TableModelChanged != null)
-                {
-                    TableModelChanged(this, e);
-                }
+                TableModelChanged?.Invoke(this, e);
             }
         }
 
@@ -9247,36 +9036,33 @@ namespace XPTable.Models
         /// <param name="e">A TableModelEventArgs that contains the event data</param>
         protected internal virtual void OnSelectionChanged(SelectionEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
                 if (e.OldSelectionBounds != Rectangle.Empty)
                 {
-                    Rectangle invalidateRect = new Rectangle(this.DisplayRectToClient(e.OldSelectionBounds.Location), e.OldSelectionBounds.Size);
+                    var invalidateRect = new Rectangle(DisplayRectToClient(e.OldSelectionBounds.Location), e.OldSelectionBounds.Size);
 
-                    if (this.HeaderStyle != ColumnHeaderStyle.None)
+                    if (HeaderStyle != ColumnHeaderStyle.None)
                     {
-                        invalidateRect.Y += this.HeaderHeight;
+                        invalidateRect.Y += HeaderHeight;
                     }
 
-                    this.InvalidateRect(invalidateRect);
+                    InvalidateRect(invalidateRect);
                 }
 
                 if (e.NewSelectionBounds != Rectangle.Empty)
                 {
-                    Rectangle invalidateRect = new Rectangle(this.DisplayRectToClient(e.NewSelectionBounds.Location), e.NewSelectionBounds.Size);
+                    var invalidateRect = new Rectangle(DisplayRectToClient(e.NewSelectionBounds.Location), e.NewSelectionBounds.Size);
 
-                    if (this.HeaderStyle != ColumnHeaderStyle.None)
+                    if (HeaderStyle != ColumnHeaderStyle.None)
                     {
-                        invalidateRect.Y += this.HeaderHeight;
+                        invalidateRect.Y += HeaderHeight;
                     }
 
-                    this.InvalidateRect(invalidateRect);
+                    InvalidateRect(invalidateRect);
                 }
 
-                if (SelectionChanged != null)
-                {
-                    SelectionChanged(this, e);
-                }
+                SelectionChanged?.Invoke(this, e);
             }
         }
 
@@ -9287,15 +9073,12 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected internal virtual void OnRowHeightChanged(EventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                this.Invalidate();
+                PerformLayout();
+                Invalidate();
 
-                if (RowHeightChanged != null)
-                {
-                    RowHeightChanged(this, e);
-                }
+                RowHeightChanged?.Invoke(this, e);
             }
         }
 
@@ -9307,19 +9090,16 @@ namespace XPTable.Models
         protected internal virtual void OnRowAdded(TableModelEventArgs e)
         {
             // tunned by Kosmokrat Hismoom on 9 jan 2006
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                Rectangle rowRect = this.RowRect(e.Row.Index);
+                PerformLayout();
+                var rowRect = RowRect(e.Row.Index);
                 if ((rowRect != Rectangle.Empty)
-                    && (rowRect.IntersectsWith(this.CellDataRect)))
+                    && rowRect.IntersectsWith(CellDataRect))
                 {
-                    this.Invalidate();
+                    Invalidate();
                 }
-                if (RowAdded != null)
-                {
-                    RowAdded(e.TableModel, e);
-                }
+                RowAdded?.Invoke(e.TableModel, e);
             }
         }
 
@@ -9330,10 +9110,10 @@ namespace XPTable.Models
         /// <param name="e">A TableModelEventArgs that contains the event data</param>
         protected internal virtual void OnRowRemoved(TableModelEventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                this.PerformLayout();
-                this.Invalidate();
+                PerformLayout();
+                Invalidate();
 
                 // Removing a parent row should also remove the child rows...
                 // Fix (Colby Dillion)
@@ -9345,10 +9125,7 @@ namespace XPTable.Models
                     }
                 }
 
-                if (RowRemoved != null)
-                {
-                    RowRemoved(e.TableModel, e);
-                }
+                RowRemoved?.Invoke(e.TableModel, e);
             }
         }
 
@@ -9361,8 +9138,10 @@ namespace XPTable.Models
         /// <param name="e">A CellToolTipEventArgs that contains the event data</param>
         protected internal virtual void OnCellToolTipPopup(CellToolTipEventArgs e)
         {
-            if (this.CanRaiseEvents && CellToolTipPopup != null)
+            if (CanRaiseEvents && CellToolTipPopup != null)
+            {
                 CellToolTipPopup(this, e);
+            }
         }
 
         /// <summary>
@@ -9371,8 +9150,10 @@ namespace XPTable.Models
         /// <param name="e">A HeaderToolTipEventArgs that contains the event data</param>
         protected internal virtual void OnHeaderToolTipPopup(HeaderToolTipEventArgs e)
         {
-            if (this.CanRaiseEvents && HeaderToolTipPopup != null)
+            if (CanRaiseEvents && HeaderToolTipPopup != null)
+            {
                 HeaderToolTipPopup(this, e);
+            }
         }
         #endregion
 
@@ -9392,12 +9173,12 @@ namespace XPTable.Models
         /// <summary>
         /// Delegate for the handler of the ListChanged event.
         /// </summary>
-        private ListChangedEventHandler listChangedHandler;
+        private readonly ListChangedEventHandler listChangedHandler;
 
         /// <summary>
         /// Delegate for the handler of the PositionChanged event.
         /// </summary>
-        private EventHandler positionChangedHandler;
+        private readonly EventHandler positionChangedHandler;
 
         /// <summary>
         /// Provides mapping from the data source to the XPTable.
@@ -9424,8 +9205,8 @@ namespace XPTable.Models
         [Browsable(false)]
         public DataSourceColumnBinder DataSourceColumnBinder
         {
-            get { return dataSourceColumnBinder; }
-            set { dataSourceColumnBinder = value; }
+            get => dataSourceColumnBinder;
+            set => dataSourceColumnBinder = value;
         }
 
         /// <summary>
@@ -9436,15 +9217,12 @@ namespace XPTable.Models
         [DefaultValue(null)]
         public object DataSource
         {
-            get
-            {
-                return this.dataSource;
-            }
+            get => dataSource;
             set
             {
-                if (this.dataSource != value)
+                if (dataSource != value)
                 {
-                    this.dataSource = value;
+                    dataSource = value;
                     TryDataBinding();
                 }
             }
@@ -9458,15 +9236,12 @@ namespace XPTable.Models
         [DefaultValue("")]
         public string DataMember
         {
-            get
-            {
-                return this.dataMember;
-            }
+            get => dataMember;
             set
             {
-                if (this.dataMember != value)
+                if (dataMember != value)
                 {
-                    this.dataMember = value;
+                    dataMember = value;
                     TryDataBinding();
                 }
             }
@@ -9482,7 +9257,7 @@ namespace XPTable.Models
         /// <param name="e"></param>
         protected override void OnBindingContextChanged(EventArgs e)
         {
-            this.TryDataBinding();
+            TryDataBinding();
             base.OnBindingContextChanged(e);
         }
 
@@ -9493,8 +9268,8 @@ namespace XPTable.Models
         /// <param name="e"></param>
         private void dataManager_ListChanged(object sender, ListChangedEventArgs e)
         {
-            if (e.ListChangedType == ListChangedType.Reset ||
-                e.ListChangedType == ListChangedType.ItemMoved)
+            if (e.ListChangedType is ListChangedType.Reset or
+                ListChangedType.ItemMoved)
             {
                 // Update all data
                 UpdateAllData();
@@ -9530,10 +9305,10 @@ namespace XPTable.Models
         /// <param name="e"></param>
         private void dataManager_PositionChanged(object sender, EventArgs e)
         {
-            if (this.TableModel.Rows.Count > dataManager.Position)
+            if (TableModel.Rows.Count > dataManager.Position)
             {
-                this.TableModel.Selections.SelectCell(dataManager.Position, 0);
-                this.EnsureVisible(dataManager.Position, 0);
+                TableModel.Selections.SelectCell(dataManager.Position, 0);
+                EnsureVisible(dataManager.Position, 0);
             }
         }
         #endregion
@@ -9546,13 +9321,15 @@ namespace XPTable.Models
         /// </summary>
         private void TryDataBinding()
         {
-            if (this.DataSource == null || base.BindingContext == null)
+            if (DataSource == null || base.BindingContext == null)
+            {
                 return;
+            }
 
             CurrencyManager cm;
             try
             {
-                cm = (CurrencyManager)base.BindingContext[this.DataSource, this.DataMember];
+                cm = (CurrencyManager)base.BindingContext[DataSource, DataMember];
             }
             catch (System.ArgumentException)
             {
@@ -9560,25 +9337,30 @@ namespace XPTable.Models
                 return;
             }
 
-            if (this.dataManager != cm)
+            if (dataManager != cm)
             {
                 // Unwire the old CurrencyManager
-                if (this.dataManager != null)
+                if (dataManager != null)
                 {
                     //                    this.dataManager.ListChanged -= listChangedHandler;	// only in .Net 2.0
-                    this.dataManager.PositionChanged -= positionChangedHandler;
-                    if (this.dataManager.List is IBindingList)
-                        ((IBindingList)this.dataManager.List).ListChanged -= listChangedHandler;	// OK for .Net 1.1
+                    dataManager.PositionChanged -= positionChangedHandler;
+                    if (dataManager.List is IBindingList)
+                    {
+                        ((IBindingList)dataManager.List).ListChanged -= listChangedHandler;    // OK for .Net 1.1
+                    }
                 }
-                this.dataManager = cm;
+                dataManager = cm;
 
                 // Wire the new CurrencyManager
-                if (this.dataManager != null)
+                if (dataManager != null)
                 {
                     //                    this.dataManager.ListChanged += listChangedHandler;	// only in .Net 2.0
-                    if (this.dataManager.List is IBindingList)
-                        ((IBindingList)this.dataManager.List).ListChanged += listChangedHandler;	// OK for .Net 1.1
-                    this.dataManager.PositionChanged += positionChangedHandler;
+                    if (dataManager.List is IBindingList)
+                    {
+                        ((IBindingList)dataManager.List).ListChanged += listChangedHandler;    // OK for .Net 1.1
+                    }
+
+                    dataManager.PositionChanged += positionChangedHandler;
                 }
 
                 // Update metadata and data
@@ -9594,11 +9376,13 @@ namespace XPTable.Models
         private void CalculateColumns()
         {
             if (dataManager == null)
+            {
                 return;
+            }
 
-            ColumnModel columns = this.DataSourceColumnBinder.GetColumnModel(dataManager.GetItemProperties());
+            var columns = DataSourceColumnBinder.GetColumnModel(dataManager.GetItemProperties());
 
-            this.ColumnModel = columns;
+            ColumnModel = columns;
         }
 
         /// <summary>
@@ -9606,11 +9390,10 @@ namespace XPTable.Models
         /// </summary>
         private void UpdateAllData()
         {
-            if (this.TableModel == null)
-                this.TableModel = new TableModel();
+            TableModel ??= new TableModel();
 
-            this.TableModel.Rows.Clear();
-            for (int i = 0; i < dataManager.Count; i++)
+            TableModel.Rows.Clear();
+            for (var i = 0; i < dataManager.Count; i++)
             {
                 AddItem(i);
             }
@@ -9623,21 +9406,18 @@ namespace XPTable.Models
         /// <returns></returns>
         private Row GetRowFromDataSource(int index)
         {
-            object row = dataManager.List[index];
-            PropertyDescriptorCollection propColl = dataManager.GetItemProperties();
+            var row = dataManager.List[index];
+            var propColl = dataManager.GetItemProperties();
 
-            Cell[] cells = new Cell[this.ColumnModel.Columns.Count];
+            var cells = new Cell[ColumnModel.Columns.Count];
 
             // Fill value for each column
-            int i = 0;
-            foreach (Column column in this.ColumnModel.Columns)
+            var i = 0;
+            foreach (Column column in ColumnModel.Columns)
             {
-                PropertyDescriptor prop = propColl.Find(column.Text, false);
-                if (prop == null)
-                    throw new ApplicationException(string.Format("Cannot find property '{0}' in datasource.", column.Text));
-
-                object val = prop.GetValue(row);
-                Cell cell = this.DataSourceColumnBinder.GetCell(column, val);
+                var prop = propColl.Find(column.Text, false) ?? throw new ApplicationException(string.Format("Cannot find property '{0}' in datasource.", column.Text));
+                var val = prop.GetValue(row);
+                var cell = DataSourceColumnBinder.GetCell(column, val);
                 cells.SetValue(cell, i);
                 i++;
             }
@@ -9651,8 +9431,8 @@ namespace XPTable.Models
         /// <param name="index"></param>
         private void AddItem(int index)
         {
-            Row row = this.GetRowFromDataSource(index);
-            this.TableModel.Rows.Insert(index, row);
+            var row = GetRowFromDataSource(index);
+            TableModel.Rows.Insert(index, row);
         }
 
         /// <summary>
@@ -9661,10 +9441,10 @@ namespace XPTable.Models
         /// <param name="index"></param>
         private void UpdateItem(int index)
         {
-            if (index >= 0 && index < this.TableModel.Rows.Count)
+            if (index >= 0 && index < TableModel.Rows.Count)
             {
-                Row item = GetRowFromDataSource(index);
-                this.TableModel.Rows.SetRow(index, item);
+                var item = GetRowFromDataSource(index);
+                TableModel.Rows.SetRow(index, item);
             }
         }
 
@@ -9674,8 +9454,10 @@ namespace XPTable.Models
         /// <param name="index"></param>
         private void DeleteItem(int index)
         {
-            if (index >= 0 && index < this.TableModel.Rows.Count)
-                this.TableModel.Rows.RemoveAt(index);
+            if (index >= 0 && index < TableModel.Rows.Count)
+            {
+                TableModel.Rows.RemoveAt(index);
+            }
         }
 
         #endregion

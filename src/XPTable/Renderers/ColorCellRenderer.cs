@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -35,256 +35,240 @@ using XPTable.Models;
 
 namespace XPTable.Renderers
 {
-	/// <summary>
-	/// A CellRenderer that draws Cell contents as Buttons
-	/// </summary>
-	public class ColorCellRenderer : DropDownCellRenderer
-	{
-		#region Class Data
-		
-		/// <summary>
-		/// Specifies whether the Cells Color should be drawn
-		/// </summary>
-		private bool showColor;
+    /// <summary>
+    /// A CellRenderer that draws Cell contents as Buttons
+    /// </summary>
+    public class ColorCellRenderer : DropDownCellRenderer
+    {
+        #region Class Data
 
-		/// <summary>
-		/// Specifies whether the Cells Color name should be drawn
-		/// </summary>
-		private bool showColorName;
+        /// <summary>
+        /// Specifies whether the Cells Color should be drawn
+        /// </summary>
+        private bool showColor;
 
-		#endregion
+        /// <summary>
+        /// Specifies whether the Cells Color name should be drawn
+        /// </summary>
+        private bool showColorName;
 
-
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ColorCellRenderer class with 
-		/// default settings
-		/// </summary>
-		public ColorCellRenderer() : base()
-		{
-			this.showColor = true;
-			this.showColorName = true;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Methods
+        #region Constructor
 
-		/// <summary>
-		/// Returns a Rectangle that specifies the size and location of the Color 
-		/// rectangle
-		/// </summary>
-		/// <param name="rowAlignment">The alignment of the Cells Row</param>
-		/// <param name="columnAlignment">The alignment of the Cells Column</param>
-		/// <returns>A Rectangle that specifies the size and location of the Color 
-		/// rectangle</returns>
-		protected Rectangle CalcColorRect(RowAlignment rowAlignment, ColumnAlignment columnAlignment)
-		{
-			Rectangle rect = this.ClientRectangle;
+        /// <summary>
+        /// Initializes a new instance of the ColorCellRenderer class with 
+        /// default settings
+        /// </summary>
+        public ColorCellRenderer() : base()
+        {
+            showColor = true;
+            showColorName = true;
+        }
 
-			rect.X += 2;
-			rect.Y += 2;
-			rect.Height -= 6;
-			rect.Width = 16;
-
-			return rect;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Properties
+        #region Methods
 
-		/// <summary>
-		/// Gets or sets whether the Cells Color should be drawn
-		/// </summary>
-		public bool ShowColor
-		{
-			get
-			{
-				return this.showColor;
-			}
+        /// <summary>
+        /// Returns a Rectangle that specifies the size and location of the Color 
+        /// rectangle
+        /// </summary>
+        /// <param name="rowAlignment">The alignment of the Cells Row</param>
+        /// <param name="columnAlignment">The alignment of the Cells Column</param>
+        /// <returns>A Rectangle that specifies the size and location of the Color 
+        /// rectangle</returns>
+        protected Rectangle CalcColorRect(RowAlignment rowAlignment, ColumnAlignment columnAlignment)
+        {
+            var rect = ClientRectangle;
 
-			set
-			{
-				this.showColor = value;
-			}
-		}
+            rect.X += 2;
+            rect.Y += 2;
+            rect.Height -= 6;
+            rect.Width = 16;
 
+            return rect;
+        }
 
-		/// <summary>
-		/// Gets or sets whether the Cells Color name should be drawn
-		/// </summary>
-		public bool ShowColorName
-		{
-			get
-			{
-				return this.showColorName;
-			}
-
-			set
-			{
-				this.showColorName = value;
-			}
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Events
+        #region Properties
 
-		/// <summary>
-		/// Raises the PaintCell event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		public override void OnPaintCell(PaintCellEventArgs e)
-		{
-			if (e.Table.ColumnModel.Columns[e.Column] is ColorColumn)
-			{
-				ColorColumn column = (ColorColumn) e.Table.ColumnModel.Columns[e.Column];
+        /// <summary>
+        /// Gets or sets whether the Cells Color should be drawn
+        /// </summary>
+        public bool ShowColor
+        {
+            get => showColor;
 
-				this.ShowColor = column.ShowColor;
-				this.ShowColorName = column.ShowColorName;
-			}
-			else
-			{
-				this.ShowColor = false;
-				this.ShowColorName = true;
-			}
-			
-			base.OnPaintCell(e);
-		}
+            set => showColor = value;
+        }
 
 
-		/// <summary>
-		/// Raises the Paint event
-		/// </summary>
-		/// <param name="e">A PaintCellEventArgs that contains the event data</param>
-		protected override void OnPaint(PaintCellEventArgs e)
-		{
-			base.OnPaint (e);
+        /// <summary>
+        /// Gets or sets whether the Cells Color name should be drawn
+        /// </summary>
+        public bool ShowColorName
+        {
+            get => showColorName;
 
-			// don't bother if the Cell is null
-			if (e.Cell == null)
-			{
-				return;
-			}
+            set => showColorName = value;
+        }
 
-			// get the Cells value
-			Color color = Color.Empty;
+        #endregion
 
-			if (e.Cell.Data != null && e.Cell.Data is Color)
-			{
-				color = (Color) e.Cell.Data;
-			}
 
-			Rectangle buttonRect = this.CalcDropDownButtonBounds();
+        #region Events
 
-			Rectangle textRect = this.ClientRectangle;
+        /// <summary>
+        /// Raises the PaintCell event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        public override void OnPaintCell(PaintCellEventArgs e)
+        {
+            if (e.Table.ColumnModel.Columns[e.Column] is ColorColumn column)
+            {
+                ShowColor = column.ShowColor;
+                ShowColorName = column.ShowColorName;
+            }
+            else
+            {
+                ShowColor = false;
+                ShowColorName = true;
+            }
 
-			if (this.ShowDropDownButton)
-			{
-				textRect.Width -= buttonRect.Width - 1;
-			}
+            base.OnPaintCell(e);
+        }
 
-			e.Graphics.SetClip(textRect);
 
-            int colourWidth = 0;
-			if (this.ShowColor)
-			{
-				Rectangle colorRect = this.CalcColorRect(e.Table.TableModel.Rows[e.Row].Alignment, e.Table.ColumnModel.Columns[e.Column].Alignment);
+        /// <summary>
+        /// Raises the Paint event
+        /// </summary>
+        /// <param name="e">A PaintCellEventArgs that contains the event data</param>
+        protected override void OnPaint(PaintCellEventArgs e)
+        {
+            base.OnPaint(e);
 
-				if (color != Color.Empty)
-				{
-					using (SolidBrush brush = new SolidBrush(color))
-					{
-						if (e.Enabled)
-						{
-							e.Graphics.FillRectangle(brush, colorRect);
-							e.Graphics.DrawRectangle(SystemPens.ControlText, colorRect);
-						}
-						else
-						{
-							using (Bitmap b = new Bitmap(colorRect.Width, colorRect.Height))
-							{
-								using (Graphics g = Graphics.FromImage(b))
-								{
-									g.FillRectangle(brush, 0, 0, colorRect.Width, colorRect.Height);
-									g.DrawRectangle(SystemPens.ControlText, 0, 0, colorRect.Width-1, colorRect.Height-1);
-								}
+            // don't bother if the Cell is null
+            if (e.Cell == null)
+            {
+                return;
+            }
 
-								ControlPaint.DrawImageDisabled(e.Graphics, b, colorRect.X, colorRect.Y, this.BackColor);
-							}
-						}
+            // get the Cells value
+            var color = Color.Empty;
+
+            if (e.Cell.Data is not null and Color)
+            {
+                color = (Color)e.Cell.Data;
+            }
+
+            var buttonRect = CalcDropDownButtonBounds();
+
+            var textRect = ClientRectangle;
+
+            if (ShowDropDownButton)
+            {
+                textRect.Width -= buttonRect.Width - 1;
+            }
+
+            e.Graphics.SetClip(textRect);
+
+            var colourWidth = 0;
+            if (ShowColor)
+            {
+                var colorRect = CalcColorRect(e.Table.TableModel.Rows[e.Row].Alignment, e.Table.ColumnModel.Columns[e.Column].Alignment);
+
+                if (color != Color.Empty)
+                {
+                    using (var brush = new SolidBrush(color))
+                    {
+                        if (e.Enabled)
+                        {
+                            e.Graphics.FillRectangle(brush, colorRect);
+                            e.Graphics.DrawRectangle(SystemPens.ControlText, colorRect);
+                        }
+                        else
+                        {
+                            using var b = new Bitmap(colorRect.Width, colorRect.Height);
+                            using (var g = Graphics.FromImage(b))
+                            {
+                                g.FillRectangle(brush, 0, 0, colorRect.Width, colorRect.Height);
+                                g.DrawRectangle(SystemPens.ControlText, 0, 0, colorRect.Width - 1, colorRect.Height - 1);
+                            }
+
+                            ControlPaint.DrawImageDisabled(e.Graphics, b, colorRect.X, colorRect.Y, BackColor);
+                        }
                         colourWidth = colorRect.Width;
-					}
+                    }
 
-					textRect.X = colorRect.Right + 2;
-					textRect.Width -= colorRect.Width + 4;
-				}
-			}
+                    textRect.X = colorRect.Right + 2;
+                    textRect.Width -= colorRect.Width + 4;
+                }
+            }
 
-            int textWidth = 0;
-			if (this.ShowColorName)
-			{
-				string text = "";
+            var textWidth = 0;
+            if (ShowColorName)
+            {
+                var text = "";
 
-				if (color.IsEmpty)
-				{
-					text = "Empty";
-				}
-				else if (color.IsNamedColor || color.IsSystemColor)
-				{
-					text = color.Name;
-				}
-				else
-				{
-					if (color.A != 255)
-					{
-						text += color.A + ", ";
-					}
+                if (color.IsEmpty)
+                {
+                    text = "Empty";
+                }
+                else if (color.IsNamedColor || color.IsSystemColor)
+                {
+                    text = color.Name;
+                }
+                else
+                {
+                    if (color.A != 255)
+                    {
+                        text += color.A + ", ";
+                    }
 
-					text += color.R +", " + color.G + ", " + color.B;
-				}
+                    text += color.R + ", " + color.G + ", " + color.B;
+                }
 
-				if (e.Enabled)
-				{
-					e.Graphics.DrawString(text, this.Font, this.ForeBrush, textRect, this.StringFormat);
-				}
-				else
-				{
-					e.Graphics.DrawString(text, this.Font, this.GrayTextBrush, textRect, this.StringFormat);
-				}
+                if (e.Enabled)
+                {
+                    e.Graphics.DrawString(text, Font, ForeBrush, textRect, StringFormat);
+                }
+                else
+                {
+                    e.Graphics.DrawString(text, Font, GrayTextBrush, textRect, StringFormat);
+                }
 
                 if (e.Cell.WidthNotSet)
                 {
-                    SizeF size = e.Graphics.MeasureString(text, this.Font);
+                    var size = e.Graphics.MeasureString(text, Font);
                     textWidth = (int)Math.Ceiling(size.Width);
                 }
-			}
+            }
 
             if (e.Cell.WidthNotSet)
             {
-                e.Cell.ContentWidth = colourWidth + textWidth + (this.ShowDropDownButton ? buttonRect.Width : 0);
+                e.Cell.ContentWidth = colourWidth + textWidth + (ShowDropDownButton ? buttonRect.Width : 0);
             }
 
-			if( (e.Focused && e.Enabled)
-				// only if we want to show selection rectangle
-				&& ( e.Table.ShowSelectionRectangle ) )
-			{
-				Rectangle focusRect = this.ClientRectangle;
+            if (e.Focused && e.Enabled
+                // only if we want to show selection rectangle
+                && e.Table.ShowSelectionRectangle)
+            {
+                var focusRect = ClientRectangle;
 
-				if (this.ShowDropDownButton)
-				{
-					focusRect.Width -= buttonRect.Width;
-				}
-				
-				ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
-			}
-		}
+                if (ShowDropDownButton)
+                {
+                    focusRect.Width -= buttonRect.Width;
+                }
 
-		#endregion
-	}
+                ControlPaint.DrawFocusRectangle(e.Graphics, focusRect);
+            }
+        }
+
+        #endregion
+    }
 }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+
 using XPTable.Events;
 using XPTable.Filters;
 using XPTable.Models;
@@ -27,27 +28,29 @@ namespace Filtering
 
         private void DoFiltering()
         {
-            Table table = this.table;       // The Table control on a form - already initialised
+            var table = this.table;       // The Table control on a form - already initialised
             table.Clear();
             table.BeginUpdate();
             table.EnableWordWrap = true;    // If false, then Cell.WordWrap is ignored
             table.EnableFilters = true;
             table.HeaderFilterClick += Table_HeaderFilterClick;
 
-            NumberColumn col0 = new NumberColumn("#", 20);
-            NumberColumn col1 = new NumberColumn("Height", 50);
-            TextColumn col2 = new TextColumn("Name", 80);
+            var col0 = new NumberColumn("#", 20);
+            var col1 = new NumberColumn("Height", 50);
+            var col2 = new TextColumn("Name", 80);
             _filter = col2.Filter as TextColumnFilter;
             col2.Filterable = true;
-            
-            TextColumn col3 = new TextColumn("Surname", 80);
-            col3.Filterable = true;
-            DateTimeColumn col4 = new DateTimeColumn("Birthday", 120);
-            TextColumn col5 = new TextColumn("Comments", 100);
+
+            var col3 = new TextColumn("Surname", 80)
+            {
+                Filterable = true
+            };
+            var col4 = new DateTimeColumn("Birthday", 120);
+            var col5 = new TextColumn("Comments", 100);
 
             table.ColumnModel = new ColumnModel(new Column[] { col0, col1, col2, col3, col4, col5 });
 
-            TableModel model = new TableModel();
+            var model = new TableModel();
 
             AddRow(model, 1, 1.52, "Mark", "Hobbs", "23/1/1978", "likes apples");
             AddRow(model, 2, 1.76, "Dave", "Duke", "2/5/1977", "keeps fish");
@@ -61,11 +64,11 @@ namespace Filtering
             this.table.EndUpdate();
         }
 
-        TextColumnFilter _filter;
+        private TextColumnFilter _filter;
 
         private void AddRow(TableModel table, int index, double height, string text, string surname, string date, string more)
         {
-            Row row = new Row();
+            var row = new Row();
             row.Cells.Add(new Cell(index));
             row.Cells.Add(new Cell(height));
             row.Cells.Add(new Cell(text));
@@ -82,16 +85,17 @@ namespace Filtering
                 return;
             }
 
-            var filter = e.Column.Filter as TextColumnFilter;
 
-            if (filter == null)
+            if (e.Column.Filter is not TextColumnFilter filter)
+            {
                 return;
-            
-            string[] items = filter.GetDistinctItems(e.Table, e.Index);
+            }
+
+            var items = filter.GetDistinctItems(e.Table, e.Index);
 
             txtFilter.Text = string.Empty;
 
-            foreach (string s in items)
+            foreach (var s in items)
             {
                 txtFilter.Text += string.Format(@"{0}{1}", s, Environment.NewLine);
             }
@@ -101,8 +105,8 @@ namespace Filtering
 
         private void btnFilter_Click(object sender, EventArgs e)
         {
-            string text = txtFilter.Text.Replace(Environment.NewLine, "\n");
-            string[] items = text.Split(new [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var text = txtFilter.Text.Replace(Environment.NewLine, "\n");
+            var items = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             _filter.SetFilterItems(items);
             table.OnHeaderFilterChanged(EventArgs.Empty);
         }

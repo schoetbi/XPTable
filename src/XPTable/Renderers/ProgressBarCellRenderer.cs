@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -62,7 +62,7 @@ namespace XPTable.Renderers
         public ProgressBarCellRenderer()
             : base()
         {
-            this.drawPercentageText = true;
+            drawPercentageText = true;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace XPTable.Renderers
         {
             get
             {
-                Rectangle client = base.ClientRectangle;
+                var client = base.ClientRectangle;
 
                 client.Inflate(-1, -1);
 
@@ -91,15 +91,9 @@ namespace XPTable.Renderers
         /// </summary>
         public bool DrawPercentageText
         {
-            get
-            {
-                return this.drawPercentageText;
-            }
+            get => drawPercentageText;
 
-            set
-            {
-                this.drawPercentageText = value;
-            }
+            set => drawPercentageText = value;
         }
 
         #endregion
@@ -115,14 +109,8 @@ namespace XPTable.Renderers
         /// <param name="e">A PaintCellEventArgs that contains the event data</param>
         public override void OnPaintCell(PaintCellEventArgs e)
         {
-            if (e.Table.ColumnModel.Columns[e.Column] is ProgressBarColumn)
-            {
-                this.drawPercentageText = ((ProgressBarColumn)e.Table.ColumnModel.Columns[e.Column]).DrawPercentageText;
-            }
-            else
-            {
-                this.drawPercentageText = false;
-            }
+            drawPercentageText = e.Table.ColumnModel.Columns[e.Column] is ProgressBarColumn
+&& ((ProgressBarColumn)e.Table.ColumnModel.Columns[e.Column]).DrawPercentageText;
 
             base.OnPaintCell(e);
         }
@@ -144,9 +132,9 @@ namespace XPTable.Renderers
 
             // fill the client area with the window color (this 
             // will be the background color of the progress bar)
-            e.Graphics.FillRectangle(SystemBrushes.Window, this.ClientRectangle);
+            e.Graphics.FillRectangle(SystemBrushes.Window, ClientRectangle);
 
-            Rectangle progressRect = this.ClientRectangle;
+            var progressRect = ClientRectangle;
 
             // draw the border
             if (e.Enabled)
@@ -163,15 +151,13 @@ namespace XPTable.Renderers
             }
             else
             {
-                using (Bitmap b = new Bitmap(progressRect.Width, progressRect.Height))
+                using var b = new Bitmap(progressRect.Width, progressRect.Height);
+                using (var g = Graphics.FromImage(b))
                 {
-                    using (Graphics g = Graphics.FromImage(b))
-                    {
-                        ThemeManager.DrawProgressBar(g, new Rectangle(0, 0, progressRect.Width, progressRect.Height));
-                    }
-
-                    ControlPaint.DrawImageDisabled(e.Graphics, b, progressRect.X, progressRect.Y, this.BackBrush.Color);
+                    ThemeManager.DrawProgressBar(g, new Rectangle(0, 0, progressRect.Width, progressRect.Height));
                 }
+
+                ControlPaint.DrawImageDisabled(e.Graphics, b, progressRect.X, progressRect.Y, BackBrush.Color);
             }
         }
 
@@ -191,9 +177,9 @@ namespace XPTable.Renderers
             }
 
             // get the Cells value
-            int intVal = 0;
+            var intVal = 0;
 
-            if (e.Cell.Data != null && e.Cell.Data is int)
+            if (e.Cell.Data is not null and int)
             {
                 intVal = (int)e.Cell.Data;
             }
@@ -209,7 +195,7 @@ namespace XPTable.Renderers
 
             // adjust the chunk rect so we don't draw over the
             // progress bars borders
-            Rectangle chunkRect = this.ClientRectangle;
+            var chunkRect = ClientRectangle;
             chunkRect.Inflate(-2, -2);
 
             // if xp themes are enabled, shrink the size of the 
@@ -220,7 +206,7 @@ namespace XPTable.Renderers
                 chunkRect.Inflate(-1, -1);
             }
 
-            chunkRect.Width = (int)((((double)intVal) / 100d) * ((double)chunkRect.Width));
+            chunkRect.Width = (int)(((double)intVal) / 100d * ((double)chunkRect.Width));
 
             if (e.Enabled)
             {
@@ -228,59 +214,55 @@ namespace XPTable.Renderers
             }
             else
             {
-                using (Bitmap b = new Bitmap(chunkRect.Width, chunkRect.Height))
+                using var b = new Bitmap(chunkRect.Width, chunkRect.Height);
+                using (var g = Graphics.FromImage(b))
                 {
-                    using (Graphics g = Graphics.FromImage(b))
-                    {
-                        ThemeManager.DrawProgressBarChunks(g, new Rectangle(0, 0, chunkRect.Width, chunkRect.Height));
-                    }
-
-                    ControlPaint.DrawImageDisabled(e.Graphics, b, chunkRect.X, chunkRect.Y, this.BackBrush.Color);
+                    ThemeManager.DrawProgressBarChunks(g, new Rectangle(0, 0, chunkRect.Width, chunkRect.Height));
                 }
+
+                ControlPaint.DrawImageDisabled(e.Graphics, b, chunkRect.X, chunkRect.Y, BackBrush.Color);
             }
 
-            if (this.DrawPercentageText)
+            if (DrawPercentageText)
             {
-                this.Alignment = ColumnAlignment.Center;
-                this.LineAlignment = RowAlignment.Center;
+                Alignment = ColumnAlignment.Center;
+                LineAlignment = RowAlignment.Center;
 
-                using (var font = new Font(this.Font.FontFamily, this.Font.SizeInPoints, FontStyle.Bold))
+                using var font = new Font(Font.FontFamily, Font.SizeInPoints, FontStyle.Bold);
+                var progressText = string.Format("{0}%", intVal);
+                e.Graphics.DrawString(
+                    progressText,
+                    font,
+                    e.Enabled ? SystemBrushes.ControlText : Brushes.White,
+                    ClientRectangle,
+                    StringFormat);
+
+                if (!ThemeManager.VisualStylesEnabled)
                 {
-                    var progressText = string.Format("{0}%", intVal);
+                    // remember the old clip area
+                    var oldClip = e.Graphics.Clip;
+
+                    var clipRect = ClientRectangle;
+                    clipRect.Width = chunkRect.Width + 2;
+                    e.Graphics.SetClip(clipRect);
+
                     e.Graphics.DrawString(
                         progressText,
                         font,
-                        e.Enabled ? SystemBrushes.ControlText : Brushes.White,
-                        this.ClientRectangle,
-                        this.StringFormat);
+                        e.Table.Enabled ? SystemBrushes.HighlightText : Brushes.White,
+                        ClientRectangle,
+                        StringFormat);
 
-                    if (!ThemeManager.VisualStylesEnabled)
-                    {
-                        // remember the old clip area
-                        Region oldClip = e.Graphics.Clip;
-
-                        Rectangle clipRect = this.ClientRectangle;
-                        clipRect.Width = chunkRect.Width + 2;
-                        e.Graphics.SetClip(clipRect);
-
-                        e.Graphics.DrawString(
-                            progressText,
-                            font,
-                            e.Table.Enabled ? SystemBrushes.HighlightText : Brushes.White,
-                            this.ClientRectangle,
-                            this.StringFormat);
-
-                        // restore the old clip area
-                        e.Graphics.SetClip(oldClip, CombineMode.Replace);
-                    }
+                    // restore the old clip area
+                    e.Graphics.SetClip(oldClip, CombineMode.Replace);
                 }
             }
 
-            if ((e.Focused && e.Enabled)
+            if (e.Focused && e.Enabled
                 // only if we want to show selection rectangle
                 && e.Table.ShowSelectionRectangle)
             {
-                ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
+                ControlPaint.DrawFocusRectangle(e.Graphics, ClientRectangle);
             }
         }
 

@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -46,11 +46,13 @@ namespace XPTable.Editors
         public TextCellEditor()
             : base()
         {
-            TextBox textbox = new TextBox();
-            textbox.AutoSize = false;
-            textbox.BorderStyle = BorderStyle.None;
+            var textbox = new TextBox
+            {
+                AutoSize = false,
+                BorderStyle = BorderStyle.None
+            };
 
-            this.Control = textbox;
+            Control = textbox;
         }
         #endregion
 
@@ -62,8 +64,8 @@ namespace XPTable.Editors
         /// of the Cell being edited</param>
         protected override void SetEditLocation(Rectangle cellRect)
         {
-            this.TextBox.Location = cellRect.Location;
-            this.TextBox.Size = new Size(cellRect.Width - 1, cellRect.Height - 1);
+            TextBox.Location = cellRect.Location;
+            TextBox.Size = new Size(cellRect.Width - 1, cellRect.Height - 1);
         }
 
         /// <summary>
@@ -72,7 +74,7 @@ namespace XPTable.Editors
         /// </summary>
         protected override void SetEditValue()
         {
-            this.TextBox.Text = this.EditingCell.Text;
+            TextBox.Text = EditingCell.Text;
         }
 
         /// <summary>
@@ -81,9 +83,9 @@ namespace XPTable.Editors
         /// </summary>
         protected override void SetCellValue()
         {
-            if (this.cell != null)
+            if (cell != null)
             {
-                this.cell.Text = this.TextBox.Text;
+                cell.Text = TextBox.Text;
             }
         }
 
@@ -92,19 +94,19 @@ namespace XPTable.Editors
         /// </summary>
         public override void StartEditing()
         {
-            if (this.EditingCell == null || this.EditingTable == null)
+            if (EditingCell == null || EditingTable == null)
             {
                 return;
             }
 
-            this.TextBox.Multiline = this.EditingTable.EnableWordWrap && this.EditingCell.WordWrap;
+            TextBox.Multiline = EditingTable.EnableWordWrap && EditingCell.WordWrap;
 
-            this.TextBox.KeyPress += this.OnKeyPress;
-            this.TextBox.LostFocus += this.OnLostFocus;
+            TextBox.KeyPress += OnKeyPress;
+            TextBox.LostFocus += OnLostFocus;
 
             base.StartEditing();
 
-            this.TextBox.Focus();
+            TextBox.Focus();
         }
 
         /// <summary>
@@ -112,8 +114,8 @@ namespace XPTable.Editors
         /// </summary>
         public override void StopEditing()
         {
-            this.TextBox.KeyPress -= this.OnKeyPress;
-            this.TextBox.LostFocus -= this.OnLostFocus;
+            TextBox.KeyPress -= OnKeyPress;
+            TextBox.LostFocus -= OnLostFocus;
 
             base.StopEditing();
         }
@@ -123,8 +125,8 @@ namespace XPTable.Editors
         /// </summary>
         public override void CancelEditing()
         {
-            this.TextBox.KeyPress -= this.OnKeyPress;
-            this.TextBox.LostFocus -= this.OnLostFocus;
+            TextBox.KeyPress -= OnKeyPress;
+            TextBox.LostFocus -= OnLostFocus;
 
             base.CancelEditing();
         }
@@ -134,10 +136,7 @@ namespace XPTable.Editors
         /// <summary>
         /// Gets the TextBox used to edit the Cells contents
         /// </summary>
-        public TextBox TextBox
-        {
-            get { return this.Control as TextBox; }
-        }
+        public TextBox TextBox => Control as TextBox;
         #endregion
 
         #region Events
@@ -148,25 +147,25 @@ namespace XPTable.Editors
         /// <param name="e">A KeyPressEventArgs that contains the event data</param>
         protected virtual void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (this.EditingTable != null && this.IsEditing)
+            if (EditingTable != null && IsEditing)
             {
                 if (e.KeyChar == AsciiChars.CarriageReturn /*Enter*/)
                 {
-                    if (this.EditingTable.SuppressEditorTerminatorBeep)
+                    if (EditingTable.SuppressEditorTerminatorBeep)
                     {
                         e.Handled = true;
                     }
 
-                    this.EditingTable.StopEditing();
+                    EditingTable.StopEditing();
                 }
                 else if (e.KeyChar == AsciiChars.Escape)
                 {
-                    if (this.EditingTable.SuppressEditorTerminatorBeep)
+                    if (EditingTable.SuppressEditorTerminatorBeep)
                     {
                         e.Handled = true;
                     }
 
-                    this.EditingTable.CancelEditing();
+                    EditingTable.CancelEditing();
                 }
             }
         }
@@ -178,8 +177,7 @@ namespace XPTable.Editors
         /// <param name="e">An EventArgs that contains the event data</param>
         protected virtual void OnLostFocus(object sender, EventArgs e)
         {
-            if (this.EditingTable != null)
-                this.EditingTable.StopEditing();
+            EditingTable?.StopEditing();
         }
         #endregion
     }

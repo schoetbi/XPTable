@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -30,34 +30,34 @@ using System;
 
 namespace XPTable.Models
 {
-	/// <summary>
-	/// Specifies the style of the lines drawn when a Table draws its grid lines
-	/// </summary>
-	public enum GridLineStyle
-	{
-		/// <summary>
-		/// Specifies a solid line
-		/// </summary>
-		Solid = 0,
+    /// <summary>
+    /// Specifies the style of the lines drawn when a Table draws its grid lines
+    /// </summary>
+    public enum GridLineStyle
+    {
+        /// <summary>
+        /// Specifies a solid line
+        /// </summary>
+        Solid = 0,
 
-		/// <summary>
-		/// Specifies a line consisting of dashes
-		/// </summary>
-		Dash = 1,
+        /// <summary>
+        /// Specifies a line consisting of dashes
+        /// </summary>
+        Dash = 1,
 
-		/// <summary>
-		/// Specifies a line consisting of dots
-		/// </summary>
-		Dot = 2,
+        /// <summary>
+        /// Specifies a line consisting of dots
+        /// </summary>
+        Dot = 2,
 
-		/// <summary>
-		/// Specifies a line consisting of a repeating pattern of dash-dot
-		/// </summary>
-		DashDot = 3,
+        /// <summary>
+        /// Specifies a line consisting of a repeating pattern of dash-dot
+        /// </summary>
+        DashDot = 3,
 
-		/// <summary>
-		/// Specifies a line consisting of a repeating pattern of dash-dot-dot
-		/// </summary>
-		DashDotDot = 4
-	}
+        /// <summary>
+        /// Specifies a line consisting of a repeating pattern of dash-dot-dot
+        /// </summary>
+        DashDotDot = 4
+    }
 }

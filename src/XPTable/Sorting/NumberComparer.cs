@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -34,67 +34,64 @@ using XPTable.Models;
 
 namespace XPTable.Sorting
 {
-	/// <summary>
-	/// An IComparer for sorting Cells that contain numbers
-	/// </summary>
-	public class NumberComparer : ComparerBase
-	{
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the NumberComparer class with the specified 
-		/// TableModel, Column index and SortOrder
-		/// </summary>
-		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public NumberComparer(TableModel tableModel, int column, SortOrder sortOrder) : base(tableModel, column, sortOrder)
-		{
-			
-		}
+    /// <summary>
+    /// An IComparer for sorting Cells that contain numbers
+    /// </summary>
+    public class NumberComparer : ComparerBase
+    {
+        #region Constructor
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the NumberComparer class with the specified 
+        /// TableModel, Column index and SortOrder
+        /// </summary>
+        /// <param name="tableModel">The TableModel that contains the data to be sorted</param>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public NumberComparer(TableModel tableModel, int column, SortOrder sortOrder) : base(tableModel, column, sortOrder)
+        {
+
+        }
+
+        #endregion
 
 
-		#region Methods
+        #region Methods
 
-	    /// <summary>
-	    /// Compares two cells and returns a value indicating whether one is less 
-	    /// than, equal to or greater than the other.
-	    /// </summary>
+        /// <summary>
+        /// Compares two cells and returns a value indicating whether one is less 
+        /// than, equal to or greater than the other.
+        /// </summary>
         /// <param name="cell1"></param>
         /// <param name="cell2"></param>
-	    /// <returns></returns>
+        /// <returns></returns>
         protected override int CompareCells(Cell cell1, Cell cell2)
-	    {
-	        // check for null data
-	        var cell1Data = cell1.Data;
-	        var cell2Data = cell2.Data;
+        {
+            // check for null data
+            var cell1Data = cell1.Data;
+            var cell2Data = cell2.Data;
 
-	        if (cell1Data == null && cell2Data == null)
-	        {
-	            return 0;
-	        }
+            if (cell1Data == null && cell2Data == null)
+            {
+                return 0;
+            }
 
-	        if (cell1Data == null)
-	        {
-	            return -1;
-	        }
+            if (cell1Data == null)
+            {
+                return -1;
+            }
 
-	        if (cell2Data == null)
-	        {
-	            return 1;
-	        }
+            if (cell2Data == null)
+            {
+                return 1;
+            }
 
-	        // comare types
-	        if (cell1Data.GetType() != cell2Data.GetType())
-	        {
-	            return 1;
-	        }
-
-            var cell1Comparable = cell1Data as IComparable;
-            var cell2Comparable = cell2Data as IComparable;
-            if (cell1Comparable != null && cell2Comparable != null)
+            // comare types
+            if (cell1Data.GetType() != cell2Data.GetType())
+            {
+                return 1;
+            }
+            if (cell1Data is IComparable cell1Comparable && cell2Data is IComparable cell2Comparable)
             {
                 return cell1Comparable.CompareTo(cell2Comparable);
             }
@@ -102,6 +99,6 @@ namespace XPTable.Sorting
             return 1;
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

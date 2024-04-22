@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  * 
  * Sort algorithm modified from the C# implementation written by Jonathan de Halleux, 
@@ -64,7 +64,7 @@ namespace XPTable.Sorting
         /// </summary>
         public override void Sort()
         {
-            this.Sort(0, this.TableModel.Rows.Count - 1);
+            Sort(0, TableModel.Rows.Count - 1);
         }
 
 
@@ -75,7 +75,7 @@ namespace XPTable.Sorting
         /// <param name="toPos"></param>
         private void Sort(int fromPos, int toPos)
         {
-            if (this.TableModel == null)
+            if (TableModel == null)
             {
                 return;
             }
@@ -85,31 +85,31 @@ namespace XPTable.Sorting
                 return;
             }
 
-            int mid = (fromPos + toPos) / 2;
+            var mid = (fromPos + toPos) / 2;
 
-            this.Sort(fromPos, mid);
-            this.Sort(mid + 1, toPos);
+            Sort(fromPos, mid);
+            Sort(mid + 1, toPos);
 
-            int end_low = mid;
-            int start_high = mid + 1;
+            var end_low = mid;
+            var start_high = mid + 1;
 
             while (fromPos <= end_low & start_high <= toPos)
             {
-                if (this.Compare(this.TableModel.Rows[fromPos], this.TableModel.Rows[start_high]) < 0)
+                if (Compare(TableModel.Rows[fromPos], TableModel.Rows[start_high]) < 0)
                 {
                     fromPos++;
                 }
                 else
                 {
-                    Row tmp = this.TableModel.Rows[start_high];
+                    var tmp = TableModel.Rows[start_high];
 
                     int i;
                     for (i = start_high - 1; i >= fromPos; i--)
                     {
-                        this.Set(i + 1, this.TableModel.Rows[i]);
+                        Set(i + 1, TableModel.Rows[i]);
                     }
 
-                    this.Set(fromPos, tmp);
+                    Set(fromPos, tmp);
 
                     fromPos++;
                     end_low++;

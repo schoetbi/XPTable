@@ -5,11 +5,11 @@ using System.Windows.Forms;
 
 namespace Filtering
 {
-    class Program
+    internal class Program
     {
 
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.Run(new DemoCustom());
         }

@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -34,29 +34,29 @@ using XPTable.Models;
 
 namespace XPTable.Sorting
 {
-	/// <summary>
-	/// An IComparer for sorting Cells that contain strings
-	/// </summary>
-	public class TextComparer : ComparerBase
-	{
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the TextComparer class with the specified 
-		/// TableModel, Column index and SortOrder
-		/// </summary>
-		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public TextComparer(TableModel tableModel, int column, SortOrder sortOrder) : base(tableModel, column, sortOrder)
-		{
-			
-		}
+    /// <summary>
+    /// An IComparer for sorting Cells that contain strings
+    /// </summary>
+    public class TextComparer : ComparerBase
+    {
+        #region Constructor
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the TextComparer class with the specified 
+        /// TableModel, Column index and SortOrder
+        /// </summary>
+        /// <param name="tableModel">The TableModel that contains the data to be sorted</param>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public TextComparer(TableModel tableModel, int column, SortOrder sortOrder) : base(tableModel, column, sortOrder)
+        {
+
+        }
+
+        #endregion
 
 
-		#region Methods
+        #region Methods
         /// <summary>
         /// Compares two cells and returns a value indicating whether one is less 
         /// than, equal to or greater than the other.
@@ -66,8 +66,8 @@ namespace XPTable.Sorting
         /// <returns></returns>
         protected override int CompareCells(Cell cell1, Cell cell2)
         {
-            string s1 = cell1.Text;
-            string s2 = cell2.Text;
+            var s1 = cell1.Text;
+            var s2 = cell2.Text;
 
             // check for null cells
             if (s1 == null && s2 == null)
@@ -88,6 +88,6 @@ namespace XPTable.Sorting
             }
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -30,24 +30,24 @@ using System;
 
 namespace XPTable.Models
 {
-	/// <summary>
-	/// Specifies alignment of a Columns content
-	/// </summary>
-	public enum ColumnAlignment
-	{
-		/// <summary>
-		/// The Columns content is aligned to the left
-		/// </summary>
-		Left = 0,
+    /// <summary>
+    /// Specifies alignment of a Columns content
+    /// </summary>
+    public enum ColumnAlignment
+    {
+        /// <summary>
+        /// The Columns content is aligned to the left
+        /// </summary>
+        Left = 0,
 
-		/// <summary>
-		/// The Columns content is aligned to the center
-		/// </summary>
-		Center = 1,
+        /// <summary>
+        /// The Columns content is aligned to the center
+        /// </summary>
+        Center = 1,
 
-		/// <summary>
-		/// The Columns content is aligned to the right
-		/// </summary>
-		Right = 2
-	}
+        /// <summary>
+        /// The Columns content is aligned to the right
+        /// </summary>
+        Right = 2
+    }
 }

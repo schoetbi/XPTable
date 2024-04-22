@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+
 using XPTable.Renderers;
 
 namespace UnitTest
@@ -8,7 +9,7 @@ namespace UnitTest
     [TestFixture]
     public class NumberCellRendererTest
     {
-        private static object[] TestData = new[]
+        private static readonly object[] TestData = new[]
                            {
                                new object[] { 1.0 / 3, "0.00", "0.33", CultureInfo.InvariantCulture},
                                new object[] { -1.0 / 3, "0.00", "-0,33", CultureInfo.GetCultureInfo("de")},
@@ -36,14 +37,14 @@ namespace UnitTest
                                new object[] { 34u, "0", "34", CultureInfo.InvariantCulture },
                                
                                // (u)short
-                               new object[] { ((short)34), "0", "34", CultureInfo.InvariantCulture },
-                               new object[] { ((short)-34), "0", "-34", CultureInfo.InvariantCulture },
-                               new object[] { ((ushort)34), "0", "34", CultureInfo.InvariantCulture },
+                               new object[] { (short)34, "0", "34", CultureInfo.InvariantCulture },
+                               new object[] { (short)-34, "0", "-34", CultureInfo.InvariantCulture },
+                               new object[] { (ushort)34, "0", "34", CultureInfo.InvariantCulture },
 
                                // (s)byte
-                               new object[] { ((sbyte)34), "0", "34", CultureInfo.InvariantCulture },
-                               new object[] { ((sbyte)-34), "0", "-34", CultureInfo.InvariantCulture },
-                               new object[] { ((byte)34), "0", "34", CultureInfo.InvariantCulture },
+                               new object[] { (sbyte)34, "0", "34", CultureInfo.InvariantCulture },
+                               new object[] { (sbyte)-34, "0", "-34", CultureInfo.InvariantCulture },
+                               new object[] { (byte)34, "0", "34", CultureInfo.InvariantCulture },
                            };
 
 
@@ -53,7 +54,7 @@ namespace UnitTest
         public void CheckNumberRenderer(object data, string format, string expected, CultureInfo culture)
         {
             var txt = NumberCellRenderer.RenderText(data, format, culture);
-            
+
             Assert.That(txt, Is.EqualTo(expected));
         }
     }

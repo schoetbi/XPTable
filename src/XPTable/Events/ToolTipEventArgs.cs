@@ -1,9 +1,9 @@
-using System;
-using System.Drawing;
-using System.ComponentModel;
-using System.Windows.Forms;
+﻿using System;
 using System.Collections;
+using System.ComponentModel;
+using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
 
 using XPTable.Models;
 
@@ -13,53 +13,53 @@ namespace XPTable.Events
     /// Provides data for the CellToolTipPopup event.
     /// </summary>
 	public class CellToolTipEventArgs : CancelEventArgs
-	{
-		/// <summary>
-		/// Creates a CellToolTipEventArgs using the values from args.
-		/// </summary>
-		/// <param name="cell"></param>
-		/// <param name="location"></param>
-		public CellToolTipEventArgs(Cell cell, Point location)
-			: base(false)
-		{
-			this.Cell = cell;
-			this.Location = location;
-			this.ToolTipText = cell.ToolTipText;
-		}
+    {
+        /// <summary>
+        /// Creates a CellToolTipEventArgs using the values from args.
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="location"></param>
+        public CellToolTipEventArgs(Cell cell, Point location)
+            : base(false)
+        {
+            Cell = cell;
+            Location = location;
+            ToolTipText = cell.ToolTipText;
+        }
 
-		private string _toolTipText = string.Empty;
+        private string _toolTipText = string.Empty;
 
-		/// <summary>
-		/// Gets or sets the text to be shown as a tooltip. By default this is only set if the text in the cell
-		/// has been truncated.
-		/// </summary>
-		public string ToolTipText 
-		{
-			get { return _toolTipText; }
-			set { _toolTipText = value; }
-		}
+        /// <summary>
+        /// Gets or sets the text to be shown as a tooltip. By default this is only set if the text in the cell
+        /// has been truncated.
+        /// </summary>
+        public string ToolTipText
+        {
+            get => _toolTipText;
+            set => _toolTipText = value;
+        }
 
-		private Point _location;
+        private Point _location;
 
-		/// <summary>
-		/// Gets or sets the location of the mouse when the tooltip was triggered.
-		/// </summary>
-		public Point Location
-		{
-			get { return _location; }
-			set { _location = value; }
-		}
+        /// <summary>
+        /// Gets or sets the location of the mouse when the tooltip was triggered.
+        /// </summary>
+        public Point Location
+        {
+            get => _location;
+            set => _location = value;
+        }
 
-		private Cell _cell = null;
-		/// <summary>
-		/// Gets or sets the cell that this tooltip is for.
-		/// </summary>
-		public Cell Cell 
-		{
-			get { return _cell; }
-			set { _cell = value; }
-		}
-	}
+        private Cell _cell = null;
+        /// <summary>
+        /// Gets or sets the cell that this tooltip is for.
+        /// </summary>
+        public Cell Cell
+        {
+            get => _cell;
+            set => _cell = value;
+        }
+    }
 
     /// <summary>
     /// Provides data for the HeaderToolTipPopup event.
@@ -74,43 +74,43 @@ namespace XPTable.Events
 		public HeaderToolTipEventArgs(Column column, Point location)
             : base(false)
         {
-            this.Column = column;
-            this.Location = location;
-            this.ToolTipText = column.ToolTipText;
+            Column = column;
+            Location = location;
+            ToolTipText = column.ToolTipText;
         }
 
-		private string _toolTipText = string.Empty;
+        private string _toolTipText = string.Empty;
 
-		/// <summary>
-		/// Gets or sets the text to be shown as a tooltip. By default this is only set if the text in the cell
-		/// has been truncated.
-		/// </summary>
-		public string ToolTipText 
-		{
-			get { return _toolTipText; }
-			set { _toolTipText = value; }
-		}
+        /// <summary>
+        /// Gets or sets the text to be shown as a tooltip. By default this is only set if the text in the cell
+        /// has been truncated.
+        /// </summary>
+        public string ToolTipText
+        {
+            get => _toolTipText;
+            set => _toolTipText = value;
+        }
 
-		private Point _location;
+        private Point _location;
 
-		/// <summary>
-		/// Gets or sets the location of the mouse when the tooltip was triggered.
-		/// </summary>
-		public Point Location
-		{
-			get { return _location; }
-			set { _location = value; }
-		}
+        /// <summary>
+        /// Gets or sets the location of the mouse when the tooltip was triggered.
+        /// </summary>
+        public Point Location
+        {
+            get => _location;
+            set => _location = value;
+        }
 
-		private Column _column = null;
-		/// <summary>
-		/// Gets or sets the cell that this tooltip is for.
-		/// </summary>
-		public Column Column 
-		{
-			get { return _column; }
-			set { _column = value; }
-		}
+        private Column _column = null;
+        /// <summary>
+        /// Gets or sets the cell that this tooltip is for.
+        /// </summary>
+        public Column Column
+        {
+            get => _column;
+            set => _column = value;
+        }
     }
 
     /// <summary>

@@ -1,14 +1,14 @@
-using System;
-using System.Drawing;
+﻿using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Data;
-
-using XPTable.Models;
-using XPTable.Events;
+using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+
+using XPTable.Events;
+using XPTable.Models;
 
 //using EventTracer;
 
@@ -19,9 +19,9 @@ namespace Grouping
         //Tracer _tracer = null;
 
         private XPTable.Models.Table table;
-        private System.ComponentModel.Container components = null;
-        Bitmap _unread = null;
-        Bitmap _read = null;
+        private readonly System.ComponentModel.Container components = null;
+        private readonly Bitmap _unread = null;
+        private readonly Bitmap _read = null;
 
         public Demo()
         {
@@ -37,7 +37,7 @@ namespace Grouping
 
         private void DoGroup()
         {
-            Table table = this.table;       // The Table control on a form - already initialised
+            var table = this.table;       // The Table control on a form - already initialised
             //table.Font = new Font(table.Font.FontFamily, 12f);
             table.SelectionStyle = SelectionStyle.Grid;
             table.BeginUpdate();
@@ -49,26 +49,32 @@ namespace Grouping
 
             table.GridLines = GridLines.Both;
 
-            GroupColumn col0 = new GroupColumn("", 20);   // this is the NEW +/- column
-            col0.Editable = false;                      // Double clicking on this is to toggle the collapsed state
-            col0.Selectable = false;
-            col0.ToggleOnSingleClick = true;
-            ImageColumn col1 = new ImageColumn("", 20);
-            TextColumn col2 = new TextColumn("From", 200);
-            DateTimeColumn col3 = new DateTimeColumn("Sent", 180); /// 493
-            col3.ShowDropDownButton = false;
-            col3.DateTimeFormat = DateTimePickerFormat.Custom;
-            col3.CustomDateTimeFormat = "d/M/yyyy hh:mm";
-            col3.Alignment = ColumnAlignment.Right;
-            col3.AutoResizeMode = ColumnAutoResizeMode.Any;
-            //NumberColumn col4 = new NumberColumn("num", 60);
+            var col0 = new GroupColumn("", 20)
+            {
+                Editable = false,                      // Double clicking on this is to toggle the collapsed state
+                Selectable = false,
+                ToggleOnSingleClick = true
+            };   // this is the NEW +/- column
+            var col1 = new ImageColumn("", 20);
+            var col2 = new TextColumn("From", 200);
+            var col3 = new DateTimeColumn("Sent", 180)
+            {
+                /// 493
+                ShowDropDownButton = false,
+                DateTimeFormat = DateTimePickerFormat.Custom,
+                CustomDateTimeFormat = "d/M/yyyy hh:mm",
+                Alignment = ColumnAlignment.Right,
+                AutoResizeMode = ColumnAutoResizeMode.Any
+            };             //NumberColumn col4 = new NumberColumn("num", 60);
             //col4.ShowUpDownButtons = true;
-            ButtonColumn col4 = new ButtonColumn("butt");
-            col4.FlatStyle = true;
+            var col4 = new ButtonColumn("butt")
+            {
+                FlatStyle = true
+            };
 
             table.ColumnModel = new ColumnModel(new Column[] { col0, col1, col2, col3, col4 });
 
-            TableModel model = new TableModel();
+            var model = new TableModel();
             //model.RowHeight = 24;
 
             AddEmailRows(model, true, "Dave ", "4/9/2007 12:34", "Here is the email subject", "Here is a preview of the text that is in the email. It wraps over too so you can see more of it");
@@ -127,13 +133,14 @@ namespace Grouping
             #endregion
         }
 
-        CellMouseEventArgs _down = null;
-        void table_CellMouseUp(object sender, CellMouseEventArgs e)
+        private CellMouseEventArgs _down = null;
+
+        private void table_CellMouseUp(object sender, CellMouseEventArgs e)
         {
             Console.WriteLine("UP   start {0}; end {1}", _down.Row, e.CellPos);
         }
 
-        void table_CellMouseDown(object sender, CellMouseEventArgs e)
+        private void table_CellMouseDown(object sender, CellMouseEventArgs e)
         {
             _down = e;
             Console.WriteLine("DOWN start {0}", _down.Row);
@@ -142,7 +149,7 @@ namespace Grouping
         #region Tracer methods
         private void OnEventTrace(object sender, object target, string eventName, EventArgs e)
         {
-            string s = String.Format("{0} - args {1} - sender {2} - target {3}",
+            var s = string.Format("{0} - args {1} - sender {2} - target {3}",
                                       eventName,
                                       GetString(e),
                                       sender ?? "null",
@@ -151,12 +158,11 @@ namespace Grouping
             Console.WriteLine(s);
         }
 
-        string GetString(EventArgs args)
+        private string GetString(EventArgs args)
         {
-            if (args is InvalidateEventArgs)
+            if (args is InvalidateEventArgs iargs)
             {
-                InvalidateEventArgs iargs = (InvalidateEventArgs)args;
-                string z = string.Format("{0} [{1}]", args, iargs.InvalidRect);
+                var z = string.Format("{0} [{1}]", args, iargs.InvalidRect);
                 return z;
             }
             else
@@ -168,34 +174,44 @@ namespace Grouping
 
         private void AddEmailRows(TableModel table, bool read, string from, string sent, string subject, string preview)
         {
-            Row row = new Row();
+            var row = new Row();
             //row.Alignment = RowAlignment.Top;
             row.Cells.Add(new Cell());       // always starts off showing all subrows
             row.Cells.Add(new Cell("", read ? _read : _unread));
-            Cell fro = new Cell(null); //from);
-            fro.WordWrap = true;
+            var fro = new Cell(null)
+            {
+                WordWrap = true
+            }; //from);
             row.Cells.Add(fro);
-            Cell cellSent = new Cell(DateTime.Parse(sent));
+            var cellSent = new Cell(DateTime.Parse(sent));
             if (sent == "5/4/2007 9:13")
             {
-                cellSent.CellStyle = new CellStyle(ColumnAlignment.Left);
-                cellSent.CellStyle.LineAlignment = RowAlignment.Top;
+                cellSent.CellStyle = new CellStyle(ColumnAlignment.Left)
+                {
+                    LineAlignment = RowAlignment.Top
+                };
             }
             row.Cells.Add(cellSent);
             row.Cells.Add(new Cell("hi"));
-            row.RowStyle = new XPTable.Models.RowStyle();
-            row.RowStyle.Alignment = RowAlignment.Top;
+            row.RowStyle = new XPTable.Models.RowStyle
+            {
+                Alignment = RowAlignment.Top
+            };
             table.Rows.Add(row);
 
             // Add a sub-row that shows just the email subject in grey (single line only)
-            Row subrow = new Row();
+            var subrow = new Row();
             subrow.Cells.Add(new Cell());   // Extra column for +/-
             subrow.Cells.Add(new Cell());
-            subrow.RowStyle = new XPTable.Models.RowStyle();
-            subrow.RowStyle.Alignment = RowAlignment.Bottom;
-            Cell cell = new Cell(subject);
-            cell.ForeColor = Color.Gray;
-            cell.ColSpan = 3;
+            subrow.RowStyle = new XPTable.Models.RowStyle
+            {
+                Alignment = RowAlignment.Bottom
+            };
+            var cell = new Cell(subject)
+            {
+                ForeColor = Color.Gray,
+                ColSpan = 3
+            };
 
             subrow.Cells.Add(cell);
             row.SubRows.Add(subrow);
@@ -204,12 +220,16 @@ namespace Grouping
             subrow = new Row();
             subrow.Cells.Add(new Cell());   // Extra column for +/-
             subrow.Cells.Add(new Cell());
-            cell = new Cell(preview);
-            cell.ForeColor = Color.Blue;
-            cell.ColSpan = 3;
-            cell.WordWrap = true;
-            subrow.RowStyle = new XPTable.Models.RowStyle();
-            subrow.RowStyle.Alignment = RowAlignment.Bottom;
+            cell = new Cell(preview)
+            {
+                ForeColor = Color.Blue,
+                ColSpan = 3,
+                WordWrap = true
+            };
+            subrow.RowStyle = new XPTable.Models.RowStyle
+            {
+                Alignment = RowAlignment.Bottom
+            };
             subrow.Cells.Add(cell);
             row.SubRows.Add(subrow);
         }
@@ -223,7 +243,7 @@ namespace Grouping
         {
             if (e.KeyCode == Keys.Delete)
             {
-                RowCollection rows = e.Table.TableModel.Rows;
+                var rows = e.Table.TableModel.Rows;
                 rows.Remove(rows[e.Row]);
             }
         }
@@ -238,9 +258,9 @@ namespace Grouping
             // Note that the event itself doesn't give us the cell or row
             // where it was clicked - we have to ask the Table for its SelectedRows
             // Bit of a faff to get our Table...
-            RowCollection rows = this.table.TableModel.Rows;
+            var rows = table.TableModel.Rows;
             // Its possible more than one is selected
-            foreach (Row row in this.table.SelectedItems)
+            foreach (var row in table.SelectedItems)
             {
                 rows.Remove(row);
             }
@@ -254,10 +274,7 @@ namespace Grouping
         {
             if (disposing)
             {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -268,36 +285,36 @@ namespace Grouping
         /// </summary>
         private void InitializeComponent()
         {
-            this.table = new XPTable.Models.Table();
-            ((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
-            this.SuspendLayout();
+            table = new XPTable.Models.Table();
+            ((System.ComponentModel.ISupportInitialize)table).BeginInit();
+            SuspendLayout();
             // 
             // table
             // 
-            this.table.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.table.Location = new System.Drawing.Point(12, 12);
-            this.table.Name = "table";
-            this.table.Size = new System.Drawing.Size(493, 257);
-            this.table.TabIndex = 0;
-            this.table.Text = "table1";
+            table.Anchor = (System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom
+                        | System.Windows.Forms.AnchorStyles.Left
+                        | System.Windows.Forms.AnchorStyles.Right);
+            table.Location = new System.Drawing.Point(12, 12);
+            table.Name = "table";
+            table.Size = new System.Drawing.Size(493, 257);
+            table.TabIndex = 0;
+            table.Text = "table1";
             // 
             // Demo
             // 
-            this.ClientSize = new System.Drawing.Size(517, 281);
-            this.Controls.Add(this.table);
-            this.Name = "Demo";
-            this.Text = "Grouping";
-            this.Load += new System.EventHandler(this.Demo_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.table)).EndInit();
-            this.ResumeLayout(false);
+            ClientSize = new System.Drawing.Size(517, 281);
+            Controls.Add(table);
+            Name = "Demo";
+            Text = "Grouping";
+            Load += new System.EventHandler(Demo_Load);
+            ((System.ComponentModel.ISupportInitialize)table).EndInit();
+            ResumeLayout(false);
 
         }
         #endregion
 
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             //Application.EnableVisualStyles();
             Application.Run(new Demo());
@@ -335,7 +352,9 @@ namespace Grouping
                 return new NumberColumn(prop.Name);
             }
             else
+            {
                 return base.GetColumn(prop, index);
+            }
         }
     }
 }

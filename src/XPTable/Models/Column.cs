@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -52,18 +52,18 @@ namespace XPTable.Models
 
         #region Class Data
         // Column state flags
-        private readonly static int STATE_EDITABLE = 1;
-        private readonly static int STATE_ENABLED = 2;
-        private readonly static int STATE_VISIBLE = 4;
-        private readonly static int STATE_SELECTABLE = 8;
-        private readonly static int STATE_SORTABLE = 16;
+        private static readonly int STATE_EDITABLE = 1;
+        private static readonly int STATE_ENABLED = 2;
+        private static readonly int STATE_VISIBLE = 4;
+        private static readonly int STATE_SELECTABLE = 8;
+        private static readonly int STATE_SORTABLE = 16;
 
         // Mateusz [PEYN] Adamus (peyn@tlen.pl)
         // Determines whether the column is able to be resized
-        private readonly static int STATE_RESIZABLE = 32;
+        private static readonly int STATE_RESIZABLE = 32;
 
         // Determines whether the column is able to be filtered
-        private readonly static int STATE_FILTERABLE = 64;
+        private static readonly int STATE_FILTERABLE = 64;
 
         /// <summary>
         /// The amount of space on each side of the Column that can 
@@ -75,12 +75,12 @@ namespace XPTable.Models
         /// The default width of a Column
         /// </summary>
         public static readonly int DefaultWidth = 75;
-        
+
         /// <summary>
         /// The maximum width of a Column
         /// </summary>
         public static readonly int MaximumWidth = 1024;
-        
+
         /// <summary>
         /// The minimum width of a Column
         /// </summary>
@@ -95,7 +95,7 @@ namespace XPTable.Models
         /// The text displayed in the Column's header
         /// </summary>
         private string text;
-        
+
         /// <summary>
         /// A string that specifies how a Column's Cell contents are formatted
         /// </summary>
@@ -179,7 +179,7 @@ namespace XPTable.Models
         /// </summary>
         public Column() : base()
         {
-            this.Init();
+            Init();
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace XPTable.Models
         /// <param name="text">The text displayed in the column's header</param>
         public Column(string text) : base()
         {
-            this.Init();
+            Init();
             this.text = text;
         }
 
@@ -199,7 +199,7 @@ namespace XPTable.Models
         /// <param name="width">The column's width</param>
         public Column(string text, int width) : base()
         {
-            this.Init();
+            Init();
 
             this.text = text;
             this.width = width;
@@ -213,11 +213,11 @@ namespace XPTable.Models
         /// <param name="visible">Specifies whether the column is visible</param>
         public Column(string text, int width, bool visible) : base()
         {
-            this.Init();
+            Init();
 
             this.text = text;
             this.width = width;
-            this.Visible = visible;
+            Visible = visible;
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace XPTable.Models
         /// <param name="image">The image displayed on the column's header</param>
         public Column(string text, Image image) : base()
         {
-            this.Init();
+            Init();
 
             this.text = text;
             this.image = image;
@@ -241,7 +241,7 @@ namespace XPTable.Models
         /// <param name="width">The column's width</param>
         public Column(string text, Image image, int width) : base()
         {
-            this.Init();
+            Init();
 
             this.text = text;
             this.image = image;
@@ -257,12 +257,12 @@ namespace XPTable.Models
         /// <param name="visible">Specifies whether the column is visible</param>
         public Column(string text, Image image, int width, bool visible) : base()
         {
-            this.Init();
+            Init();
 
             this.text = text;
             this.image = image;
             this.width = width;
-            this.Visible = visible;
+            Visible = visible;
         }
 
         /// <summary>
@@ -270,25 +270,25 @@ namespace XPTable.Models
         /// </summary>
         private void Init()
         {
-            this.text = null;
-            this.width = Column.DefaultWidth;
-            this.columnState = ColumnState.Normal;
-            this.alignment = ColumnAlignment.Left;
-            this.image = null;
-            this.imageOnRight = false;
-            this.columnModel = null;
-            this.x = 0;
-            this.tooltipText = null;
-            this.format = "";
-            this.sortOrder = SortOrder.None;
-            this.renderer = null;
-            this.editor = null;
-            this.comparer = null;
-            this.filter = null;
+            text = null;
+            width = Column.DefaultWidth;
+            columnState = ColumnState.Normal;
+            alignment = ColumnAlignment.Left;
+            image = null;
+            imageOnRight = false;
+            columnModel = null;
+            x = 0;
+            tooltipText = null;
+            format = "";
+            sortOrder = SortOrder.None;
+            renderer = null;
+            editor = null;
+            comparer = null;
+            filter = null;
 
             // Mateusz [PEYN] Adamus (peyn@tlen.pl)
             // Added STATE_RESIZABLE to column's initialization
-            this.state = (byte) (STATE_ENABLED | STATE_EDITABLE | STATE_VISIBLE | STATE_SELECTABLE | STATE_SORTABLE | STATE_RESIZABLE );
+            state = (byte)(STATE_ENABLED | STATE_EDITABLE | STATE_VISIBLE | STATE_SELECTABLE | STATE_SORTABLE | STATE_RESIZABLE);
         }
         #endregion
 
@@ -335,7 +335,7 @@ namespace XPTable.Models
         /// <returns>The state represented by the specified state flag</returns>
         internal bool GetState(int flag)
         {
-            return ((this.state & flag) != 0);
+            return (state & flag) != 0;
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace XPTable.Models
         /// <param name="value">The new value of the state</param>
         internal void SetState(int flag, bool value)
         {
-            this.state = (byte) (value ? (this.state | flag) : (this.state & ~flag));
+            state = (byte)(value ? (state | flag) : (state & ~flag));
         }
         #endregion
 
@@ -359,17 +359,16 @@ namespace XPTable.Models
         Localizable(true)]
         public string Text
         {
-            get { return this.text; }
+            get => text;
             set
             {
-                if (value == null)
-                    value = "";
-                
-                if (!value.Equals(this.text))
+                value ??= "";
+
+                if (!value.Equals(text))
                 {
-                    string oldText = this.text;
-                    this.text = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.TextChanged, oldText));
+                    var oldText = text;
+                    text = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.TextChanged, oldText));
                 }
             }
         }
@@ -384,17 +383,16 @@ namespace XPTable.Models
         Localizable(true)]
         public virtual string Format
         {
-            get { return this.format; }
+            get => format;
             set
             {
-                if (value == null)
-                    value = "";
+                value ??= "";
 
-                if (!value.Equals(this.format))
+                if (!value.Equals(format))
                 {
-                    string oldFormat = this.format;
-                    this.format = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FormatChanged, oldFormat));
+                    var oldFormat = format;
+                    format = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FormatChanged, oldFormat));
                 }
             }
         }
@@ -408,17 +406,19 @@ namespace XPTable.Models
         Localizable(true)]
         public virtual ColumnAlignment Alignment
         {
-            get { return this.alignment; }
+            get => alignment;
             set
             {
-                if (!Enum.IsDefined(typeof(ColumnAlignment), value)) 
-                    throw new InvalidEnumArgumentException("value", (int) value, typeof(ColumnAlignment));
-                    
-                if (this.alignment != value)
+                if (!Enum.IsDefined(typeof(ColumnAlignment), value))
                 {
-                    ColumnAlignment oldAlignment = this.alignment;
-                    this.alignment = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.AlignmentChanged, oldAlignment));
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(ColumnAlignment));
+                }
+
+                if (alignment != value)
+                {
+                    var oldAlignment = alignment;
+                    alignment = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.AlignmentChanged, oldAlignment));
                 }
             }
         }
@@ -432,17 +432,19 @@ namespace XPTable.Models
         Localizable(true)]
         public virtual ColumnAutoResizeMode AutoResizeMode
         {
-            get { return this.resizeMode; }
+            get => resizeMode;
             set
             {
                 if (!Enum.IsDefined(typeof(ColumnAutoResizeMode), value))
-                    throw new InvalidEnumArgumentException("value", (int)value, typeof(ColumnAutoResizeMode));
-
-                if (this.resizeMode != value)
                 {
-                    ColumnAutoResizeMode oldValue = this.resizeMode;
-                    this.resizeMode = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.AutoResizeModeChanged, oldValue));
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(ColumnAutoResizeMode));
+                }
+
+                if (resizeMode != value)
+                {
+                    var oldValue = resizeMode;
+                    resizeMode = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.AutoResizeModeChanged, oldValue));
                 }
             }
         }
@@ -455,15 +457,15 @@ namespace XPTable.Models
         Localizable(true)]
         public int Width
         {
-            get { return this.width; }
+            get => width;
             set
             {
-                if (this.width != value)
+                if (width != value)
                 {
-                    int oldWidth = this.Width;
+                    var oldWidth = Width;
                     // Set the width, and check min & max
-                    this.width = Math.Min(Math.Max(value, MinimumWidth), MaximumWidth);
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.WidthChanged, oldWidth));
+                    width = Math.Min(Math.Max(value, MinimumWidth), MaximumWidth);
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.WidthChanged, oldWidth));
                 }
             }
         }
@@ -476,7 +478,7 @@ namespace XPTable.Models
         /// false otherwise</returns>
         private bool ShouldSerializeWidth()
         {
-            return this.Width != Column.DefaultWidth;
+            return Width != Column.DefaultWidth;
         }
 
         /// <summary>
@@ -490,8 +492,8 @@ namespace XPTable.Models
         [Browsable(false)]
         public bool IsTextTrimmed
         {
-            get { return _isTextTrimmed; }
-            set { _isTextTrimmed = value; }
+            get => _isTextTrimmed;
+            set => _isTextTrimmed = value;
         }
 
         private int _internalContentWidth;
@@ -503,12 +505,14 @@ namespace XPTable.Models
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int ContentWidth
         {
-            get { return _internalContentWidth; }
+            get => _internalContentWidth;
             set
             {
                 _internalContentWidth = value;
                 if (value > 0)
+                {
                     _internalWidthSet = true;
+                }
             }
         }
 
@@ -518,10 +522,7 @@ namespace XPTable.Models
         /// Returns true if the cells width property has been assigned.
         /// </summary>
         [Browsable(false)]
-        public bool WidthNotSet
-        {
-            get { return !_internalWidthSet; }
-        }
+        public bool WidthNotSet => !_internalWidthSet;
 
         /// <summary>
         /// Gets or sets the Image displayed in the Column's header
@@ -532,14 +533,14 @@ namespace XPTable.Models
         Localizable(true)]
         public Image Image
         {
-            get { return this.image; }
+            get => image;
             set
             {
-                if (this.image != value)
+                if (image != value)
                 {
-                    Image oldImage = this.Image;
-                    this.image = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ImageChanged, oldImage));
+                    var oldImage = Image;
+                    image = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ImageChanged, oldImage));
                 }
             }
         }
@@ -554,13 +555,13 @@ namespace XPTable.Models
         Localizable(true)]
         public bool ImageOnRight
         {
-            get { return this.imageOnRight; }
+            get => imageOnRight;
             set
             {
-                if (this.imageOnRight != value)
+                if (imageOnRight != value)
                 {
-                    this.imageOnRight = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ImageChanged, null));
+                    imageOnRight = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ImageChanged, null));
                 }
             }
         }
@@ -570,26 +571,26 @@ namespace XPTable.Models
         /// </summary>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ColumnState ColumnState
-        {
-            get { return this.columnState; }
-        }
+        public ColumnState ColumnState => columnState;
 
         /// <summary>
         /// Gets or sets the state of the Column
         /// </summary>
         internal ColumnState InternalColumnState
         {
-            get { return this.ColumnState; }
+            get => ColumnState;
             set
             {
-                if (!Enum.IsDefined(typeof(ColumnState), value)) 
-                    throw new InvalidEnumArgumentException("value", (int) value, typeof(ColumnState));
-                if (this.columnState != value)
+                if (!Enum.IsDefined(typeof(ColumnState), value))
                 {
-                    ColumnState oldState = this.columnState;
-                    this.columnState = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.StateChanged, oldState));
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(ColumnState));
+                }
+
+                if (columnState != value)
+                {
+                    var oldState = columnState;
+                    columnState = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.StateChanged, oldState));
                 }
             }
         }
@@ -602,13 +603,15 @@ namespace XPTable.Models
         Description("Determines whether the column is visible or hidden.")]
         public bool Visible
         {
-            get { return this.GetState(STATE_VISIBLE); }
+            get => GetState(STATE_VISIBLE);
             set
             {
-                bool visible = this.Visible;
-                this.SetState(STATE_VISIBLE, value);
+                var visible = Visible;
+                SetState(STATE_VISIBLE, value);
                 if (visible != value)
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.VisibleChanged, visible));
+                {
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.VisibleChanged, visible));
+                }
             }
         }
 
@@ -620,13 +623,15 @@ namespace XPTable.Models
         Description("Determines whether the column is able to be sorted.")]
         public virtual bool Sortable
         {
-            get { return this.GetState(STATE_SORTABLE); }
+            get => GetState(STATE_SORTABLE);
             set
             {
-                bool sortable = this.Sortable;
-                this.SetState(STATE_SORTABLE, value);
+                var sortable = Sortable;
+                SetState(STATE_SORTABLE, value);
                 if (sortable != value)
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.SortableChanged, sortable));
+                {
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.SortableChanged, sortable));
+                }
             }
         }
 
@@ -635,18 +640,20 @@ namespace XPTable.Models
         /// <summary>
         /// Gets or sets whether the Column is able to be resized
         /// </summary>
-        [ Category( "Appearance" ),
-        DefaultValue( true ),
-        Description( "Determines whether the column is able to be resized." ) ]
+        [Category("Appearance"),
+        DefaultValue(true),
+        Description("Determines whether the column is able to be resized.")]
         public virtual bool Resizable
         {
-            get { return this.GetState( STATE_RESIZABLE ); }
+            get => GetState(STATE_RESIZABLE);
             set
             {
-                bool resizable = this.Resizable;
-                this.SetState( STATE_RESIZABLE, value );
-                if( resizable != value)
-                    this.OnPropertyChanged( new ColumnEventArgs( this, ColumnEventType.ResizableChanged, resizable ) );
+                var resizable = Resizable;
+                SetState(STATE_RESIZABLE, value);
+                if (resizable != value)
+                {
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ResizableChanged, resizable));
+                }
             }
         }
 
@@ -659,13 +666,15 @@ namespace XPTable.Models
         Description("Determines whether the column is able to be filtered.")]
         public virtual bool Filterable
         {
-            get { return this.GetState(STATE_FILTERABLE); }
+            get => GetState(STATE_FILTERABLE);
             set
             {
-                bool filterable = this.Filterable;
-                this.SetState(STATE_FILTERABLE, value);
+                var filterable = Filterable;
+                SetState(STATE_FILTERABLE, value);
                 if (filterable != value)
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FilterableChanged, filterable));
+                {
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FilterableChanged, filterable));
+                }
             }
         }
 
@@ -679,19 +688,16 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.filter == null)
-                {
-                    this.filter = CreateDefaultFilter();
-                }
+                filter ??= CreateDefaultFilter();
 
-                return this.filter;
+                return filter;
             }
             set
             {
-                if (this.filter != value)
+                if (filter != value)
                 {
-                    this.filter = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FilterChanged, null));
+                    filter = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.FilterChanged, null));
                 }
             }
         }
@@ -704,13 +710,13 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ICellRenderer Renderer
         {
-            get { return this.renderer; }
+            get => renderer;
             set
             {
-                if (this.renderer != value)
+                if (renderer != value)
                 {
-                    this.renderer = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.RendererChanged, null));
+                    renderer = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.RendererChanged, null));
                 }
             }
         }
@@ -723,17 +729,17 @@ namespace XPTable.Models
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ICellEditor Editor
         {
-            get { return this.editor; }
+            get => editor;
             set
             {
-                if (this.editor != value)
+                if (editor != value)
                 {
-                    this.editor = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.EditorChanged, null));
+                    editor = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.EditorChanged, null));
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the user specified Comparer type that is used to edit the 
         /// Column's Cells
@@ -741,17 +747,17 @@ namespace XPTable.Models
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Type Comparer
-         {
-             get { return this.comparer; }
-             set
-             {
-                 if (this.comparer != value)
-                 {
-                     this.comparer = value;
-                     this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ComparerChanged, null));
-                 }
-             }
-         }
+        {
+            get => comparer;
+            set
+            {
+                if (comparer != value)
+                {
+                    comparer = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ComparerChanged, null));
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the Type of the default Comparer used to compare the Column's Cells when 
@@ -767,28 +773,27 @@ namespace XPTable.Models
         /// Gets the current SortOrder of the Column
         /// </summary>
         [Browsable(false)]
-        public SortOrder SortOrder
-        {
-            get { return this.sortOrder; }
-        }
+        public SortOrder SortOrder => sortOrder;
 
         /// <summary>
         /// Gets or sets the current SortOrder of the Column
         /// </summary>
         internal SortOrder InternalSortOrder
         {
-            get { return this.SortOrder; }
+            get => SortOrder;
             set
             {
-                if (!Enum.IsDefined(typeof(SortOrder), value)) 
-                    throw new InvalidEnumArgumentException("value", (int) value, typeof(SortOrder));
-                
-                if (this.sortOrder != value)
+                if (!Enum.IsDefined(typeof(SortOrder), value))
                 {
-                    SortOrder oldOrder = this.sortOrder;
-                    this.sortOrder = value;
-                    this._internalWidthSet = false; // Need to re-calc width with/without the arrow
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.SortOrderChanged, oldOrder));
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(SortOrder));
+                }
+
+                if (sortOrder != value)
+                {
+                    var oldOrder = sortOrder;
+                    sortOrder = value;
+                    _internalWidthSet = false; // Need to re-calc width with/without the arrow
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.SortOrderChanged, oldOrder));
                 }
             }
         }
@@ -803,19 +808,25 @@ namespace XPTable.Models
         {
             get
             {
-                if (!this.GetState(STATE_EDITABLE))
+                if (!GetState(STATE_EDITABLE))
+                {
                     return false;
+                }
                 else
-                    return this.Visible && this.Enabled;
+                {
+                    return Visible && Enabled;
+                }
             }
 
             set
             {
-                bool editable = this.GetState(STATE_EDITABLE);
-                this.SetState(STATE_EDITABLE, value);
-                
+                var editable = GetState(STATE_EDITABLE);
+                SetState(STATE_EDITABLE, value);
+
                 if (editable != value)
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.EditableChanged, editable));
+                {
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.EditableChanged, editable));
+                }
             }
         }
 
@@ -827,7 +838,7 @@ namespace XPTable.Models
         /// false otherwise</returns>
         private bool ShouldSerializeEditable()
         {
-            return !this.GetState(STATE_EDITABLE);
+            return !GetState(STATE_EDITABLE);
         }
 
         /// <summary>
@@ -840,23 +851,29 @@ namespace XPTable.Models
         {
             get
             {
-                if (!this.GetState(STATE_ENABLED))
+                if (!GetState(STATE_ENABLED))
+                {
                     return false;
+                }
 
-                if (this.ColumnModel == null)
+                if (ColumnModel == null)
+                {
                     return true;
+                }
 
-                return this.ColumnModel.Enabled;
+                return ColumnModel.Enabled;
             }
 
             set
             {
-                bool enabled = this.GetState(STATE_ENABLED);
-                
-                this.SetState(STATE_ENABLED, value);
-                
+                var enabled = GetState(STATE_ENABLED);
+
+                SetState(STATE_ENABLED, value);
+
                 if (enabled != value)
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.EnabledChanged, enabled));
+                {
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.EnabledChanged, enabled));
+                }
             }
         }
 
@@ -868,7 +885,7 @@ namespace XPTable.Models
         /// false otherwise</returns>
         private bool ShouldSerializeEnabled()
         {
-            return !this.GetState(STATE_ENABLED);
+            return !GetState(STATE_ENABLED);
         }
 
         /// <summary>
@@ -879,16 +896,18 @@ namespace XPTable.Models
         Description("Indicates whether the column's cells can be selected")]
         public virtual bool Selectable
         {
-            get { return this.GetState(STATE_SELECTABLE); }
+            get => GetState(STATE_SELECTABLE);
 
             set
             {
-                bool selectable = this.Selectable;
-                
-                this.SetState(STATE_SELECTABLE, value);
-                
+                var selectable = Selectable;
+
+                SetState(STATE_SELECTABLE, value);
+
                 if (selectable != value)
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.SelectableChanged, selectable));
+                {
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.SelectableChanged, selectable));
+                }
             }
         }
 
@@ -901,18 +920,17 @@ namespace XPTable.Models
         Localizable(true)]
         public string ToolTipText
         {
-            get { return this.tooltipText; }
+            get => tooltipText;
 
             set
             {
-                if (value == null)
-                    value = "";
-                
-                if (!value.Equals(this.tooltipText))
+                value ??= "";
+
+                if (!value.Equals(tooltipText))
                 {
-                    string oldTip = this.tooltipText;
-                    this.tooltipText = value;
-                    this.OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ToolTipTextChanged, oldTip));
+                    var oldTip = tooltipText;
+                    tooltipText = value;
+                    OnPropertyChanged(new ColumnEventArgs(this, ColumnEventType.ToolTipTextChanged, oldTip));
                 }
             }
         }
@@ -922,35 +940,29 @@ namespace XPTable.Models
         /// </summary>
         internal int X
         {
-            get { return this.x; }
-            set { this.x = value; }
+            get => x;
+            set => x = value;
         }
 
         /// <summary>
         /// Gets the x-coordinate of the column's left edge in pixels
         /// </summary>
         [Browsable(false)]
-        public int Left
-        {
-            get { return this.X; }
-        }
+        public int Left => X;
 
         /// <summary>
         /// Gets the x-coordinate of the column's right edge in pixels
         /// </summary>
         [Browsable(false)]
-        public int Right
-        {
-            get { return this.Left + this.Width; }
-        }
+        public int Right => Left + Width;
 
         /// <summary>
         /// Gets or sets the ColumnModel the Column belongs to
         /// </summary>
         protected internal ColumnModel ColumnModel
         {
-            get { return this.columnModel; }
-            set { this.columnModel = value; }
+            get => columnModel;
+            set => columnModel = value;
         }
 
         /// <summary>
@@ -958,34 +970,32 @@ namespace XPTable.Models
         /// intended to be used directly from your code
         /// </summary>
         [Browsable(false)]
-        public ColumnModel Parent
-        {
-            get { return this.ColumnModel; }
-        }
+        public ColumnModel Parent => ColumnModel;
 
         /// <summary>
         /// Gets whether the Column is able to raise events
         /// </summary>
-		protected override bool CanRaiseEvents
+        protected override bool CanRaiseEvents
         {
             get
             {
                 // check if the ColumnModel that the Colum belongs to is able to 
                 // raise events (if it can't, the Colum shouldn't raise events either)
-                if (this.ColumnModel != null)
-					return this.ColumnModel.CanRaiseEventsInternal;
+                if (ColumnModel != null)
+                {
+                    return ColumnModel.CanRaiseEventsInternal;
+                }
                 else
+                {
                     return true;
+                }
             }
         }
 
         /// <summary>
         /// Gets the value for CanRaiseEvents.
         /// </summary>
-        protected internal bool CanRaiseEventsInternal
-        {
-            get { return this.CanRaiseEvents; }
-        }
+        protected internal bool CanRaiseEventsInternal => CanRaiseEvents;
         #endregion
 
         #region Events
@@ -995,16 +1005,16 @@ namespace XPTable.Models
         /// <param name="e">A ColumnEventArgs that contains the event data</param>
         protected virtual void OnPropertyChanged(ColumnEventArgs e)
         {
-            if (this.ColumnModel != null)
-                e.SetIndex(this.ColumnModel.Columns.IndexOf(this)); 
-            
-            if (this.CanRaiseEvents)
+            if (ColumnModel != null)
             {
-                if (this.ColumnModel != null)
-                    this.ColumnModel.OnColumnPropertyChanged(e);
-                
-                if (PropertyChanged != null)
-                    PropertyChanged(this, e);
+                e.SetIndex(ColumnModel.Columns.IndexOf(this));
+            }
+
+            if (CanRaiseEvents)
+            {
+                ColumnModel?.OnColumnPropertyChanged(e);
+
+                PropertyChanged?.Invoke(this, e);
             }
         }
         #endregion

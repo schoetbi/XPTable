@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace XPTable.Models
 {
@@ -10,8 +10,8 @@ namespace XPTable.Models
 
         public ScrollPosition(int horizontalValue, int verticalValue)
         {
-            this.HorizontalValue = horizontalValue;
-            this.VerticalValue = verticalValue;
+            HorizontalValue = horizontalValue;
+            VerticalValue = verticalValue;
         }
     }
 }

@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -34,46 +34,46 @@ using XPTable.Models;
 
 namespace XPTable.Sorting
 {
-	/// <summary>
-	/// Base class for comparers used to sort the Cells contained in a TableModel
-	/// </summary>
-	public abstract class ComparerBase : IComparer
-	{
-		#region Class Data
+    /// <summary>
+    /// Base class for comparers used to sort the Cells contained in a TableModel
+    /// </summary>
+    public abstract class ComparerBase : IComparer
+    {
+        #region Class Data
 
-		/// <summary>
-		/// The TableModel that contains the Cells to be sorted
-		/// </summary>
-		private TableModel tableModel;
+        /// <summary>
+        /// The TableModel that contains the Cells to be sorted
+        /// </summary>
+        private readonly TableModel tableModel;
 
-		/// <summary>
-		/// The index of the Column to be sorted
-		/// </summary>
-		private int column;
-
-
-		#endregion
-		
-
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ComparerBase class with the specified 
-		/// TableModel, Column index and SortOrder
-		/// </summary>
-		/// <param name="tableModel">The TableModel that contains the data to be sorted</param>
-		/// <param name="column">The index of the Column to be sorted</param>
-		/// <param name="sortOrder">Specifies how the Column is to be sorted</param>
-		public ComparerBase(TableModel tableModel, int column, SortOrder sortOrder)
-		{
-			this.tableModel = tableModel;
-			this.column = column;
-		}
-
-		#endregion
+        /// <summary>
+        /// The index of the Column to be sorted
+        /// </summary>
+        private readonly int column;
 
 
-		#region Methods
+        #endregion
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the ComparerBase class with the specified 
+        /// TableModel, Column index and SortOrder
+        /// </summary>
+        /// <param name="tableModel">The TableModel that contains the data to be sorted</param>
+        /// <param name="column">The index of the Column to be sorted</param>
+        /// <param name="sortOrder">Specifies how the Column is to be sorted</param>
+        public ComparerBase(TableModel tableModel, int column, SortOrder sortOrder)
+        {
+            this.tableModel = tableModel;
+            this.column = column;
+        }
+
+        #endregion
+
+
+        #region Methods
 
         /// <summary>
         /// Compares two objects and returns a value indicating whether one is less 
@@ -84,13 +84,18 @@ namespace XPTable.Sorting
         /// <returns>-1 if a is less than b, 1 if a is greater than b, or 0 if a equals b</returns>
         public virtual int Compare(object a, object b)
         {
-            if (!(a is Cell))
+            if (a is not Cell)
+            {
                 throw new ArgumentException("Invalid type '" + a.GetType().FullName + "'. Cell expected.", "a");
-            if (!(b is Cell))
-                throw new ArgumentException("Invalid type '" + b.GetType().FullName + "'. Cell expected.", "b");
+            }
 
-            Cell cell1 = (Cell)a;
-            Cell cell2 = (Cell)b;
+            if (b is not Cell)
+            {
+                throw new ArgumentException("Invalid type '" + b.GetType().FullName + "'. Cell expected.", "b");
+            }
+
+            var cell1 = (Cell)a;
+            var cell2 = (Cell)b;
 
             // check for null cells
             if (cell1 == null && cell2 == null)
@@ -106,7 +111,7 @@ namespace XPTable.Sorting
                 return 1;
             }
 
-            int result = CompareCells(cell1, cell2);
+            var result = CompareCells(cell1, cell2);
 
             return result;
         }
@@ -121,36 +126,24 @@ namespace XPTable.Sorting
         /// <param name="cell2"></param>
         /// <returns></returns>
         protected abstract int CompareCells(Cell cell1, Cell cell2);
-		#endregion
+        #endregion
 
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// Gets the TableModel that contains the Cells to be sorted
-		/// </summary>
-		public TableModel TableModel
-		{
-			get
-			{
-				return this.tableModel;
-			}
-		}
+        /// <summary>
+        /// Gets the TableModel that contains the Cells to be sorted
+        /// </summary>
+        public TableModel TableModel => tableModel;
 
 
-		/// <summary>
-		/// Gets the index of the Column to be sorted
-		/// </summary>
-		public int SortColumn
-		{
-			get
-			{
-				return this.column;
-			}
-		}
+        /// <summary>
+        /// Gets the index of the Column to be sorted
+        /// </summary>
+        public int SortColumn => column;
 
 
 
-		#endregion
-	}
+        #endregion
+    }
 }

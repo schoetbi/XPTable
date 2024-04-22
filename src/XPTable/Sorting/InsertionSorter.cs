@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  * 
  * Sort algorithm modified from the C# implementation written by Jonathan de Halleux, 
@@ -61,26 +61,26 @@ namespace XPTable.Sorting
         /// </summary>
         public override void Sort()
         {
-            if (this.TableModel == null)
+            if (TableModel == null)
             {
                 return;
             }
 
-            RowCollection rows = this.TableModel.Rows;
+            var rows = TableModel.Rows;
 
-            for (int i = 1; i < rows.Count; i++)
+            for (var i = 1; i < rows.Count; i++)
             {
-                int j = i;
-                Row b = rows[i];
+                var j = i;
+                var b = rows[i];
 
-                while ((j > 0) && (this.Compare(rows[j - 1], b) > 0))
+                while ((j > 0) && (Compare(rows[j - 1], b) > 0))
                 {
-                    this.Set(j, rows[j - 1]);
+                    Set(j, rows[j - 1]);
 
                     --j;
                 }
 
-                this.Set(j, b);
+                Set(j, b);
             }
         }
     }

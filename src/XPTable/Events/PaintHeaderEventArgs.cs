@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -34,231 +34,195 @@ using XPTable.Models;
 
 namespace XPTable.Events
 {
-	#region Delegates
+    #region Delegates
 
-	/// <summary>
-	/// Represents the method that will handle the PaintHeader events of a Table
-	/// </summary>
-	public delegate void PaintHeaderEventHandler(object sender, PaintHeaderEventArgs e);
+    /// <summary>
+    /// Represents the method that will handle the PaintHeader events of a Table
+    /// </summary>
+    public delegate void PaintHeaderEventHandler(object sender, PaintHeaderEventArgs e);
 
-	#endregion
-
-
-
-	#region PaintHeaderEventArgs
-	
-	/// <summary>
-	/// Provides data for the PaintHeader event
-	/// </summary>
-	public class PaintHeaderEventArgs : PaintEventArgs
-	{
-		#region Class Data
-
-		/// <summary>
-		/// The Column to be painted
-		/// </summary>
-		private Column column;
-		
-		/// <summary>
-		/// The Table the Column's ColumnModel belongs to
-		/// </summary>
-		private Table table;
-		
-		/// <summary>
-		/// The index of the Column in the Table's ColumnModel
-		/// </summary>
-		private int columnIndex;
-		
-		/// <summary>
-		/// The style of the Column header
-		/// </summary>
-		private ColumnHeaderStyle headerStyle;
-
-		/// <summary>
-		/// The rectangle in which to paint
-		/// </summary>
-		private Rectangle headerRect;
-
-		/// <summary>
-		/// Indicates whether the user has done the paining for us
-		/// </summary>
-		private bool handled;
-
-		#endregion
+    #endregion
 
 
-		#region Constructor
 
-		/// <summary>
-		/// Initializes a new instance of the PaintHeaderEventArgs class with 
-		/// the specified graphics and clipping rectangle
-		/// </summary>
-		/// <param name="g">The Graphics used to paint the Column header</param>
-		/// <param name="headerRect">The Rectangle that represents the rectangle 
-		/// in which to paint</param>
-		public PaintHeaderEventArgs(Graphics g, Rectangle headerRect) : this(g, null, null, -1, ColumnHeaderStyle.None, headerRect)
-		{
+    #region PaintHeaderEventArgs
 
-		}
-		
-		
-		/// <summary>
-		/// Initializes a new instance of the PaintHeaderEventArgs class with 
-		/// the specified graphics, column, table, column index, header style 
-		/// and clipping rectangle
-		/// </summary>
-		/// <param name="g">The Graphics used to paint the Column header</param>
-		/// <param name="column">The Column to be painted</param>
-		/// <param name="table">The Table the Column's ColumnModel belongs to</param>
-		/// <param name="columnIndex">The index of the Column in the Table's ColumnModel</param>
-		/// <param name="headerStyle">The style of the Column's header</param>
-		/// <param name="headerRect">The Rectangle that represents the rectangle 
-		/// in which to paint</param>
-		public PaintHeaderEventArgs(Graphics g, Column column, Table table, int columnIndex, ColumnHeaderStyle headerStyle, Rectangle headerRect) : base(g, headerRect)
-		{
-			this.column = column;
-			this.table = table;
-			this.columnIndex = columnIndex;
-			this.column = column;
-			this.headerStyle = headerStyle;
-			this.headerRect = headerRect;
-			this.handled = false;
-		}
+    /// <summary>
+    /// Provides data for the PaintHeader event
+    /// </summary>
+    public class PaintHeaderEventArgs : PaintEventArgs
+    {
+        #region Class Data
 
-		#endregion
+        /// <summary>
+        /// The Column to be painted
+        /// </summary>
+        private Column column;
 
+        /// <summary>
+        /// The Table the Column's ColumnModel belongs to
+        /// </summary>
+        private Table table;
 
-		#region Properties
+        /// <summary>
+        /// The index of the Column in the Table's ColumnModel
+        /// </summary>
+        private int columnIndex;
 
-		/// <summary>
-		/// Gets the Column to be painted
-		/// </summary>
-		public Column Column
-		{
-			get
-			{
-				return this.column;
-			}
-		}
+        /// <summary>
+        /// The style of the Column header
+        /// </summary>
+        private ColumnHeaderStyle headerStyle;
+
+        /// <summary>
+        /// The rectangle in which to paint
+        /// </summary>
+        private Rectangle headerRect;
+
+        /// <summary>
+        /// Indicates whether the user has done the paining for us
+        /// </summary>
+        private bool handled;
+
+        #endregion
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="column"></param>
-		internal void SetColumn(Column column)
-		{
-			this.column = column;
-		}
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the PaintHeaderEventArgs class with 
+        /// the specified graphics and clipping rectangle
+        /// </summary>
+        /// <param name="g">The Graphics used to paint the Column header</param>
+        /// <param name="headerRect">The Rectangle that represents the rectangle 
+        /// in which to paint</param>
+        public PaintHeaderEventArgs(Graphics g, Rectangle headerRect) : this(g, null, null, -1, ColumnHeaderStyle.None, headerRect)
+        {
+
+        }
 
 
-		/// <summary>
-		/// Gets the Table the Column's ColumnModel belongs to
-		/// </summary>
-		public Table Table
-		{
-			get
-			{
-				return this.table;
-			}
-		}
+        /// <summary>
+        /// Initializes a new instance of the PaintHeaderEventArgs class with 
+        /// the specified graphics, column, table, column index, header style 
+        /// and clipping rectangle
+        /// </summary>
+        /// <param name="g">The Graphics used to paint the Column header</param>
+        /// <param name="column">The Column to be painted</param>
+        /// <param name="table">The Table the Column's ColumnModel belongs to</param>
+        /// <param name="columnIndex">The index of the Column in the Table's ColumnModel</param>
+        /// <param name="headerStyle">The style of the Column's header</param>
+        /// <param name="headerRect">The Rectangle that represents the rectangle 
+        /// in which to paint</param>
+        public PaintHeaderEventArgs(Graphics g, Column column, Table table, int columnIndex, ColumnHeaderStyle headerStyle, Rectangle headerRect) : base(g, headerRect)
+        {
+            this.column = column;
+            this.table = table;
+            this.columnIndex = columnIndex;
+            this.column = column;
+            this.headerStyle = headerStyle;
+            this.headerRect = headerRect;
+            handled = false;
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="table"></param>
-		internal void SetTable(Table table)
-		{
-			this.table = table;
-		}
+        #region Properties
+
+        /// <summary>
+        /// Gets the Column to be painted
+        /// </summary>
+        public Column Column => column;
 
 
-		/// <summary>
-		/// Gets the index of the Column in the Table's ColumnModel
-		/// </summary>
-		public int ColumnIndex
-		{
-			get
-			{
-				return this.columnIndex;
-			}
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="column"></param>
+        internal void SetColumn(Column column)
+        {
+            this.column = column;
+        }
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="columnIndex"></param>
-		internal void SetColumnIndex(int columnIndex)
-		{
-			this.columnIndex = columnIndex;
-		}
+        /// <summary>
+        /// Gets the Table the Column's ColumnModel belongs to
+        /// </summary>
+        public Table Table => table;
 
 
-		/// <summary>
-		/// Gets the style of the Column's header
-		/// </summary>
-		public ColumnHeaderStyle HeaderStyle
-		{
-			get
-			{
-				return this.headerStyle;
-			}
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        internal void SetTable(Table table)
+        {
+            this.table = table;
+        }
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="headerStyle"></param>
-		internal void SetHeaderStyle(ColumnHeaderStyle headerStyle)
-		{
-			this.headerStyle = headerStyle;
-		}
+        /// <summary>
+        /// Gets the index of the Column in the Table's ColumnModel
+        /// </summary>
+        public int ColumnIndex => columnIndex;
 
 
-		/// <summary>
-		/// Gets the column header's bounding rectangle
-		/// </summary>
-		public Rectangle HeaderRect
-		{
-			get
-			{
-				return this.headerRect;
-			}
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        internal void SetColumnIndex(int columnIndex)
+        {
+            this.columnIndex = columnIndex;
+        }
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="headerRect"></param>
-		internal void SetHeaderRect(Rectangle headerRect)
-		{
-			this.headerRect = headerRect;
-		}
+        /// <summary>
+        /// Gets the style of the Column's header
+        /// </summary>
+        public ColumnHeaderStyle HeaderStyle => headerStyle;
 
 
-		/// <summary>
-		/// Gets or sets a value indicating whether the BeforePaintHeader 
-		/// event was handled
-		/// </summary>
-		public bool Handled
-		{
-			get
-			{
-				return this.handled;
-			}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="headerStyle"></param>
+        internal void SetHeaderStyle(ColumnHeaderStyle headerStyle)
+        {
+            this.headerStyle = headerStyle;
+        }
 
-			set
-			{
-				this.handled = value;
-			}
-		}
 
-		#endregion
-	}
+        /// <summary>
+        /// Gets the column header's bounding rectangle
+        /// </summary>
+        public Rectangle HeaderRect => headerRect;
 
-	#endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="headerRect"></param>
+        internal void SetHeaderRect(Rectangle headerRect)
+        {
+            this.headerRect = headerRect;
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the BeforePaintHeader 
+        /// event was handled
+        /// </summary>
+        public bool Handled
+        {
+            get => handled;
+
+            set => handled = value;
+        }
+
+        #endregion
+    }
+
+    #endregion
 }

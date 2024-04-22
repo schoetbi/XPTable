@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -32,156 +32,132 @@ using XPTable.Models;
 
 namespace XPTable.Events
 {
-	#region Delegates
+    #region Delegates
 
-	/// <summary>
-	/// Represents the methods that will handle the PropertyChanged event of a Column, 
-	/// or a Table's BeginSort and EndSort events
-	/// </summary>
-	public delegate void ColumnEventHandler(object sender, ColumnEventArgs e);
+    /// <summary>
+    /// Represents the methods that will handle the PropertyChanged event of a Column, 
+    /// or a Table's BeginSort and EndSort events
+    /// </summary>
+    public delegate void ColumnEventHandler(object sender, ColumnEventArgs e);
 
-	#endregion
-	
-	
-	
-	#region ColumnEventArgs
-
-	/// <summary>
-	/// Provides data for a Column's PropertyChanged event, or a Table's 
-	/// BeginSort and EndSort events
-	/// </summary>
-	public class ColumnEventArgs
-	{
-		#region Class Data
-
-		/// <summary>
-		/// The Column that Raised the event
-		/// </summary>
-		private Column source;
-
-		/// <summary>
-		/// The index of the Column in the ColumnModel
-		/// </summary>
-		private int index;
-
-		/// <summary>
-		/// The old value of the property that changed
-		/// </summary>
-		private object oldValue;
-
-		/// <summary>
-		/// The type of event
-		/// </summary>
-		private ColumnEventType eventType;
-
-		#endregion
+    #endregion
 
 
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ColumnEventArgs class with 
-		/// the specified Column source, column index and event type
-		/// </summary>
-		/// <param name="source">The Column that Raised the event</param>
-		/// <param name="eventType">The type of event</param>
-		/// <param name="oldValue">The old value of the changed property</param>
-		public ColumnEventArgs(Column source, ColumnEventType eventType, object oldValue) : this(source, -1, eventType, oldValue)
-		{
 
-		}
+    #region ColumnEventArgs
 
-		
-		/// <summary>
-		/// Initializes a new instance of the ColumnEventArgs class with 
-		/// the specified Column source, column index and event type
-		/// </summary>
-		/// <param name="source">The Column that Raised the event</param>
-		/// <param name="index">The index of the Column</param>
-		/// <param name="eventType">The type of event</param>
-		/// <param name="oldValue">The old value of the changed property</param>
-		public ColumnEventArgs(Column source, int index, ColumnEventType eventType, object oldValue) : base()
-		{
-			this.source = source;
-			this.index = index;
-			this.eventType = eventType;
-			this.oldValue = oldValue;
-		}
+    /// <summary>
+    /// Provides data for a Column's PropertyChanged event, or a Table's 
+    /// BeginSort and EndSort events
+    /// </summary>
+    public class ColumnEventArgs
+    {
+        #region Class Data
 
-		#endregion
+        /// <summary>
+        /// The Column that Raised the event
+        /// </summary>
+        private Column source;
 
+        /// <summary>
+        /// The index of the Column in the ColumnModel
+        /// </summary>
+        private int index;
 
-		#region Properties
+        /// <summary>
+        /// The old value of the property that changed
+        /// </summary>
+        private readonly object oldValue;
 
-		/// <summary>
-		/// Gets the Column that Raised the event
-		/// </summary>
-		public Column Column
-		{
-			get
-			{
-				return this.source;
-			}
-		}
+        /// <summary>
+        /// The type of event
+        /// </summary>
+        private readonly ColumnEventType eventType;
+
+        #endregion
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="column"></param>
-		internal void SetColumn(Column column)
-		{
-			this.source = column;
-		}
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the ColumnEventArgs class with 
+        /// the specified Column source, column index and event type
+        /// </summary>
+        /// <param name="source">The Column that Raised the event</param>
+        /// <param name="eventType">The type of event</param>
+        /// <param name="oldValue">The old value of the changed property</param>
+        public ColumnEventArgs(Column source, ColumnEventType eventType, object oldValue) : this(source, -1, eventType, oldValue)
+        {
+
+        }
 
 
-		/// <summary>
-		/// Gets the index of the Column
-		/// </summary>
-		public int Index
-		{
-			get
-			{
-				return this.index;
-			}
-		}
+        /// <summary>
+        /// Initializes a new instance of the ColumnEventArgs class with 
+        /// the specified Column source, column index and event type
+        /// </summary>
+        /// <param name="source">The Column that Raised the event</param>
+        /// <param name="index">The index of the Column</param>
+        /// <param name="eventType">The type of event</param>
+        /// <param name="oldValue">The old value of the changed property</param>
+        public ColumnEventArgs(Column source, int index, ColumnEventType eventType, object oldValue) : base()
+        {
+            this.source = source;
+            this.index = index;
+            this.eventType = eventType;
+            this.oldValue = oldValue;
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="index"></param>
-		internal void SetIndex(int index)
-		{
-			this.index = index;
-		}
+        #region Properties
+
+        /// <summary>
+        /// Gets the Column that Raised the event
+        /// </summary>
+        public Column Column => source;
 
 
-		/// <summary>
-		/// Gets the type of event
-		/// </summary>
-		public ColumnEventType EventType
-		{
-			get
-			{
-				return this.eventType;
-			}
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="column"></param>
+        internal void SetColumn(Column column)
+        {
+            source = column;
+        }
 
 
-		/// <summary>
-		/// Gets the old value of the Columns changed property
-		/// </summary>
-		public object OldValue
-		{
-			get
-			{
-				return this.oldValue;
-			}
-		}
+        /// <summary>
+        /// Gets the index of the Column
+        /// </summary>
+        public int Index => index;
 
-		#endregion
-	}
 
-	#endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        internal void SetIndex(int index)
+        {
+            this.index = index;
+        }
+
+
+        /// <summary>
+        /// Gets the type of event
+        /// </summary>
+        public ColumnEventType EventType => eventType;
+
+
+        /// <summary>
+        /// Gets the old value of the Columns changed property
+        /// </summary>
+        public object OldValue => oldValue;
+
+        #endregion
+    }
+
+    #endregion
 }

@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -37,529 +37,474 @@ using XPTable.Win32;
 
 namespace XPTable.Editors
 {
-	/// <summary>
-	/// A class for editing Cells that look like a ComboBox
-	/// </summary>
-	public class ComboBoxCellEditor : DropDownCellEditor
-	{
-		#region EventHandlers
-
-		/// <summary>
-		/// Occurs when the SelectedIndex property has changed
-		/// </summary>
-		public event EventHandler SelectedIndexChanged;
-
-		/// <summary>
-		/// Occurs when a visual aspect of an owner-drawn ComboBoxCellEditor changes
-		/// </summary>
-		public event DrawItemEventHandler DrawItem;
-
-		/// <summary>
-		/// Occurs each time an owner-drawn ComboBoxCellEditor item needs to be 
-		/// drawn and when the sizes of the list items are determined
-		/// </summary>
-		public event MeasureItemEventHandler MeasureItem;
-
-		#endregion
-		
-		
-		#region Class Data
-
-		/// <summary>
-		/// The ListBox that contains the items to be shown in the 
-		/// drop-down portion of the ComboBoxCellEditor
-		/// </summary>
-		private ListBox listbox;
-
-		/// <summary>
-		/// The maximum number of items to be shown in the drop-down 
-		/// portion of the ComboBoxCellEditor
-		/// </summary>
-		private int maxDropDownItems;
-
-		/// <summary>
-		/// The width of the Cell being edited
-		/// </summary>
-		private int cellWidth;
-
-		#endregion
-		
-		
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the ComboBoxCellEditor class with default settings
-		/// </summary>
-		public ComboBoxCellEditor() : base()
-		{
-			this.listbox = new ListBox();
-			this.listbox.BorderStyle = BorderStyle.None;
-			this.listbox.Location = new Point(0, 0);
-			this.listbox.Size = new Size(100, 100);
-			this.listbox.Dock = DockStyle.Fill;
-			this.listbox.DrawItem += new DrawItemEventHandler(this.listbox_DrawItem);
-			this.listbox.MeasureItem += new MeasureItemEventHandler(this.listbox_MeasureItem);
-			this.listbox.MouseEnter += new EventHandler(this.listbox_MouseEnter);
-			this.listbox.KeyDown += new KeyEventHandler(this.OnKeyDown);
-			this.listbox.KeyPress += new KeyPressEventHandler(base.OnKeyPress);
-			this.listbox.Click += new EventHandler(listbox_Click);
-			
-			this.TextBox.KeyDown += new KeyEventHandler(OnKeyDown);
-			this.TextBox.MouseWheel += new MouseEventHandler(OnMouseWheel);
-
-			this.maxDropDownItems = 8;
-
-			this.cellWidth = 0;
-
-			this.DropDown.Control = this.listbox;
-		}	
-
-		#endregion
-
-
-		#region Methods
-
-		/// <summary>
-		/// Sets the location and size of the CellEditor
-		/// </summary>
-		/// <param name="cellRect">A Rectangle that represents the size and location 
-		/// of the Cell being edited</param>
-		protected override void SetEditLocation(Rectangle cellRect)
-		{
-			// calc the size of the textbox
-			ICellRenderer renderer = this.EditingTable.ColumnModel.GetCellRenderer(this.EditingCellPos.Column);
-			int buttonWidth = ((ComboBoxCellRenderer) renderer).ButtonWidth;
-
-			this.TextBox.Size = new Size(cellRect.Width - 1 - buttonWidth, cellRect.Height-1);
-			this.TextBox.Location = cellRect.Location;
-
-			this.cellWidth = cellRect.Width;
-		}
-
-
-		/// <summary>
-		/// Sets the initial value of the editor based on the contents of 
-		/// the Cell being edited
-		/// </summary>
-		protected override void SetEditValue()
-		{
-			this.TextBox.Text = this.EditingCell.Text;
-			this.listbox.SelectedItem = this.EditingCell.Text;
-		}
-
-
-		/// <summary>
-		/// Sets the contents of the Cell being edited based on the value 
-		/// in the editor
-		/// </summary>
-		protected override void SetCellValue()
-		{
-			this.EditingCell.Text = this.TextBox.Text;
-		}
-
-
-		/// <summary>
-		/// Starts editing the Cell
-		/// </summary>
-		public override void StartEditing()
-		{
-			this.listbox.SelectedIndexChanged += new EventHandler(listbox_SelectedIndexChanged);
-			
-			base.StartEditing();
-		}
-
-
-		/// <summary>
-		/// Stops editing the Cell and commits any changes
-		/// </summary>
-		public override void StopEditing()
-		{
-			this.listbox.SelectedIndexChanged -= new EventHandler(listbox_SelectedIndexChanged);
-			
-			base.StopEditing();
-		}
-
-
-		/// <summary>
-		/// Stops editing the Cell and ignores any changes
-		/// </summary>
-		public override void CancelEditing()
-		{
-			this.listbox.SelectedIndexChanged -= new EventHandler(listbox_SelectedIndexChanged);
-			
-			base.CancelEditing();
-		}
-
-
-
-		/// <summary>
-		/// Displays the drop down portion to the user
-		/// </summary>
-		protected override void ShowDropDown()
-		{
-			if (this.InternalDropDownWidth == -1)
-			{
-				this.DropDown.Width = this.cellWidth;
-				this.listbox.Width = this.cellWidth;
-			}
-			
-			if (this.IntegralHeight)
-			{
-				int visItems = this.listbox.Height / this.ItemHeight;
-
-				if (visItems > this.MaxDropDownItems)
-				{
-					visItems = this.MaxDropDownItems;
-				}
-
-				if (this.listbox.Items.Count < this.MaxDropDownItems)
-				{
-					visItems = this.listbox.Items.Count;
-				}
-
-				if (visItems == 0)
-				{
-					visItems = 1;
-				}
-
-				this.DropDown.Height = (visItems * this.ItemHeight) + 2;
-				this.listbox.Height = visItems * this.ItemHeight;
-			}
-			
-			base.ShowDropDown();
-		}
-
-		#endregion
-
-
-		#region Properties
-
-		/// <summary>
-		/// Gets or sets the maximum number of items to be shown in the drop-down 
-		/// portion of the ComboBoxCellEditor
-		/// </summary>
-		public int MaxDropDownItems
-		{
-			get
-			{
-				return this.maxDropDownItems;
-			}
-
-			set
-			{
-				if ((value < 1) || (value > 100))
-				{
-					throw new ArgumentOutOfRangeException("MaxDropDownItems must be between 1 and 100");
-				}
-
-				this.maxDropDownItems = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets a value indicating whether your code or the operating 
-		/// system will handle drawing of elements in the list
-		/// </summary>
-		public DrawMode DrawMode
-		{
-			get
-			{
-				return this.listbox.DrawMode;
-			}
-
-			set
-			{
-				if (!Enum.IsDefined(typeof(DrawMode), value))
-				{
-					throw new InvalidEnumArgumentException("value", (int) value, typeof(DrawMode));
-				}
-				
-				this.listbox.DrawMode = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets a value indicating whether the drop-down portion of the 
-		/// editor should resize to avoid showing partial items
-		/// </summary>
-		public bool IntegralHeight
-		{
-			get
-			{
-				return this.listbox.IntegralHeight;
-			}
-
-			set
-			{
-				this.listbox.IntegralHeight = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the height of an item in the editor
-		/// </summary>
-		public int ItemHeight
-		{
-			get
-			{
-				return this.listbox.ItemHeight;
-			}
-
-			set
-			{
-				this.listbox.ItemHeight = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets an object representing the collection of the items contained 
-		/// in this ComboBoxCellEditor
-		/// </summary>
-		public ListBox.ObjectCollection Items
-		{
-			get
-			{
-				return this.listbox.Items;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the maximum number of characters allowed in the editable 
-		/// portion of a ComboBoxCellEditor
-		/// </summary>
-		public int MaxLength
-		{
-			get
-			{
-				return this.TextBox.MaxLength;
-			}
-
-			set
-			{
-				this.TextBox.MaxLength = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the index specifying the currently selected item
-		/// </summary>
-		public int SelectedIndex
-		{
-			get
-			{
-				return this.listbox.SelectedIndex;
-			}
-
-			set
-			{
-				this.listbox.SelectedIndex = value;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets currently selected item in the ComboBoxCellEditor
-		/// </summary>
-		public object SelectedItem
-		{
-			get
-			{
-				return this.listbox.SelectedItem;
-			}
-
-			set
-			{
-				this.listbox.SelectedItem = value;
-			}
-		}
-
-		#endregion
-
-
-		#region Events
-
-		/// <summary>
-		/// Handler for the editors TextBox.KeyDown and ListBox.KeyDown events
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A KeyEventArgs that contains the event data</param>
-		protected virtual void OnKeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.KeyData == Keys.Up)
-			{
-				int index = this.SelectedIndex;
-
-				if (index == -1)
-				{
-					this.SelectedIndex = 0;
-				}
-				else if (index > 0)
-				{
-					this.SelectedIndex--;
-				}
-
-				e.Handled = true;
-			}
-			else if (e.KeyData == Keys.Down)
-			{
-				int index = this.SelectedIndex;
-
-				if (index == -1)
-				{
-					this.SelectedIndex = 0;
-				}
-				else if (index < this.Items.Count - 1)
-				{
-					this.SelectedIndex++;
-				}
-
-				e.Handled = true;
-			}
-		}
-
-
-		/// <summary>
-		/// Handler for the editors TextBox.MouseWheel event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A MouseEventArgs that contains the event data</param>
-		protected virtual void OnMouseWheel(object sender, MouseEventArgs e)
-		{
-			int index = this.SelectedIndex;
-
-			if (index == -1)
-			{
-				this.SelectedIndex = 0;
-			}
-			else
-			{
-				if (e.Delta > 0)
-				{
-					if (index > 0)
-					{
-						this.SelectedIndex--;
-					}
-				}
-				else
-				{
-					if (index < this.Items.Count - 1)
-					{
-						this.SelectedIndex++;
-					}
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Raises the DrawItem event
-		/// </summary>
-		/// <param name="e">A DrawItemEventArgs that contains the event data</param>
-		protected virtual void OnDrawItem(DrawItemEventArgs e)
-		{
-			if (DrawItem != null)
-			{
-				DrawItem(this, e);
-			}
-		}
-
-
-		/// <summary>
-		/// Raises the MeasureItem event
-		/// </summary>
-		/// <param name="e">A MeasureItemEventArgs that contains the event data</param>
-		protected virtual void OnMeasureItem(MeasureItemEventArgs e)
-		{
-			if (MeasureItem != null)
-			{
-				MeasureItem(this, e);
-			}
-		}
-
-		
-		/// <summary>
-		/// Raises the SelectedIndexChanged event
-		/// </summary>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		protected virtual void OnSelectedIndexChanged(EventArgs e)
-		{
-			if (SelectedIndexChanged != null)
-			{
-				SelectedIndexChanged(this, e);
-			}
-
-			this.TextBox.Text = this.SelectedItem.ToString();
-		}
-
-
-		/// <summary>
-		/// Handler for the editors ListBox.Click event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		private void listbox_Click(object sender, EventArgs e)
-		{
-            this.DroppedDown = false;
-
-            if (this.EditingTable != null)
+    /// <summary>
+    /// A class for editing Cells that look like a ComboBox
+    /// </summary>
+    public class ComboBoxCellEditor : DropDownCellEditor
+    {
+        #region EventHandlers
+
+        /// <summary>
+        /// Occurs when the SelectedIndex property has changed
+        /// </summary>
+        public event EventHandler SelectedIndexChanged;
+
+        /// <summary>
+        /// Occurs when a visual aspect of an owner-drawn ComboBoxCellEditor changes
+        /// </summary>
+        public event DrawItemEventHandler DrawItem;
+
+        /// <summary>
+        /// Occurs each time an owner-drawn ComboBoxCellEditor item needs to be 
+        /// drawn and when the sizes of the list items are determined
+        /// </summary>
+        public event MeasureItemEventHandler MeasureItem;
+
+        #endregion
+
+
+        #region Class Data
+
+        /// <summary>
+        /// The ListBox that contains the items to be shown in the 
+        /// drop-down portion of the ComboBoxCellEditor
+        /// </summary>
+        private readonly ListBox listbox;
+
+        /// <summary>
+        /// The maximum number of items to be shown in the drop-down 
+        /// portion of the ComboBoxCellEditor
+        /// </summary>
+        private int maxDropDownItems;
+
+        /// <summary>
+        /// The width of the Cell being edited
+        /// </summary>
+        private int cellWidth;
+
+        #endregion
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the ComboBoxCellEditor class with default settings
+        /// </summary>
+        public ComboBoxCellEditor() : base()
+        {
+            listbox = new ListBox
             {
-                this.EditingTable.StopEditing();
-            }
-		}
+                BorderStyle = BorderStyle.None,
+                Location = new Point(0, 0),
+                Size = new Size(100, 100),
+                Dock = DockStyle.Fill
+            };
+            listbox.DrawItem += new DrawItemEventHandler(listbox_DrawItem);
+            listbox.MeasureItem += new MeasureItemEventHandler(listbox_MeasureItem);
+            listbox.MouseEnter += new EventHandler(listbox_MouseEnter);
+            listbox.KeyDown += new KeyEventHandler(OnKeyDown);
+            listbox.KeyPress += new KeyPressEventHandler(base.OnKeyPress);
+            listbox.Click += new EventHandler(listbox_Click);
+
+            TextBox.KeyDown += new KeyEventHandler(OnKeyDown);
+            TextBox.MouseWheel += new MouseEventHandler(OnMouseWheel);
+
+            maxDropDownItems = 8;
+
+            cellWidth = 0;
+
+            DropDown.Control = listbox;
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// Handler for the editors ListBox.SelectedIndexChanged event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		private void listbox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-            this.OnSelectedIndexChanged(e);
-		}
+        #region Methods
+
+        /// <summary>
+        /// Sets the location and size of the CellEditor
+        /// </summary>
+        /// <param name="cellRect">A Rectangle that represents the size and location 
+        /// of the Cell being edited</param>
+        protected override void SetEditLocation(Rectangle cellRect)
+        {
+            // calc the size of the textbox
+            var renderer = EditingTable.ColumnModel.GetCellRenderer(EditingCellPos.Column);
+            var buttonWidth = ((ComboBoxCellRenderer)renderer).ButtonWidth;
+
+            TextBox.Size = new Size(cellRect.Width - 1 - buttonWidth, cellRect.Height - 1);
+            TextBox.Location = cellRect.Location;
+
+            cellWidth = cellRect.Width;
+        }
 
 
-		/// <summary>
-		/// Handler for the editors ListBox.MouseEnter event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		private void listbox_MouseEnter(object sender, EventArgs e)
-		{
-            if (this.EditingTable != null)
+        /// <summary>
+        /// Sets the initial value of the editor based on the contents of 
+        /// the Cell being edited
+        /// </summary>
+        protected override void SetEditValue()
+        {
+            TextBox.Text = EditingCell.Text;
+            listbox.SelectedItem = EditingCell.Text;
+        }
+
+
+        /// <summary>
+        /// Sets the contents of the Cell being edited based on the value 
+        /// in the editor
+        /// </summary>
+        protected override void SetCellValue()
+        {
+            EditingCell.Text = TextBox.Text;
+        }
+
+
+        /// <summary>
+        /// Starts editing the Cell
+        /// </summary>
+        public override void StartEditing()
+        {
+            listbox.SelectedIndexChanged += new EventHandler(listbox_SelectedIndexChanged);
+
+            base.StartEditing();
+        }
+
+
+        /// <summary>
+        /// Stops editing the Cell and commits any changes
+        /// </summary>
+        public override void StopEditing()
+        {
+            listbox.SelectedIndexChanged -= new EventHandler(listbox_SelectedIndexChanged);
+
+            base.StopEditing();
+        }
+
+
+        /// <summary>
+        /// Stops editing the Cell and ignores any changes
+        /// </summary>
+        public override void CancelEditing()
+        {
+            listbox.SelectedIndexChanged -= new EventHandler(listbox_SelectedIndexChanged);
+
+            base.CancelEditing();
+        }
+
+
+
+        /// <summary>
+        /// Displays the drop down portion to the user
+        /// </summary>
+        protected override void ShowDropDown()
+        {
+            if (InternalDropDownWidth == -1)
             {
-                this.EditingTable.RaiseCellMouseLeave(this.EditingCellPos);
+                DropDown.Width = cellWidth;
+                listbox.Width = cellWidth;
             }
-		}
+
+            if (IntegralHeight)
+            {
+                var visItems = listbox.Height / ItemHeight;
+
+                if (visItems > MaxDropDownItems)
+                {
+                    visItems = MaxDropDownItems;
+                }
+
+                if (listbox.Items.Count < MaxDropDownItems)
+                {
+                    visItems = listbox.Items.Count;
+                }
+
+                if (visItems == 0)
+                {
+                    visItems = 1;
+                }
+
+                DropDown.Height = (visItems * ItemHeight) + 2;
+                listbox.Height = visItems * ItemHeight;
+            }
+
+            base.ShowDropDown();
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// Handler for the editors ListBox.DrawItem event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A DrawItemEventArgs that contains the event data</param>
-		private void listbox_DrawItem(object sender, DrawItemEventArgs e)
-		{
-			this.OnDrawItem(e);
-		}
+        #region Properties
 
-		
-		/// <summary>
-		/// Handler for the editors ListBox.MeasureItem event
-		/// </summary>
-		/// <param name="sender">The object that raised the event</param>
-		/// <param name="e">A MeasureItemEventArgs that contains the event data</param>
-		private void listbox_MeasureItem(object sender, MeasureItemEventArgs e)
-		{
-			this.OnMeasureItem(e);
-		}
+        /// <summary>
+        /// Gets or sets the maximum number of items to be shown in the drop-down 
+        /// portion of the ComboBoxCellEditor
+        /// </summary>
+        public int MaxDropDownItems
+        {
+            get => maxDropDownItems;
 
-		#endregion
-	}
+            set
+            {
+                if (value is < 1 or > 100)
+                {
+                    throw new ArgumentOutOfRangeException("MaxDropDownItems must be between 1 and 100");
+                }
+
+                maxDropDownItems = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether your code or the operating 
+        /// system will handle drawing of elements in the list
+        /// </summary>
+        public DrawMode DrawMode
+        {
+            get => listbox.DrawMode;
+
+            set
+            {
+                if (!Enum.IsDefined(typeof(DrawMode), value))
+                {
+                    throw new InvalidEnumArgumentException("value", (int)value, typeof(DrawMode));
+                }
+
+                listbox.DrawMode = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the drop-down portion of the 
+        /// editor should resize to avoid showing partial items
+        /// </summary>
+        public bool IntegralHeight
+        {
+            get => listbox.IntegralHeight;
+
+            set => listbox.IntegralHeight = value;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the height of an item in the editor
+        /// </summary>
+        public int ItemHeight
+        {
+            get => listbox.ItemHeight;
+
+            set => listbox.ItemHeight = value;
+        }
+
+
+        /// <summary>
+        /// Gets an object representing the collection of the items contained 
+        /// in this ComboBoxCellEditor
+        /// </summary>
+        public ListBox.ObjectCollection Items => listbox.Items;
+
+
+        /// <summary>
+        /// Gets or sets the maximum number of characters allowed in the editable 
+        /// portion of a ComboBoxCellEditor
+        /// </summary>
+        public int MaxLength
+        {
+            get => TextBox.MaxLength;
+
+            set => TextBox.MaxLength = value;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the index specifying the currently selected item
+        /// </summary>
+        public int SelectedIndex
+        {
+            get => listbox.SelectedIndex;
+
+            set => listbox.SelectedIndex = value;
+        }
+
+
+        /// <summary>
+        /// Gets or sets currently selected item in the ComboBoxCellEditor
+        /// </summary>
+        public object SelectedItem
+        {
+            get => listbox.SelectedItem;
+
+            set => listbox.SelectedItem = value;
+        }
+
+        #endregion
+
+
+        #region Events
+
+        /// <summary>
+        /// Handler for the editors TextBox.KeyDown and ListBox.KeyDown events
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A KeyEventArgs that contains the event data</param>
+        protected virtual void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Up)
+            {
+                var index = SelectedIndex;
+
+                if (index == -1)
+                {
+                    SelectedIndex = 0;
+                }
+                else if (index > 0)
+                {
+                    SelectedIndex--;
+                }
+
+                e.Handled = true;
+            }
+            else if (e.KeyData == Keys.Down)
+            {
+                var index = SelectedIndex;
+
+                if (index == -1)
+                {
+                    SelectedIndex = 0;
+                }
+                else if (index < Items.Count - 1)
+                {
+                    SelectedIndex++;
+                }
+
+                e.Handled = true;
+            }
+        }
+
+
+        /// <summary>
+        /// Handler for the editors TextBox.MouseWheel event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A MouseEventArgs that contains the event data</param>
+        protected virtual void OnMouseWheel(object sender, MouseEventArgs e)
+        {
+            var index = SelectedIndex;
+
+            if (index == -1)
+            {
+                SelectedIndex = 0;
+            }
+            else
+            {
+                if (e.Delta > 0)
+                {
+                    if (index > 0)
+                    {
+                        SelectedIndex--;
+                    }
+                }
+                else
+                {
+                    if (index < Items.Count - 1)
+                    {
+                        SelectedIndex++;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Raises the DrawItem event
+        /// </summary>
+        /// <param name="e">A DrawItemEventArgs that contains the event data</param>
+        protected virtual void OnDrawItem(DrawItemEventArgs e)
+        {
+            DrawItem?.Invoke(this, e);
+        }
+
+
+        /// <summary>
+        /// Raises the MeasureItem event
+        /// </summary>
+        /// <param name="e">A MeasureItemEventArgs that contains the event data</param>
+        protected virtual void OnMeasureItem(MeasureItemEventArgs e)
+        {
+            MeasureItem?.Invoke(this, e);
+        }
+
+
+        /// <summary>
+        /// Raises the SelectedIndexChanged event
+        /// </summary>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        protected virtual void OnSelectedIndexChanged(EventArgs e)
+        {
+            SelectedIndexChanged?.Invoke(this, e);
+
+            TextBox.Text = SelectedItem.ToString();
+        }
+
+
+        /// <summary>
+        /// Handler for the editors ListBox.Click event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        private void listbox_Click(object sender, EventArgs e)
+        {
+            DroppedDown = false;
+
+            EditingTable?.StopEditing();
+        }
+
+
+        /// <summary>
+        /// Handler for the editors ListBox.SelectedIndexChanged event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        private void listbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            OnSelectedIndexChanged(e);
+        }
+
+
+        /// <summary>
+        /// Handler for the editors ListBox.MouseEnter event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">An EventArgs that contains the event data</param>
+        private void listbox_MouseEnter(object sender, EventArgs e)
+        {
+            EditingTable?.RaiseCellMouseLeave(EditingCellPos);
+        }
+
+
+        /// <summary>
+        /// Handler for the editors ListBox.DrawItem event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A DrawItemEventArgs that contains the event data</param>
+        private void listbox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            OnDrawItem(e);
+        }
+
+
+        /// <summary>
+        /// Handler for the editors ListBox.MeasureItem event
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">A MeasureItemEventArgs that contains the event data</param>
+        private void listbox_MeasureItem(object sender, MeasureItemEventArgs e)
+        {
+            OnMeasureItem(e);
+        }
+
+        #endregion
+    }
 }

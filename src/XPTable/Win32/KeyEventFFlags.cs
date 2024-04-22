@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -30,19 +30,19 @@ using System;
 
 namespace XPTable.Win32
 {
-	/// <summary>
-	/// Specifies the flags used with the keybd_event function
-	/// </summary>
-	internal enum KeyEventFFlags
-	{
-		/// <summary>
-		/// If specified, the scan code was preceded by a prefix byte having the value 0xE0 (224)
-		/// </summary>
-		KEYEVENTF_EXTENDEDKEY = 0x0001,
-		
-		/// <summary>
-		/// If specified, the key is being released. If not specified, the key is being depressed
-		/// </summary>
-		KEYEVENTF_KEYUP = 0x0002
-	}
+    /// <summary>
+    /// Specifies the flags used with the keybd_event function
+    /// </summary>
+    internal enum KeyEventFFlags
+    {
+        /// <summary>
+        /// If specified, the scan code was preceded by a prefix byte having the value 0xE0 (224)
+        /// </summary>
+        KEYEVENTF_EXTENDEDKEY = 0x0001,
+
+        /// <summary>
+        /// If specified, the key is being released. If not specified, the key is being depressed
+        /// </summary>
+        KEYEVENTF_KEYUP = 0x0002
+    }
 }

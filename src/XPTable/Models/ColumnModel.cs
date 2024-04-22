@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -44,7 +44,7 @@ namespace XPTable.Models
     /// CellRenderer or CellEditor has been created for a particular Column. 
     /// </summary>
     [DesignTimeVisible(true),
-    ToolboxItem(true), 
+    ToolboxItem(true),
     ToolboxBitmap(typeof(ColumnModel))]
     public class ColumnModel : Component
     {
@@ -66,7 +66,7 @@ namespace XPTable.Models
         public event EventHandler HeaderHeightChanged;
 
         #endregion
-        
+
         #region Class Data
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace XPTable.Models
         /// The maximum height of a column header
         /// </summary>
         public static readonly int MaximumHeaderHeight = 128;
-        
+
         /// <summary>
         /// The collection of Column's contained in the ColumnModel
         /// </summary>
@@ -125,7 +125,7 @@ namespace XPTable.Models
         /// </summary>
         public ColumnModel()
         {
-            this.Init();
+            Init();
         }
 
 
@@ -141,19 +141,19 @@ namespace XPTable.Models
             {
                 throw new ArgumentNullException("columns", "string[] cannot be null");
             }
-            
-            this.Init();
+
+            Init();
 
             if (columns.Length > 0)
             {
-                Column[] cols = new Column[columns.Length];
+                var cols = new Column[columns.Length];
 
-                for (int i=0; i<columns.Length; i++)
+                for (var i = 0; i < columns.Length; i++)
                 {
                     cols[i] = new TextColumn(columns[i]);
                 }
 
-                this.Columns.AddRange(cols);
+                Columns.AddRange(cols);
             }
         }
 
@@ -169,12 +169,12 @@ namespace XPTable.Models
             {
                 throw new ArgumentNullException("columns", "Column[] cannot be null");
             }
-            
-            this.Init();
+
+            Init();
 
             if (columns.Length > 0)
             {
-                this.Columns.AddRange(columns);
+                Columns.AddRange(columns);
             }
         }
 
@@ -184,18 +184,18 @@ namespace XPTable.Models
         /// </summary>
         private void Init()
         {
-            this.columns = null;
-            
-            this.table = null;
-            this.headerHeight = ColumnModel.DefaultHeaderHeight;
+            columns = null;
 
-            this.cellRenderers = new Dictionary<string, ICellRenderer>();
-            this.SetCellRenderer(DefaultKey, new TextCellRenderer());
+            table = null;
+            headerHeight = ColumnModel.DefaultHeaderHeight;
 
-            this.cellEditors = new Dictionary<string, ICellEditor>();
-            this.SetCellEditor(DefaultKey, new TextCellEditor());
+            cellRenderers = new Dictionary<string, ICellRenderer>();
+            SetCellRenderer(DefaultKey, new TextCellRenderer());
 
-            this.secondarySortOrder = new SortColumnCollection();
+            cellEditors = new Dictionary<string, ICellEditor>();
+            SetCellEditor(DefaultKey, new TextCellEditor());
+
+            secondarySortOrder = new SortColumnCollection();
         }
 
         #endregion
@@ -209,16 +209,16 @@ namespace XPTable.Models
         /// </summary>
         /// <param name="xPosition">The x-coordinate to check</param>
         /// <returns>The index of the Column or -1 if no Column is found</returns>
-        public int ColumnIndexAtX(int xPosition) 
+        public int ColumnIndexAtX(int xPosition)
         {
-            if (xPosition < 0 || xPosition > this.VisibleColumnsWidth)
+            if (xPosition < 0 || xPosition > VisibleColumnsWidth)
             {
                 return -1;
             }
 
-            for (int i=0; i<this.Columns.Count; i++)
+            for (var i = 0; i < Columns.Count; i++)
             {
-                if (this.Columns[i].Visible && xPosition < this.Columns[i].Right)
+                if (Columns[i].Visible && xPosition < Columns[i].Right)
                 {
                     return i;
                 }
@@ -234,18 +234,18 @@ namespace XPTable.Models
         /// <param name="xPosition">The x-coordinate to check</param>
         /// <returns>The Column that lies on the specified position, 
         /// or null if not found</returns>
-        public Column ColumnAtX(int xPosition) 
+        public Column ColumnAtX(int xPosition)
         {
-            if (xPosition < 0 || xPosition > this.VisibleColumnsWidth)
+            if (xPosition < 0 || xPosition > VisibleColumnsWidth)
             {
                 return null;
             }
-            
-            int index = this.ColumnIndexAtX(xPosition);
+
+            var index = ColumnIndexAtX(xPosition);
 
             if (index != -1)
             {
-                return this.Columns[index];
+                return Columns[index];
             }
 
             return null;
@@ -260,10 +260,12 @@ namespace XPTable.Models
         public Rectangle ColumnHeaderRect(int index)
         {
             // make sure the index is valid and the column is not hidden
-            if (index < 0 || index >= this.Columns.Count || !this.Columns[index].Visible)
+            if (index < 0 || index >= Columns.Count || !Columns[index].Visible)
+            {
                 return Rectangle.Empty;
+            }
 
-            return new Rectangle(this.Columns[index].Left, 0, this.Columns[index].Width, this.HeaderHeight);
+            return new Rectangle(Columns[index].Left, 0, Columns[index].Width, HeaderHeight);
         }
 
         /// <summary>
@@ -274,12 +276,14 @@ namespace XPTable.Models
         public Rectangle ColumnHeaderRect(Column column)
         {
             // check if we actually own the column
-            int index = this.Columns.IndexOf(column);
-            
-            if (index == -1)
-                return Rectangle.Empty;
+            var index = Columns.IndexOf(column);
 
-            return this.ColumnHeaderRect(index);
+            if (index == -1)
+            {
+                return Rectangle.Empty;
+            }
+
+            return ColumnHeaderRect(index);
         }
         #endregion
 
@@ -293,14 +297,11 @@ namespace XPTable.Models
         {
             if (disposing)
             {
-                if (this.cellRenderers != null)
+                if (cellRenderers != null)
                 {
-                    foreach (var renderer in this.cellRenderers.Values)
+                    foreach (var renderer in cellRenderers.Values)
                     {
-                        if (renderer != null)
-                        {
-                            renderer.Dispose();
-                        }
+                        renderer?.Dispose();
                     }
                 }
             }
@@ -324,20 +325,20 @@ namespace XPTable.Models
             {
                 return null;
             }
-            
+
             name = name.ToUpper();
-            
-            if (!this.cellEditors.ContainsKey(name))
+
+            if (!cellEditors.ContainsKey(name))
             {
-                if (this.cellEditors.Count == 0)
+                if (cellEditors.Count == 0)
                 {
-                    this.SetCellEditor(DefaultKey, new TextCellEditor());
+                    SetCellEditor(DefaultKey, new TextCellEditor());
                 }
-                
+
                 return null;
             }
 
-            return (ICellEditor) this.cellEditors[name];
+            return (ICellEditor)cellEditors[name];
         }
 
 
@@ -351,18 +352,18 @@ namespace XPTable.Models
         /// null if the editor does not exist</returns>
         public ICellEditor GetCellEditor(int column)
         {
-            if (column < 0 || column >= this.Columns.Count)
+            if (column < 0 || column >= Columns.Count)
             {
                 return null;
             }
 
             //
-            if (this.Columns[column].Editor != null)
+            if (Columns[column].Editor != null)
             {
-                return this.Columns[column].Editor;
+                return Columns[column].Editor;
             }
 
-            return this.GetCellEditor(this.Columns[column].GetDefaultEditorName());
+            return GetCellEditor(Columns[column].GetDefaultEditorName());
         }
 
 
@@ -377,15 +378,15 @@ namespace XPTable.Models
             {
                 return;
             }
-            
+
             name = name.ToUpper();
 
-            if (this.cellEditors.ContainsKey(name))
+            if (cellEditors.ContainsKey(name))
             {
-                this.cellEditors.Remove(name);
+                cellEditors.Remove(name);
             }
 
-            this.cellEditors.Add(name, editor);
+            cellEditors.Add(name, editor);
         }
 
 
@@ -403,20 +404,14 @@ namespace XPTable.Models
                 return false;
             }
 
-            return this.cellEditors.ContainsKey(name);
+            return cellEditors.ContainsKey(name);
         }
 
 
         /// <summary>
         /// Gets the number of ICellEditors contained in the ColumnModel
         /// </summary>
-        internal int EditorCount
-        {
-            get
-            {
-                return this.cellEditors.Count;
-            }
-        }
+        internal int EditorCount => cellEditors.Count;
 
         #endregion
 
@@ -429,24 +424,21 @@ namespace XPTable.Models
         /// or null if the name or ICellRenderer do not exist</returns>
         public ICellRenderer GetCellRenderer(string name)
         {
-            if (name == null)
-            {
-                name = DefaultKey;
-            }
-            
+            name ??= DefaultKey;
+
             name = name.ToUpper();
-            
-            if (!this.cellRenderers.ContainsKey(name))
+
+            if (!cellRenderers.ContainsKey(name))
             {
-                if (!this.cellRenderers.ContainsKey(DefaultKey))
+                if (!cellRenderers.ContainsKey(DefaultKey))
                 {
-                    this.SetCellRenderer(DefaultKey, new TextCellRenderer());
+                    SetCellRenderer(DefaultKey, new TextCellRenderer());
                 }
-                
-                return this.cellRenderers[DefaultKey];
+
+                return cellRenderers[DefaultKey];
             }
 
-            return this.cellRenderers[name];
+            return cellRenderers[name];
         }
 
         /// <summary>
@@ -459,13 +451,17 @@ namespace XPTable.Models
         /// null if the renderer does not exist</returns>
         public ICellRenderer GetCellRenderer(int column)
         {
-            if (column < 0 || column >= this.Columns.Count)
+            if (column < 0 || column >= Columns.Count)
+            {
                 return null;
+            }
 
-            if (this.Columns[column].Renderer != null)
-                return this.Columns[column].Renderer;
+            if (Columns[column].Renderer != null)
+            {
+                return Columns[column].Renderer;
+            }
 
-            return this.GetCellRenderer(this.Columns[column].GetDefaultRendererName());
+            return GetCellRenderer(Columns[column].GetDefaultRendererName());
         }
 
         /// <summary>
@@ -479,15 +475,15 @@ namespace XPTable.Models
             {
                 return;
             }
-            
+
             name = name.ToUpper();
 
-            if (this.cellRenderers.ContainsKey(name))
+            if (cellRenderers.ContainsKey(name))
             {
-                this.cellRenderers.Remove(name);
+                cellRenderers.Remove(name);
             }
 
-            this.cellRenderers.Add(name, renderer);
+            cellRenderers.Add(name, renderer);
         }
 
         /// <summary>
@@ -504,20 +500,14 @@ namespace XPTable.Models
                 return false;
             }
 
-            return this.cellRenderers.ContainsKey(name);
+            return cellRenderers.ContainsKey(name);
         }
 
 
         /// <summary>
         /// Gets the number of ICellRenderers contained in the ColumnModel
         /// </summary>
-        internal int RendererCount
-        {
-            get
-            {
-                return this.cellRenderers.Count;
-            }
-        }
+        internal int RendererCount => cellRenderers.Count;
 
         #endregion
 
@@ -536,29 +526,29 @@ namespace XPTable.Models
         /// or there are no Columns in the Column model</returns>
         public int PreviousVisibleColumn(int index)
         {
-            if (this.Columns.Count == 0)
+            if (Columns.Count == 0)
             {
                 return -1;
             }
-            
+
             if (index <= 0)
             {
                 return -1;
             }
 
-            if (index >= this.Columns.Count)
+            if (index >= Columns.Count)
             {
-                if (this.Columns[this.Columns.Count-1].Visible)
+                if (Columns[Columns.Count - 1].Visible)
                 {
-                    return this.Columns.Count - 1;
+                    return Columns.Count - 1;
                 }
-                
-                index = this.Columns.Count - 1;
+
+                index = Columns.Count - 1;
             }
 
-            for (int i=index; i>0; i--)
+            for (var i = index; i > 0; i--)
             {
-                if (this.Columns[i-1].Visible)
+                if (Columns[i - 1].Visible)
                 {
                     return i - 1;
                 }
@@ -581,19 +571,19 @@ namespace XPTable.Models
         /// or there are no Columns in the Column model</returns>
         public int NextVisibleColumn(int index)
         {
-            if (this.Columns.Count == 0)
-            {
-                return -1;
-            }
-            
-            if (index >= this.Columns.Count - 1)
+            if (Columns.Count == 0)
             {
                 return -1;
             }
 
-            for (int i=index; i<this.Columns.Count-1; i++)
+            if (index >= Columns.Count - 1)
             {
-                if (this.Columns[i+1].Visible)
+                return -1;
+            }
+
+            for (var i = index; i < Columns.Count - 1; i++)
+            {
+                if (Columns[i + 1].Visible)
                 {
                     return i + 1;
                 }
@@ -619,10 +609,9 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.columns == null)
-                    this.columns = new ColumnCollection(this);
-                
-                return this.columns;
+                columns ??= new ColumnCollection(this);
+
+                return columns;
             }
         }
 
@@ -633,19 +622,23 @@ namespace XPTable.Models
         Description("The height of the column headers")]
         public int HeaderHeight
         {
-            get { return this.headerHeight; }
+            get => headerHeight;
 
             set
             {
                 if (value < ColumnModel.MinimumHeaderHeight)
-                    value = ColumnModel.MinimumHeaderHeight;
-                else if (value > ColumnModel.MaximumHeaderHeight)
-                    value = ColumnModel.MaximumHeaderHeight;
-                
-                if (this.headerHeight != value)
                 {
-                    this.headerHeight = value;
-                    this.OnHeaderHeightChanged(EventArgs.Empty);
+                    value = ColumnModel.MinimumHeaderHeight;
+                }
+                else if (value > ColumnModel.MaximumHeaderHeight)
+                {
+                    value = ColumnModel.MaximumHeaderHeight;
+                }
+
+                if (headerHeight != value)
+                {
+                    headerHeight = value;
+                    OnHeaderHeightChanged(EventArgs.Empty);
                 }
             }
         }
@@ -658,7 +651,7 @@ namespace XPTable.Models
         /// false otherwise</returns>
         private bool ShouldSerializeHeaderHeight()
         {
-            return this.headerHeight != ColumnModel.DefaultHeaderHeight;
+            return headerHeight != ColumnModel.DefaultHeaderHeight;
         }
 
         /// <summary>
@@ -670,10 +663,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.VisibleColumnCount == 0)
+                if (VisibleColumnCount == 0)
+                {
                     return Rectangle.Empty;
-                
-                return new Rectangle(0, 0, this.VisibleColumnsWidth, this.HeaderHeight);
+                }
+
+                return new Rectangle(0, 0, VisibleColumnsWidth, HeaderHeight);
             }
         }
 
@@ -681,46 +676,31 @@ namespace XPTable.Models
         /// Gets the total width of all the Columns in the model
         /// </summary>
         [Browsable(false)]
-        public int TotalColumnWidth
-        {
-            get { return this.Columns.TotalColumnWidth; }
-        }
+        public int TotalColumnWidth => Columns.TotalColumnWidth;
 
         /// <summary>
         /// Gets the total width of all the visible Columns in the model
         /// </summary>
         [Browsable(false)]
-        public int VisibleColumnsWidth
-        {
-            get { return this.Columns.VisibleColumnsWidth; }
-        }
+        public int VisibleColumnsWidth => Columns.VisibleColumnsWidth;
 
         /// <summary>
         /// Gets the index of the last Column that is not hidden
         /// </summary>
         [Browsable(false)]
-        public int LastVisibleColumnIndex
-        {
-            get { return this.Columns.LastVisibleColumn; }
-        }
+        public int LastVisibleColumnIndex => Columns.LastVisibleColumn;
 
         /// <summary>
         /// Gets the number of Columns in the ColumnModel that are visible
         /// </summary>
         [Browsable(false)]
-        public int VisibleColumnCount
-        {
-            get { return this.Columns.VisibleColumnCount; }
-        }
+        public int VisibleColumnCount => Columns.VisibleColumnCount;
 
         /// <summary>
         /// Gets the Table the ColumnModel belongs to
         /// </summary>
         [Browsable(false)]
-        public Table Table
-        {
-            get { return this.table; }
-        }
+        public Table Table => table;
 
         /// <summary>
         /// Gets or sets a collection of underlying sort order(s)
@@ -728,8 +708,8 @@ namespace XPTable.Models
         [Browsable(false)]
         public SortColumnCollection SecondarySortOrders
         {
-            get { return this.secondarySortOrder; }
-            set { this.secondarySortOrder = value; }
+            get => secondarySortOrder;
+            set => secondarySortOrder = value;
         }
 
         /// <summary>
@@ -737,8 +717,8 @@ namespace XPTable.Models
         /// </summary>
         internal Table InternalTable
         {
-            get { return this.table; }
-            set { this.table = value; }
+            get => table;
+            set => table = value;
         }
 
         /// <summary>
@@ -751,8 +731,10 @@ namespace XPTable.Models
                 // check if the Table that the ColumModel belongs to is able to 
                 // raise events (if it can't, the ColumModel shouldn't raise 
                 // events either)
-                if (this.Table != null)
-                    return this.Table.CanRaiseEventsInternal;
+                if (Table != null)
+                {
+                    return Table.CanRaiseEventsInternal;
+                }
 
                 return true;
             }
@@ -761,10 +743,7 @@ namespace XPTable.Models
         /// <summary>
         /// Gets the value for CanRaiseEvents.
         /// </summary>
-        protected internal bool CanRaiseEventsInternal
-        {
-            get { return this.CanRaiseEvents; }
-        }
+        protected internal bool CanRaiseEventsInternal => CanRaiseEvents;
 
         /// <summary>
         /// Gets whether the ColumnModel is enabled
@@ -773,10 +752,12 @@ namespace XPTable.Models
         {
             get
             {
-                if (this.Table == null)
+                if (Table == null)
+                {
                     return true;
+                }
 
-                return this.Table.Enabled;
+                return Table.Enabled;
             }
         }
         #endregion
@@ -790,27 +771,21 @@ namespace XPTable.Models
         {
             e.Column.ColumnModel = this;
 
-            if (!this.ContainsCellRenderer(e.Column.GetDefaultRendererName()))
+            if (!ContainsCellRenderer(e.Column.GetDefaultRendererName()))
             {
-                this.SetCellRenderer(e.Column.GetDefaultRendererName(), e.Column.CreateDefaultRenderer());
+                SetCellRenderer(e.Column.GetDefaultRendererName(), e.Column.CreateDefaultRenderer());
             }
 
-            if (!this.ContainsCellEditor(e.Column.GetDefaultEditorName()))
+            if (!ContainsCellEditor(e.Column.GetDefaultEditorName()))
             {
-                this.SetCellEditor(e.Column.GetDefaultEditorName(), e.Column.CreateDefaultEditor());
+                SetCellEditor(e.Column.GetDefaultEditorName(), e.Column.CreateDefaultEditor());
             }
 
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnColumnAdded(e);
-                }
-                
-                if (ColumnAdded != null)
-                {
-                    ColumnAdded(this, e);
-                }
+                Table?.OnColumnAdded(e);
+
+                ColumnAdded?.Invoke(this, e);
             }
         }
 
@@ -825,18 +800,12 @@ namespace XPTable.Models
             {
                 e.Column.ColumnModel = null;
             }
-            
-            if (this.CanRaiseEvents)
+
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnColumnRemoved(e);
-                }
-                
-                if (ColumnRemoved != null)
-                {
-                    ColumnRemoved(this, e);
-                }
+                Table?.OnColumnRemoved(e);
+
+                ColumnRemoved?.Invoke(this, e);
             }
         }
 
@@ -847,17 +816,11 @@ namespace XPTable.Models
         /// <param name="e">An EventArgs that contains the event data</param>
         protected virtual void OnHeaderHeightChanged(EventArgs e)
         {
-            if (this.CanRaiseEvents)
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnHeaderHeightChanged(e);
-                }
-                
-                if (HeaderHeightChanged != null)
-                {
-                    HeaderHeightChanged(this, e);
-                }
+                Table?.OnHeaderHeightChanged(e);
+
+                HeaderHeightChanged?.Invoke(this, e);
             }
         }
 
@@ -868,17 +831,14 @@ namespace XPTable.Models
         /// <param name="e">A ColumnEventArgs that contains the event data</param>
         internal void OnColumnPropertyChanged(ColumnEventArgs e)
         {
-            if (e.EventType == ColumnEventType.WidthChanged || e.EventType == ColumnEventType.VisibleChanged)
+            if (e.EventType is ColumnEventType.WidthChanged or ColumnEventType.VisibleChanged)
             {
-                this.Columns.RecalcWidthCache();
+                Columns.RecalcWidthCache();
             }
-            
-            if (this.CanRaiseEvents)
+
+            if (CanRaiseEvents)
             {
-                if (this.Table != null)
-                {
-                    this.Table.OnColumnPropertyChanged(e);
-                }
+                Table?.OnColumnPropertyChanged(e);
             }
         }
 

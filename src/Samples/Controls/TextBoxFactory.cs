@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Text;
 using System.Windows.Forms;
@@ -15,8 +15,10 @@ namespace Grouping
 
         public override System.Windows.Forms.Control GetControl(Cell cell)
         {
-            TextBox box = new TextBox();
-            box.Text = cell.Text;
+            var box = new TextBox
+            {
+                Text = cell.Text
+            };
             return box;
         }
     }

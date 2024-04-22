@@ -1,5 +1,5 @@
-/*
- * Copyright � 2014, Patrick Schaller
+﻿/*
+ * Copyright © 2014, Patrick Schaller
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -41,21 +41,21 @@ namespace XPTable.Renderers
     public class TextWithButtonCellRenderer : CellRenderer
     {
         #region Constructor
-        
+
         /// <summary>
         /// Initializes a new instance of the ComboBoxCellRenderer class with 
         /// default settings
         /// </summary>
         public TextWithButtonCellRenderer() : base()
         {
-            this.FlatStyle = false;
-            this.ButtonWidth = 24;
-            this.ButtonText = "...";
-            this.ButtonStringFormat = new StringFormat(this.StringFormat)
-                                          {
-                                              Alignment = StringAlignment.Center,
-                                              LineAlignment = StringAlignment.Center
-                                          };
+            FlatStyle = false;
+            ButtonWidth = 24;
+            ButtonText = "...";
+            ButtonStringFormat = new StringFormat(StringFormat)
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace XPTable.Renderers
                 return;
             }
 
-            Rectangle buttonRect = this.CalcButtonBounds();
-            Rectangle textRect = this.ClientRectangle;
+            var buttonRect = CalcButtonBounds();
+            var textRect = ClientRectangle;
 
             textRect.Width -= buttonRect.Width - 1;
 
@@ -114,16 +114,16 @@ namespace XPTable.Renderers
             {
                 if (e.Enabled)
                 {
-                    this.DrawString(e.Graphics, e.Cell.Text, this.Font, this.ForeBrush, textRect, e.Cell.WordWrap);
+                    DrawString(e.Graphics, e.Cell.Text, Font, ForeBrush, textRect, e.Cell.WordWrap);
                 }
                 else
                 {
-                    this.DrawString(e.Graphics, e.Cell.Text, this.Font, this.GrayTextBrush, textRect, e.Cell.WordWrap);
+                    DrawString(e.Graphics, e.Cell.Text, Font, GrayTextBrush, textRect, e.Cell.WordWrap);
                 }
 
                 if (e.Cell.WidthNotSet)
                 {
-                    SizeF size = e.Graphics.MeasureString(e.Cell.Text, this.Font);
+                    var size = e.Graphics.MeasureString(e.Cell.Text, Font);
                     e.Cell.ContentWidth = (int)Math.Ceiling(size.Width) + buttonRect.Width;
                 }
             }
@@ -140,16 +140,16 @@ namespace XPTable.Renderers
             // our forecolor will be the selection forecolor.
             // we'll ignore this and reset our forecolor to 
             // that of the cell being rendered
-            using (var foreBrush = e.Selected ? new SolidBrush(e.Cell.ForeColor) : new SolidBrush(this.ForeColor))
+            using (var foreBrush = e.Selected ? new SolidBrush(e.Cell.ForeColor) : new SolidBrush(ForeColor))
             {
                 // draw the button.
-                e.Graphics.DrawString(this.ButtonText, this.Font, foreBrush, buttonRect, this.ButtonStringFormat);
+                e.Graphics.DrawString(ButtonText, Font, foreBrush, buttonRect, ButtonStringFormat);
             }
 
             // only if we want to show selection rectangle
             if (e.Focused && e.Enabled && e.Table.ShowSelectionRectangle)
             {
-                Rectangle focusRect = this.ClientRectangle;
+                var focusRect = ClientRectangle;
 
                 focusRect.Width -= buttonRect.Width;
 
@@ -172,8 +172,8 @@ namespace XPTable.Renderers
             }
 
             // get the button state
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
-            PushButtonState state = rendererData.ButtonState;
+            var rendererData = GetButtonRendererData(e.Cell);
+            var state = rendererData.ButtonState;
 
             // if the cell has focus and is in its normal state, 
             // make the button look like a default button
@@ -189,7 +189,7 @@ namespace XPTable.Renderers
             }
 
             // draw the button
-            ThemeManager.DrawButton(e.Graphics, this.CalcButtonBounds(), state, this.FlatStyle);
+            ThemeManager.DrawButton(e.Graphics, CalcButtonBounds(), state, FlatStyle);
         }
 
         #endregion
@@ -235,8 +235,8 @@ namespace XPTable.Renderers
             base.OnKeyDown(e);
 
             // get the button renderer data
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
-            if (e.KeyData == Keys.Enter || e.KeyData == Keys.Space)
+            var rendererData = GetButtonRendererData(e.Cell);
+            if (e.KeyData is Keys.Enter or Keys.Space)
             {
                 rendererData.ButtonState = PushButtonState.Normal;
 
@@ -261,10 +261,10 @@ namespace XPTable.Renderers
             base.OnMouseEnter(e);
 
             // get the button renderer data
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
+            var rendererData = GetButtonRendererData(e.Cell);
 
             // if the mouse is inside the button, make sure it is "hot"
-            if (this.CalcButtonBounds().Contains(e.X, e.Y))
+            if (CalcButtonBounds().Contains(e.X, e.Y))
             {
                 if (rendererData.ButtonState != PushButtonState.Hot)
                 {
@@ -298,7 +298,7 @@ namespace XPTable.Renderers
             base.OnMouseLeave(e);
 
             // get the button renderer data
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
+            var rendererData = GetButtonRendererData(e.Cell);
 
             // make sure the button is in its normal state
             if (rendererData.ButtonState != PushButtonState.Normal)
@@ -322,12 +322,12 @@ namespace XPTable.Renderers
             base.OnMouseUp(e);
 
             // get the button renderer data
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
+            var rendererData = GetButtonRendererData(e.Cell);
 
             // check for the left mouse button
             if (e.Button == MouseButtons.Left)
             {
-                Rectangle buttonRect = this.CalcButtonBounds();
+                var buttonRect = CalcButtonBounds();
 
                 // if the mouse pointer is over the button, make sure 
                 // the button is "hot"
@@ -374,7 +374,7 @@ namespace XPTable.Renderers
             base.OnMouseDown(e);
 
             // get the button renderer data
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
+            var rendererData = GetButtonRendererData(e.Cell);
 
             // check if the left mouse button is pressed
             if (e.Button == MouseButtons.Left)
@@ -383,7 +383,7 @@ namespace XPTable.Renderers
                 rendererData.ClickPoint = new Point(e.X, e.Y);
 
                 // if the click was inside the button, set the button state to pressed
-                if (this.CalcButtonBounds().Contains(rendererData.ClickPoint))
+                if (CalcButtonBounds().Contains(rendererData.ClickPoint))
                 {
                     rendererData.ButtonState = PushButtonState.Pressed;
 
@@ -405,9 +405,9 @@ namespace XPTable.Renderers
             base.OnMouseMove(e);
 
             // get the button renderer data
-            ButtonRendererData rendererData = this.GetButtonRendererData(e.Cell);
+            var rendererData = GetButtonRendererData(e.Cell);
 
-            Rectangle buttonRect = this.CalcButtonBounds();
+            var buttonRect = CalcButtonBounds();
 
             // check if the left mouse button is pressed
             if (e.Button == MouseButtons.Left)
@@ -476,14 +476,14 @@ namespace XPTable.Renderers
         /// the current Cell's dropdown button</returns>
         private Rectangle CalcButtonBounds()
         {
-            Rectangle buttonRect = this.ClientRectangle;
+            var buttonRect = ClientRectangle;
 
-            buttonRect.Width = this.ButtonWidth;
-            buttonRect.X = this.ClientRectangle.Right - buttonRect.Width;
+            buttonRect.Width = ButtonWidth;
+            buttonRect.X = ClientRectangle.Right - buttonRect.Width;
 
-            if (buttonRect.Width > this.ClientRectangle.Width)
+            if (buttonRect.Width > ClientRectangle.Width)
             {
-                buttonRect = this.ClientRectangle;
+                buttonRect = ClientRectangle;
             }
 
             return buttonRect;
@@ -497,13 +497,13 @@ namespace XPTable.Renderers
         /// <returns>The ButtonCellRenderer data for the specified Cell</returns>
         private ButtonRendererData GetButtonRendererData(Cell cell)
         {
-            object rendererData = this.GetRendererData(cell);
+            var rendererData = GetRendererData(cell);
 
-            if (rendererData == null || !(rendererData is ButtonRendererData))
+            if (rendererData is null or not ButtonRendererData)
             {
                 rendererData = new ButtonRendererData();
 
-                this.SetRendererData(cell, rendererData);
+                SetRendererData(cell, rendererData);
             }
 
             return (ButtonRendererData)rendererData;

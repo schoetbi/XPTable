@@ -1,5 +1,5 @@
-/*
- * Copyright � 2005, Mathew Hall
+﻿/*
+ * Copyright © 2005, Mathew Hall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -68,11 +68,13 @@ namespace XPTable.Renderers
             base.GetCellHeight(graphics, cell);
 
             if (cell == null)
+            {
                 return 0;
+            }
 
-            this.Font = cell.Font;
+            Font = cell.Font;
             // Need to set this.Bounds before we access Client rectangle
-            SizeF size = graphics.MeasureString(cell.Text, this.Font, this.ClientRectangle.Width, this.StringFormat);
+            var size = graphics.MeasureString(cell.Text, Font, ClientRectangle.Width, StringFormat);
             return (int)Math.Ceiling(size.Height);
         }
 
@@ -85,9 +87,11 @@ namespace XPTable.Renderers
         private int GetCellWidth(Graphics graphics, Cell cell)
         {
             if (cell == null)
+            {
                 return 0;
+            }
 
-            SizeF size = graphics.MeasureString(cell.Text, this.Font);
+            var size = graphics.MeasureString(cell.Text, Font);
             return (int)Math.Ceiling(size.Width);
         }
 
@@ -104,29 +108,31 @@ namespace XPTable.Renderers
 
             // don't bother going any further if the Cell is null 
             if (e.Cell == null)
+            {
                 return;
+            }
 
-            Cell c = e.Cell;
+            var c = e.Cell;
 
             //////////////////
             if (c.WidthNotSet)
             {
-                int w = GetCellWidth(e.Graphics, c);
+                var w = GetCellWidth(e.Graphics, c);
                 c.ContentWidth = w;
             }
             //////////////////
 
-            string text = c.Text;
+            var text = c.Text;
 
             if (!string.IsNullOrEmpty(text))
             {
                 if (e.Enabled)
                 {
-                    this.DrawString(e.Graphics, text, this.Font, this.ForeBrush, this.ClientRectangle, c.WordWrap);
+                    DrawString(e.Graphics, text, Font, ForeBrush, ClientRectangle, c.WordWrap);
                 }
                 else
                 {
-                    this.DrawString(e.Graphics, text, this.Font, this.GrayTextBrush, this.ClientRectangle, c.WordWrap);
+                    DrawString(e.Graphics, text, Font, GrayTextBrush, ClientRectangle, c.WordWrap);
                 }
 
                 // Also, determine whether we need a tooltip, if the text was truncated.
@@ -136,15 +142,15 @@ namespace XPTable.Renderers
                 }
                 else if (e.Table.EnableToolTips)
                 {
-                    c.InternalIsTextTrimmed = this.IsTextTrimmed(e.Graphics, c.Text);
+                    c.InternalIsTextTrimmed = IsTextTrimmed(e.Graphics, c.Text);
                 }
             }
 
-            if ((e.Focused && e.Enabled)
+            if (e.Focused && e.Enabled
                 // only if we want to show selection rectangle
-                && (e.Table.ShowSelectionRectangle))
+                && e.Table.ShowSelectionRectangle)
             {
-                ControlPaint.DrawFocusRectangle(e.Graphics, this.ClientRectangle);
+                ControlPaint.DrawFocusRectangle(e.Graphics, ClientRectangle);
             }
         }
         #endregion

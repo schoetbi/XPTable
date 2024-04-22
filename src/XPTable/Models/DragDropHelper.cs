@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
@@ -19,15 +19,15 @@ namespace XPTable.Models
     /// <summary>
     /// Encapsulates drag drop functionality for Table.
     /// </summary>
-    class DragDropHelper
+    internal class DragDropHelper
     {
         #region Members
-        Table _table;
-        bool _isMouseDown;
-        bool _isStartDrag;
-        int _selectedRow;
-        Row _previousRow;
-        IDragDropRenderer _renderer;
+        private readonly Table _table;
+        private bool _isMouseDown;
+        private bool _isStartDrag;
+        private int _selectedRow;
+        private Row _previousRow;
+        private IDragDropRenderer _renderer;
         #endregion
 
         /// <summary>
@@ -48,32 +48,36 @@ namespace XPTable.Models
         /// </summary>
         public IDragDropRenderer DragDropRenderer
         {
-            get { return _renderer; }
-            set { _renderer = value; }
+            get => _renderer;
+            set => _renderer = value;
         }
 
         #region Drag drop events
-        void table_DragDrop(object sender, DragEventArgs drgevent)
+        private void table_DragDrop(object sender, DragEventArgs drgevent)
         {
             if (_table.UseBuiltInDragDrop)
             {
                 if (drgevent.Data.GetDataPresent(typeof(DragItemData).ToString()))
                 {
-                    Point point = _table.PointToClient(new Point(drgevent.X, drgevent.Y));
-                    int nRow = -1;
+                    var point = _table.PointToClient(new Point(drgevent.X, drgevent.Y));
+                    var nRow = -1;
                     if (point.Y <= _table.HeaderHeight)
                     {
                         nRow = _table.TopIndex - 1;
                         if (nRow < 0)
+                        {
                             nRow = 0;
+                        }
                     }
                     else
+                    {
                         nRow = _table.RowIndexAt(point);
+                    }
 
-                    Row hoverItem = _table.TableModel.Rows[nRow];
+                    var hoverItem = _table.TableModel.Rows[nRow];
 
-                    DragItemData data = (DragItemData)drgevent.Data.GetData(typeof(DragItemData).ToString());
-                    int srcIndex = -1;
+                    var data = (DragItemData)drgevent.Data.GetData(typeof(DragItemData).ToString());
+                    var srcIndex = -1;
                     if ((data.table == null) || (data.DragItems.Count == 0))
                     {
                         _isStartDrag = false;
@@ -86,12 +90,18 @@ namespace XPTable.Models
                     {
                         if (data.table.SelectedIndicies.GetLength(0) > 0)
                         {
-                            if (data.table.AllowDrop && ((data.table == _table) || (data.table.ExternalDropRemovesRows)))
+                            if (data.table.AllowDrop && ((data.table == _table) || data.table.ExternalDropRemovesRows))
+                            {
                                 data.table.TableModel.Rows.Remove(data.table.SelectedItems[0]);
+                            }
+
                             _isMouseDown = false;
                             _isStartDrag = false;
                             if (data.table == _table)
+                            {
                                 srcIndex = _selectedRow;
+                            }
+
                             _selectedRow = -1;
                             _previousRow = null;
                         }
@@ -99,43 +109,55 @@ namespace XPTable.Models
 
                     if (hoverItem == null)
                     {
-                        for (int i = 0; i < data.DragItems.Count; i++)
+                        for (var i = 0; i < data.DragItems.Count; i++)
                         {
-                            Row newItem = (Row)data.DragItems[i];
+                            var newItem = (Row)data.DragItems[i];
                             _table.TableModel.Rows.Add(newItem);
                             _table.DragDropRowInsertedAt(_table.TableModel.Rows.Count - 1);
                         }
                     }
                     else
                     {
-                        for (int i = data.DragItems.Count - 1; i >= 0; i--)
+                        for (var i = data.DragItems.Count - 1; i >= 0; i--)
                         {
-                            Row newItem = (Row)data.DragItems[i];
+                            var newItem = (Row)data.DragItems[i];
 
                             if (nRow < 0)
                             {
                                 _table.TableModel.Rows.Add(newItem);
                                 if (srcIndex < 0)
+                                {
                                     _table.DragDropRowInsertedAt(_table.TableModel.Rows.Count - 1);
+                                }
                                 else
+                                {
                                     _table.DragDropRowMoved(srcIndex, _table.TableModel.Rows.Count - 1);
+                                }
                             }
                             else
                             {
                                 _table.TableModel.Rows.Insert(nRow, newItem);
                                 if (srcIndex < 0)
+                                {
                                     _table.DragDropRowInsertedAt(nRow);
+                                }
                                 else
+                                {
                                     _table.DragDropRowMoved(srcIndex, nRow);
+                                }
                             }
                         }
                     }
                 }
                 else
+                {
                     _table.DragDropExternalType(sender, drgevent);
+                }
 
                 if (_previousRow != null)
+                {
                     _previousRow = null;
+                }
 
                 _table.Invalidate();
 
@@ -144,10 +166,12 @@ namespace XPTable.Models
                 _selectedRow = -1;
             }
             else
+            {
                 _table.DragDropExternalType(sender, drgevent);
+            }
         }
 
-        void table_DragOver(object sender, DragEventArgs drgevent)
+        private void table_DragOver(object sender, DragEventArgs drgevent)
         {
             //if (!drgevent.Data.GetDataPresent(typeof(DragItemData).ToString()))
             //{
@@ -157,20 +181,24 @@ namespace XPTable.Models
 
             if (_table.UseBuiltInDragDrop && _table.TableModel.Rows.Count > 0)
             {
-                Point point = _table.PointToClient(new Point(drgevent.X, drgevent.Y));
-                int nRow = -1;
+                var point = _table.PointToClient(new Point(drgevent.X, drgevent.Y));
+                var nRow = -1;
                 if (point.Y <= _table.HeaderHeight)
                 {
                     nRow = _table.TopIndex - 1;
                     if (nRow < 0)
+                    {
                         nRow = 0;
+                    }
                 }
                 else
+                {
                     nRow = _table.RowIndexAt(point);
+                }
 
-                Row hoverItem = _table.TableModel.Rows[nRow];
+                var hoverItem = _table.TableModel.Rows[nRow];
 
-                Graphics g = _table.CreateGraphics();
+                var g = _table.CreateGraphics();
 
                 if (hoverItem == null)
                 {
@@ -197,50 +225,52 @@ namespace XPTable.Models
                 {
                     if (drgevent.Data.GetDataPresent(typeof(DragItemData).ToString()))
                     {
-                        DragItemData data = (DragItemData)drgevent.Data.GetData(typeof(DragItemData).ToString());
-                        if (!data.table.ExternalDropRemovesRows && (data.table != _table))
-                            drgevent.Effect = DragDropEffects.Copy;
-                        else
-                            drgevent.Effect = DragDropEffects.Move;
+                        var data = (DragItemData)drgevent.Data.GetData(typeof(DragItemData).ToString());
+                        drgevent.Effect = !data.table.ExternalDropRemovesRows && (data.table != _table) ? DragDropEffects.Copy : DragDropEffects.Move;
                     }
                     else
                         if (!drgevent.Data.GetDataPresent(typeof(DragItemData).ToString()))
-                            drgevent.Effect = _table.DragDropExternalTypeEffectSelector(sender, drgevent);
+                    {
+                        drgevent.Effect = _table.DragDropExternalTypeEffectSelector(sender, drgevent);
+                    }
 
                     if (drgevent.Effect != DragDropEffects.None)
+                    {
                         _renderer.PaintDragDrop(g, hoverItem, _table.RowRect(nRow));
+                    }
                 }
                 _table.EnsureVisible(nRow, 0);
             }
         }
 
-        void table_DragEnter(object sender, DragEventArgs drgevent)
+        private void table_DragEnter(object sender, DragEventArgs drgevent)
         {
             if (_table.UseBuiltInDragDrop)
             {
                 if (!drgevent.Data.GetDataPresent(typeof(DragItemData).ToString()))
+                {
                     drgevent.Effect = _table.DragDropExternalTypeEffectSelector(sender, drgevent);
+                }
                 else
                 {
-                    DragItemData data = (DragItemData)drgevent.Data.GetData(typeof(DragItemData).ToString());
-                    if (!data.table.ExternalDropRemovesRows && (data.table != _table))
-                        drgevent.Effect = DragDropEffects.Copy;
-                    else
-                        drgevent.Effect = DragDropEffects.Move;
+                    var data = (DragItemData)drgevent.Data.GetData(typeof(DragItemData).ToString());
+                    drgevent.Effect = !data.table.ExternalDropRemovesRows && (data.table != _table) ? DragDropEffects.Copy : DragDropEffects.Move;
                 }
 
                 _isStartDrag = true;
             }
             else
+            {
                 drgevent.Effect = _table.DragDropExternalTypeEffectSelector(sender, drgevent);
+            }
         }
         #endregion
 
         #region Drag drop helpers
         private DragItemData GetDataForDragDrop(int nRow)
         {
-            DragItemData data = new DragItemData(_table);
-            Row rowData = new Row();
+            var data = new DragItemData(_table);
+            var rowData = new Row();
             rowData = _table.TableModel.Rows[nRow];
             data.DragItems.Add(rowData);
 
@@ -249,18 +279,12 @@ namespace XPTable.Models
 
         private class DragItemData
         {
-            private Table m_Table;
-            private ArrayList m_DragItems;
+            private readonly Table m_Table;
+            private readonly ArrayList m_DragItems;
 
-            public Table table
-            {
-                get { return m_Table; }
-            }
+            public Table table => m_Table;
 
-            public ArrayList DragItems
-            {
-                get { return m_DragItems; }
-            }
+            public ArrayList DragItems => m_DragItems;
 
             public DragItemData(Table table)
             {
@@ -270,7 +294,7 @@ namespace XPTable.Models
         }
         #endregion
 
-        void Reset()
+        private void Reset()
         {
             _isMouseDown = false;
             _isStartDrag = false;
@@ -296,9 +320,9 @@ namespace XPTable.Models
         internal void MouseMove(MouseEventArgs e)
         {
             // Drag & Drop Code Added - by tankun
-            if (_table.UseBuiltInDragDrop && (this._isStartDrag == false) && (this._isMouseDown == true))
+            if (_table.UseBuiltInDragDrop && (_isStartDrag == false) && (_isMouseDown == true))
             {
-                int row = _table.RowIndexAt(e.X, e.Y);
+                var row = _table.RowIndexAt(e.X, e.Y);
                 _table.DoDragDrop(GetDataForDragDrop(row), DragDropEffects.All);
             }
         }

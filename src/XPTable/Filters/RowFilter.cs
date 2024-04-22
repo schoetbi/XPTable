@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 using XPTable.Models;
 
 namespace XPTable.Filters
@@ -8,9 +9,9 @@ namespace XPTable.Filters
     /// <summary>
     /// Implementation of IRowFilter that filters rows based on a collection of IColumnFilters.
     /// </summary>
-    class RowFilter : IRowFilter
+    internal class RowFilter : IRowFilter
     {
-        readonly Dictionary<int, IColumnFilter> columnFilters;
+        private readonly Dictionary<int, IColumnFilter> columnFilters;
 
         /// <summary>
         /// Creates an IRowFilter that filters rows based on a collection of IColumnFilters.
@@ -28,11 +29,11 @@ namespace XPTable.Filters
         /// <returns></returns>
         public bool CanShow(Row row)
         {
-            bool canShow = true;
+            var canShow = true;
 
-            foreach (int col in columnFilters.Keys)
+            foreach (var col in columnFilters.Keys)
             {
-                Cell cell = row.Cells[col];
+                var cell = row.Cells[col];
 
                 if (cell != null)
                 {
