@@ -15,6 +15,6 @@
       </dependencies>
    </metadata>
    <files>
-      <file src="bin/release/XPTable.dll" target="lib\net48\XPTable.dll"/>
+      <file src="bin/release/net6.0-windows/XPTable.dll" target="lib\net6\XPTable.dll"/>
    </files>
 </package>
