@@ -1,0 +1,311 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{721743DC-57E7-4E03-B12D-C166AF874D47}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Controls</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Controls</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\samples\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\..\bin\samples\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>
+    </CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>Migrated rules for Controls.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Controls, Version=2.2.5.0, Culture=neutral, PublicKeyToken=a8ac264d1dc6b9d9, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\AForge.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Imaging, Version=2.2.5.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\AForge.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Math, Version=2.2.5.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\AForge.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
+    <Reference Include="BaseForm, Version=1.1.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\BaseForm.dll</HintPath>
+    </Reference>
+    <Reference Include="BLBase, Version=1.1.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\BLBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Boleto.Net, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Boleto.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="CRIARCustomControls, Version=1.5.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\CRIARCustomControls.dll</HintPath>
+    </Reference>
+    <Reference Include="CsLibImag, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\CsLibImag.dll</HintPath>
+    </Reference>
+    <Reference Include="dbBase, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\dbBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Dialogos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Dialogos.dll</HintPath>
+    </Reference>
+    <Reference Include="Elegant.Ui.Common, Version=3.6.0.0, Culture=neutral, PublicKeyToken=3a2b400713aae6e0, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Elegant.Ui.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Elegant.Ui.Grid, Version=3.6.0.0, Culture=neutral, PublicKeyToken=3a2b400713aae6e0, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Elegant.Ui.Grid.dll</HintPath>
+    </Reference>
+    <Reference Include="Elegant.Ui.Ribbon, Version=3.6.0.0, Culture=neutral, PublicKeyToken=3a2b400713aae6e0, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Elegant.Ui.Ribbon.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=2.8.0.2, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\ExcelLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=2.5.1.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.WIA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Interop.WIA.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.0.6.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="LibImageForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\LibImageForms.dll</HintPath>
+    </Reference>
+    <Reference Include="ListaPesquisas, Version=1.1.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\ListaPesquisas.dll</HintPath>
+    </Reference>
+    <Reference Include="Mensagens, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Mensagens.dll</HintPath>
+    </Reference>
+    <Reference Include="Menu, Version=1.2.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Menu.dll</HintPath>
+    </Reference>
+    <Reference Include="Menudinamico, Version=1.1.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Menudinamico.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MRG.Controls.UI, Version=1.0.2601.14400, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\MRG.Controls.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.3.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp, Version=1.31.1789.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PrintBase, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\PrintBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Serializacao, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Serializacao.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Util, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\Util.dll</HintPath>
+    </Reference>
+    <Reference Include="WebCam_Capture, Version=1.0.5885.20821, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\WebCam_Capture.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI, Version=1.2.1.0, Culture=neutral, PublicKeyToken=48798f12c314eb27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\WeifenLuo.WinFormsUI.dll</HintPath>
+    </Reference>
+    <Reference Include="ZedGraph, Version=5.1.5.29577, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ComercialFramework.1.0.0\lib\ZedGraph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.ico" />
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ControlsDemo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ControlsDemo.Designer.cs">
+      <DependentUpon>ControlsDemo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Demo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SpinnerFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TextBoxFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Demo.resx">
+      <DependentUpon>Demo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\EmailRead.bmp" />
+    <EmbeddedResource Include="Resources\EmailUnRead.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\XPTable\XPTable.csproj">
+      <Project>{1ADD2ECB-2B24-4162-8965-3EFAA9BB041E}</Project>
+      <Name>XPTable</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
