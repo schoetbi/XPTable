@@ -120,15 +120,25 @@
   <ItemGroup>
     <Content Include="Resources\XPTable32x32.png" />
   </ItemGroup>
-  <PropertyGroup>
-    <PreBuildEvent>powershell -File $(SolutionDir)src/xptable/createGitStatus.ps1
-</PreBuildEvent>
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <PropertyGroup>    
     <AssemblyTitle>XPTable</AssemblyTitle>
-    <Description>A fully customizable ListView style control based on Java%27s JTable</Description>
-    <Company>Hall, adambl, adarmus, lanwin, peyn, schoetbi, Jeoffman</Company>
+    <Description>A fully customizable ListView style control based on Java's JTable</Description>
+    <Company></Company>
     <Product>XPTable</Product>
     <Copyright>Copyright © 2005, Mathew Hall.  All rights reserved.</Copyright>
-    <AssemblyVersion>1.6.1.%2a</AssemblyVersion>
+    <AssemblyVersion>6.0.0</AssemblyVersion>
     <InformationalVersion>git:0d079fe</InformationalVersion>
+    <PackageId>XPTable</PackageId>
+    <Title>XPTable - .NET ListView meets Java's JTable</Title>
+    <Authors>Hall, adambl, adarmus, lanwin, peyn, schoetbi, Jeoffman</Authors>
+    <RepositoryUrl>https://github.com/schoetbi/XPTable</RepositoryUrl>
+    <PackageTags>XPTable;Table;WinForms</PackageTags>
+    <FileVersion>6.0.0</FileVersion>
   </PropertyGroup>
 </Project>
