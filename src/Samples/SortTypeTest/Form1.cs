@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using XPTable.Models;
 
-namespace TESTAPP
+namespace SortTypeTest
 {
 	public partial class Form1 : Form
 	{

@@ -1,4 +1,4 @@
-namespace TESTAPP
+namespace SortTypeTest
 {
 	partial class Form1
 	{
