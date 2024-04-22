@@ -31,8 +31,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tooltips", "src\Samples\Too
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordWrap", "src\Samples\WordWrap\WordWrap.csproj", "{9334C955-CA5C-40C3-A9C0-D79249E47795}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp1", "WinFormsApp1\WinFormsApp1.csproj", "{492639AD-A1B9-427F-BC91-F8D95F309F0A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,10 +85,6 @@ Global
 		{9334C955-CA5C-40C3-A9C0-D79249E47795}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9334C955-CA5C-40C3-A9C0-D79249E47795}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9334C955-CA5C-40C3-A9C0-D79249E47795}.Release|Any CPU.Build.0 = Release|Any CPU
-		{492639AD-A1B9-427F-BC91-F8D95F309F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{492639AD-A1B9-427F-BC91-F8D95F309F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{492639AD-A1B9-427F-BC91-F8D95F309F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{492639AD-A1B9-427F-BC91-F8D95F309F0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,7 +100,6 @@ Global
 		{0B84DD04-39BB-42BC-8EA9-C927FA250F8F} = {2107DECD-D59A-4A4C-BE6F-ECB04A6E1875}
 		{7C02369B-41C3-4701-961A-1172797E76A4} = {2107DECD-D59A-4A4C-BE6F-ECB04A6E1875}
 		{9334C955-CA5C-40C3-A9C0-D79249E47795} = {2107DECD-D59A-4A4C-BE6F-ECB04A6E1875}
-		{492639AD-A1B9-427F-BC91-F8D95F309F0A} = {2107DECD-D59A-4A4C-BE6F-ECB04A6E1875}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3570A2F-6951-4178-9819-28894A6C3243}

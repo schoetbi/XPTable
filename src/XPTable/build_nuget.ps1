@@ -7,6 +7,7 @@ dotnet build ..\..\XPTable.sln --configuration=release
 dotnet gitversion /output file /outputfile gitversion.json
 
 # get version from gitversion.json
-$version = (Get-Content -Raw gitversion.json | ConvertFrom-Json).FullSemVer
+$gitversion = Get-Content -Raw gitversion.json | ConvertFrom-Json
+$version = $gitversion.NuGetVersion
 nuget pack .\XPTable.nuspec -OutputDirectory .\nupkg -Version $version
 
