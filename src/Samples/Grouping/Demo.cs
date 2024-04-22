@@ -8,28 +8,29 @@ using System.Data;
 using XPTable.Models;
 using XPTable.Events;
 using System.IO;
+using System.Windows.Forms.VisualStyles;
 
 //using EventTracer;
 
 namespace Grouping
 {
-	public class Demo : System.Windows.Forms.Form
-	{
+    public class Demo : System.Windows.Forms.Form
+    {
         //Tracer _tracer = null;
 
         private XPTable.Models.Table table;
-		private System.ComponentModel.Container components = null;
-		Bitmap _unread = null;
-		Bitmap _read = null;
+        private System.ComponentModel.Container components = null;
+        Bitmap _unread = null;
+        Bitmap _read = null;
 
-		public Demo()
-		{
-		    InitializeComponent();
-		    _unread = new Bitmap("resources\\EmailUnRead.bmp");
-		    _read = new Bitmap("resources\\EmailRead.bmp");
-		}
+        public Demo()
+        {
+            InitializeComponent();
+            _unread = new Bitmap("resources\\EmailUnRead.bmp");
+            _read = new Bitmap("resources\\EmailRead.bmp");
+        }
 
-	    private void Demo_Load(object sender, EventArgs e)
+        private void Demo_Load(object sender, EventArgs e)
         {
             DoGroup();
         }
@@ -62,10 +63,10 @@ namespace Grouping
             col3.AutoResizeMode = ColumnAutoResizeMode.Any;
             //NumberColumn col4 = new NumberColumn("num", 60);
             //col4.ShowUpDownButtons = true;
-			ButtonColumn col4 = new ButtonColumn("butt");
+            ButtonColumn col4 = new ButtonColumn("butt");
             col4.FlatStyle = true;
 
-			table.ColumnModel = new ColumnModel(new Column[] { col0, col1, col2, col3, col4 });
+            table.ColumnModel = new ColumnModel(new Column[] { col0, col1, col2, col3, col4 });
 
             TableModel model = new TableModel();
             //model.RowHeight = 24;
@@ -77,15 +78,16 @@ namespace Grouping
             AddEmailRows(model, true, "Andy", "13/2/2007 9:45", "Work stuff", "Can you get this finished by this afternoon please? Thanks");
 
             // Make and add the context menu:
-            ContextMenu menu = new ContextMenu();
-            MenuItem delete = new MenuItem("Delete");
+
+            var menu = new ContextMenuStrip();
+            var delete = new ToolStripMenuItem("Delete");
             delete.Click += new EventHandler(delete_Click);
-            menu.MenuItems.Add(delete);
-            table.ContextMenu = menu;
+            menu.Items.Add(delete);
+            table.ContextMenuStrip = menu;
 
             // Add an event handler for the key event
             table.CellKeyUp += new CellKeyEventHandler(table_CellKeyUp);
-			table.CellButtonClicked += new CellButtonEventHandler(table_CellButtonClicked);
+            table.CellButtonClicked += new CellButtonEventHandler(table_CellButtonClicked);
 
             table.CellMouseDown += new CellMouseEventHandler(table_CellMouseDown);
             table.CellMouseUp += new CellMouseEventHandler(table_CellMouseUp);
@@ -180,7 +182,7 @@ namespace Grouping
                 cellSent.CellStyle.LineAlignment = RowAlignment.Top;
             }
             row.Cells.Add(cellSent);
-			row.Cells.Add(new Cell("hi"));
+            row.Cells.Add(new Cell("hi"));
             row.RowStyle = new XPTable.Models.RowStyle();
             row.RowStyle.Alignment = RowAlignment.Top;
             table.Rows.Add(row);
@@ -194,7 +196,7 @@ namespace Grouping
             Cell cell = new Cell(subject);
             cell.ForeColor = Color.Gray;
             cell.ColSpan = 3;
-            
+
             subrow.Cells.Add(cell);
             row.SubRows.Add(subrow);
 
@@ -236,50 +238,36 @@ namespace Grouping
             // Note that the event itself doesn't give us the cell or row
             // where it was clicked - we have to ask the Table for its SelectedRows
             // Bit of a faff to get our Table...
-            if (sender is MenuItem)
+            RowCollection rows = this.table.TableModel.Rows;
+            // Its possible more than one is selected
+            foreach (Row row in this.table.SelectedItems)
             {
-                MenuItem item = (MenuItem)sender;
-                if (item.Parent is ContextMenu)
-                {
-                    ContextMenu menu = (ContextMenu)item.Parent;
-                    // SourceControl is automatically set to be the Table when
-                    // the menu is added to the Table in Setup()
-                    if (menu.SourceControl is Table)
-                    {
-                        Table t = (Table)menu.SourceControl;
-                        RowCollection rows = t.TableModel.Rows;
-                        // Its possible more than one is selected
-                        foreach (Row row in t.SelectedItems)
-                        {
-                            rows.Remove(row);
-                        }
-                    }
-                }
+                rows.Remove(row);
             }
         }
 
-		#region Windows Form Designer generated code
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if (components != null) 
-				{
-					components.Dispose();
-				}
-			}
-			base.Dispose( disposing );
-		}
+        #region Windows Form Designer generated code
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.table = new XPTable.Models.Table();
             ((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
             this.SuspendLayout();
@@ -305,33 +293,33 @@ namespace Grouping
             ((System.ComponentModel.ISupportInitialize)(this.table)).EndInit();
             this.ResumeLayout(false);
 
-		}
-		#endregion
+        }
+        #endregion
 
         [STAThread]
-		static void Main() 
-		{
+        static void Main()
+        {
             //Application.EnableVisualStyles();
-			Application.Run(new Demo());
-		}
+            Application.Run(new Demo());
+        }
 
-		private void table_CellButtonClicked(object sender, CellButtonEventArgs e)
-		{
-			DoMyClickThing(e.CellPos);
-		}
+        private void table_CellButtonClicked(object sender, CellButtonEventArgs e)
+        {
+            DoMyClickThing(e.CellPos);
+        }
 
-		private void SomeOtherProcess()
-		{
-			// Decide what cell you are interested in
-			DoMyClickThing(new CellPos(1, 3));
-		}
+        private void SomeOtherProcess()
+        {
+            // Decide what cell you are interested in
+            DoMyClickThing(new CellPos(1, 3));
+        }
 
-		private void DoMyClickThing(CellPos cellpos)
-		{
-			// Off we go...
+        private void DoMyClickThing(CellPos cellpos)
+        {
+            // Off we go...
             table.ClearAllData();
-		}
-	}
+        }
+    }
 
     public class mybinder : DataSourceColumnBinder
     {

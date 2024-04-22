@@ -1,23 +1,9 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
-//
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-//
-[assembly: AssemblyTitle("XPTable")]
-[assembly: AssemblyDescription("A fully customizable ListView style control based on Java's JTable")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hall, adambl, adarmus, lanwin, peyn, schoetbi, Jeoffman")]
-[assembly: AssemblyProduct("XPTable")]
-[assembly: AssemblyCopyright("Copyright © 2005, Mathew Hall.  All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")] 
 [assembly: CLSCompliant(true)]  
-
-[assembly: AssemblyVersion("1.6.1.*")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

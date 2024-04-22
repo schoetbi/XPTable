@@ -1358,6 +1358,288 @@
             <param name="sender">The object that raised the event</param>
             <param name="e">A DateRangeEventArgs that contains the event data</param>
         </member>
+        <member name="T:XPTable.Editors.DoubleCellEditor">
+            <summary>
+            A class for editing Cells that contain numbers
+            </summary>
+        </member>
+        <member name="T:XPTable.Editors.DoubleCellEditor.ButtonId">
+            <summary>
+            ID number for the up button
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.currentValue">
+            <summary>
+            The current value of the editor
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.increment">
+            <summary>
+            The value to increment or decrement when the up or down buttons are clicked
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.maximum">
+            <summary>
+            The maximum value for the editor
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.minimum">
+            <summary>
+            The inximum value for the editor
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.format">
+            <summary>
+            A string that specifies how editors value is formatted
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.wheelDelta">
+            <summary>
+            The amount the mouse wheel has moved
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.interceptArrowKeys">
+            <summary>
+            Indicates whether the arrow keys should be passed to the editor
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.changingText">
+            <summary>
+            Specifies whether the editors text value is changing
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.TimerInterval">
+            <summary>
+            Initial interval between timer events
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.interval">
+            <summary>
+            Current interval between timer events
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.userEdit">
+            <summary>
+            Indicates whether the user has changed the editors value
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.buttonBounds">
+            <summary>
+            The bounding Rectangle of the up and down buttons
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.buttonID">
+            <summary>
+            The id of the button that was pressed
+            </summary>
+        </member>
+        <member name="F:XPTable.Editors.DoubleCellEditor.timer">
+            <summary>
+            Timer to to fire button presses at regular intervals while 
+            a button is pressed
+            </summary>
+        </member>
+        <member name="E:XPTable.Editors.DoubleCellEditor.BeforeChange">
+            <summary>
+            Occurs when the CellEditor is just about to change the value
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.OnBeforeChange(XPTable.Events.DoubleCellEditEventArgs)">
+            <summary>
+            Raises the BeforeChange event
+            </summary>
+            <param name="e">A CellEditEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.#ctor">
+            <summary>
+            Initializes a new instance of the DoubleCellEditor class with default settings
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.PrepareForEditing(XPTable.Models.Cell,XPTable.Models.Table,XPTable.Models.CellPos,System.Drawing.Rectangle,System.Boolean)">
+            <summary>
+            Prepares the CellEditor to edit the specified Cell
+            </summary>
+            <param name="cell">The Cell to be edited</param>
+            <param name="table">The Table that contains the Cell</param>
+            <param name="cellPos">A CellPos representing the position of the Cell</param>
+            <param name="cellRect">The Rectangle that represents the Cells location and size</param>
+            <param name="userSetEditorValues">Specifies whether the ICellEditors 
+            starting value has already been set by the user</param>
+            <returns>true if the ICellEditor can continue editing the Cell, false otherwise</returns>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.SetEditValue">
+            <summary>
+            Sets the initial value of the editor based on the contents of 
+            the Cell being edited
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.SetCellValue">
+            <summary>
+            Sets the contents of the Cell being edited based on the value 
+            in the editor
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.StartEditing">
+            <summary>
+            Starts editing the Cell
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.StopEditing">
+            <summary>
+            Stops editing the Cell and commits any changes
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.CancelEditing">
+            <summary>
+            Stops editing the Cell and ignores any changes
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.SetEditLocation(System.Drawing.Rectangle)">
+            <summary>
+            Sets the location and size of the CellEditor
+            </summary>
+            <param name="cellRect">A Rectangle that represents the size and location 
+            of the Cell being edited</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.UpButton">
+            <summary>
+            Simulates the up button being pressed
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.DownButton">
+            <summary>
+            Simulates the down button being pressed
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.UpdateEditText">
+            <summary>
+            Updates the editors text value to the current value
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.ValidateEditText">
+            <summary>
+            Checks the current value and updates the editors text value
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.ParseEditText">
+            <summary>
+            Converts the editors current value to a number
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.Constrain(System.Double)">
+            <summary>
+            Ensures that the specified value is between the editors Maximun and 
+            Minimum values
+            </summary>
+            <param name="value">The value to be checked</param>
+            <returns>A value is between the editors Maximun and Minimum values</returns>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.StartTimer">
+            <summary>
+            Starts the Timer
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.StopTimer">
+            <summary>
+            Stops the Timer
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.TextBox">
+            <summary>
+            Gets the TextBox used to edit the Cells contents
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.Value">
+            <summary>
+            Gets or sets the editors current value
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.Increment">
+            <summary>
+            Gets or sets the value to increment or decrement when the up or down 
+            buttons are clicked
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.Maximum">
+            <summary>
+            Gets or sets the maximum value for the editor
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.Minimum">
+            <summary>
+            Gets or sets the minimum value for the editor
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.Format">
+            <summary>
+            Gets or sets the string that specifies how the editors contents 
+            are formatted
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.ChangingText">
+            <summary>
+            Gets or sets whether the editors text is being updated
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.InterceptArrowKeys">
+            <summary>
+            Gets or sets whether the arrow keys should be passed to the editor
+            </summary>
+        </member>
+        <member name="P:XPTable.Editors.DoubleCellEditor.UserEdit">
+            <summary>
+            Gets or sets whether the user has changed the editors value
+            </summary>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.OnMouseWheel(System.Object,System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Handler for the editors TextBox.MouseWheel event
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">A MouseEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.OnTextBoxKeyDown(System.Object,System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            Handler for the editors TextBox.KeyDown event
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">A KeyEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.OnTextBoxKeyPress(System.Object,System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Handler for the editors TextBox.KeyPress event
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">A KeyPressEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.OnTextBoxLostFocus(System.Object,System.EventArgs)">
+            <summary>
+            Handler for the editors TextBox.LostFocus event
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">An EventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.OnEditorButtonMouseDown(System.Object,XPTable.Events.CellMouseEventArgs)">
+            <summary>
+            Handler for the editors buttons MouseDown event
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">A CellMouseEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.OnEditorButtonMouseUp(System.Object,XPTable.Events.CellMouseEventArgs)">
+            <summary>
+            Handler for the editors buttons MouseUp event
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">A CellMouseEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Editors.DoubleCellEditor.TimerHandler(System.Object,System.EventArgs)">
+            <summary>
+            Handler for the editors Timer event
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">An EventArgs that contains the event data</param>
+        </member>
         <member name="T:XPTable.Editors.DropDownCellEditor">
             <summary>
             A base class for editing Cells that contain drop down buttons
@@ -2133,288 +2415,6 @@
             <param name="sender">The object that raised the event</param>
             <param name="e">An EventArgs that contains the event data</param>
         </member>
-        <member name="T:XPTable.Editors.DoubleCellEditor">
-            <summary>
-            A class for editing Cells that contain numbers
-            </summary>
-        </member>
-        <member name="T:XPTable.Editors.DoubleCellEditor.ButtonId">
-            <summary>
-            ID number for the up button
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.currentValue">
-            <summary>
-            The current value of the editor
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.increment">
-            <summary>
-            The value to increment or decrement when the up or down buttons are clicked
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.maximum">
-            <summary>
-            The maximum value for the editor
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.minimum">
-            <summary>
-            The inximum value for the editor
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.format">
-            <summary>
-            A string that specifies how editors value is formatted
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.wheelDelta">
-            <summary>
-            The amount the mouse wheel has moved
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.interceptArrowKeys">
-            <summary>
-            Indicates whether the arrow keys should be passed to the editor
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.changingText">
-            <summary>
-            Specifies whether the editors text value is changing
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.TimerInterval">
-            <summary>
-            Initial interval between timer events
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.interval">
-            <summary>
-            Current interval between timer events
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.userEdit">
-            <summary>
-            Indicates whether the user has changed the editors value
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.buttonBounds">
-            <summary>
-            The bounding Rectangle of the up and down buttons
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.buttonID">
-            <summary>
-            The id of the button that was pressed
-            </summary>
-        </member>
-        <member name="F:XPTable.Editors.DoubleCellEditor.timer">
-            <summary>
-            Timer to to fire button presses at regular intervals while 
-            a button is pressed
-            </summary>
-        </member>
-        <member name="E:XPTable.Editors.DoubleCellEditor.BeforeChange">
-            <summary>
-            Occurs when the CellEditor is just about to change the value
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.OnBeforeChange(XPTable.Events.DoubleCellEditEventArgs)">
-            <summary>
-            Raises the BeforeChange event
-            </summary>
-            <param name="e">A CellEditEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.#ctor">
-            <summary>
-            Initializes a new instance of the DoubleCellEditor class with default settings
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.PrepareForEditing(XPTable.Models.Cell,XPTable.Models.Table,XPTable.Models.CellPos,System.Drawing.Rectangle,System.Boolean)">
-            <summary>
-            Prepares the CellEditor to edit the specified Cell
-            </summary>
-            <param name="cell">The Cell to be edited</param>
-            <param name="table">The Table that contains the Cell</param>
-            <param name="cellPos">A CellPos representing the position of the Cell</param>
-            <param name="cellRect">The Rectangle that represents the Cells location and size</param>
-            <param name="userSetEditorValues">Specifies whether the ICellEditors 
-            starting value has already been set by the user</param>
-            <returns>true if the ICellEditor can continue editing the Cell, false otherwise</returns>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.SetEditValue">
-            <summary>
-            Sets the initial value of the editor based on the contents of 
-            the Cell being edited
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.SetCellValue">
-            <summary>
-            Sets the contents of the Cell being edited based on the value 
-            in the editor
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.StartEditing">
-            <summary>
-            Starts editing the Cell
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.StopEditing">
-            <summary>
-            Stops editing the Cell and commits any changes
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.CancelEditing">
-            <summary>
-            Stops editing the Cell and ignores any changes
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.SetEditLocation(System.Drawing.Rectangle)">
-            <summary>
-            Sets the location and size of the CellEditor
-            </summary>
-            <param name="cellRect">A Rectangle that represents the size and location 
-            of the Cell being edited</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.UpButton">
-            <summary>
-            Simulates the up button being pressed
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.DownButton">
-            <summary>
-            Simulates the down button being pressed
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.UpdateEditText">
-            <summary>
-            Updates the editors text value to the current value
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.ValidateEditText">
-            <summary>
-            Checks the current value and updates the editors text value
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.ParseEditText">
-            <summary>
-            Converts the editors current value to a number
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.Constrain(System.Double)">
-            <summary>
-            Ensures that the specified value is between the editors Maximun and 
-            Minimum values
-            </summary>
-            <param name="value">The value to be checked</param>
-            <returns>A value is between the editors Maximun and Minimum values</returns>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.StartTimer">
-            <summary>
-            Starts the Timer
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.StopTimer">
-            <summary>
-            Stops the Timer
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.TextBox">
-            <summary>
-            Gets the TextBox used to edit the Cells contents
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.Value">
-            <summary>
-            Gets or sets the editors current value
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.Increment">
-            <summary>
-            Gets or sets the value to increment or decrement when the up or down 
-            buttons are clicked
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.Maximum">
-            <summary>
-            Gets or sets the maximum value for the editor
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.Minimum">
-            <summary>
-            Gets or sets the minimum value for the editor
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.Format">
-            <summary>
-            Gets or sets the string that specifies how the editors contents 
-            are formatted
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.ChangingText">
-            <summary>
-            Gets or sets whether the editors text is being updated
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.InterceptArrowKeys">
-            <summary>
-            Gets or sets whether the arrow keys should be passed to the editor
-            </summary>
-        </member>
-        <member name="P:XPTable.Editors.DoubleCellEditor.UserEdit">
-            <summary>
-            Gets or sets whether the user has changed the editors value
-            </summary>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.OnMouseWheel(System.Object,System.Windows.Forms.MouseEventArgs)">
-            <summary>
-            Handler for the editors TextBox.MouseWheel event
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">A MouseEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.OnTextBoxKeyDown(System.Object,System.Windows.Forms.KeyEventArgs)">
-            <summary>
-            Handler for the editors TextBox.KeyDown event
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">A KeyEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.OnTextBoxKeyPress(System.Object,System.Windows.Forms.KeyPressEventArgs)">
-            <summary>
-            Handler for the editors TextBox.KeyPress event
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">A KeyPressEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.OnTextBoxLostFocus(System.Object,System.EventArgs)">
-            <summary>
-            Handler for the editors TextBox.LostFocus event
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">An EventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.OnEditorButtonMouseDown(System.Object,XPTable.Events.CellMouseEventArgs)">
-            <summary>
-            Handler for the editors buttons MouseDown event
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">A CellMouseEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.OnEditorButtonMouseUp(System.Object,XPTable.Events.CellMouseEventArgs)">
-            <summary>
-            Handler for the editors buttons MouseUp event
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">A CellMouseEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Editors.DoubleCellEditor.TimerHandler(System.Object,System.EventArgs)">
-            <summary>
-            Handler for the editors Timer event
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">An EventArgs that contains the event data</param>
-        </member>
         <member name="T:XPTable.Editors.TextCellEditor">
             <summary>
             A class for editing Cells that contain strings
@@ -2477,24 +2477,6 @@
             </summary>
             <param name="sender">The object that raised the event</param>
             <param name="e">An EventArgs that contains the event data</param>
-        </member>
-        <member name="T:XPTable.Events.HandledHeaderMouseEventArgs">
-            <summary>
-            Provides data for the HeaderFilterClick events of a Table
-            </summary>
-        </member>
-        <member name="M:XPTable.Events.HandledHeaderMouseEventArgs.#ctor(XPTable.Events.HeaderMouseEventArgs)">
-            <summary>
-            Initializes a new instance of the HandledHeaderMouseEventArgs class with 
-            the specified source Column, Table, column index, column header bounds 
-            and MouseEventArgs
-            </summary>
-            <param name="e"></param>
-        </member>
-        <member name="P:XPTable.Events.HandledHeaderMouseEventArgs.Handled">
-            <summary>
-            Gets or sets a value that indicates whether this event has already been handled.
-            </summary>
         </member>
         <member name="T:XPTable.Events.CellButtonEventHandler">
             <summary>
@@ -3331,6 +3313,58 @@
             Gets the end index of the affected Column(s)
             </summary>
         </member>
+        <member name="T:XPTable.Events.DoubleCellEditEventHandler">
+            <summary>
+            Represents the methods that will handle the BeginEdit, StopEdit and 
+            CancelEdit events of a Table
+            </summary>
+        </member>
+        <member name="T:XPTable.Events.DoubleCellEditEventArgs">
+            <summary>
+            Provides data for the BeforeChange event of a Table
+            </summary>
+        </member>
+        <member name="M:XPTable.Events.DoubleCellEditEventArgs.#ctor(XPTable.Models.Cell,XPTable.Editors.ICellEditor,XPTable.Models.Table,System.Int32,System.Int32,System.Drawing.Rectangle,System.Double)">
+            <summary>
+            Initializes a new instance of the NumericCellEditEventArgs class with 
+            the specified Cell source, column index and row index
+            </summary>
+            <param name="source"></param>
+            <param name="editor"></param>
+            <param name="table"></param>
+            <param name="row"></param>
+            <param name="column"></param>
+            <param name="cellRect"></param>
+            <param name="oldValue"></param>
+        </member>
+        <member name="P:XPTable.Events.DoubleCellEditEventArgs.OldValue">
+            <summary>
+            Gets the editors old value
+            </summary>
+        </member>
+        <member name="P:XPTable.Events.DoubleCellEditEventArgs.NewValue">
+            <summary>
+            Gets or sets the editors new value
+            </summary>
+        </member>
+        <member name="T:XPTable.Events.HandledHeaderMouseEventArgs">
+            <summary>
+            Provides data for the HeaderFilterClick events of a Table
+            </summary>
+        </member>
+        <member name="M:XPTable.Events.HandledHeaderMouseEventArgs.#ctor(XPTable.Events.HeaderMouseEventArgs)">
+            <summary>
+            Initializes a new instance of the HandledHeaderMouseEventArgs class with 
+            the specified source Column, Table, column index, column header bounds 
+            and MouseEventArgs
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="P:XPTable.Events.HandledHeaderMouseEventArgs.Handled">
+            <summary>
+            Gets or sets a value that indicates whether this event has already been handled.
+            </summary>
+        </member>
         <member name="T:XPTable.Events.HeaderMouseEventHandler">
             <summary>
             Represents the method that will handle the HeaderMouseEnter, HeaderMouseLeave, 
@@ -3405,40 +3439,6 @@
         <member name="P:XPTable.Events.HeaderMouseEventArgs.HeaderRect">
             <summary>
             Gets the column header's bounding rectangle
-            </summary>
-        </member>
-        <member name="T:XPTable.Events.DoubleCellEditEventHandler">
-            <summary>
-            Represents the methods that will handle the BeginEdit, StopEdit and 
-            CancelEdit events of a Table
-            </summary>
-        </member>
-        <member name="T:XPTable.Events.DoubleCellEditEventArgs">
-            <summary>
-            Provides data for the BeforeChange event of a Table
-            </summary>
-        </member>
-        <member name="M:XPTable.Events.DoubleCellEditEventArgs.#ctor(XPTable.Models.Cell,XPTable.Editors.ICellEditor,XPTable.Models.Table,System.Int32,System.Int32,System.Drawing.Rectangle,System.Double)">
-            <summary>
-            Initializes a new instance of the NumericCellEditEventArgs class with 
-            the specified Cell source, column index and row index
-            </summary>
-            <param name="source"></param>
-            <param name="editor"></param>
-            <param name="table"></param>
-            <param name="row"></param>
-            <param name="column"></param>
-            <param name="cellRect"></param>
-            <param name="oldValue"></param>
-        </member>
-        <member name="P:XPTable.Events.DoubleCellEditEventArgs.OldValue">
-            <summary>
-            Gets the editors old value
-            </summary>
-        </member>
-        <member name="P:XPTable.Events.DoubleCellEditEventArgs.NewValue">
-            <summary>
-            Gets or sets the editors new value
             </summary>
         </member>
         <member name="T:XPTable.Events.NumericCellEditEventHandler">
@@ -4279,24 +4279,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="T:XPTable.Filters.RowFilter">
-            <summary>
-            Implementation of IRowFilter that filters rows based on a collection of IColumnFilters.
-            </summary>
-        </member>
-        <member name="M:XPTable.Filters.RowFilter.#ctor(System.Collections.Generic.Dictionary{System.Int32,XPTable.Filters.IColumnFilter})">
-            <summary>
-            Creates an IRowFilter that filters rows based on a collection of IColumnFilters.
-            </summary>
-            <param name="columnFilters"></param>
-        </member>
-        <member name="M:XPTable.Filters.RowFilter.CanShow(XPTable.Models.Row)">
-            <summary>
-            Returns true if this row should be displayed
-            </summary>
-            <param name="row"></param>
-            <returns></returns>
-        </member>
         <member name="T:XPTable.Filters.IColumnFilter">
             <summary>
             Implemented by classes that define filtering behaviour for a column
@@ -4326,6 +4308,24 @@
             </summary>
         </member>
         <member name="M:XPTable.Filters.IRowFilter.CanShow(XPTable.Models.Row)">
+            <summary>
+            Returns true if this row should be displayed
+            </summary>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
+        <member name="T:XPTable.Filters.RowFilter">
+            <summary>
+            Implementation of IRowFilter that filters rows based on a collection of IColumnFilters.
+            </summary>
+        </member>
+        <member name="M:XPTable.Filters.RowFilter.#ctor(System.Collections.Generic.Dictionary{System.Int32,XPTable.Filters.IColumnFilter})">
+            <summary>
+            Creates an IRowFilter that filters rows based on a collection of IColumnFilters.
+            </summary>
+            <param name="columnFilters"></param>
+        </member>
+        <member name="M:XPTable.Filters.RowFilter.CanShow(XPTable.Models.Row)">
             <summary>
             Returns true if this row should be displayed
             </summary>
@@ -6473,6 +6473,21 @@
             </summary>
             <param name="e">A ColumnModelEventArgs that contains the event data</param>
         </member>
+        <member name="T:XPTable.Models.ColumnHeaderRegion">
+            <summary>
+            Specifies the part of the ColumnHeader the user has clicked
+            </summary>
+        </member>
+        <member name="F:XPTable.Models.ColumnHeaderRegion.ColumnTitle">
+            <summary>
+            The label for the column title
+            </summary>
+        </member>
+        <member name="F:XPTable.Models.ColumnHeaderRegion.FilterButton">
+            <summary>
+            The button that shows the filter drop-down
+            </summary>
+        </member>
         <member name="T:XPTable.Models.ColumnModel">
             <summary>
             A ColumnModel contains a collection of Columns that will be displayed in a Table. It also keeps track of whether a 
@@ -7467,6 +7482,180 @@
             parameter to</param>
             <returns>An Object that represents the converted value</returns>
         </member>
+        <member name="T:XPTable.Models.DoubleColumn">
+            <summary>
+            Represents a Column whose Cells are displayed as a numbers
+            </summary>
+        </member>
+        <member name="F:XPTable.Models.DoubleColumn.increment">
+            <summary>
+            The value to increment or decrement a Cell when its up or down buttons are clicked
+            </summary>
+        </member>
+        <member name="F:XPTable.Models.DoubleColumn.maximum">
+            <summary>
+            The maximum value for a Cell
+            </summary>
+        </member>
+        <member name="F:XPTable.Models.DoubleColumn.minimum">
+            <summary>
+            The minimum value for a Cell
+            </summary>
+        </member>
+        <member name="F:XPTable.Models.DoubleColumn.upDownAlignment">
+            <summary>
+            The alignment of the up and down buttons in the Column
+            </summary>
+        </member>
+        <member name="F:XPTable.Models.DoubleColumn.showUpDownButtons">
+            <summary>
+            Specifies whether the up and down buttons should be drawn
+            </summary>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.#ctor">
+            <summary>
+            Creates a new NumberColumn with default values
+            </summary>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String)">
+            <summary>
+            Creates a new NumberColumn with the specified header text
+            </summary>
+            <param name="text">The text displayed in the column's header</param>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Int32)">
+            <summary>
+            Creates a new NumberColumn with the specified header text and width
+            </summary>
+            <param name="text">The text displayed in the column's header</param>
+            <param name="width">The column's width</param>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Creates a new NumberColumn with the specified header text, width and visibility
+            </summary>
+            <param name="text">The text displayed in the column's header</param>
+            <param name="width">The column's width</param>
+            <param name="visible">Specifies whether the column is visible</param>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Drawing.Image)">
+            <summary>
+            Creates a new TextColumn with the specified header text and image
+            </summary>
+            <param name="text">The text displayed in the column's header</param>
+            <param name="image">The image displayed on the column's header</param>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Drawing.Image,System.Int32)">
+            <summary>
+            Creates a new TextColumn with the specified header text, image and width
+            </summary>
+            <param name="text">The text displayed in the column's header</param>
+            <param name="image">The image displayed on the column's header</param>
+            <param name="width">The column's width</param>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Drawing.Image,System.Int32,System.Boolean)">
+            <summary>
+            Creates a new TextColumn with the specified header text, image, width 
+            and visibility
+            </summary>
+            <param name="text">The text displayed in the column's header</param>
+            <param name="image">The image displayed on the column's header</param>
+            <param name="width">The column's width</param>
+            <param name="visible">Specifies whether the column is visible</param>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.Init">
+            <summary>
+            Initializes the NumberColumn with default values
+            </summary>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.GetDefaultRendererName">
+            <summary>
+            Gets a string that specifies the name of the Column's default CellRenderer
+            </summary>
+            <returns>A string that specifies the name of the Column's default 
+            CellRenderer</returns>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.CreateDefaultRenderer">
+            <summary>
+            Gets the Column's default CellRenderer
+            </summary>
+            <returns>The Column's default CellRenderer</returns>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.GetDefaultEditorName">
+            <summary>
+            Gets a string that specifies the name of the Column's default CellEditor
+            </summary>
+            <returns>A string that specifies the name of the Column's default 
+            CellEditor</returns>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.CreateDefaultEditor">
+            <summary>
+            Gets the Column's default CellEditor
+            </summary>
+            <returns>The Column's default CellEditor</returns>
+        </member>
+        <member name="P:XPTable.Models.DoubleColumn.Maximum">
+            <summary>
+            Gets or sets the maximum value for Column's Cells
+            </summary>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.ShouldSerializeMaximum">
+            <summary>
+            Specifies whether the Maximum property should be serialized at 
+            design time
+            </summary>
+            <returns>true if the Maximum property should be serialized, 
+            false otherwise</returns>
+        </member>
+        <member name="P:XPTable.Models.DoubleColumn.Minimum">
+            <summary>
+            Gets or sets the minimum value for Column's Cells
+            </summary>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.ShouldSerializeMinimum">
+            <summary>
+            Specifies whether the Minimum property should be serialized at 
+            design time
+            </summary>
+            <returns>true if the Minimum property should be serialized, 
+            false otherwise</returns>
+        </member>
+        <member name="P:XPTable.Models.DoubleColumn.Increment">
+            <summary>
+            Gets or sets the value to increment or decrement a Cell when its up or down 
+            buttons are clicked
+            </summary>
+        </member>
+        <member name="M:XPTable.Models.DoubleColumn.ShouldSerializeIncrement">
+            <summary>
+            Specifies whether the Increment property should be serialized at 
+            design time
+            </summary>
+            <returns>true if the Increment property should be serialized, 
+            false otherwise</returns>
+        </member>
+        <member name="P:XPTable.Models.DoubleColumn.ShowUpDownButtons">
+            <summary>
+            Gets or sets whether the Column's Cells should draw up and down buttons
+            </summary>
+        </member>
+        <member name="P:XPTable.Models.DoubleColumn.UpDownAlign">
+            <summary>
+            Gets or sets the alignment of the up and down buttons in the Column
+            </summary>
+        </member>
+        <member name="P:XPTable.Models.DoubleColumn.Format">
+            <summary>
+            Gets or sets the string that specifies how a Column's Cell contents 
+            are formatted
+            </summary>
+        </member>
+        <member name="P:XPTable.Models.DoubleColumn.DefaultComparerType">
+            <summary>
+            Gets the Type of the Comparer used to compare the Column's Cells when 
+            the Column is sorting
+            </summary>
+        </member>
         <member name="T:XPTable.Models.DragDropHelper">
             <summary>
             Encapsulates drag drop functionality for Table.
@@ -7803,7 +7992,7 @@
             
             </summary>
         </member>
-        <member name="M:XPTable.Models.HeaderContextMenu.OnPopup(System.EventArgs)">
+        <member name="M:XPTable.Models.HeaderContextMenu.OnOpening(System.ComponentModel.CancelEventArgs)">
             <summary>
             Raises the Popup event
             </summary>
@@ -7822,21 +8011,6 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
-        </member>
-        <member name="T:XPTable.Models.ColumnHeaderRegion">
-            <summary>
-            Specifies the part of the ColumnHeader the user has clicked
-            </summary>
-        </member>
-        <member name="F:XPTable.Models.ColumnHeaderRegion.ColumnTitle">
-            <summary>
-            The label for the column title
-            </summary>
-        </member>
-        <member name="F:XPTable.Models.ColumnHeaderRegion.FilterButton">
-            <summary>
-            The button that shows the filter drop-down
-            </summary>
         </member>
         <member name="T:XPTable.Models.ImageColumn">
             <summary>
@@ -8141,180 +8315,6 @@
             </summary>
         </member>
         <member name="P:XPTable.Models.NumberColumn.DefaultComparerType">
-            <summary>
-            Gets the Type of the Comparer used to compare the Column's Cells when 
-            the Column is sorting
-            </summary>
-        </member>
-        <member name="T:XPTable.Models.DoubleColumn">
-            <summary>
-            Represents a Column whose Cells are displayed as a numbers
-            </summary>
-        </member>
-        <member name="F:XPTable.Models.DoubleColumn.increment">
-            <summary>
-            The value to increment or decrement a Cell when its up or down buttons are clicked
-            </summary>
-        </member>
-        <member name="F:XPTable.Models.DoubleColumn.maximum">
-            <summary>
-            The maximum value for a Cell
-            </summary>
-        </member>
-        <member name="F:XPTable.Models.DoubleColumn.minimum">
-            <summary>
-            The minimum value for a Cell
-            </summary>
-        </member>
-        <member name="F:XPTable.Models.DoubleColumn.upDownAlignment">
-            <summary>
-            The alignment of the up and down buttons in the Column
-            </summary>
-        </member>
-        <member name="F:XPTable.Models.DoubleColumn.showUpDownButtons">
-            <summary>
-            Specifies whether the up and down buttons should be drawn
-            </summary>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.#ctor">
-            <summary>
-            Creates a new NumberColumn with default values
-            </summary>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String)">
-            <summary>
-            Creates a new NumberColumn with the specified header text
-            </summary>
-            <param name="text">The text displayed in the column's header</param>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Int32)">
-            <summary>
-            Creates a new NumberColumn with the specified header text and width
-            </summary>
-            <param name="text">The text displayed in the column's header</param>
-            <param name="width">The column's width</param>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Int32,System.Boolean)">
-            <summary>
-            Creates a new NumberColumn with the specified header text, width and visibility
-            </summary>
-            <param name="text">The text displayed in the column's header</param>
-            <param name="width">The column's width</param>
-            <param name="visible">Specifies whether the column is visible</param>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Drawing.Image)">
-            <summary>
-            Creates a new TextColumn with the specified header text and image
-            </summary>
-            <param name="text">The text displayed in the column's header</param>
-            <param name="image">The image displayed on the column's header</param>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Drawing.Image,System.Int32)">
-            <summary>
-            Creates a new TextColumn with the specified header text, image and width
-            </summary>
-            <param name="text">The text displayed in the column's header</param>
-            <param name="image">The image displayed on the column's header</param>
-            <param name="width">The column's width</param>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.#ctor(System.String,System.Drawing.Image,System.Int32,System.Boolean)">
-            <summary>
-            Creates a new TextColumn with the specified header text, image, width 
-            and visibility
-            </summary>
-            <param name="text">The text displayed in the column's header</param>
-            <param name="image">The image displayed on the column's header</param>
-            <param name="width">The column's width</param>
-            <param name="visible">Specifies whether the column is visible</param>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.Init">
-            <summary>
-            Initializes the NumberColumn with default values
-            </summary>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.GetDefaultRendererName">
-            <summary>
-            Gets a string that specifies the name of the Column's default CellRenderer
-            </summary>
-            <returns>A string that specifies the name of the Column's default 
-            CellRenderer</returns>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.CreateDefaultRenderer">
-            <summary>
-            Gets the Column's default CellRenderer
-            </summary>
-            <returns>The Column's default CellRenderer</returns>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.GetDefaultEditorName">
-            <summary>
-            Gets a string that specifies the name of the Column's default CellEditor
-            </summary>
-            <returns>A string that specifies the name of the Column's default 
-            CellEditor</returns>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.CreateDefaultEditor">
-            <summary>
-            Gets the Column's default CellEditor
-            </summary>
-            <returns>The Column's default CellEditor</returns>
-        </member>
-        <member name="P:XPTable.Models.DoubleColumn.Maximum">
-            <summary>
-            Gets or sets the maximum value for Column's Cells
-            </summary>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.ShouldSerializeMaximum">
-            <summary>
-            Specifies whether the Maximum property should be serialized at 
-            design time
-            </summary>
-            <returns>true if the Maximum property should be serialized, 
-            false otherwise</returns>
-        </member>
-        <member name="P:XPTable.Models.DoubleColumn.Minimum">
-            <summary>
-            Gets or sets the minimum value for Column's Cells
-            </summary>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.ShouldSerializeMinimum">
-            <summary>
-            Specifies whether the Minimum property should be serialized at 
-            design time
-            </summary>
-            <returns>true if the Minimum property should be serialized, 
-            false otherwise</returns>
-        </member>
-        <member name="P:XPTable.Models.DoubleColumn.Increment">
-            <summary>
-            Gets or sets the value to increment or decrement a Cell when its up or down 
-            buttons are clicked
-            </summary>
-        </member>
-        <member name="M:XPTable.Models.DoubleColumn.ShouldSerializeIncrement">
-            <summary>
-            Specifies whether the Increment property should be serialized at 
-            design time
-            </summary>
-            <returns>true if the Increment property should be serialized, 
-            false otherwise</returns>
-        </member>
-        <member name="P:XPTable.Models.DoubleColumn.ShowUpDownButtons">
-            <summary>
-            Gets or sets whether the Column's Cells should draw up and down buttons
-            </summary>
-        </member>
-        <member name="P:XPTable.Models.DoubleColumn.UpDownAlign">
-            <summary>
-            Gets or sets the alignment of the up and down buttons in the Column
-            </summary>
-        </member>
-        <member name="P:XPTable.Models.DoubleColumn.Format">
-            <summary>
-            Gets or sets the string that specifies how a Column's Cell contents 
-            are formatted
-            </summary>
-        </member>
-        <member name="P:XPTable.Models.DoubleColumn.DefaultComparerType">
             <summary>
             Gets the Type of the Comparer used to compare the Column's Cells when 
             the Column is sorting
@@ -13119,6 +13119,147 @@
             <param name="dateTime"></param>
             <returns></returns>
         </member>
+        <member name="T:XPTable.Renderers.DoubleCellRenderer">
+            <summary>
+            A base class for drawing Cells contents as numbers
+            </summary>
+        </member>
+        <member name="F:XPTable.Renderers.DoubleCellRenderer.buttonWidth">
+            <summary>
+            The width of the ComboBox's dropdown button
+            </summary>
+        </member>
+        <member name="F:XPTable.Renderers.DoubleCellRenderer.showUpDownButtons">
+            <summary>
+            Specifies whether the up and down buttons should be drawn
+            </summary>
+        </member>
+        <member name="F:XPTable.Renderers.DoubleCellRenderer.upDownAlignment">
+            <summary>
+            The alignment of the up and down buttons in the Cell
+            </summary>
+        </member>
+        <member name="F:XPTable.Renderers.DoubleCellRenderer.maximum">
+            <summary>
+            The maximum value for the Cell
+            </summary>
+        </member>
+        <member name="F:XPTable.Renderers.DoubleCellRenderer.minimum">
+            <summary>
+            The minimum value for the Cell
+            </summary>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the NumberCellRenderer class with 
+            default settings
+            </summary>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.CalcButtonBounds">
+            <summary>
+            Returns a Rectangle that specifies the size and location of the 
+            up and down buttons
+            </summary>
+            <returns>A Rectangle that specifies the size and location of the 
+            up and down buttons</returns>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.GetUpButtonBounds">
+            <summary>
+            Returns a Rectangle that specifies the size and location of the up button
+            </summary>
+            <returns>A Rectangle that specifies the size and location of the up button</returns>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.GetDownButtonBounds">
+            <summary>
+            Returns a Rectangle that specifies the size and location of the down button
+            </summary>
+            <returns>A Rectangle that specifies the size and location of the down button</returns>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.GetNumberRendererData(XPTable.Models.Cell)">
+            <summary>
+            Gets the NumberRendererData specific data used by the Renderer from 
+            the specified Cell
+            </summary>
+            <param name="cell">The Cell to get the NumberRendererData data for</param>
+            <returns>The NumberRendererData data for the specified Cell</returns>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.TableUsingNumericCellEditor(XPTable.Models.Table,XPTable.Models.CellPos)">
+            <summary>
+            Gets whether the specified Table is using a NumericCellEditor to edit the 
+            Cell at the specified CellPos
+            </summary>
+            <param name="table">The Table to check</param>
+            <param name="cellPos">A CellPos that represents the Cell to check</param>
+            <returns>true if the specified Table is using a NumericCellEditor to edit the 
+            Cell at the specified CellPos, false otherwise</returns>
+        </member>
+        <member name="P:XPTable.Renderers.DoubleCellRenderer.ButtonWidth">
+            <summary>
+            Gets or sets the width of the dropdown button
+            </summary>
+        </member>
+        <member name="P:XPTable.Renderers.DoubleCellRenderer.ShowUpDownButtons">
+            <summary>
+            Gets or sets whether the up and down buttons should be drawn
+            </summary>
+        </member>
+        <member name="P:XPTable.Renderers.DoubleCellRenderer.UpDownAlign">
+            <summary>
+            Gets or sets the alignment of the up and down buttons in the Cell
+            </summary>
+        </member>
+        <member name="P:XPTable.Renderers.DoubleCellRenderer.Maximum">
+            <summary>
+            Gets or sets the maximum value for the Cell
+            </summary>
+        </member>
+        <member name="P:XPTable.Renderers.DoubleCellRenderer.Minimum">
+            <summary>
+            Gets or sets the minimum value for the Cell
+            </summary>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseLeave(XPTable.Events.CellMouseEventArgs)">
+            <summary>
+            Raises the MouseLeave event
+            </summary>
+            <param name="e">A CellMouseEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseUp(XPTable.Events.CellMouseEventArgs)">
+            <summary>
+            Raises the MouseUp event
+            </summary>
+            <param name="e">A CellMouseEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseDown(XPTable.Events.CellMouseEventArgs)">
+            <summary>
+            Raises the MouseDown event
+            </summary>
+            <param name="e">A CellMouseEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseMove(XPTable.Events.CellMouseEventArgs)">
+            <summary>
+            Raises the MouseMove event
+            </summary>
+            <param name="e">A CellMouseEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnPaintCell(XPTable.Events.PaintCellEventArgs)">
+            <summary>
+            Raises the PaintCell event
+            </summary>
+            <param name="e">A PaintCellEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnPaintBackground(XPTable.Events.PaintCellEventArgs)">
+            <summary>
+            Raises the PaintBackground event
+            </summary>
+            <param name="e">A PaintCellEventArgs that contains the event data</param>
+        </member>
+        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnPaint(XPTable.Events.PaintCellEventArgs)">
+            <summary>
+            Raises the Paint event
+            </summary>
+            <param name="e">A PaintCellEventArgs that contains the event data</param>
+        </member>
         <member name="T:XPTable.Renderers.DragDropRenderer">
             <summary>
             Draws a rectangle round the destination drag drop row.
@@ -14020,147 +14161,6 @@
             <param name="e">A PaintCellEventArgs that contains the event data</param>
         </member>
         <member name="M:XPTable.Renderers.NumberCellRenderer.OnPaint(XPTable.Events.PaintCellEventArgs)">
-            <summary>
-            Raises the Paint event
-            </summary>
-            <param name="e">A PaintCellEventArgs that contains the event data</param>
-        </member>
-        <member name="T:XPTable.Renderers.DoubleCellRenderer">
-            <summary>
-            A base class for drawing Cells contents as numbers
-            </summary>
-        </member>
-        <member name="F:XPTable.Renderers.DoubleCellRenderer.buttonWidth">
-            <summary>
-            The width of the ComboBox's dropdown button
-            </summary>
-        </member>
-        <member name="F:XPTable.Renderers.DoubleCellRenderer.showUpDownButtons">
-            <summary>
-            Specifies whether the up and down buttons should be drawn
-            </summary>
-        </member>
-        <member name="F:XPTable.Renderers.DoubleCellRenderer.upDownAlignment">
-            <summary>
-            The alignment of the up and down buttons in the Cell
-            </summary>
-        </member>
-        <member name="F:XPTable.Renderers.DoubleCellRenderer.maximum">
-            <summary>
-            The maximum value for the Cell
-            </summary>
-        </member>
-        <member name="F:XPTable.Renderers.DoubleCellRenderer.minimum">
-            <summary>
-            The minimum value for the Cell
-            </summary>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.#ctor">
-            <summary>
-            Initializes a new instance of the NumberCellRenderer class with 
-            default settings
-            </summary>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.CalcButtonBounds">
-            <summary>
-            Returns a Rectangle that specifies the size and location of the 
-            up and down buttons
-            </summary>
-            <returns>A Rectangle that specifies the size and location of the 
-            up and down buttons</returns>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.GetUpButtonBounds">
-            <summary>
-            Returns a Rectangle that specifies the size and location of the up button
-            </summary>
-            <returns>A Rectangle that specifies the size and location of the up button</returns>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.GetDownButtonBounds">
-            <summary>
-            Returns a Rectangle that specifies the size and location of the down button
-            </summary>
-            <returns>A Rectangle that specifies the size and location of the down button</returns>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.GetNumberRendererData(XPTable.Models.Cell)">
-            <summary>
-            Gets the NumberRendererData specific data used by the Renderer from 
-            the specified Cell
-            </summary>
-            <param name="cell">The Cell to get the NumberRendererData data for</param>
-            <returns>The NumberRendererData data for the specified Cell</returns>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.TableUsingNumericCellEditor(XPTable.Models.Table,XPTable.Models.CellPos)">
-            <summary>
-            Gets whether the specified Table is using a NumericCellEditor to edit the 
-            Cell at the specified CellPos
-            </summary>
-            <param name="table">The Table to check</param>
-            <param name="cellPos">A CellPos that represents the Cell to check</param>
-            <returns>true if the specified Table is using a NumericCellEditor to edit the 
-            Cell at the specified CellPos, false otherwise</returns>
-        </member>
-        <member name="P:XPTable.Renderers.DoubleCellRenderer.ButtonWidth">
-            <summary>
-            Gets or sets the width of the dropdown button
-            </summary>
-        </member>
-        <member name="P:XPTable.Renderers.DoubleCellRenderer.ShowUpDownButtons">
-            <summary>
-            Gets or sets whether the up and down buttons should be drawn
-            </summary>
-        </member>
-        <member name="P:XPTable.Renderers.DoubleCellRenderer.UpDownAlign">
-            <summary>
-            Gets or sets the alignment of the up and down buttons in the Cell
-            </summary>
-        </member>
-        <member name="P:XPTable.Renderers.DoubleCellRenderer.Maximum">
-            <summary>
-            Gets or sets the maximum value for the Cell
-            </summary>
-        </member>
-        <member name="P:XPTable.Renderers.DoubleCellRenderer.Minimum">
-            <summary>
-            Gets or sets the minimum value for the Cell
-            </summary>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseLeave(XPTable.Events.CellMouseEventArgs)">
-            <summary>
-            Raises the MouseLeave event
-            </summary>
-            <param name="e">A CellMouseEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseUp(XPTable.Events.CellMouseEventArgs)">
-            <summary>
-            Raises the MouseUp event
-            </summary>
-            <param name="e">A CellMouseEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseDown(XPTable.Events.CellMouseEventArgs)">
-            <summary>
-            Raises the MouseDown event
-            </summary>
-            <param name="e">A CellMouseEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnMouseMove(XPTable.Events.CellMouseEventArgs)">
-            <summary>
-            Raises the MouseMove event
-            </summary>
-            <param name="e">A CellMouseEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnPaintCell(XPTable.Events.PaintCellEventArgs)">
-            <summary>
-            Raises the PaintCell event
-            </summary>
-            <param name="e">A PaintCellEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnPaintBackground(XPTable.Events.PaintCellEventArgs)">
-            <summary>
-            Raises the PaintBackground event
-            </summary>
-            <param name="e">A PaintCellEventArgs that contains the event data</param>
-        </member>
-        <member name="M:XPTable.Renderers.DoubleCellRenderer.OnPaint(XPTable.Events.PaintCellEventArgs)">
             <summary>
             Raises the Paint event
             </summary>

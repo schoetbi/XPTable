@@ -174,35 +174,5 @@ namespace Grouping
 		{
 			Application.Run(new Demo());
 		}
-
-		private void table_CellKeyUp(object sender, XPTable.Events.CellKeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Delete)
-			{
-				RowCollection rows = e.Table.TableModel.Rows;
-				rows.Remove(rows[e.Row]);
-			}
-		}
-
-		private void delete_Click(object sender, EventArgs e)
-		{
-			if (sender is MenuItem)
-			{
-				MenuItem item = (MenuItem)sender;
-				if (item.Parent is ContextMenu)
-				{
-					ContextMenu menu = (ContextMenu)item.Parent;
-					if (menu.SourceControl is Table)
-					{
-						Table t = (Table)menu.SourceControl;
-						RowCollection rows = t.TableModel.Rows;
-						foreach(Row row in t.SelectedItems)
-						{
-							rows.Remove(row);
-						}
-					}
-				}
-			}
-		}
 	}
 }

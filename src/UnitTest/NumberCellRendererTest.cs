@@ -1,10 +1,9 @@
-﻿using XPTable.Renderers;
+﻿using NUnit.Framework;
+using XPTable.Renderers;
 
 namespace UnitTest
 {
     using System.Globalization;
-
-    using NUnit.Framework;
 
     [TestFixture]
     public class NumberCellRendererTest
@@ -21,12 +20,12 @@ namespace UnitTest
                                new object[] { 0.0001f, "0.0000", "0.0001", CultureInfo.InvariantCulture },
 
                                // double min max epsilon
-                               new object[] { double.MinValue, "e", "-1.79769313486232E+308", CultureInfo.InvariantCulture },
-                               new object[] { double.MaxValue, "e", "1.79769313486232E+308", CultureInfo.InvariantCulture },
-                               new object[] { double.Epsilon, "e", "4.94065645841247E-324", CultureInfo.InvariantCulture },
+                               new object[] { double.MinValue, "e", "-1.7976931348623157E+308", CultureInfo.InvariantCulture },
+                               new object[] { double.MaxValue, "e", "1.7976931348623157E+308", CultureInfo.InvariantCulture },
+                               new object[] { double.Epsilon, "e", "5E-324", CultureInfo.InvariantCulture },
 
                                // wrong format
-                               new object[] { double.Epsilon, "yyy", "4.94065645841247E-324", CultureInfo.InvariantCulture },
+                               new object[] { double.Epsilon, "yyy", "5E-324", CultureInfo.InvariantCulture },
 
                                // a nonnumber object
                                new object[] { "nonnumber", "yyy", "nonnumber", CultureInfo.InvariantCulture },
@@ -54,7 +53,8 @@ namespace UnitTest
         public void CheckNumberRenderer(object data, string format, string expected, CultureInfo culture)
         {
             var txt = NumberCellRenderer.RenderText(data, format, culture);
-            Assert.AreEqual(expected, txt);
+            
+            Assert.That(txt, Is.EqualTo(expected));
         }
     }
 }

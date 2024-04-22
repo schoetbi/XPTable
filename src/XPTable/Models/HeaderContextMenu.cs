@@ -35,175 +35,183 @@ using XPTable;
 
 namespace XPTable.Models
 {
-	/// <summary>
-	/// A specialized ContextMenu for Column Headers
-	/// </summary>
-	[ToolboxItem(false)]
-	public class HeaderContextMenu : ContextMenu
-	{
-		#region Class Data
-		
-		/// <summary>
-		/// The ColumnModel that owns the menu
-		/// </summary>
-		private ColumnModel model;
+    /// <summary>
+    /// A specialized ContextMenu for Column Headers
+    /// </summary>
+    [ToolboxItem(false)]
+    public class HeaderContextMenu : ContextMenuStrip
+    {
+        #region Class Data
 
-		/// <summary>
-		/// Specifies whether the menu is enabled
-		/// </summary>
-		private bool enabled;
+        /// <summary>
+        /// The ColumnModel that owns the menu
+        /// </summary>
+        private ColumnModel model;
 
-		/// <summary>
-		/// More columns menuitem
-		/// </summary>
-		private MenuItem moreMenuItem;
+        /// <summary>
+        /// Specifies whether the menu is enabled
+        /// </summary>
+        private bool enabled;
 
-		/// <summary>
-		/// Seperator menuitem
-		/// </summary>
-		private MenuItem separator;
+        /// <summary>
+        /// More columns menuitem
+        /// </summary>
+        private ToolStripMenuItem moreMenuItem;
 
-		#endregion
+        /// <summary>
+        /// Seperator menuitem
+        /// </summary>
+        private ToolStripMenuItem separator;
 
-        
-		#region Constructor
-		
-		/// <summary>
-		/// Initializes a new instance of the HeaderContextMenu class with 
-		/// no menu items specified
-		/// </summary>
-		public HeaderContextMenu() : base()
-		{
-			this.model = null;
-			this.enabled = true;
-
-			this.moreMenuItem = new MenuItem("More...", new EventHandler(moreMenuItem_Click));
-			this.separator = new MenuItem("-");
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Methods
-		
-		/// <summary>
-		/// Displays the shortcut menu at the specified position
-		/// </summary>
-		/// <param name="control">A Control object that specifies the control 
-		/// with which this shortcut menu is associated</param>
-		/// <param name="pos">A Point object that specifies the coordinates at 
-		/// which to display the menu. These coordinates are specified relative 
-		/// to the client coordinates of the control specified in the control 
-		/// parameter</param>
-		public new void Show(Control control, Point pos)
-		{
-			if (control == null)
-			{
-				throw new ArgumentNullException("control", "control cannot be null");
-			}
+        #region Constructor
 
-			if (!(control is Table))
-			{
-				throw new ArgumentException("control must be of type Table", "control");
-			}
+        /// <summary>
+        /// Initializes a new instance of the HeaderContextMenu class with 
+        /// no menu items specified
+        /// </summary>
+        public HeaderContextMenu() : base()
+        {
+            this.model = null;
+            this.enabled = true;
 
-			if (((Table) control).ColumnModel == null)
-			{
-				throw new InvalidOperationException("The specified Table does not have an associated ColumnModel");
-			}
+            this.moreMenuItem = new ToolStripMenuItem("More...");
+            this.moreMenuItem.Click += moreMenuItem_Click;
+            this.separator = new ToolStripMenuItem("-");
+        }
 
-			//
-			this.model = ((Table) control).ColumnModel;
+        private void MoreMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
-			//
-			this.MenuItems.Clear();
-
-			base.Show(control, pos);
-		}
+        #endregion
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		internal bool Enabled
-		{
-			get
-			{
-				return this.enabled;
-			}
+        #region Methods
 
-			set
-			{
-				this.enabled = value;
-			}
-		}
+        /// <summary>
+        /// Displays the shortcut menu at the specified position
+        /// </summary>
+        /// <param name="control">A Control object that specifies the control 
+        /// with which this shortcut menu is associated</param>
+        /// <param name="pos">A Point object that specifies the coordinates at 
+        /// which to display the menu. These coordinates are specified relative 
+        /// to the client coordinates of the control specified in the control 
+        /// parameter</param>
+        public new void Show(Control control, Point pos)
+        {
+            if (control == null)
+            {
+                throw new ArgumentNullException("control", "control cannot be null");
+            }
 
-		#endregion
+            if (!(control is Table))
+            {
+                throw new ArgumentException("control must be of type Table", "control");
+            }
 
+            if (((Table)control).ColumnModel == null)
+            {
+                throw new InvalidOperationException("The specified Table does not have an associated ColumnModel");
+            }
 
-		#region Events
+            //
+            this.model = ((Table)control).ColumnModel;
 
-		/// <summary>
-		/// Raises the Popup event
-		/// </summary>
-		/// <param name="e">An EventArgs that contains the event data</param>
-		protected override void OnPopup(EventArgs e)
-		{
-			if (this.model.Columns.Count > 0)
-			{
-				MenuItem item;
-				
-				for (int i=0; i<this.model.Columns.Count; i++)
-				{
-					if (i == 10)
-					{
-						this.MenuItems.Add(this.separator);
-						this.MenuItems.Add(this.moreMenuItem);
+            //
+            this.Items.Clear();
 
-						break;
-					}
-
-					item = new MenuItem(this.model.Columns[i].Text, new EventHandler(menuItem_Click));
-					item.Checked = this.model.Columns[i].Visible;
-
-					this.MenuItems.Add(item);
-				}
-			}
-
-			base.OnPopup(e);
-		}
+            base.Show(control, pos);
+        }
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void menuItem_Click(object sender, EventArgs e)
-		{
-			MenuItem item = (MenuItem) sender;
-			
-			this.model.Columns[item.Index].Visible = !item.Checked;
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool Enabled
+        {
+            get
+            {
+                return this.enabled;
+            }
+
+            set
+            {
+                this.enabled = value;
+            }
+        }
+
+        #endregion
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void moreMenuItem_Click(object sender, EventArgs e)
-		{
-			ShowColumnsDialog scd = new ShowColumnsDialog();
-			scd.AddColumns(this.model);
-			scd.ShowDialog(this.SourceControl);
-		}
+        #region Events
 
-		#endregion
+        /// <summary>
+        /// Raises the Popup event
+        /// </summary>
+        /// <param name="e">An EventArgs that contains the event data</param>
+
+        protected override void OnOpening(CancelEventArgs e)
+        {
+            if (this.model.Columns.Count > 0)
+            {
+                ToolStripMenuItem item;
+
+                for (int i = 0; i < this.model.Columns.Count; i++)
+                {
+                    if (i == 10)
+                    {
+                        this.Items.Add(this.separator);
+                        this.Items.Add(this.moreMenuItem);
+
+                        break;
+                    }
+
+                    // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+                    item = new ToolStripMenuItem(this.model.Columns[i].Text);
+                    item.Click += menuItem_Click;
+                    item.Checked = this.model.Columns[i].Visible;
+
+                    this.Items.Add(item);
+                }
+            }
+
+            base.OnOpening(e);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuItem_Click(object sender, EventArgs e)
+        {
+            var item = (ToolStripMenuItem)sender;
+
+            this.model.Columns[item.MergeIndex].Visible = !item.Checked;
+        }
 
 
-		#region ShowColumnsDialog
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void moreMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowColumnsDialog scd = new ShowColumnsDialog();
+            scd.AddColumns(this.model);
+            scd.ShowDialog(this.SourceControl);
+        }
 
-	    #endregion
-	}
+        #endregion
+
+
+        #region ShowColumnsDialog
+
+        #endregion
+    }
 }
