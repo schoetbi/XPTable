@@ -3341,7 +3341,7 @@ namespace XPTable.Editors
                         string r_text, g_text, b_text;
                         int r, g, b;
 
-                        r_text = hex_data[..2];
+                        r_text = hex_data.Substring(0, 2);
                         g_text = hex_data.Substring(2, 2);
                         b_text = hex_data.Substring(4, 2);
 

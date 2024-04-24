@@ -1200,7 +1200,7 @@ namespace XPTable.Models
 
                     var indicies = SelectedIndicies;
 
-                    return CalcSelectionBounds(indicies[0], indicies[^1]);
+                    return CalcSelectionBounds(indicies[0], indicies[indicies.Length - 1]);
                 }
             }
 
