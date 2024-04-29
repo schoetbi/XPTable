@@ -150,10 +150,8 @@ namespace XPTable.Models
 
         protected override void OnOpening(CancelEventArgs e)
         {
-            if (model.Columns.Count > 0)
+            if (Items.Count == 0)
             {
-                ToolStripMenuItem item;
-
                 for (var i = 0; i < model.Columns.Count; i++)
                 {
                     if (i == 10)
@@ -164,8 +162,7 @@ namespace XPTable.Models
                         break;
                     }
 
-                    // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-                    item = new ToolStripMenuItem(model.Columns[i].Text)
+                    var item = new ToolStripMenuItem(model.Columns[i].Text)
                     {
                         Tag = model.Columns[i]
                     };
