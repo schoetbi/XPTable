@@ -165,7 +165,10 @@ namespace XPTable.Models
                     }
 
                     // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-                    item = new ToolStripMenuItem(model.Columns[i].Text);
+                    item = new ToolStripMenuItem(model.Columns[i].Text)
+                    {
+                        Tag = model.Columns[i]
+                    };
                     item.Click += menuItem_Click;
                     item.Checked = model.Columns[i].Visible;
 
@@ -184,10 +187,11 @@ namespace XPTable.Models
         private void menuItem_Click(object sender, EventArgs e)
         {
             var item = (ToolStripMenuItem)sender;
-
-            model.Columns[item.MergeIndex].Visible = !item.Checked;
+            if (item.Tag is Column column)
+            {
+                column.Visible = !item.Checked;
+            }
         }
-
 
         /// <summary>
         /// 
