@@ -103,7 +103,7 @@ namespace XPTable.Events
             if (oldSelectedIndicies.Length > 0)
             {
                 oldSelectionBounds = source.Selections.CalcSelectionBounds(oldSelectedIndicies[0],
-                                                                                oldSelectedIndicies[newSelectedIndicies.Length - 1]);
+                                                                                oldSelectedIndicies[oldSelectedIndicies.Length - 1]);
             }
 
             if (newSelectedIndicies.Length > 0)
