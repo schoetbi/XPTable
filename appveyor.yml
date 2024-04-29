@@ -1,28 +1,8 @@
-version: 6.0.0
+version: 2.0.0
+image: Visual Studio 2022
 
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: "$(APPVEYOR_BUILD_VERSION)"
-  assembly_file_version: "$(APPVEYOR_BUILD_VERSION)"
-  assembly_informational_version: "$(APPVEYOR_BUILD_VERSION).$(APPVEYOR_BUILD_NUMBER) $(APPVEYOR_REPO_COMMIT)"
-
-before_build:
-  - cmd: dotnet restore
-
-build:
-  project: XPTable.sln
-  verbosity: minimal
-
-configuration:
-  - Release
-
-after_build:
-  - dotnet pack src/XPTable/XPTable.csproj
-
-test:
-  assemblies:
-    - src/UnitTest/bin/Test/net6.0-windows7.0/UnitTest.dll
+build_script:
+  - ps: ./build_nuget.ps1
 
 artifacts:
-  - path: src/XPTable/bin
+  - path: src/XPTable/bin/Release/**.nupkg
