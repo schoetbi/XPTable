@@ -35,6 +35,9 @@ using XPTable;
 
 namespace XPTable.Models
 {
+    using System.Data.Common;
+    using System.Linq;
+
     /// <summary>
     /// A specialized ContextMenu for Column Headers
     /// </summary>
@@ -150,26 +153,33 @@ namespace XPTable.Models
 
         protected override void OnOpening(CancelEventArgs e)
         {
-            if (Items.Count == 0)
+            if (Items.Count == 0 && model?.Columns != null)
             {
-                for (var i = 0; i < model.Columns.Count; i++)
+                foreach (var column in model.Columns.OfType<Column>().Take(9))
                 {
-                    if (i == 10)
+                    var item = new ToolStripMenuItem(column.Text)
                     {
-                        Items.Add(separator);
-                        Items.Add(moreMenuItem);
-
-                        break;
-                    }
-
-                    var item = new ToolStripMenuItem(model.Columns[i].Text)
-                    {
-                        Tag = model.Columns[i]
+                        Tag = column
                     };
                     item.Click += menuItem_Click;
-                    item.Checked = model.Columns[i].Visible;
-
+                    item.Checked = column.Visible;
                     Items.Add(item);
+                }
+
+                if (model.Columns.Count > 9)
+                {
+                    Items.Add(separator);
+                    Items.Add(moreMenuItem);
+                }
+            }
+            else
+            {
+                foreach (var item in Items.OfType<ToolStripMenuItem>())
+                {
+                    if (item.Tag is Column column)
+                    {
+                        item.Checked = column.Visible;
+                    }
                 }
             }
 
