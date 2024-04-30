@@ -17,6 +17,7 @@
         <SignAssembly>true</SignAssembly>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <UseWindowsForms>true</UseWindowsForms>
+        <UseFullSemVerForNuGet>true</UseFullSemVerForNuGet>
         <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     </PropertyGroup>
     <ItemGroup>
@@ -81,7 +82,7 @@
     <ItemGroup>
         <Content Include="Resources\XPTable32x32.png" />
     </ItemGroup>
-    <ItemGroup>
+    <ItemGroup>	 
         <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -92,6 +93,8 @@
         <Reference Include="System.Design" />
     </ItemGroup>
     <PropertyGroup>
+	     <IncludeSymbols>true</IncludeSymbols>
+		  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <AssemblyTitle>XPTable</AssemblyTitle>
         <Description>A fully customizable ListView style control based on Java's JTable</Description>
         <Company></Company>

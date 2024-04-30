@@ -931,6 +931,7 @@ namespace XPTable.Models
             beginUpdateCount = 0;
             init = false;
             preview = false;
+            ContextMenuStrip = headerContextMenu;
         }
         #endregion
 
