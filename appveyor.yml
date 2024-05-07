@@ -4,5 +4,22 @@ image: Visual Studio 2022
 build_script:
   - ps: ./build_nuget.ps1
 
+<<<<<<< HEAD
+build:
+  project: XPTable.sln
+  verbosity: minimal
+  
+configuration:
+  - Release  
+
+after_build:
+- nuget pack XPTable.csproj
+
+test:
+  assemblies:
+    - UnitTest\bin\Test\UnitTest.dll
+    
+=======
+>>>>>>> 1ec40aacf075527cb8251ee250482f8be4171705
 artifacts:
   - path: src/XPTable/bin/Release/**.nupkg
