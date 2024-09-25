@@ -2,9 +2,7 @@
     <PropertyGroup>
         <TargetFrameworks>net48;net60-windows;net80-windows</TargetFrameworks>
         <ProjectType>Local</ProjectType>
-        <AssemblyKeyContainerName>
-        </AssemblyKeyContainerName>
-        <LangVersion>9.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <AssemblyOriginatorKeyFile>XPTable.snk</AssemblyOriginatorKeyFile>
         <DefaultClientScript>JScript</DefaultClientScript>
         <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
@@ -12,13 +10,10 @@
         <DelaySign>false</DelaySign>
         <OutputType>Library</OutputType>
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-        <StartupObject>
-        </StartupObject>
         <SignAssembly>true</SignAssembly>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <UseWindowsForms>true</UseWindowsForms>
         <UseFullSemVerForNuGet>true</UseFullSemVerForNuGet>
-        <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     </PropertyGroup>
     <ItemGroup>
         <Compile Update="Models\ButtonColumn.cs">
@@ -81,20 +76,22 @@
     </ItemGroup>
     <ItemGroup>
         <Content Include="Resources\XPTable32x32.png" />
+        <SupportedPlatform Include="windows" />
     </ItemGroup>
-    <ItemGroup>	 
+    <ItemGroup>
         <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    <ItemGroup>
+    <!-- Reference only in .net 48-->
+    <ItemGroup Condition ="'$(TargetFramework)' == 'net48'">
         <Reference Include="Microsoft.CSharp" />
         <Reference Include="System.Design" />
     </ItemGroup>
     <PropertyGroup>
-	     <IncludeSymbols>true</IncludeSymbols>
-		  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <AssemblyTitle>XPTable</AssemblyTitle>
         <Description>A fully customizable ListView style control based on Java's JTable</Description>
         <Company></Company>
