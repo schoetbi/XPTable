@@ -6,15 +6,26 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
+<<<<<<< HEAD:AssemblyInfo.cs
+[assembly: AssemblyTitle("XPTable")]
+[assembly: AssemblyDescription("A fully customizable ListView style control based on Java's JTable")]
+[assembly: AssemblyCompany("Hall, adambl, adarmus, lanwin, peyn, schoetbi, Jeoffman")]
+[assembly: AssemblyProduct("XPTable")]
+[assembly: AssemblyCopyright("Copyright © 2005, Mathew Hall.  All rights reserved.")]
+=======
 [assembly: AssemblyTitle("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("")]
+>>>>>>> 1ec40aacf075527cb8251ee250482f8be4171705:src/Samples/MultiSorting/AssemblyInfo.cs
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+<<<<<<< HEAD:AssemblyInfo.cs
+[assembly: AssemblyVersion("1.6.1.1")]
+=======
 //
 // Version information for an assembly consists of the following four values:
 //
@@ -27,6 +38,7 @@ using System.Runtime.CompilerServices;
 // by using the '*' as shown below:
 
 [assembly: AssemblyVersion("1.0.0.0")]
+>>>>>>> 1ec40aacf075527cb8251ee250482f8be4171705:src/Samples/MultiSorting/AssemblyInfo.cs
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

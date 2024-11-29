@@ -214,10 +214,24 @@ namespace XPTable.Renderers
             }
             else
             {
+<<<<<<< HEAD:Renderers/ProgressBarCellRenderer.cs
+                if (chunkRect.Width != 0)
+                {
+                    using (Bitmap b = new Bitmap(chunkRect.Width, chunkRect.Height))
+                    {
+                        using (Graphics g = Graphics.FromImage(b))
+                        {
+                            ThemeManager.DrawProgressBarChunks(g, new Rectangle(0, 0, chunkRect.Width, chunkRect.Height));
+                        }
+
+                        ControlPaint.DrawImageDisabled(e.Graphics, b, chunkRect.X, chunkRect.Y, this.BackBrush.Color);
+                    }
+=======
                 using var b = new Bitmap(chunkRect.Width, chunkRect.Height);
                 using (var g = Graphics.FromImage(b))
                 {
                     ThemeManager.DrawProgressBarChunks(g, new Rectangle(0, 0, chunkRect.Width, chunkRect.Height));
+>>>>>>> 1ec40aacf075527cb8251ee250482f8be4171705:src/XPTable/Renderers/ProgressBarCellRenderer.cs
                 }
 
                 ControlPaint.DrawImageDisabled(e.Graphics, b, chunkRect.X, chunkRect.Y, BackBrush.Color);
